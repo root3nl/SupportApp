@@ -152,11 +152,13 @@ A JSON Schema for Jamf Pro is provided for easy configuration of all the prefere
 
 More information about the JSON Schema feature in Jamf Pro: https://docs.jamf.com/technical-papers/jamf-pro/json-schema/10.19.0/Overview.html
 
+<img src="/Screenshots/jamf_pro_custom_schema.png" width="800"> 
+
 ### Installer or app bundle
 Depending on your preference or MDM solution you can use either the installer or zipped app bundle. The installer includes a LaunchAgent and is the recommended method.
 
 ### Sample LaunchAgent
-A sample LaunchAgent to always keep the app alive is provider [**here**](https://github.com/root3nl/SupportApp/blob/master/LaunchAgent%20Sample/nl.root3.support.plist)
+A sample LaunchAgent to always keep the app alive is provided [**here**](https://github.com/root3nl/SupportApp/blob/master/LaunchAgent%20Sample/nl.root3.support.plist)
 
 ### Sample Configuration Profile
 A sample Configuration Profile you can edit to your preferences is provided [**here**](https://github.com/root3nl/SupportApp/blob/master/Configuration%20Profile%20Sample/Support%20App%20Configuration%20Sample.mobileconfig)
