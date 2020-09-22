@@ -1,4 +1,4 @@
-# Support App
+# macOS Support App
 
 <img src="/Screenshots/root3_light_mode.png" width="450"> 
 
@@ -29,6 +29,7 @@ The Support app is a macOS menu bar app built for organizations to:
 * Offer shortcuts to easily access support channels or other company resources such as a website or a file server
 * Give users a modern and native macOS app with your corporate identity
 
+The app is developed by Root3, specialized in managing Apple devices. Root3 offers consultancy and support for organizations to get the most out of their Apple devices and is based in The Netherlands (Haarlem).
 
 Root3 already had a basic in-house support app written in Objective-C and decided to completely rewrite it in Swift using SwiftUI with an all-new design that looks great on macOS Big Sur. We’ve learned that SwiftUI is the perfect way of creating great looking apps for all Apple platforms with minimal effort. In the development process we decided to make it generic so other organizations can take advantage of it and contribute to the Mac admins community.
 
@@ -36,7 +37,7 @@ Root3 already had a basic in-house support app written in Objective-C and decide
 The easiest and recommended way to configure the app is using a Configuration Profile and your MDM solution.
 
 ## Requirements
-* macOS 11.0 or higher is required
+* macOS 11.0 or higher
 * Any MDM solution supporting custom Configuration Profiles
 
 ## Download
@@ -147,7 +148,7 @@ We choose to go all the way with SF Symbols as these good looking icons are desi
 ## MDM deployment
 It is recommended to deploy the Configuration Profile first before installing the Support app.
 
-### Jamf Pro custom JSON Schema
+### Jamf Pro custom JSON schema
 A JSON Schema for Jamf Pro is provided for easy configuration of all the preference keys without creating/modifying a custom Configuration Profile in XML format. Download the JSON file [**here**](https://github.com/root3nl/SupportApp/blob/master/Jamf%20Pro%20Custom%20Schema/Jamf%20Pro%20Custom%20Schema.json)
 
 More information about the JSON Schema feature in Jamf Pro: https://docs.jamf.com/technical-papers/jamf-pro/json-schema/10.19.0/Overview.html
