@@ -89,7 +89,7 @@ The rows with configurable items are shown in the screenshot below:
 
 <img src="/Screenshots/configurable_buttons.png" height="350">
 
-### Configuration
+## Configuration
 The configuration of the Support app is optimized for use with your MDM solution. The easiest way to configure the app is using a Configuration Profile so you can use whatever MDM solution you like, as long as it supports custom Configuration Profiles.
 
 Some preference keys like the icon and status bar icon point to a file location. Due to the sandboxed characteristic of the app, not all file locations are allowed. We suggest putting the files in a folder within Application Support such as `/Library/Application Support/Your Company/` where the app can read the contents. Other supported file locations can be found in Apple’s documentation about App Sandbox: https://developer.apple.com/library/archive/documentation/Security/Conceptual/AppSandboxDesignGuide/AppSandboxInDepth/AppSandboxInDepth.html#//apple_ref/doc/uid/TP40011183-CH3-SW17
@@ -135,7 +135,7 @@ Below are all available preference keys:
 | SecondRowLinkRight | String | tel:+31000000000 | The Bundle Identifier of the app or link that should be opened. | “https://yourticketsystem.tld”, “mailto:support@company.tld”, “tel:+31000000000” or “smb://yourfileserver.tld” |
 | SecondRowSymbolRight | String | phone | The SF Symbol shown in the button. | “iphone.homebutton”, “megaphone” or any other SF Symbol. Please check the SF Symbols section. |
 
-### How to use SF Symbols
+## How to use SF Symbols
 We choose to go all the way with SF Symbols as these good looking icons are designed by Apple and give the app a native look and feel. All icons have a symbol name which you can use in the Configuration Profile. As these icons are built into macOS, it automatically shows the correct icon.
 
 * Download SF Symbols [**here**](https://developer.apple.com/sf-symbols/)
@@ -144,29 +144,29 @@ We choose to go all the way with SF Symbols as these good looking icons are desi
 
 <img src="/Screenshots/how_to_use_sf_symbols.png" height="400">
 
-### MDM deployment
+## MDM deployment
 It is recommended to deploy the Configuration Profile first before installing the Support app.
 
-## Jamf Pro custom JSON Schema
+### Jamf Pro custom JSON Schema
 A JSON Schema for Jamf Pro is provided for easy configuration of all the preference keys without creating/modifying a custom Configuration Profile in XML format. Download the JSON file [**here**](https://github.com/root3nl/SupportApp/blob/master/Jamf%20Pro%20Custom%20Schema/Jamf%20Pro%20Custom%20Schema.json)
 
 More information about the JSON Schema feature in Jamf Pro: https://docs.jamf.com/technical-papers/jamf-pro/json-schema/10.19.0/Overview.html
 
-## Installer or app bundle
+### Installer or app bundle
 Depending on your preference or MDM solution you can use either the installer or zipped app bundle. The installer includes a LaunchAgent and is the recommended method.
 
-## Sample LaunchAgent
+### Sample LaunchAgent
 A sample LaunchAgent to always keep the app alive is provider [**here**](https://github.com/root3nl/SupportApp/blob/master/LaunchAgent%20Sample/nl.root3.support.plist)
 
-## Sample Configuration Profile
+### Sample Configuration Profile
 A sample Configuration Profile you can edit to your preferences is provided [**here**](https://github.com/root3nl/SupportApp/blob/master/Configuration%20Profile%20Sample/Support%20App%20Configuration%20Sample.mobileconfig)
 
-### Known issues
+## Known issues
 * Buttons may keep a hovered state when mouse cursor moves fast: FB8212902
 
-### Changelog
+## Changelog
 
-### Note and disclaimer
+## Note and disclaimer
 * Root3 developed this application as a side project to add additional value for our customers
 * The application can be used free of charge and is provided ‘as is’, without any warranty
 * Comments and feature request are appreciated. Please email jordy.witteman@root3.nl
