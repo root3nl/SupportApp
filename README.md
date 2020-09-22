@@ -1,8 +1,8 @@
 # Support App
 
-<img src="/Screenshots/root3_light_mode.png" height="350"> 
+<img src="/Screenshots/root3_light_mode.png" width="450"> 
 
-<img src="/Screenshots/example_light_mode.png" height="200"> <img src="/Screenshots/example_dark_mode.png" height="200">
+<img src="/Screenshots/example_light_mode.png" width="300"> <img src="/Screenshots/example_dark_mode.png" width="300">
 
 - [Introduction](#introduction)
 - [Requirements](#requirements)
@@ -40,9 +40,9 @@ The easiest and recommended way to configure the app is using a Configuration Pr
 * Any MDM solution supporting custom Configuration Profiles
 
 ## Download
-Package Installer (includes LaunchAgent):
+Package Installer (includes LaunchAgent): [**Download**](https://github.com/root3nl/SupportApp/releases/download/v2.0-beta1/Support.2.0.Installer.pkg)
 
-Application (zipped):
+Application (zipped): [**Download**](https://github.com/root3nl/SupportApp/releases/download/v2.0-beta1/Support.zip)
 
 See the MDM deployment section below for more info.
 
@@ -87,7 +87,7 @@ The buttons in the 3rd and 4th row behave as shortcuts to applications or links.
 
 The rows with configurable items are shown in the screenshot below:
 
-<img src="/Screenshots/configurable_buttons.png" height="350">
+<img src="/Screenshots/configurable_buttons.png" width="450">
 
 ## Configuration
 The configuration of the Support app is optimized for use with your MDM solution. The easiest way to configure the app is using a Configuration Profile so you can use whatever MDM solution you like, as long as it supports custom Configuration Profiles.
