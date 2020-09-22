@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>PayloadContent</key>
+			<dict>
+				<key>nl.root3.support</key>
+				<dict>
+					<key>Forced</key>
+					<array>
+						<dict>
+							<key>mcx_preference_settings</key>
+							<dict>
+								<key>FirstRowLinkLeft</key>
+								<string>com.teamviewer.TeamViewerQS</string>
+								<key>FirstRowLinkRight</key>
+								<string>com.jamfsoftware.selfservice.mac</string>
+								<key>FirstRowSubtitleLeft</key>
+								<string>Share your screen</string>
+								<key>FirstRowSubtitleRight</key>
+								<string>Download apps</string>
+								<key>FirstRowSymbolLeft</key>
+								<string>cursorarrow</string>
+								<key>FirstRowSymbolRight</key>
+								<string>briefcase.fill</string>
+								<key>FirstRowTitleLeft</key>
+								<string>Remote Support</string>
+								<key>FirstRowTitleRight</key>
+								<string>Self Service</string>
+								<key>FirstRowTypeLeft</key>
+								<string>App</string>
+								<key>FirstRowTypeRight</key>
+								<string>App</string>
+								<key>Logo</key>
+								<string>/Library/Application Support/Your Company/logo.png</string>
+								<key>SecondRowLinkLeft</key>
+								<string>https://support.root3.nl</string>
+								<key>SecondRowLinkMiddle</key>
+								<string>mailto:support@root3.nl</string>
+								<key>SecondRowLinkRight</key>
+								<string>tel:0031854003030</string>
+								<key>SecondRowSubtitleLeft</key>
+								<string>Open</string>
+								<key>SecondRowSubtitleMiddle</key>
+								<string>Create</string>
+								<key>SecondRowSubtitleRight</key>
+								<string>Call</string>
+								<key>SecondRowSymbolLeft</key>
+								<string>lifepreserver</string>
+								<key>SecondRowSymbolMiddle</key>
+								<string>envelope.badge</string>
+								<key>SecondRowSymbolRight</key>
+								<string>apps.iphone</string>
+								<key>SecondRowTitleLeft</key>
+								<string>Website</string>
+								<key>SecondRowTitleMiddle</key>
+								<string>Email</string>
+								<key>SecondRowTitleRight</key>
+								<string>Phone</string>
+								<key>SecondRowTypeLeft</key>
+								<string>URL</string>
+								<key>SecondRowTypeMiddle</key>
+								<string>URL</string>
+								<key>SecondRowTypeRight</key>
+								<string>URL</string>
+								<key>Title</key>
+								<string>Root3 Support</string>
+							</dict>
+						</dict>
+					</array>
+				</dict>
+			</dict>
+			<key>PayloadDescription</key>
+			<string></string>
+			<key>PayloadDisplayName</key>
+			<string>Custom</string>
+			<key>PayloadEnabled</key>
+			<true/>
+			<key>PayloadIdentifier</key>
+			<string>com.apple.ManagedClient.preferences.E07B484A-FC4A-450B-A0E9-3BC0B737974B</string>
+			<key>PayloadOrganization</key>
+			<string>Root3</string>
+			<key>PayloadType</key>
+			<string>com.apple.ManagedClient.preferences</string>
+			<key>PayloadUUID</key>
+			<string>E07B484A-FC4A-450B-A0E9-3BC0B737974B</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>PayloadDescription</key>
+	<string></string>
+	<key>PayloadDisplayName</key>
+	<string>Support App Configuration</string>
+	<key>PayloadEnabled</key>
+	<true/>
+	<key>PayloadIdentifier</key>
+	<string>BDA1AE71-4F70-4D93-9924-F8E77E8F0F10</string>
+	<key>PayloadOrganization</key>
+	<string>Root3</string>
+	<key>PayloadRemovalDisallowed</key>
+	<true/>
+	<key>PayloadScope</key>
+	<string>System</string>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>164671D3-3656-41FF-A387-E3229001BB9B</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+</dict>
+</plist>

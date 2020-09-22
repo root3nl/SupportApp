@@ -1,0 +1,160 @@
+{
+"title": "nl.root3.support",
+"description": "Support",
+"options": {
+"remove_empty_properties": true
+},
+
+"properties": {
+"Title": {
+"title": "Title",
+"description": "Text shown in the top left corner when the app opens",
+"type": "string"
+},
+"Logo": {
+"title": "Custom Logo",
+"description": "Path to the logo shown in the top right corner when the app opens. Scales to 48 points maximum height",
+"type": "string"
+},
+"StatusBarIcon": {
+"title": "Custom Status Bar Icon",
+"description": "Path to the status bar icon shown in the menu bar. Recommended: PNG, 16x16 points",
+"type": "string"
+},
+"HideFirstRow": {
+"title": "Hide the first row",
+"description": "Hide the first row with configurable items",
+"type": "boolean"
+},
+"HideSecondRow": {
+"title": "Hide the second row",
+"description": "Hide the second row with configurable items",
+"type": "boolean"
+},
+"FirstRowTitleLeft": {
+"title": "First Row Left: Title",
+"description": "The text shown in the button label",
+"type": "string"
+},
+"FirstRowSubtitleLeft": {
+"title": "First Row Left: Subtitle",
+"description": "Subtitle text will appear under title when the user hovers over the button. Ignored if left empty.",
+"type": "string"
+},
+"FirstRowTypeLeft": {
+"title": "First Row Left: Type",
+"description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization.",
+"type": "string"
+},
+"FirstRowLinkLeft": {
+"title": "First Row Left: Link",
+"description": "The Bundle Identifier of the app or link that should be opened",
+"type": "string"
+},
+"FirstRowSymbolLeft": {
+"title": "First Row Left: SF Symbol name",
+"description": "The SF Symbol shown in the button",
+"type": "string"
+},
+"FirstRowTitleRight": {
+"title": "First Row Right: Title",
+"description": "The text shown in the button label.",
+"type": "string"
+},
+"FirstRowSubtitleRight": {
+"title": "First Row Right: Subtitle",
+"description": "Subtitle text will appear under title when the user hovers over the button. Ignored if left empty.",
+"type": "string"
+},
+"FirstRowTypeRight": {
+"title": "First Row Right: Type",
+"description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization.",
+"type": "string"
+},
+"FirstRowLinkRight": {
+"title": "First Row Right: Link",
+"description": "The Bundle Identifier of the app or link that should be opened",
+"type": "string"
+},
+"FirstRowSymbolRight": {
+"title": "First Row Right: SF Symbol name",
+"description": "The SF Symbol shown in the button.",
+"type": "string"
+},
+"SecondRowTitleLeft": {
+"title": "Second Row Left: Title",
+"description": "The text shown in the button label.",
+"type": "string"
+},
+"SecondRowSubtitleLeft": {
+"title": "Second Row Left: Subtitle",
+"description": "Subtitle text will replace the title when the user hovers over the button. Ignored if left empty.",
+"type": "string"
+},
+"SecondRowTypeLeft": {
+"title": "Second Row Left: Type",
+"description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization.",
+"type": "string"
+},
+"SecondRowLinkLeft": {
+"title": "Second Row Left: Link",
+"description": "The Bundle Identifier of the app or link that should be opened.",
+"type": "string"
+},
+"SecondRowSymbolLeft": {
+"title": "Second Row Left: SF Symbol name",
+"description": "The SF Symbol shown in the button.",
+"type": "string"
+},
+"SecondRowTitleMiddle": {
+"title": "Second Row Middle: Title",
+"description": "The text shown in the button label.",
+"type": "string"
+},
+"SecondRowSubtitleMiddle": {
+"title": "Second Row Middle: Subtitle",
+"description": "Subtitle text will replace the title when the user hovers over the button. Ignored if left empty.",
+"type": "string"
+},
+"SecondRowTypeMiddle": {
+"title": "Second Row Middle: Type",
+"description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization.",
+"type": "string"
+},
+"SecondRowLinkMiddle": {
+"title": "Second Row Middle: Link",
+"description": "The Bundle Identifier of the app or link that should be opened.",
+"type": "string"
+},
+"SecondRowSymbolMiddle": {
+"title": "Second Row Middle: SF Symbol name",
+"description": "The SF Symbol shown in the button.",
+"type": "string"
+},
+"SecondRowTitleRight": {
+"title": "Second Row Right: Title",
+"description": "The text shown in the button label.",
+"type": "string"
+},
+"SecondRowSubtitleRight": {
+"title": "Second Row Right: Subtitle",
+"description": "Subtitle text will replace the title when the user hovers over the button. Ignored if left empty.",
+"type": "string"
+},
+"SecondRowTypeRight": {
+"title": "Second Row Right: Type",
+"description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization.",
+"type": "string"
+},
+"SecondRowLinkRight": {
+"title": "Second Row Right: Link",
+"description": "The Bundle Identifier of the app or link that should be opened.",
+"type": "string"
+},
+"SecondRowSymbolRight": {
+"title": "Second Row Right: SF Symbol name",
+"description": "The SF Symbol shown in the button.",
+"type": "string"
+}
+}
+}
