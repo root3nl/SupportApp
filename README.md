@@ -1,5 +1,28 @@
 # Support App
 
+<img src="/Screenshots/root3_light_mode.png" height="350"> 
+
+<img src="/Screenshots/example_light_mode.png" height="200"> <img src="/Screenshots/example_dark_mode.png" height="200">
+
+- [Introduction](#introduction)
+- [Requirements](#requirements)
+- [Download](#download)
+- [Technologies](#technologies)
+- [Features](#features)
+  * [Title and logo](#title-and-logo)
+  * [Diagnostic information](#diagnostic-information)
+  * [App and Link shortcuts](#app-and-link-shortcuts)
+- [Configuration](#configuration)
+- [How to use SF Symbols](#how-to-use-sf-symbols)
+- [MDM deployment](#mdm-deployment)
+  * [Jamf Pro custom JSON Schema](#jamf-pro-custom-json-schema)
+  * [Installer or app bundle](#app-and-link-shortcuts)
+  * [Sample LaunchAgent](#app-and-link-shortcuts)
+  * [Sample Configuration Profile](#app-and-link-shortcuts)
+- [Known issues](#known-issues)
+- [Changelog](#changelog)
+- [Note and disclaimer](#note-and-disclaimer)
+
 ## Introduction
 The Support app is a macOS menu bar app built for organizations to:
 * Help users and helpdesks to see basic diagnostic information at a glance
@@ -19,7 +42,7 @@ The easiest and recommended way to configure the app is using a Configuration Pr
 ## Download
 Package Installer (includes LaunchAgent):
 
-Application (Zipped):
+Application (zipped):
 
 See the MDM deployment section below for more info.
 
@@ -49,7 +72,7 @@ The row above the buttons allow a custom title and company logo. The logo suppor
 * **Storage Used**: The storage percentage used on the boot drive. When hovering with the mouse, the available storage is shown. Clicking on this item opens the macOS built-in Storage Management app.
 
 
-### App/Link shortcuts
+### App and link shortcuts
 The buttons in the 3rd and 4th row behave as shortcuts to applications or links. You can configure five variables for every of these buttons:
 
 * **Title**: Button label
@@ -63,6 +86,8 @@ The buttons in the 3rd and 4th row behave as shortcuts to applications or links.
 * **Symbol**: The symbol shown in the button, see the SF Symbols section how to use these symbols
 
 The rows with configurable items are shown in the screenshot below:
+
+<img src="/Screenshots/configurable_buttons.png" height="350">
 
 ### Configuration
 The configuration of the Support app is optimized for use with your MDM solution. The easiest way to configure the app is using a Configuration Profile so you can use whatever MDM solution you like, as long as it supports custom Configuration Profiles.
@@ -86,3 +111,62 @@ Below are all available preference keys:
 | FirstRowLinkLeft | String | com.apple.ScreenSharing | The Bundle Identifier of the app or link that should be opened. | “com.teamviewer.TeamViewerQS“ |
 | FirstRowSymbolLeft | String | cursorarrow | The SF Symbol shown in the button. | “binoculars.fill”, “cursorarrow.click.2” or any other SF Symbol. Please check the SF Symbols section. |
 | **First row of configurable items: Item right** |
+| FirstRowTitleRight | String | Company Store | The text shown in the button label. | “Self Service“, “App Store“ |
+| FirstRowSubtitleRight | String | - | Subtitle text will appear under title when the user hovers over the button. Ignored if left empty. | “Click to open”, “Download apps“ |
+| FirstRowTypeRight | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App** or **URL** |
+| FirstRowLinkRight | String | com.apple.AppStore | The Bundle Identifier of the app or link that should be opened. | “com.jamfsoftware.selfservice.mac” |
+| FirstRowSymbolRight | String | cart.fill | The SF Symbol shown in the button. | “briefcase.fill”, “bag.circle”, “giftcard.fill”, “gift.circle” or any other SF Symbol. Please check the SF Symbols section. |
+| **Second row of configurable items: Item left**|
+| SecondRowTitleLeft | String | Support Ticket | The text shown in the button label. | “Create ticket”, “Open incident“ |
+| SecondRowSubtitleLeft | String | - | Subtitle text will replace the title when the user hovers over the button. Ignored if left empty. | “support.company.tld”, “Now”, “Create“ |
+| SecondRowTypeLeft | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App** or **URL** |
+| SecondRowLinkLeft | String | https://yourticketsystem.tld | The Bundle Identifier of the app or link that should be opened. | “https://yourticketsystem.tld”, “mailto:support@company.tld”, “tel:+31000000000” or “smb://yourfileserver.tld” |
+| SecondRowSymbolLeft | String | ticket | The SF Symbol shown in the button. | “lifepreserver”, “person.fill.questionmark” or any other SF Symbol. Please check the SF Symbols section. |
+| **Second row of configurable items: Item middle** |
+| SecondRowTitleMiddle | String | Email | The text shown in the button label. | “Send email” |
+| SecondRowSubtitleMiddle | String | - | Subtitle text will replace the title when the user hovers over the button. Ignored if left empty. | “support@company.tld”, “Now” |
+| SecondRowTypeMiddle | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App** or **URL** |
+| SecondRowLinkMiddle | String | mailto:support@company.tld | The Bundle Identifier of the app or link that should be opened. | “https://yourticketsystem.tld”, “mailto:support@company.tld”, “tel:+31000000000” or “smb://yourfileserver.tld” |
+| SecondRowSymbolMiddle | String | envelope | The SF Symbol shown in the button. | “paperplane”, “arrowshape.turn.up.right.fill” or any other SF Symbol. Please check the SF Symbols section. |
+| **Second row of configurable items: Item right** |
+| SecondRowTitleRight | String | Phone | The text shown in the button label. | “Call Helpdesk“, “Phone“ |
+| SecondRowSubtitleRight | String | - | Subtitle text will replace the title when the user hovers over the button. Ignored if left empty. | “+31 00 000 00 00”, “Now”, “Call“ |
+| SecondRowTypeRight | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App** or **URL** |
+| SecondRowLinkRight | String | tel:+31000000000 | The Bundle Identifier of the app or link that should be opened. | “https://yourticketsystem.tld”, “mailto:support@company.tld”, “tel:+31000000000” or “smb://yourfileserver.tld” |
+| SecondRowSymbolRight | String | phone | The SF Symbol shown in the button. | “iphone.homebutton”, “megaphone” or any other SF Symbol. Please check the SF Symbols section. |
+
+### How to use SF Symbols
+We choose to go all the way with SF Symbols as these good looking icons are designed by Apple and give the app a native look and feel. All icons have a symbol name which you can use in the Configuration Profile. As these icons are built into macOS, it automatically shows the correct icon.
+
+* Download SF Symbols [**here**](https://developer.apple.com/sf-symbols/)
+* Select the icon you’d like to use
+* Copy the symbol name and paste into your Configuration Profile
+
+<img src="/Screenshots/how_to_use_sf_symbols.png" height="400">
+
+### MDM deployment
+It is recommended to deploy the Configuration Profile first before installing the Support app.
+
+## Jamf Pro custom JSON Schema
+A JSON Schema for Jamf Pro is provided for easy configuration of all the preference keys without creating/modifying a custom Configuration Profile in XML format. Download the JSON file [**here**](https://github.com/root3nl/SupportApp/blob/master/Jamf%20Pro%20Custom%20Schema/Jamf%20Pro%20Custom%20Schema.json)
+
+More information about the JSON Schema feature in Jamf Pro: https://docs.jamf.com/technical-papers/jamf-pro/json-schema/10.19.0/Overview.html
+
+## Installer or app bundle
+Depending on your preference or MDM solution you can use either the installer or zipped app bundle. The installer includes a LaunchAgent and is the recommended method.
+
+## Sample LaunchAgent
+A sample LaunchAgent to always keep the app alive is provider [**here**](https://github.com/root3nl/SupportApp/blob/master/LaunchAgent%20Sample/nl.root3.support.plist)
+
+## Sample Configuration Profile
+A sample Configuration Profile you can edit to your preferences is provided [**here**](https://github.com/root3nl/SupportApp/blob/master/Configuration%20Profile%20Sample/Support%20App%20Configuration%20Sample.mobileconfig)
+
+### Known issues
+* Buttons may keep a hovered state when mouse cursor moves fast: FB8212902
+
+### Changelog
+
+### Note and disclaimer
+* Root3 developed this application as a side project to add additional value for our customers
+* The application can be used free of charge and is provided ‘as is’, without any warranty
+* Comments and feature request are appreciated. Please email jordy.witteman@root3.nl
