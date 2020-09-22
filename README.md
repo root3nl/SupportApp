@@ -142,7 +142,7 @@ We choose to go all the way with SF Symbols as these good looking icons are desi
 * Select the icon you’d like to use
 * Copy the symbol name and paste into your Configuration Profile
 
-<img src="/Screenshots/how_to_use_sf_symbols.png" height="400">
+<img src="/Screenshots/how_to_use_sf_symbols.png" width="800">
 
 ## MDM deployment
 It is recommended to deploy the Configuration Profile first before installing the Support app.
