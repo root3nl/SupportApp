@@ -14,6 +14,8 @@
 						<dict>
 							<key>mcx_preference_settings</key>
 							<dict>
+								<key>CustomColor</key>
+								<string>#8cc63f</string>
 								<key>FirstRowLinkLeft</key>
 								<string>com.teamviewer.TeamViewerQS</string>
 								<key>FirstRowLinkRight</key>
