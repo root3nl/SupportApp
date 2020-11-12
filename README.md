@@ -10,6 +10,7 @@
 - [Technologies](#technologies)
 - [Features](#features)
   * [Title and logo](#title-and-logo)
+  * [Color](#color)
   * [Diagnostic information](#diagnostic-information)
   * [App and Link shortcuts](#app-and-link-shortcuts)
 - [Configuration](#configuration)
@@ -62,6 +63,9 @@ See the MDM deployment section below for more info.
 
 ### Title and logo
 The row above the buttons allow a custom title and company logo. The logo supports several images types like PNG, JPEG and ICNS and will be resized to a maximum height of 48 points. The original aspect ratio will be retained. A PNG with alpha channel is advised to get variable transparency around your logo.
+
+### Color
+All the circles around the symbols have the macOS accent color and will dynamically change with the user setting. If desired, this color can be customized matching your corporate colors. We recommend keeping the macOS accent color when the color of your choice is too light, as text is be difficult to read.
 
 ### Diagnostic information
 * **Computer Name**: The current computer name will be displayed here. Especially helpful when your organisation has a difficult naming convention and users want to do things like AirDrop.
