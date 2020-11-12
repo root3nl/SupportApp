@@ -22,7 +22,7 @@
 "type": "string"
 },
 "CustomColor": {
-"title": "Custom color for all symbols",
+"title": "Custom Color",
 "description": "HEX color in RGB format. Example: #8cc63f. Leave empty to use macOS Accent Color",
 "type": "string"
 },
