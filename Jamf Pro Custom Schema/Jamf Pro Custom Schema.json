@@ -21,6 +21,11 @@
 "description": "Path to the status bar icon shown in the menu bar. Recommended: PNG, 16x16 points",
 "type": "string"
 },
+"CustomColor": {
+"title": "Custom color for all symbols",
+"description": "HEX color in RGB format. Example: #8cc63f. Leave empty to use macOS Accent Color",
+"type": "string"
+},
 "HideFirstRow": {
 "title": "Hide the first row",
 "description": "Hide the first row with configurable items",
