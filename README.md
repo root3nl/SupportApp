@@ -37,7 +37,7 @@ Root3 already had a basic in-house support app written in Objective-C and decide
 The easiest and recommended way to configure the app is using a Configuration Profile and your MDM solution.
 
 ## Requirements
-* macOS 11.0 or higher
+* macOS 11.0.1 or higher
 * Any MDM solution supporting custom Configuration Profiles
 
 ## Download
@@ -103,6 +103,7 @@ Below are all available preference keys:
 | Title | String | Support | Text shown in the top left corner when the app opens. | “Your Company Name“, “IT Helpdesk“ etc. |
 | Logo | String | App Icon | Path to the logo shown in the top right corner when the app opens. Scales to 48 points maximum height. | “ /Library/Application Support/Your Company/logo.png” |
 | StatusBarIcon | String | Root3 Logo | Path to the status bar icon shown in the menu bar. Recommended: PNG, 16x16 points | “ /Library/Application Support/Your Company/statusbaricon.png” |
+| CustomColor | String | macOS Accent Color | Custom color for all symbols. Leave empty to use macOS Accent Color. We recommend not to use a very light color as text may become hard to read | HEX color in RGB format like "#8cc63f" |
 | HideFirstRow | Boolean | false | Hides the first row of configurable items. | true |
 | HideSecondRow | Boolean | false | Hides the second row of configurable items. | true |
 | **First row of configurable items: Item left** |
