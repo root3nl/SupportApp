@@ -42,9 +42,9 @@ The easiest and recommended way to configure the app is using a Configuration Pr
 * Any MDM solution supporting custom Configuration Profiles
 
 ## Download
-Package Installer (includes LaunchAgent): [**Download**](https://github.com/root3nl/SupportApp/releases/download/v2.0-beta1/Support.2.0.Installer.pkg)
+Package Installer (includes LaunchAgent): [**Download**](https://github.com/root3nl/SupportApp/releases/download/v2.0-rc1/Support.2.0.RC1.pkg)
 
-Application (zipped): [**Download**](https://github.com/root3nl/SupportApp/releases/download/v2.0-beta1/Support.zip)
+Application (zipped): [**Download**](https://github.com/root3nl/SupportApp/releases/download/v2.0-rc1/Support.zip)
 
 See the MDM deployment section below for more info.
 
