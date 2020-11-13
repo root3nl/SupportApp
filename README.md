@@ -42,9 +42,9 @@ The easiest and recommended way to configure the app is using a Configuration Pr
 * Any MDM solution supporting custom Configuration Profiles
 
 ## Download
-Package Installer (includes LaunchAgent): [**Download**](https://github.com/root3nl/SupportApp/releases/download/v2.0-rc1/Support.2.0.RC1.pkg)
+Package Installer (includes LaunchAgent): [**Download**](https://github.com/root3nl/SupportApp/releases/download/v2.0-20201113/Support.2.0.pkg)
 
-Application (zipped): [**Download**](https://github.com/root3nl/SupportApp/releases/download/v2.0-rc1/Support.zip)
+Application (zipped): [**Download**](https://github.com/root3nl/SupportApp/releases/download/v2.0-20201113/Support.zip)
 
 See the MDM deployment section below for more info.
 
@@ -177,4 +177,4 @@ A sample Configuration Profile you can edit to your preferences is provided [**h
 ## Note and disclaimer
 * Root3 developed this application as a side project to add additional value for our customers
 * The application can be used free of charge and is provided ‘as is’, without any warranty
-* Comments and feature request are appreciated. Please email jordy.witteman@root3.nl
+* Comments and feature request are appreciated. Please file an issue on Github
