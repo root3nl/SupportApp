@@ -6,7 +6,7 @@
 	<string>nl.root3.support</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/Applications/Utilities/Support.app/Contents/MacOS/Support</string>
+		<string>/Applications/Support.app/Contents/MacOS/Support</string>
 	</array>
 	<key>KeepAlive</key>
 	<true/>
