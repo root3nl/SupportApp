@@ -21,6 +21,11 @@
 "description": "Path to the status bar icon shown in the menu bar. Recommended: PNG, 16x16 points",
 "type": "string"
 },
+"StatusBarIconSFSymbol": {
+"title": "Custom Status Bar Icon using SF Symbols",
+"description": "Custom status bar icon using an SF Symbol. Ignored when StatusBarIcon is also set",
+"type": "string"
+},
 "CustomColor": {
 "title": "Custom Color",
 "description": "HEX color in RGB format. Example: #8cc63f. Leave empty to use macOS Accent Color",

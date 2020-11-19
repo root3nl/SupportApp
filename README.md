@@ -1,6 +1,6 @@
 # macOS Support App
 
-<img src="/Screenshots/root3_light_mode.png" width="450"> 
+<img src="/Screenshots/root3_light_mode.png" width="450">
 
 <img src="/Screenshots/example_light_mode.png" width="300"> <img src="/Screenshots/example_dark_mode.png" width="300">
 
@@ -106,7 +106,8 @@ Below are all available preference keys:
 | **General** |
 | Title | String | Support | Text shown in the top left corner when the app opens. | “Your Company Name“, “IT Helpdesk“ etc. |
 | Logo | String | App Icon | Path to the logo shown in the top right corner when the app opens. Scales to 48 points maximum height. | “ /Library/Application Support/Your Company/logo.png” |
-| StatusBarIcon | String | Root3 Logo | Path to the status bar icon shown in the menu bar. Recommended: PNG, 16x16 points | “ /Library/Application Support/Your Company/statusbaricon.png” |
+| StatusBarIcon | String | Root3 Logo | Path to the status bar icon shown in the menu bar. Recommended: PNG, 16x16 points | “/Library/Application Support/Your Company/statusbaricon.png” |
+| StatusBarIconSFSymbol | String | Root3 Logo | Custom status bar icon using an SF Symbol. Ignored when StatusBarIcon is also set | “lifepreserver” |
 | CustomColor | String | macOS Accent Color | Custom color for all symbols. Leave empty to use macOS Accent Color. We recommend not to use a very light color as text may become hard to read | HEX color in RGB format like "#8cc63f" |
 | HideFirstRow | Boolean | false | Hides the first row of configurable items. | true |
 | HideSecondRow | Boolean | false | Hides the second row of configurable items. | true |
@@ -158,7 +159,7 @@ A JSON Schema for Jamf Pro is provided for easy configuration of all the prefere
 
 More information about the JSON Schema feature in Jamf Pro: https://docs.jamf.com/technical-papers/jamf-pro/json-schema/10.19.0/Overview.html
 
-<img src="/Screenshots/jamf_pro_custom_schema.png" width="800"> 
+<img src="/Screenshots/jamf_pro_custom_schema.png" width="800">
 
 ### Installer or app bundle
 Depending on your preference or MDM solution you can use either the installer or zipped app bundle. The installer includes a LaunchAgent and is the recommended method.
