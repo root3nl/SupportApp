@@ -9,6 +9,7 @@
 - [Download](#download)
 - [Technologies](#technologies)
 - [Features](#features)
+  * [Menu Bar Icon](#menu-bar-icon)
   * [Title and logo](#title-and-logo)
   * [Color](#color)
   * [Diagnostic information](#diagnostic-information)
@@ -52,6 +53,7 @@ See the MDM deployment section below for more info.
 * Written in Swift using SwiftUI
 * All icons are SF Symbols
 * Built for and compatible with macOS 11.0 and higher
+* Native support for Apple Silicon
 * Dark Mode support
 * Colors are matched with your macOS accent color (blue by default)
 * MDM support to configure your own branding such as a custom title, logo, SF Symbols and contact methods
@@ -60,6 +62,9 @@ See the MDM deployment section below for more info.
 * Localization in English and Dutch
 
 ## Features
+
+### Menu Bar Icon
+The Menu Bar Icon can be customized to your own PNG with Alpha Channel or using an SF Symbol. Any image will be shown as template to match the rest of the Menu Bar Extras.
 
 ### Title and logo
 The row above the buttons allow a custom title and company logo. The logo supports several images types like PNG, JPEG and ICNS and will be resized to a maximum height of 48 points. The original aspect ratio will be retained. A PNG with alpha channel is advised to get variable transparency around your logo.
