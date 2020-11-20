@@ -2,7 +2,7 @@
 
 <img src="/Screenshots/generic_light_mode.png" width="800">
 
-<img src="/Screenshots/root3_light_mode_cropped.png" width="350"> <img src="/Screenshots/generic_light_mode_cropped.png" width="350">
+<img src="/Screenshots/root3_light_mode_cropped.png" width="450"> <img src="/Screenshots/generic_light_mode_cropped.png" width="450">
 
 - [Introduction](#introduction)
 - [Requirements](#requirements)
@@ -43,9 +43,9 @@ The easiest and recommended way to configure the app is using a Configuration Pr
 * Any MDM solution supporting custom Configuration Profiles
 
 ## Download
-Package Installer (includes LaunchAgent): [**Download**](https://github.com/root3nl/SupportApp/releases/download/v2.0-20201113/Support.2.0.pkg)
+Package Installer (includes LaunchAgent): [**Download**](https://github.com/root3nl/SupportApp/releases/latest)
 
-Application (zipped): [**Download**](https://github.com/root3nl/SupportApp/releases/download/v2.0-20201113/Support.zip)
+Application (zipped): [**Download**](https://github.com/root3nl/SupportApp/releases/latest)
 
 See the MDM deployment section below for more info.
 
