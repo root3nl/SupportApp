@@ -117,10 +117,10 @@ Below are all available preference keys:
 | HideFirstRow | Boolean | false | Hides the first row of configurable items. | true |
 | HideSecondRow | Boolean | false | Hides the second row of configurable items. | true |
 | **First row of configurable items: Item left** |
-| FirstRowTitleLeft | String | Remote Support | The text shown in the button label. | “Share My Screen”, “TeamViewer“, “My core application” etc. |
+| FirstRowTitleLeft | String | Remote Support | The text shown in the button label. | “Share My Screen”, “TeamViewer“, “Software Updates“ “My core application” etc. |
 | FirstRowSubtitleLeft | String | - | Subtitle text will appear under title when the user hovers over the button. Ignored if left empty. | “Click to open“, “Share your screen“ |
 | FirstRowTypeLeft | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App** or **URL** |
-| FirstRowLinkLeft | String | com.apple.ScreenSharing | The Bundle Identifier of the app or link that should be opened. | “com.teamviewer.TeamViewerQS“ |
+| FirstRowLinkLeft | String | com.apple.ScreenSharing | The Bundle Identifier of the app or link that should be opened. | “com.teamviewer.TeamViewerQS“ (App), “x-apple.systempreferences:com.apple.preferences.softwareupdate“ (URL) |
 | FirstRowSymbolLeft | String | cursorarrow | The SF Symbol shown in the button. | “binoculars.fill”, “cursorarrow.click.2” or any other SF Symbol. Please check the SF Symbols section. |
 | **First row of configurable items: Item right** |
 | FirstRowTitleRight | String | Company Store | The text shown in the button label. | “Self Service“, “App Store“ |
