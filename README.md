@@ -66,7 +66,7 @@ See the MDM deployment section below for more info.
 ## Features
 
 ### Menu Bar Icon
-The Menu Bar Icon can be customized to your own PNG with Alpha Channel or using an SF Symbol. Any image will be shown as template to match the rest of the Menu Bar Extras.
+The Menu Bar Icon can be customized to your own PNG with Alpha Channel or using an SF Symbol. Any image will be shown as template to match the rest of the Menu Bar Extras. Optionally a notification badge can overlay the icon to attract the user's attention when an Apple Software Update is available. Please check the preference key "StatusBarIconNotifierEnabled". This notification badge may also be used for other features in the future.
 
 ### Title and logo
 The row above the buttons allow a custom title and company logo. The logo supports several images types like PNG, JPEG and ICNS and will be resized to a maximum height of 48 points. The original aspect ratio will be retained. A PNG with alpha channel is advised to get variable transparency around your logo.
@@ -91,9 +91,15 @@ The buttons in the 3rd and 4th row behave as shortcuts to applications or links.
 
 * **Subtitle** (now shown if not configured): An extra string to display when the user hovers over the button
 
-* **Type**: The link type the button should open, App, URL or Command
+* **Type**: The link type the button should open. The following action types are available:
+  * App
+  * URL
+  * Command
 
-* **Link**: Application (based on the bundle identifier), Link to open or command/script to execute
+* **Link**: Application, URL or command/script to execute:
+  * App: Bundle Identifier of the app
+  * URL: Link to a webpage or other links that would normaly work like PROTOCOL://URL
+  * Command: Zsh command or path to a script. Be aware that this will be executed as the user and therefore has its limitations
 
 * **Symbol**: The symbol shown in the button, see the SF Symbols section how to use these symbols
 
@@ -118,7 +124,7 @@ Below are all available preference keys:
 | StatusBarIconSFSymbol | String | Root3 Logo | Custom status bar icon using an SF Symbol. Ignored when StatusBarIcon is also set | “lifepreserver” |
 | StatusBarIconNotifierEnabled | Boolean | false | Shows a small notification badge in the Status Bar Icon when there is an Apple Software Update available | true |
 | CustomColor | String | macOS Accent Color | Custom color for all symbols. Leave empty to use macOS Accent Color. We recommend not to use a very light color as text may become hard to read | HEX color in RGB format like "#8cc63f" |
-| CustomColorDarkMode | String | macOS Accent Color | HEX color in RGB format for Dark Mode. Example: #8cc63f. CustomColor is used when CustomColorDarkMode is not specified | HEX color in RGB format like "#8cc63f" |
+| CustomColorDarkMode | String | macOS Accent Color | Custom color for all symbols in Dark Mode. Leave empty to use macOS Accent Color or CustomColor if specified. We recommend not to use a very dark color as text may become hard to read | HEX color in RGB format like "#8cc63f" |
 | HideFirstRow | Boolean | false | Hides the first row of configurable items. | true |
 | HideSecondRow | Boolean | false | Hides the second row of configurable items. | true |
 | **First row of configurable items: Item left** |
