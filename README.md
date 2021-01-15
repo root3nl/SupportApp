@@ -1,8 +1,10 @@
 # macOS Support App
 
+<img src="/Screenshots/generic_version_2.1.png" width="800">
+
 <img src="/Screenshots/generic_light_mode.png" width="800">
 
-<img src="/Screenshots/root3_light_mode_cropped.png" width="450"> <img src="/Screenshots/generic_light_mode_cropped.png" width="450">
+<img src="/Screenshots/generic_version_2.1_small.png" width="450"> <img src="/Screenshots/generic_light_mode_cropped.png" width="450">
 
 - [Introduction](#introduction)
 - [Requirements](#requirements)

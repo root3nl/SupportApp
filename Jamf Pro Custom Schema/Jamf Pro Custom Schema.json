@@ -16,6 +16,11 @@
 "description": "Path to the logo shown in the top right corner when the app opens. Scales to 48 points maximum height",
 "type": "string"
 },
+"LogoDarkMode": {
+"title": "Custom Logo Dark Mode",
+"description": "Path to the logo shown in the top right corner when the app opens for Dark Mode. Scales to 48 points maximum height",
+"type": "string"
+},
 "StatusBarIcon": {
 "title": "Custom Status Bar Icon",
 "description": "Path to the status bar icon shown in the menu bar. Recommended: PNG, 16x16 points",
@@ -26,9 +31,19 @@
 "description": "Custom status bar icon using an SF Symbol. Ignored when StatusBarIcon is also set",
 "type": "string"
 },
+"StatusBarIconNotifierEnabled": {
+"title": "Notification badge in Status Bar Icon",
+"description": "Shows a small notification badge in the Status Bar Icon when there is an Apple Software Update available",
+"type": "boolean"
+},
 "CustomColor": {
 "title": "Custom Color",
 "description": "HEX color in RGB format. Example: #8cc63f. Leave empty to use macOS Accent Color",
+"type": "string"
+},
+"CustomColorDarkMode": {
+"title": "Custom Color Dark Mode",
+"description": "HEX color in RGB format for Dark Mode. Example: #8cc63f. CustomColor is used when CustomColorDarkMode is not specified",
 "type": "string"
 },
 "HideFirstRow": {
@@ -164,6 +179,11 @@
 "SecondRowSymbolRight": {
 "title": "Second Row Right: SF Symbol name",
 "description": "The SF Symbol shown in the button.",
+"type": "string"
+},
+"ErrorMessage": {
+"title": "Custom error message",
+"description": "Shown when clicking an action results in an error",
 "type": "string"
 }
 }
