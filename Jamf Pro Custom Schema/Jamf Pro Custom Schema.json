@@ -68,8 +68,12 @@
 },
 "FirstRowTypeLeft": {
 "title": "First Row Left: Type",
-"description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization.",
-"type": "string"
+"description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. App by default.",
+"type": "string",
+"options": {
+"enum_titles": ["App", "URL", "Command"]
+},
+"enum": ["App", "URL", "Command"]
 },
 "FirstRowLinkLeft": {
 "title": "First Row Left: Link",
@@ -93,8 +97,12 @@
 },
 "FirstRowTypeRight": {
 "title": "First Row Right: Type",
-"description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization.",
-"type": "string"
+"description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. App by default.",
+"type": "string",
+"options": {
+"enum_titles": ["App", "URL", "Command"]
+},
+"enum": ["App", "URL", "Command"]
 },
 "FirstRowLinkRight": {
 "title": "First Row Right: Link",
@@ -118,8 +126,12 @@
 },
 "SecondRowTypeLeft": {
 "title": "Second Row Left: Type",
-"description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization.",
-"type": "string"
+"description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. URL by default",
+"type": "string",
+"options": {
+"enum_titles": ["App", "URL", "Command"]
+},
+"enum": ["App", "URL", "Command"]
 },
 "SecondRowLinkLeft": {
 "title": "Second Row Left: Link",
@@ -143,8 +155,12 @@
 },
 "SecondRowTypeMiddle": {
 "title": "Second Row Middle: Type",
-"description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization.",
-"type": "string"
+"description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. URL by default",
+"type": "string",
+"options": {
+"enum_titles": ["App", "URL", "Command"]
+},
+"enum": ["App", "URL", "Command"]
 },
 "SecondRowLinkMiddle": {
 "title": "Second Row Middle: Link",
@@ -168,8 +184,12 @@
 },
 "SecondRowTypeRight": {
 "title": "Second Row Right: Type",
-"description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization.",
-"type": "string"
+"description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. URL by default",
+"type": "string",
+"options": {
+"enum_titles": ["App", "URL", "Command"]
+},
+"enum": ["App", "URL", "Command"]
 },
 "SecondRowLinkRight": {
 "title": "Second Row Right: Link",
