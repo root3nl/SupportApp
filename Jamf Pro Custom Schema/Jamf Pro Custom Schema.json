@@ -56,6 +56,62 @@
 "description": "Hide the second row with configurable items",
 "type": "boolean"
 },
+"ErrorMessage": {
+"title": "Custom error message",
+"description": "Shown when clicking an action results in an error",
+"type": "string"
+},
+"InfoItemOne": {
+"title": "Info item 1st tile",
+"description": "Info item shown in the upper left corner",
+"type": "string",
+"options": {
+"enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime"]
+},
+"enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime"]
+},
+"InfoItemTwo": {
+"title": "Info item 2nd tile",
+"description": "Info item shown in the upper right corner",
+"type": "string",
+"options": {
+"enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime"]
+},
+"enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime"]
+},
+"InfoItemThree": {
+"title": "Info item 3rd tile",
+"description": "Info item shown in the second row left",
+"type": "string",
+"options": {
+"enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime"]
+},
+"enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime"]
+},
+"InfoItemFour": {
+"title": "Info item 4th tile",
+"description": "Info item shown in the second row right",
+"type": "string",
+"options": {
+"enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime"]
+},
+"enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime"]
+},
+"UptimeDaysLimit": {
+"title": "Maximum uptime in days",
+"description": "Days of uptime after which a notification badge is shown",
+"type": "integer"
+},
+"PasswordExpiryLimit": {
+"title": "Maximum password expiry in days",
+"description": "Days until password expiry after which a notification badge is shown",
+"type": "integer"
+},
+"PasswordLabel": {
+"title": "Password item label",
+"description": "Alternative text label shown in the Password info item",
+"type": "string"
+},
 "FirstRowTitleLeft": {
 "title": "First Row Left: Title",
 "description": "The text shown in the button label",
@@ -82,6 +138,35 @@
 },
 "FirstRowSymbolLeft": {
 "title": "First Row Left: SF Symbol name",
+"description": "The SF Symbol shown in the button",
+"type": "string"
+},
+"FirstRowTitleMiddle": {
+"title": "First Row Middle: Title",
+"description": "The text shown in the button label",
+"type": "string"
+},
+"FirstRowSubtitleMiddle": {
+"title": "First Row Middle: Subtitle",
+"description": "Subtitle text will appear under title when the user hovers over the button. Ignored if left empty.",
+"type": "string"
+},
+"FirstRowTypeMiddle": {
+"title": "First Row Middle: Type",
+"description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. App by default.",
+"type": "string",
+"options": {
+"enum_titles": ["App", "URL", "Command"]
+},
+"enum": ["App", "URL", "Command"]
+},
+"FirstRowLinkMiddle": {
+"title": "First Row Middle: Link",
+"description": "The Bundle Identifier of the app or link that should be opened",
+"type": "string"
+},
+"FirstRowSymbolMiddle": {
+"title": "First Row Middle: SF Symbol name",
 "description": "The SF Symbol shown in the button",
 "type": "string"
 },
@@ -199,11 +284,6 @@
 "SecondRowSymbolRight": {
 "title": "Second Row Right: SF Symbol name",
 "description": "The SF Symbol shown in the button.",
-"type": "string"
-},
-"ErrorMessage": {
-"title": "Custom error message",
-"description": "Shown when clicking an action results in an error",
 "type": "string"
 }
 }
