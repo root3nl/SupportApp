@@ -61,7 +61,7 @@ See the MDM deployment section below for more info.
 * MDM support to configure your own branding such as a custom title, logo, SF Symbols and contact methods
 * Notarized
 * Sandboxed
-* Localization in English and Dutch
+* Localized in English and Dutch
 
 ## Features
 
@@ -144,8 +144,8 @@ Configuration of the top four items with diagnostic information.
 | InfoItemThree | String | Uptime | Info item shown in the second row left | "ComputerName", "MacOSVersion", "Network", "Password", "Storage" or "Uptime" |
 | InfoItemFour | String | Storage | Info item shown in the second row right | "ComputerName", "MacOSVersion", "Network", "Password", "Storage" or "Uptime" |
 | UptimeDaysLimit | Integer | 0 (Disabled) | Days of uptime after which a notification badge is shown, disabled by default | 7 |
-| PasswordExpiryLimit| Integer | 0 (Disabled) | Days until password expiry shows a notification badge is shown, disabled by default | 14 |
-| PasswordLabel| String | Mac Password | Text to show in Password info item | "AD Password", "Company Password" |
+| PasswordExpiryLimit| Integer | 0 (Disabled) | Days until password expiry after which a notification badge is shown, disabled by default | 14 |
+| PasswordLabel| String | Mac Password | Alternative text label shown in the Password info item | "AD Password", "Company Password" |
 
 ### First row of configurable items: Item left
 | Preference key | Type | Default value | Description | Example |
@@ -153,17 +153,17 @@ Configuration of the top four items with diagnostic information.
 | FirstRowTitleLeft | String | Remote Support | The text shown in the button label. | “Share My Screen”, “TeamViewer“, “Software Updates“ “My core application” etc. |
 | FirstRowSubtitleLeft | String | - | Subtitle text will appear under title when the user hovers over the button. Ignored if left empty. | “Click to open“, “Share your screen“ |
 | FirstRowTypeLeft | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL** or **Command** |
-| FirstRowLinkLeft | String | com.apple.ScreenSharing | The Bundle Identifier of the app or link that should be opened. | “com.teamviewer.TeamViewerQS“ (App), “x-apple.systempreferences:com.apple.preferences.softwareupdate“ (URL) |
+| FirstRowLinkLeft | String | com.apple.ScreenSharing | The Bundle Identifier of the app, URL or command to open. | “com.teamviewer.TeamViewerQS“ (App), “x-apple.systempreferences:com.apple.preferences.softwareupdate“ (URL) |
 | FirstRowSymbolLeft | String | cursorarrow | The SF Symbol shown in the button. | “binoculars.fill”, “cursorarrow.click.2” or any other SF Symbol. Please check the SF Symbols section. |
 
 ### First row of configurable items: Item middle
 | Preference key | Type | Default value | Description | Example |
 | --- | --- | --- | --- | --- |
-| - FirstRowTitleMiddle | String | - | The text shown in the button label. | “Self Service“, “App Store“ |
-| - FirstRowSubtitleMiddle | String | - | Subtitle text will appear under title when the user hovers over the button. Ignored if left empty. | “Click to open”, “Download apps“ |
-| - FirstRowTypeMiddle | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL** or **Command** |
-| - FirstRowLinkMiddle | String | - | The Bundle Identifier of the app or link that should be opened. | “com.jamfsoftware.selfservice.mac” |
-| - FirstRowSymbolMiddle | String | - | The SF Symbol shown in the button. | “briefcase.fill”, “bag.circle”, “giftcard.fill”, “gift.circle” or any other SF Symbol. Please check the SF Symbols section. |
+| FirstRowTitleMiddle | String | - | The text shown in the button label. | “Self Service“, “App Store“ |
+| FirstRowSubtitleMiddle | String | - | Subtitle text will appear under title when the user hovers over the button. Ignored if left empty. | “Click to open”, “Download apps“ |
+| FirstRowTypeMiddle | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL** or **Command** |
+| FirstRowLinkMiddle | String | - | The Bundle Identifier of the app, URL or command to open. | “com.jamfsoftware.selfservice.mac” |
+| FirstRowSymbolMiddle | String | - | The SF Symbol shown in the button. | “briefcase.fill”, “bag.circle”, “giftcard.fill”, “gift.circle” or any other SF Symbol. Please check the SF Symbols section. |
 
 ### First row of configurable items: Item right
 | Preference key | Type | Default value | Description | Example |
@@ -171,7 +171,7 @@ Configuration of the top four items with diagnostic information.
 | FirstRowTitleRight | String | Company Store | The text shown in the button label. | “Self Service“, “App Store“ |
 | FirstRowSubtitleRight | String | - | Subtitle text will appear under title when the user hovers over the button. Ignored if left empty. | “Click to open”, “Download apps“ |
 | FirstRowTypeRight | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL** or **Command** |
-| FirstRowLinkRight | String | com.apple.AppStore | The Bundle Identifier of the app or link that should be opened. | “com.jamfsoftware.selfservice.mac” |
+| FirstRowLinkRight | String | com.apple.AppStore | The Bundle Identifier of the app, URL or command to open. | “com.jamfsoftware.selfservice.mac” |
 | FirstRowSymbolRight | String | cart.fill | The SF Symbol shown in the button. | “briefcase.fill”, “bag.circle”, “giftcard.fill”, “gift.circle” or any other SF Symbol. Please check the SF Symbols section. |
 
 ### Second row of configurable items: Item left
@@ -180,7 +180,7 @@ Configuration of the top four items with diagnostic information.
 | SecondRowTitleLeft | String | Support Ticket | The text shown in the button label. | “Create ticket”, “Open incident“ |
 | SecondRowSubtitleLeft | String | - | Subtitle text will replace the title when the user hovers over the button. Ignored if left empty. | “support.company.tld”, “Now”, “Create“ |
 | SecondRowTypeLeft | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL** or **Command** |
-| SecondRowLinkLeft | String | https://yourticketsystem.tld | The Bundle Identifier of the app or link that should be opened. | “https://yourticketsystem.tld”, “mailto:support@company.tld”, “tel:+31000000000” or “smb://yourfileserver.tld” |
+| SecondRowLinkLeft | String | https://yourticketsystem.tld | The Bundle Identifier of the app, URL or command to open. | “https://yourticketsystem.tld”, “mailto:support@company.tld”, “tel:+31000000000” or “smb://yourfileserver.tld” |
 | SecondRowSymbolLeft | String | ticket | The SF Symbol shown in the button. | “lifepreserver”, “person.fill.questionmark” or any other SF Symbol. Please check the SF Symbols section. |
 
 ### Second row of configurable items: Item middle
@@ -189,7 +189,7 @@ Configuration of the top four items with diagnostic information.
 | SecondRowTitleMiddle | String | - | The text shown in the button label. | “Send email” |
 | SecondRowSubtitleMiddle | String | - | Subtitle text will replace the title when the user hovers over the button. Ignored if left empty. | “support@company.tld”, “Now” |
 | SecondRowTypeMiddle | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL** or **Command** |
-| SecondRowLinkMiddle | String | - | The Bundle Identifier of the app or link that should be opened. | “https://yourticketsystem.tld”, “mailto:support@company.tld”, “tel:+31000000000” or “smb://yourfileserver.tld” |
+| SecondRowLinkMiddle | String | - | The Bundle Identifier of the app, URL or command to open. | “https://yourticketsystem.tld”, “mailto:support@company.tld”, “tel:+31000000000” or “smb://yourfileserver.tld” |
 | SecondRowSymbolMiddle | String | - | The SF Symbol shown in the button. | “paperplane”, “arrowshape.turn.up.right.fill” or any other SF Symbol. Please check the SF Symbols section. |
 
 ### Second row of configurable items: Item right**
@@ -198,7 +198,7 @@ Configuration of the top four items with diagnostic information.
 | SecondRowTitleRight | String | Phone | The text shown in the button label. | “Call Helpdesk“, “Phone“ |
 | SecondRowSubtitleRight | String | - | Subtitle text will replace the title when the user hovers over the button. Ignored if left empty. | “+31 00 000 00 00”, “Now”, “Call“ |
 | SecondRowTypeRight | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL** or **Command** |
-| SecondRowLinkRight | String | tel:+31000000000 | The Bundle Identifier of the app or link that should be opened. | “https://yourticketsystem.tld”, “mailto:support@company.tld”, “tel:+31000000000” or “smb://yourfileserver.tld” |
+| SecondRowLinkRight | String | tel:+31000000000 | The Bundle Identifier of the app, URL or command to open. | “https://yourticketsystem.tld”, “mailto:support@company.tld”, “tel:+31000000000” or “smb://yourfileserver.tld” |
 | SecondRowSymbolRight | String | phone | The SF Symbol shown in the button. | “iphone.homebutton”, “megaphone” or any other SF Symbol. Please check the SF Symbols section. |
 
 ## How to use SF Symbols
