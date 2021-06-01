@@ -1,8 +1,8 @@
 # macOS Support App
 
-<img src="/Screenshots/generic_version_2.1.png" width="800">
-
 <img src="/Screenshots/generic_version_2.2.png" width="800">
+
+<img src="/Screenshots/generic_version_2.1.png" width="800">
 
 <img src="/Screenshots/generic_version_2.1_small.png" width="450"> <img src="/Screenshots/generic_light_mode_cropped.png" width="450"> <img src="/Screenshots/generic_version_2.2_small_dark.png" width="450">
 
