@@ -33,7 +33,7 @@
 },
 "StatusBarIconNotifierEnabled": {
 "title": "Notification badge in Status Bar Icon",
-"description": "Shows a small notification badge in the Status Bar Icon when there is an Apple Software Update available",
+"description": "Shows a small notification badge in the Status Bar Icon when there is an Apple Software Update available or when the UptimeDaysLimit or PasswordExpiryLimit is reached",
 "type": "boolean"
 },
 "CustomColor": {
