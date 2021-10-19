@@ -1,10 +1,10 @@
 # macOS Support App
 
-<img src="/Screenshots/generic_version_2.2.png" width="800">
+<img src="/Screenshots/generic_version_2.3.png" width="800">
 
 <img src="/Screenshots/generic_version_2.1.png" width="800">
 
-<img src="/Screenshots/generic_version_2.1_small.png" width="450"> <img src="/Screenshots/generic_light_mode_cropped.png" width="450"> <img src="/Screenshots/generic_version_2.2_small_dark.png" width="450">
+<img src="/Screenshots/generic_version_2.1_small.png" width="450"> <img src="/Screenshots/generic_light_mode_cropped.png" width="450"> <img src="/Screenshots/generic_version_2.3_small_dark.png" width="450">
 
 - [Introduction](#introduction)
 - [Requirements](#requirements)
@@ -16,6 +16,9 @@
   * [Color](#color)
   * [Diagnostic information](#diagnostic-information)
   * [App, link or command shortcuts](#app-link-or-command-shortcuts)
+  * [Footer Text](#footer-text)
+  * [Notification Icon](#notification-icon)
+  * [Welcome Screen](#welcome-screen)
 - [Configuration](#configuration)
 - [How to use SF Symbols](#how-to-use-sf-symbols)
 - [MDM deployment](#mdm-deployment)
@@ -61,7 +64,7 @@ See the MDM deployment section below for more info.
 * MDM support to configure your own branding such as a custom title, logo, SF Symbols and contact methods
 * Notarized
 * Sandboxed
-* Localized in English and Dutch
+* Localized in English, Dutch and French
 
 ## Features
 
@@ -83,9 +86,9 @@ There are a couple of info items with diagnostics available to choose from. A to
 
 * **Last Reboot** (default): The current uptime. When troubleshooting some issue, the first thing you would like to do is a reboot when the uptime is high. The optional preference key ‘UptimeDaysLimit’ can be used to configure the maximum amount of uptime days recommended by the organization. Exceeding this limit results in a badge counter with exclamation mark in the info item.
 
-* **Storage Used** (default): The storage percentage used on the boot drive. When hovering with the mouse, the available storage is shown. Clicking on this item opens the macOS built-in Storage Management app.
+* **Storage Used** (default): The storage percentage used on the boot drive. When hovering with the mouse, the available storage is shown. Clicking on this item opens the macOS built-in Storage Management app. The optional preference key ‘StorageLimit’ can be used to configure the maximum percentage of used storage recommended by the organization. Exceeding this limit results in a badge counter with exclamation mark in the info item.
 
-* **IP Address**: The current local IPv4 address. The icon indicates the connection type, Wi-Fi or Ethernet. It also shows a warning when the IP address is self-assigned. Clicking on this item opens the Network preference pane in System Preferences.
+* **Network**: The current SSID or Ethernet along with the local IPv4 address. The icon indicates the connection type, Wi-Fi or Ethernet. Clicking on this item opens the Network preference pane in System Preferences.
 
 * **Mac Password**: Shows when the user's password expires and supports both local and Active Directory accounts. Shows a warning when the expiry reaches the value set in the optional key 'PasswordExpiryLimit'. The text label in the item can be modified using the preference key ‘PasswordLabel’.
 
@@ -112,6 +115,25 @@ The rows with configurable items are shown in the screenshot below:
 
 <img src="/Screenshots/configurable_buttons.png" width="450">
 
+### Footer Text
+A footer text can optionally be used to put some additional text at the bottom of the Support App. This supports both text and Emoji. On macOS Monterey and higher, it supports Markdown.
+
+### Notification Icon
+The icon shown in alerts and the about window can be modified by using the preference key 'NotificationIcon'.
+
+See an example below:
+
+<img src="/Screenshots/custom_alert.png" width="350">
+
+**Note**: modifying the app icon when it is not running would compromise the App Sandbox and we decided not to implement this. We suggest hiding the app by running the following command: `sudo chflags hidden "/Applications/Support.app"`
+
+### Welcome Screen
+An informational window can optionally be shown when the Support App is opened for the first time. It explains the key features to the user before all data is shown. This can be set using the preference key ‘ShowWelcomeScreen’.
+
+See an example below:
+
+<img src="/Screenshots/welcome_screen.png" width="500">
+
 ## Configuration
 The configuration of the Support app is optimized for use with your MDM solution. The easiest way to configure the app is using a Configuration Profile so you can use whatever MDM solution you like, as long as it supports custom Configuration Profiles.
 
@@ -126,6 +148,7 @@ All general settings
 | Title | String | Support | Text shown in the top left corner when the app opens. | “Your Company Name“, “IT Helpdesk“ etc. |
 | Logo | String | App Icon | Path to the logo shown in the top right corner when the app opens. Scales to 48 points maximum height. A subfolder in `/Library/Application Support/` is the recommended location due to sandboxing | `/Library/Application Support/Your Company/logo.png` |
 | LogoDarkMode | String | App Icon | Path to the logo shown in the top right corner when the app opens for Dark Mode. Scales to 48 points maximum height. A subfolder in `/Library/Application Support/` is the recommended location due to sandboxing | `/Library/Application Support/Your Company/logo_darkmode.png` |
+| NotificationIcon | String | App Icon | Path to a custom square image to be shown in alerts and the about window. | `/Library/Application Support/Your Company/logo.png` |
 | StatusBarIcon | String | Root3 Logo | Path to the status bar icon shown in the menu bar. Recommended: PNG, 16x16 points. A subfolder in `/Library/Application Support/` is the recommended location due to sandboxing | `/Library/Application Support/Your Company/statusbaricon.png` |
 | StatusBarIconSFSymbol | String | Root3 Logo | Custom status bar icon using an SF Symbol. Ignored when StatusBarIcon is also set | “lifepreserver” |
 | StatusBarIconNotifierEnabled | Boolean | false | Shows a small notification badge in the Status Bar Icon when an info items triggers a warning or notification | true |
@@ -134,6 +157,8 @@ All general settings
 | HideFirstRow | Boolean | false | Hides the first row of configurable items. | true |
 | HideSecondRow | Boolean | false | Hides the second row of configurable items. | true |
 | ErrorMessage | String | Please contact IT support | Shown when clicking an action results in an error | "Please contact the servicedesk", "Please contact COMPANY_NAME" |
+| ShowWelcomeScreen | Boolean | false | Shows the welcome screen when the Support App is opened for the first time. | true |
+| FooterText | String | - | Text shown at the bottom as footnote | "Provided by your **IT department** with ❤️" |
 
 ### Info items
 Configuration of the top four items with diagnostic information.
@@ -146,6 +171,7 @@ Configuration of the top four items with diagnostic information.
 | UptimeDaysLimit | Integer | 0 (Disabled) | Days of uptime after which a notification badge is shown, disabled by default | 7 |
 | PasswordExpiryLimit| Integer | 0 (Disabled) | Days until password expiry after which a notification badge is shown, disabled by default | 14 |
 | PasswordLabel| String | Mac Password | Alternative text label shown in the Password info item | "AD Password", "Company Password" |
+| StorageLimit | Integer | 0 (Disabled) | Percentage of storage used after which a notification badge is shown, disabled by default | 80 |
 
 ### First row of configurable items: Item left
 | Preference key | Type | Default value | Description | Example |
@@ -230,9 +256,21 @@ A sample LaunchAgent to always keep the app alive is provided [**here**](https:/
 A sample Configuration Profile you can edit to your preferences is provided [**here**](https://github.com/root3nl/SupportApp/blob/master/Configuration%20Profile%20Sample/Support%20App%20Configuration%20Sample.mobileconfig)
 
 ## Known issues
-* Buttons may keep a hovered state when mouse cursor moves fast: FB8212902
+* Buttons may keep a hovered state when mouse cursor moves fast: FB8212902 (**resolved on macOS Monterey**)
 
 ## Changelog
+
+**Version 2.3**
+* Welcome Screen: an informational window can now optionally be shown when the Support App is opened for the first time. It explains the key features to the user.
+* Preference key ‘StorageLimit’ added to configure the maximum percentage of used storage recommended by the organization. When the limit is reached, a badge counter with exclamation mark will be shown in the Storage tile. Also a little orange notification badge can overlay the menu bar icon when the preference key ‘StatusBarIconNotifierEnabled’ is set to ‘true’.
+* The Network info item now shows either the current SSID or Ethernet as the title instead of ‘IP Address’.
+* Preference key ‘NotificationIcon’ added to configure a custom square image to be shown in alerts and the about window.
+* The notification badge in the StatusBarItem can now show either orange or red, depending on the current state. An available software update will overrule orange warnings and will show a red notification badge.
+* A footer option is added to put some additional text at the bottom of the Support App. This supports both text and Emoji. On macOS Monterey and higher, it supports Markdown.
+* French localization is added
+* macOS Monterey compatibility
+* Bug fixes and improvements
+
 **Version 2.2**
 * Modulair info items: you can now configure any of the top four info items to any of the six available options:
   * IP Address (NEW)
