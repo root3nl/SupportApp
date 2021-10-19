@@ -1,0 +1,46 @@
+/* 
+  Localizable.strings
+  Support
+
+  Created by Jordy Witteman on 03/09/2020.
+  
+*/
+
+"Computer Name" = "Computernaam";
+"Last Reboot" = "Laatste herstart";
+"RESTART_REGULARLY" = "Herstart je Mac regelmatig";
+"ADMIN_RECOMMENDS_RESTARTING_EVERY" = "Je beheerder raadt aan je Mac te herstarten tenminste iedere";
+"ago" = "geleden";
+"minute" = "minuut";
+"minutes" = "minuten";
+"hour" = "uur";
+"hours" = "uur";
+"day" = "dag";
+"days" = "dagen";
+"Used" = "vol";
+"Available" = "beschikbaar";
+"About Support" = "Over Support";
+"Help and Documentation" = "Help en Documentatie";
+"Quit Support" = "Stop Support";
+"Quit" = "Stop";
+"Are you sure you want to quit?" = "Weet je zeker dat je wilt afsluiten?";
+"An error occurred" = "Er was een probleem";
+"Please contact IT support" = "Neem contact op met de servicedesk";
+"Not connected" = "Niet verbonden";
+"IP Address" = "IP adres";
+"No IP Address" = "Geen IP adres";
+"Password" = "Wachtwoord";
+"Expires today" = "Verloopt vandaag";
+"Never expires" = "Verloopt nooit";
+"Expires in " = "Verloopt over ";
+"Expired" = "Verlopen";
+"Change Now" = "Wijzig nu";
+" days" = " dagen";
+" day" = " dag";
+"Mac diagnosis" = "Mac diagnose";
+"MAC_DIAGNOSIS_TEXT" = "Een overzicht van je Mac en helpt je deze gezond te houden";
+"Easy access" = "Snel toegang";
+"EASY_ACCESS_TEXT" = "Krijg toegang tot apps en sites van de organisatie";
+"Get in touch" = "Neem contact op";
+"GET_IN_TOUCH_TEXT" = "Maak snel een ticket aan of dien een verzoek in";
+"Continue" = "Doorgaan";

@@ -1,0 +1,19 @@
+/* 
+  Localizable.strings
+  Support
+
+  Created by Jordy Witteman on 03/09/2020.
+  
+*/
+
+"Computer Name" = "Computername";
+"Last Reboot" = "Letzter Neustart";
+"ago" = "ago";
+"minute" = "minute";
+"minutes" = "minutes";
+"hour" = "hour";
+"hours" = "hour";
+"day" = "day";
+"days" = "days";
+"Used" = "Used";
+"Available" = "Available";

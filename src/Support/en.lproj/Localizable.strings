@@ -1,0 +1,46 @@
+/* 
+  Localizable.strings
+  Support
+
+  Created by Jordy Witteman on 03/09/2020.
+  
+*/
+
+"Computer Name" = "Computer Name";
+"Last Reboot" = "Last Reboot";
+"RESTART_REGULARLY" = "Please restart your Mac regularly";
+"ADMIN_RECOMMENDS_RESTARTING_EVERY" = "Your administrator recommends restarting your Mac every";
+"ago" = "ago";
+"minute" = "minute";
+"minutes" = "minutes";
+"hour" = "hour";
+"hours" = "hours";
+"day" = "day";
+"days" = "days";
+"Used" = "Used";
+"Available" = "Available";
+"About Support" = "About Support";
+"Help and Documentation" = "Help and Documentation";
+"Quit Support" = "Quit Support";
+"Quit" = "Quit";
+"Are you sure you want to quit?" = "Are you sure you want to quit?";
+"An error occurred" = "An error occurred";
+"Please contact IT support" = "Please contact IT support";
+"Not connected" = "Not connected";
+"IP Address" = "IP Address";
+"No IP Address" = "No IP Address";
+"Password" = "Password";
+"Expires today" = "Expires Today";
+"Never expires" = "Never Expires";
+"Expires in " = "Expires in ";
+"Expired" = "Expired";
+"Change Now" = "Change Now";
+" days" = " days";
+" day" = " day";
+"Mac diagnosis" = "Mac diagnosis";
+"MAC_DIAGNOSIS_TEXT" = "An overview of your Mac and helps you keeping it healthy";
+"Easy access" = "Easy access";
+"EASY_ACCESS_TEXT" = "Get access to organization resources like apps and sites";
+"Get in touch" = "Get in touch";
+"GET_IN_TOUCH_TEXT" = "Easily create a ticket or submit a request";
+"Continue" = "Continue";
