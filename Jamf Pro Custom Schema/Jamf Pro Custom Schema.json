@@ -1,290 +1,762 @@
 {
-"title": "nl.root3.support",
-"description": "Support",
-"options": {
-"remove_empty_properties": true
-},
+  "title": "Support App (nl.root3.support)",
+  "description": "Support App",
+  "options": {
+    "remove_empty_properties": true
+  },
 
-"properties": {
-"Title": {
-"title": "Title",
-"description": "Text shown in the top left corner when the app opens",
-"type": "string"
-},
-"Logo": {
-"title": "Custom Logo",
-"description": "Path to the logo shown in the top right corner when the app opens. Scales to 48 points maximum height",
-"type": "string"
-},
-"LogoDarkMode": {
-"title": "Custom Logo Dark Mode",
-"description": "Path to the logo shown in the top right corner when the app opens for Dark Mode. Scales to 48 points maximum height",
-"type": "string"
-},
-"StatusBarIcon": {
-"title": "Custom Status Bar Icon",
-"description": "Path to the status bar icon shown in the menu bar. Recommended: PNG, 16x16 points",
-"type": "string"
-},
-"StatusBarIconSFSymbol": {
-"title": "Custom Status Bar Icon using SF Symbols",
-"description": "Custom status bar icon using an SF Symbol. Ignored when StatusBarIcon is also set",
-"type": "string"
-},
-"StatusBarIconNotifierEnabled": {
-"title": "Notification badge in Status Bar Icon",
-"description": "Shows a small notification badge in the Status Bar Icon when there is an Apple Software Update available or when the UptimeDaysLimit or PasswordExpiryLimit is reached",
-"type": "boolean"
-},
-"CustomColor": {
-"title": "Custom Color",
-"description": "HEX color in RGB format. Example: #8cc63f. Leave empty to use macOS Accent Color",
-"type": "string"
-},
-"CustomColorDarkMode": {
-"title": "Custom Color Dark Mode",
-"description": "HEX color in RGB format for Dark Mode. Example: #8cc63f. CustomColor is used when CustomColorDarkMode is not specified",
-"type": "string"
-},
-"HideFirstRow": {
-"title": "Hide the first row",
-"description": "Hide the first row with configurable items",
-"type": "boolean"
-},
-"HideSecondRow": {
-"title": "Hide the second row",
-"description": "Hide the second row with configurable items",
-"type": "boolean"
-},
-"ErrorMessage": {
-"title": "Custom error message",
-"description": "Shown when clicking an action results in an error",
-"type": "string"
-},
-"InfoItemOne": {
-"title": "Info item 1st tile",
-"description": "Info item shown in the upper left corner",
-"type": "string",
-"options": {
-"enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime"]
-},
-"enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime"]
-},
-"InfoItemTwo": {
-"title": "Info item 2nd tile",
-"description": "Info item shown in the upper right corner",
-"type": "string",
-"options": {
-"enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime"]
-},
-"enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime"]
-},
-"InfoItemThree": {
-"title": "Info item 3rd tile",
-"description": "Info item shown in the second row left",
-"type": "string",
-"options": {
-"enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime"]
-},
-"enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime"]
-},
-"InfoItemFour": {
-"title": "Info item 4th tile",
-"description": "Info item shown in the second row right",
-"type": "string",
-"options": {
-"enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime"]
-},
-"enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime"]
-},
-"UptimeDaysLimit": {
-"title": "Maximum uptime in days",
-"description": "Days of uptime after which a notification badge is shown",
-"type": "integer"
-},
-"PasswordExpiryLimit": {
-"title": "Maximum password expiry in days",
-"description": "Days until password expiry after which a notification badge is shown",
-"type": "integer"
-},
-"PasswordLabel": {
-"title": "Password item label",
-"description": "Alternative text label shown in the Password info item",
-"type": "string"
-},
-"FirstRowTitleLeft": {
-"title": "First Row Left: Title",
-"description": "The text shown in the button label",
-"type": "string"
-},
-"FirstRowSubtitleLeft": {
-"title": "First Row Left: Subtitle",
-"description": "Subtitle text will appear under title when the user hovers over the button. Ignored if left empty.",
-"type": "string"
-},
-"FirstRowTypeLeft": {
-"title": "First Row Left: Type",
-"description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. App by default.",
-"type": "string",
-"options": {
-"enum_titles": ["App", "URL", "Command"]
-},
-"enum": ["App", "URL", "Command"]
-},
-"FirstRowLinkLeft": {
-"title": "First Row Left: Link",
-"description": "The Bundle Identifier of the app or link that should be opened",
-"type": "string"
-},
-"FirstRowSymbolLeft": {
-"title": "First Row Left: SF Symbol name",
-"description": "The SF Symbol shown in the button",
-"type": "string"
-},
-"FirstRowTitleMiddle": {
-"title": "First Row Middle: Title",
-"description": "The text shown in the button label",
-"type": "string"
-},
-"FirstRowSubtitleMiddle": {
-"title": "First Row Middle: Subtitle",
-"description": "Subtitle text will appear under title when the user hovers over the button. Ignored if left empty.",
-"type": "string"
-},
-"FirstRowTypeMiddle": {
-"title": "First Row Middle: Type",
-"description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. App by default.",
-"type": "string",
-"options": {
-"enum_titles": ["App", "URL", "Command"]
-},
-"enum": ["App", "URL", "Command"]
-},
-"FirstRowLinkMiddle": {
-"title": "First Row Middle: Link",
-"description": "The Bundle Identifier of the app or link that should be opened",
-"type": "string"
-},
-"FirstRowSymbolMiddle": {
-"title": "First Row Middle: SF Symbol name",
-"description": "The SF Symbol shown in the button",
-"type": "string"
-},
-"FirstRowTitleRight": {
-"title": "First Row Right: Title",
-"description": "The text shown in the button label.",
-"type": "string"
-},
-"FirstRowSubtitleRight": {
-"title": "First Row Right: Subtitle",
-"description": "Subtitle text will appear under title when the user hovers over the button. Ignored if left empty.",
-"type": "string"
-},
-"FirstRowTypeRight": {
-"title": "First Row Right: Type",
-"description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. App by default.",
-"type": "string",
-"options": {
-"enum_titles": ["App", "URL", "Command"]
-},
-"enum": ["App", "URL", "Command"]
-},
-"FirstRowLinkRight": {
-"title": "First Row Right: Link",
-"description": "The Bundle Identifier of the app or link that should be opened",
-"type": "string"
-},
-"FirstRowSymbolRight": {
-"title": "First Row Right: SF Symbol name",
-"description": "The SF Symbol shown in the button.",
-"type": "string"
-},
-"SecondRowTitleLeft": {
-"title": "Second Row Left: Title",
-"description": "The text shown in the button label.",
-"type": "string"
-},
-"SecondRowSubtitleLeft": {
-"title": "Second Row Left: Subtitle",
-"description": "Subtitle text will replace the title when the user hovers over the button. Ignored if left empty.",
-"type": "string"
-},
-"SecondRowTypeLeft": {
-"title": "Second Row Left: Type",
-"description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. URL by default",
-"type": "string",
-"options": {
-"enum_titles": ["App", "URL", "Command"]
-},
-"enum": ["App", "URL", "Command"]
-},
-"SecondRowLinkLeft": {
-"title": "Second Row Left: Link",
-"description": "The Bundle Identifier of the app or link that should be opened.",
-"type": "string"
-},
-"SecondRowSymbolLeft": {
-"title": "Second Row Left: SF Symbol name",
-"description": "The SF Symbol shown in the button.",
-"type": "string"
-},
-"SecondRowTitleMiddle": {
-"title": "Second Row Middle: Title",
-"description": "The text shown in the button label.",
-"type": "string"
-},
-"SecondRowSubtitleMiddle": {
-"title": "Second Row Middle: Subtitle",
-"description": "Subtitle text will replace the title when the user hovers over the button. Ignored if left empty.",
-"type": "string"
-},
-"SecondRowTypeMiddle": {
-"title": "Second Row Middle: Type",
-"description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. URL by default",
-"type": "string",
-"options": {
-"enum_titles": ["App", "URL", "Command"]
-},
-"enum": ["App", "URL", "Command"]
-},
-"SecondRowLinkMiddle": {
-"title": "Second Row Middle: Link",
-"description": "The Bundle Identifier of the app or link that should be opened.",
-"type": "string"
-},
-"SecondRowSymbolMiddle": {
-"title": "Second Row Middle: SF Symbol name",
-"description": "The SF Symbol shown in the button.",
-"type": "string"
-},
-"SecondRowTitleRight": {
-"title": "Second Row Right: Title",
-"description": "The text shown in the button label.",
-"type": "string"
-},
-"SecondRowSubtitleRight": {
-"title": "Second Row Right: Subtitle",
-"description": "Subtitle text will replace the title when the user hovers over the button. Ignored if left empty.",
-"type": "string"
-},
-"SecondRowTypeRight": {
-"title": "Second Row Right: Type",
-"description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. URL by default",
-"type": "string",
-"options": {
-"enum_titles": ["App", "URL", "Command"]
-},
-"enum": ["App", "URL", "Command"]
-},
-"SecondRowLinkRight": {
-"title": "Second Row Right: Link",
-"description": "The Bundle Identifier of the app or link that should be opened.",
-"type": "string"
-},
-"SecondRowSymbolRight": {
-"title": "Second Row Right: SF Symbol name",
-"description": "The SF Symbol shown in the button.",
-"type": "string"
-}
-}
+  "properties": {
+    "Title": {
+      "title": "Title",
+      "description": "Text shown in the top left corner when the app opens",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: Title"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "Logo": {
+      "title": "Custom Logo",
+      "description": "Path to the logo shown in the top right corner when the app opens. Scales to 48 points maximum height",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: Logo"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "LogoDarkMode": {
+      "title": "Custom Logo Dark Mode",
+      "description": "Path to the logo shown in the top right corner when the app opens for Dark Mode. Scales to 48 points maximum height",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: LogoDarkMode"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+		"NotificationIcon": {
+			"title": "Custom Notification Icon",
+			"description": "Path to the notification icon",
+			"type": "string",
+			"options": {
+				"infoText": "Key name: NotificationIcon"
+			},
+			"links": [
+				{
+					"rel": "Documentation",
+					"href": "https://github.com/root3nl/SupportApp"
+				}
+			]
+		},
+    "StatusBarIcon": {
+      "title": "Custom Status Bar Icon",
+      "description": "Path to the status bar icon shown in the menu bar. Recommended: PNG, 16x16 points",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: StatusBarIcon"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "StatusBarIconSFSymbol": {
+      "title": "Custom Status Bar Icon using SF Symbols",
+      "description": "Custom status bar icon using an SF Symbol. Ignored when StatusBarIcon is also set",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: StatusBarIconSFSymbol"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "StatusBarIconNotifierEnabled": {
+      "title": "Notification badge in Status Bar Icon",
+      "description": "Shows a small notification badge in the Status Bar Icon when there is an Apple Software Update available or when the UptimeDaysLimit or PasswordExpiryLimit is reached",
+      "type": "boolean",
+      "options": {
+        "enum_titles": ["Enabled", "Disabled"],
+        "infoText": "Key name: StatusBarIconNotifierEnabled"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "CustomColor": {
+      "title": "Custom Color",
+      "description": "HEX color in RGB format. Example: #8cc63f. Leave empty to use macOS Accent Color",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: CustomColor"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "CustomColorDarkMode": {
+      "title": "Custom Color Dark Mode",
+      "description": "HEX color in RGB format for Dark Mode. Example: #8cc63f. CustomColor is used when CustomColorDarkMode is not specified",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: CustomColorDarkMode"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "HideFirstRow": {
+      "title": "Hide the first row",
+      "description": "Hide the first row with configurable items",
+      "type": "boolean",
+      "options": {
+        "enum_titles": ["Hide", "Show"],
+        "infoText": "Key name: HideFirstRow"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "HideSecondRow": {
+      "title": "Hide the second row",
+      "description": "Hide the second row with configurable items",
+      "type": "boolean",
+      "options": {
+        "enum_titles": ["Hide", "Show"],
+        "infoText": "Key name: HideSecondRow"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "ErrorMessage": {
+      "title": "Custom error message",
+      "description": "Shown when clicking an action results in an error",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: ErrorMessage"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "ShowWelcomeScreen": {
+      "title": "Welcome Screen",
+      "description": "A welcome screen and feature explanation to show when the app is first opened",
+      "type": "boolean",
+      "options": {
+        "enum_titles": ["Enabled", "Disabled"],
+        "infoText": "Key name: ShowWelcomeScreen"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "FooterText": {
+      "title": "Footer text",
+      "description": "Shown at the bottom as footnote. Supports both text and Emoji. Markdown is supported for macOS Monterey and higher",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: FooterText"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "InfoItemOne": {
+      "title": "Info item 1st tile",
+      "description": "Info item shown in the upper left corner",
+      "type": "string",
+      "options": {
+        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime"],
+        "infoText": "Key name: InfoItemOne"
+      },
+      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime"],
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "InfoItemTwo": {
+      "title": "Info item 2nd tile",
+      "description": "Info item shown in the upper right corner",
+      "type": "string",
+      "options": {
+        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime"],
+        "infoText": "Key name: InfoItemTwo"
+      },
+      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime"],
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "InfoItemThree": {
+      "title": "Info item 3rd tile",
+      "description": "Info item shown in the second row left",
+      "type": "string",
+      "options": {
+        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime"],
+        "infoText": "Key name: InfoItemThree"
+      },
+      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime"],
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "InfoItemFour": {
+      "title": "Info item 4th tile",
+      "description": "Info item shown in the second row right",
+      "type": "string",
+      "options": {
+        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime"],
+        "infoText": "Key name: InfoItemFour"
+      },
+      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime"],
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "UptimeDaysLimit": {
+      "title": "Maximum uptime in days",
+      "description": "Days of uptime after which a notification badge is shown",
+      "type": "integer",
+      "options": {
+        "infoText": "Key name: UptimeDaysLimit"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "StorageLimit": {
+      "title": "Maximum used storage percentage",
+      "description": "Percentage of storage after which a notification badge is shown",
+      "type": "integer",
+      "options": {
+        "infoText": "Key name: StorageLimit"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "PasswordExpiryLimit": {
+      "title": "Maximum password expiry in days",
+      "description": "Days until password expiry after which a notification badge is shown",
+      "type": "integer",
+      "options": {
+        "infoText": "Key name: PasswordExpiryLimit"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "PasswordLabel": {
+      "title": "Password item label",
+      "description": "Alternative text label shown in the Password info item",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: PasswordLabel"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "FirstRowTitleLeft": {
+      "title": "First Row Left: Title",
+      "description": "The text shown in the button label",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: FirstRowTitleLeft"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "FirstRowSubtitleLeft": {
+      "title": "First Row Left: Subtitle",
+      "description": "Subtitle text will appear under title when the user hovers over the button. Ignored if left empty.",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: FirstRowSubtitleLeft"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "FirstRowTypeLeft": {
+      "title": "First Row Left: Type",
+      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. App by default.",
+      "type": "string",
+      "options": {
+        "enum_titles": ["App", "URL", "Command"],
+        "infoText": "Key name: FirstRowTypeLeft"
+      },
+      "enum": ["App", "URL", "Command"],
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "FirstRowLinkLeft": {
+      "title": "First Row Left: Link",
+      "description": "The Bundle Identifier of the app or link that should be opened",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: FirstRowLinkLeft"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "FirstRowSymbolLeft": {
+      "title": "First Row Left: SF Symbol name",
+      "description": "The SF Symbol shown in the button",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: FirstRowSymbolLeft"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "FirstRowTitleMiddle": {
+      "title": "First Row Middle: Title",
+      "description": "The text shown in the button label",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: FirstRowTitleMiddle"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "FirstRowSubtitleMiddle": {
+      "title": "First Row Middle: Subtitle",
+      "description": "Subtitle text will appear under title when the user hovers over the button. Ignored if left empty.",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: FirstRowSubtitleMiddle"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "FirstRowTypeMiddle": {
+      "title": "First Row Middle: Type",
+      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. App by default.",
+      "type": "string",
+      "options": {
+        "enum_titles": ["App", "URL", "Command"],
+        "infoText": "Key name: FirstRowTypeMiddle"
+      },
+      "enum": ["App", "URL", "Command"],
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "FirstRowLinkMiddle": {
+      "title": "First Row Middle: Link",
+      "description": "The Bundle Identifier of the app or link that should be opened",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: FirstRowLinkMiddle"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "FirstRowSymbolMiddle": {
+      "title": "First Row Middle: SF Symbol name",
+      "description": "The SF Symbol shown in the button",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: FirstRowSymbolMiddle"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "FirstRowTitleRight": {
+      "title": "First Row Right: Title",
+      "description": "The text shown in the button label.",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: FirstRowTitleRight"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "FirstRowSubtitleRight": {
+      "title": "First Row Right: Subtitle",
+      "description": "Subtitle text will appear under title when the user hovers over the button. Ignored if left empty.",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: FirstRowSubtitleRight"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "FirstRowTypeRight": {
+      "title": "First Row Right: Type",
+      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. App by default.",
+      "type": "string",
+      "options": {
+        "enum_titles": ["App", "URL", "Command"],
+        "infoText": "Key name: FirstRowTypeRight"
+      },
+      "enum": ["App", "URL", "Command"],
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "FirstRowLinkRight": {
+      "title": "First Row Right: Link",
+      "description": "The Bundle Identifier of the app or link that should be opened",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: FirstRowLinkRight"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "FirstRowSymbolRight": {
+      "title": "First Row Right: SF Symbol name",
+      "description": "The SF Symbol shown in the button.",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: FirstRowSymbolRight"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "SecondRowTitleLeft": {
+      "title": "Second Row Left: Title",
+      "description": "The text shown in the button label.",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: SecondRowTitleLeft"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "SecondRowSubtitleLeft": {
+      "title": "Second Row Left: Subtitle",
+      "description": "Subtitle text will replace the title when the user hovers over the button. Ignored if left empty.",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: SecondRowSubtitleLeft"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "SecondRowTypeLeft": {
+      "title": "Second Row Left: Type",
+      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. URL by default",
+      "type": "string",
+      "options": {
+        "enum_titles": ["App", "URL", "Command"],
+        "infoText": "Key name: SecondRowTypeLeft"
+      },
+      "enum": ["App", "URL", "Command"],
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "SecondRowLinkLeft": {
+      "title": "Second Row Left: Link",
+      "description": "The Bundle Identifier of the app or link that should be opened.",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: SecondRowLinkLeft"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "SecondRowSymbolLeft": {
+      "title": "Second Row Left: SF Symbol name",
+      "description": "The SF Symbol shown in the button.",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: SecondRowSymbolLeft"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "SecondRowTitleMiddle": {
+      "title": "Second Row Middle: Title",
+      "description": "The text shown in the button label.",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: SecondRowTitleMiddle"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "SecondRowSubtitleMiddle": {
+      "title": "Second Row Middle: Subtitle",
+      "description": "Subtitle text will replace the title when the user hovers over the button. Ignored if left empty.",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: SecondRowSubtitleMiddle"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "SecondRowTypeMiddle": {
+      "title": "Second Row Middle: Type",
+      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. URL by default",
+      "type": "string",
+      "options": {
+        "enum_titles": ["App", "URL", "Command"],
+        "infoText": "Key name: SecondRowTypeMiddle"
+      },
+      "enum": ["App", "URL", "Command"],
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "SecondRowLinkMiddle": {
+      "title": "Second Row Middle: Link",
+      "description": "The Bundle Identifier of the app or link that should be opened.",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: SecondRowLinkMiddle"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "SecondRowSymbolMiddle": {
+      "title": "Second Row Middle: SF Symbol name",
+      "description": "The SF Symbol shown in the button.",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: SecondRowSymbolMiddle"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "SecondRowTitleRight": {
+      "title": "Second Row Right: Title",
+      "description": "The text shown in the button label.",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: SecondRowTitleRight"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "SecondRowSubtitleRight": {
+      "title": "Second Row Right: Subtitle",
+      "description": "Subtitle text will replace the title when the user hovers over the button. Ignored if left empty.",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: SecondRowSubtitleRight"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "SecondRowTypeRight": {
+      "title": "Second Row Right: Type",
+      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. URL by default",
+      "type": "string",
+      "options": {
+        "enum_titles": ["App", "URL", "Command"],
+        "infoText": "Key name: SecondRowTypeRight"
+      },
+      "enum": ["App", "URL", "Command"],
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "SecondRowLinkRight": {
+      "title": "Second Row Right: Link",
+      "description": "The Bundle Identifier of the app or link that should be opened.",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: SecondRowLinkRight"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "SecondRowSymbolRight": {
+      "title": "Second Row Right: SF Symbol name",
+      "description": "The SF Symbol shown in the button.",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: SecondRowSymbolRight"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+		}
+	}
 }
