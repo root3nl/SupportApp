@@ -28,6 +28,7 @@
   * [Sample Configuration Profile](#sample-configuration-profile)
 - [Known issues](#known-issues)
 - [Changelog](#changelog)
+- [Privacy policy](#privacy-policy)
 - [Note and disclaimer](#note-and-disclaimer)
 
 ## Introduction
