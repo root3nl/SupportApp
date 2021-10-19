@@ -122,12 +122,16 @@ A footer text can optionally be used to put some additional text at the bottom o
 The icon shown in alerts and the about window can be modified by using the preference key 'NotificationIcon'.
 
 See an example below:
-<img src="/Screenshots/custom_alert.png" width="400">
+
+<img src="/Screenshots/custom_alert.png" width="350">
+
+**Note**: modifying the app icon when it is not running would compromise the App Sandbox and we decided not to implement this. We suggest hiding the app by running the following command: `sudo chflags hidden "/Applications/Support.app"`
 
 ### Welcome Screen
 An informational window can optionally be shown when the Support App is opened for the first time. It explains the key features to the user before all data is shown. This can be set using the preference key ‘ShowWelcomeScreen’.
 
 See an example below:
+
 <img src="/Screenshots/welcome_screen.png" width="500">
 
 ## Configuration
