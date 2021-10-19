@@ -302,6 +302,9 @@ A sample Configuration Profile you can edit to your preferences is provided [**h
 * Fixed a localization issue for error alerts
 * Fixed an issue where some functions kept running in the background, causing more CPU time than required
 
+## Privacy policy
+We value your privacy. To protect your privacy, the Support App does not collect or send any personal data. The only outgoing network request is to send the computer's serial number to an Apple API to request the model's marketing name. This information is only kept within the app and is never collected elsewhere.
+
 ## Note and disclaimer
 * Root3 developed this application as a side project to add additional value for our customers
 * The application can be used free of charge and is provided ‘as is’, without any warranty
