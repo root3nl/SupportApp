@@ -55,6 +55,9 @@ class Preferences: ObservableObject {
     // Text to show in Password info item
     @AppStorage("PasswordLabel") var passwordLabel: String = "Mac " + NSLocalizedString("Password", comment: "")
     
+    // Password type
+    @AppStorage("PasswordType") var passwordType: String = "Apple"
+    
     // Percentage of storage used after which a notification badge is shown, disabled by default
     @AppStorage("StorageLimit") var storageLimit: Int = 0
     

@@ -35,6 +35,19 @@ class UserInfo: ObservableObject {
     // Boolean to show alert and menu bar icon notification badge
     @Published var passwordExpiryLimitReached: Bool = false
     
+    // Set preference suite to "com.jamf.connect.state"
+    let defaultsJamfConnect = UserDefaults(suiteName: "com.jamf.connect.state")
+    
+    var passwordString: String {
+        if preferences.passwordType == "Apple" {
+            return userPasswordExpiryString
+        } else if preferences.passwordType == "JamfConnect" {
+            return jcExpiryDate()
+        } else {
+            return "Unknown password source"
+        }
+    }
+    
     // MARK: - Function to get the user record
     // https://gitlab.com/Mactroll/NoMAD/blob/8786704ccf1ae4c1ec0f5efec60fa27a0f4a871f/NoMAD/NoMADUser.swift
     func getCurrentUserRecord() {
@@ -115,6 +128,15 @@ class UserInfo: ObservableObject {
             }
         }
         }
+    }
+    
+    // MARK: - Function to get Jamf Connect password expiry
+    func jcExpiryDate() -> String {
+        guard let expiryDate = defaultsJamfConnect?.object(forKey: "ComputedPasswordExpireDate") as? Date else {
+            return NSLocalizedString("Never Expires", comment: "")
+        }
+        let expiresInDays = Calendar.current.dateComponents([.day], from: Date(), to: expiryDate).day!
+        return (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" days", comment: ""))
     }
     
     // MARK: - Expirimental function to change the local Mac password
