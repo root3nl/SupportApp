@@ -43,6 +43,8 @@ class UserInfo: ObservableObject {
             return userPasswordExpiryString
         } else if preferences.passwordType == "JamfConnect" {
             return jcExpiryDate()
+        } else if preferences.passwordType == "KerberosSSO" {
+            return userPasswordExpiryString
         } else {
             return "Unknown password source"
         }
@@ -136,7 +138,12 @@ class UserInfo: ObservableObject {
             return NSLocalizedString("Never Expires", comment: "")
         }
         let expiresInDays = Calendar.current.dateComponents([.day], from: Date(), to: expiryDate).day!
-        return (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" days", comment: ""))
+        
+        if expiresInDays > 1 {
+            return (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" days", comment: ""))
+        } else {
+            return (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" day", comment: ""))
+        }
     }
     
     // MARK: - Expirimental function to change the local Mac password
