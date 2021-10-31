@@ -58,6 +58,9 @@ class Preferences: ObservableObject {
     // Password type
     @AppStorage("PasswordType") var passwordType: String = "Apple"
     
+    // Kerberos realm when used with Kerberos SSO Extension
+    @AppStorage("KerberosRealm") var kerberosRealm: String = ""
+    
     // Percentage of storage used after which a notification badge is shown, disabled by default
     @AppStorage("StorageLimit") var storageLimit: Int = 0
     

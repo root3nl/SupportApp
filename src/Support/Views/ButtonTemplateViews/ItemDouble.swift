@@ -136,15 +136,15 @@ struct ItemDouble: View {
         task.arguments = ["-c", "\(link ?? "")"]
         task.launch()
         
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        let output = String(data: data, encoding: .utf8)!
+//        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+//        let output = String(data: data, encoding: .utf8)!
         
         if !task.isRunning {
             let status = task.terminationStatus
             if status == 0 {
-                logger.debug("\(output)")
+//                logger.debug("\(output)")
             } else {
-                logger.error("\(output)")
+//                logger.error("\(output)")
                 self.showingAlert.toggle()
             }
         }

@@ -44,7 +44,7 @@ class UserInfo: ObservableObject {
         } else if preferences.passwordType == "JamfConnect" {
             return jcExpiryDate()
         } else if preferences.passwordType == "KerberosSSO" {
-            return userPasswordExpiryString
+            return kerbSSOExpiryDate()
         } else {
             return "Unknown password source"
         }
@@ -143,6 +143,56 @@ class UserInfo: ObservableObject {
             return (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" days", comment: ""))
         } else {
             return (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" day", comment: ""))
+        }
+    }
+    
+    func kerbSSOExpiryDate() -> String {
+        
+        if preferences.kerberosRealm == "" {
+            return "Kerberos Realm Not Set"
+        } else {
+            
+            let query = "app-sso -j -i \(preferences.kerberosRealm)"
+            
+            let task = Process()
+            let pipe = Pipe()
+            
+            task.standardOutput = pipe
+            task.standardError = pipe
+            task.launchPath = "/bin/zsh"
+            task.arguments = ["-c", "\(query)"]
+            task.launch()
+            
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            let output = String(data: data, encoding: .utf8)!
+            
+            if !task.isRunning {
+                let status = task.terminationStatus
+                if status == 0 {
+                    logger.debug("\(output)")
+                } else {
+                    logger.error("\(output)")
+                }
+            }
+            
+            // Set JSONDecoder to handle ISO-8601 dates
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601
+            
+            // Try to decode JSON output to get password expiry date
+            do {
+                let decoded = try decoder.decode(KerberosSSOExtension.self, from: data)
+                let expiresInDays = Calendar.current.dateComponents([.day], from: Date(), to: decoded.passwordExpiresDate).day!
+                
+                if expiresInDays > 1 {
+                    return (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" days", comment: ""))
+                } else {
+                    return (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" day", comment: ""))
+                }
+            } catch {
+                logger.error("\(error.localizedDescription)")
+                return "Not logged in"
+            }
         }
     }
     

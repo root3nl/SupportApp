@@ -39,6 +39,7 @@
 		49822CED24B4C3F200E8DE54 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 49822CEB24B4C3F200E8DE54 /* Main.storyboard */; };
 		49857E9824D4B543009B6FBA /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49857E9724D4B543009B6FBA /* Preferences.swift */; };
 		49857E9A24D4B58B009B6FBA /* ComputerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49857E9924D4B58B009B6FBA /* ComputerInfo.swift */; };
+		498B7001272F460100BFA45E /* KerberosSSOExtensionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498B7000272F460100BFA45E /* KerberosSSOExtensionModel.swift */; };
 		49B4952D2642E96A00A6AE64 /* DarkModeBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B4952C2642E96A00A6AE64 /* DarkModeBorder.swift */; };
 /* End PBXBuildFile section */
 
@@ -79,6 +80,7 @@
 		49822CEF24B4C3F200E8DE54 /* Support.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Support.entitlements; sourceTree = "<group>"; };
 		49857E9724D4B543009B6FBA /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		49857E9924D4B58B009B6FBA /* ComputerInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComputerInfo.swift; sourceTree = "<group>"; };
+		498B7000272F460100BFA45E /* KerberosSSOExtensionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KerberosSSOExtensionModel.swift; sourceTree = "<group>"; };
 		49B163AC26FCB154006D57C7 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		49B4952C2642E96A00A6AE64 /* DarkModeBorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeBorder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -162,6 +164,7 @@
 		49822CE124B4C3F100E8DE54 /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				498B6FFF272F45EF00BFA45E /* Models */,
 				4915290A259CCF2500056B5F /* Views */,
 				0AFE0A8525014C6100957B52 /* Localizable.strings */,
 				49822CE224B4C3F100E8DE54 /* AppDelegate.swift */,
@@ -186,6 +189,14 @@
 				49822CE924B4C3F200E8DE54 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		498B6FFF272F45EF00BFA45E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				498B7000272F460100BFA45E /* KerberosSSOExtensionModel.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		49B4952E264343FC00A6AE64 /* ViewModifiers */ = {
@@ -289,6 +300,7 @@
 				0AFB04FD263B422900507B23 /* ItemDouble.swift in Sources */,
 				0A4A73812602052800927DAB /* NetworkSubview.swift in Sources */,
 				0A315E5B2683C88800E9A1F9 /* FeatureView.swift in Sources */,
+				498B7001272F460100BFA45E /* KerberosSSOExtensionModel.swift in Sources */,
 				4976EB8B265317C6006EE097 /* AppView.swift in Sources */,
 				496FE4D12651485E007746ED /* UserInfo.swift in Sources */,
 				4915290D259CCF7A00056B5F /* NotificationBadgeView.swift in Sources */,
