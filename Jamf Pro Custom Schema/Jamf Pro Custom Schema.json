@@ -312,6 +312,36 @@
         }
       ]
     },
+    "PasswordType": {
+      "title": "Password type",
+      "description": "Apple native (local account or AD), Jamf Connect or Kerberos SSO Extension",
+      "type": "string",
+      "options": {
+        "enum_titles": ["Apple Native", " Jamf Connect", "Kerberos SSO Extension"],
+        "infoText": "Key name: PasswordType"
+      },
+      "enum": ["Apple", "JamfConnect", "KerberosSSO"],
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "KerberosRealm": {
+      "title": "Kerberos Realm",
+      "description": "Required when used with Kerberos SSO Extension as PasswordType",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: KerberosRealm"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
     "PasswordLabel": {
       "title": "Password item label",
       "description": "Alternative text label shown in the Password info item",
