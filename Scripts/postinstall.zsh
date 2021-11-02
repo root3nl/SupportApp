@@ -5,9 +5,9 @@
 #
 # Copyright 2021 Root3 B.V. All rights reserved.
 #
-# This script will install the Root3 Support App.
+# This script will create the Support App LaunchAgent and reload it when needed.
 
-# LaunchAgent name
+# LaunchAgent label
 launch_agent="nl.root3.support"
 
 # Get the username of the currently logged in user
@@ -31,13 +31,16 @@ defaults write "/Library/LaunchAgents/${launch_agent}.plist" ProcessType -string
 chown root:wheel "/Library/LaunchAgents/${launch_agent}.plist"
 chmod 644 "/Library/LaunchAgents/${launch_agent}.plist"
 
-# No user logged in
-if [[ -z "${username}" ]]; then
-  exit 0
-fi
-
 # Reload the LaunchAgent
 if [[ -n "${username}" ]]; then
+	# Unload the LauchAgent
   launchctl bootout gui/${uid} "/Library/LaunchAgents/${launch_agent}.plist" &> /dev/null
+
+	# Just to be sure, kill Support App if still running
+	if pgrep -x "Support" ; then
+		killall -9 "Support"
+	fi
+
+	# Load the LaunchAgent
   launchctl bootstrap gui/${uid} "/Library/LaunchAgents/${launch_agent}.plist"
 fi
