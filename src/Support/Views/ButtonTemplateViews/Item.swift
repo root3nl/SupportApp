@@ -108,6 +108,8 @@ struct Item: View {
                 openLink()
             } else if linkType == "Command" {
                 runCommand()
+            } else if linkType == "DistributedNotification" {
+                postDistributedNotification()
             } else {
                 self.showingAlert.toggle()
                 logger.error("Invalid Link Type: \(linkType!)")
@@ -161,5 +163,22 @@ struct Item: View {
                 self.showingAlert.toggle()
             }
         }
+    }
+    
+    // Post Distributed Notification
+    func postDistributedNotification() {
+        logger.debug("Posting Distributed Notification: \(link ?? "NoLinkSpecified")")
+        
+        // Initialize distributed notifications
+        let nc = DistributedNotificationCenter.default()
+        
+        // Define the NSNotification name
+        let name = NSNotification.Name(link ?? "NoLinkSpecified")
+        
+        // Post the notification including all sessions to support LaunchDaemons
+        nc.postNotificationName(name, object: nil, userInfo: nil, options: [.deliverImmediately, .postToAllSessions])
+        
+        // Close the popover
+        NSApp.deactivate()
     }
 }
