@@ -17,6 +17,7 @@ struct Item: View {
     var symbolColor: Color
     var notificationBadge: Int?
     var notificationBadgeBool: Bool?
+    var loading: Bool?
     
     // Declare unified logging
     let logger = Logger(subsystem: "nl.root3.support", category: "Action")
@@ -41,14 +42,25 @@ struct Item: View {
         ZStack {
             
             HStack {
-                Ellipse()
-                    .foregroundColor(hoverView ? .primary : symbolColor)
-                    .overlay(
-                        Image(systemName: image)
-                            .foregroundColor(hoverView ? Color("hoverColor") : Color.white)
-                    )
-                    .frame(width: 26, height: 26)
-                    .padding(.leading, 10)
+                if loading ?? false {
+                    Ellipse()
+                        .foregroundColor(symbolColor.opacity(0.5))
+                        .overlay(
+                            ProgressView()
+                                .scaleEffect(0.5)
+                        )
+                        .frame(width: 26, height: 26)
+                        .padding(.leading, 10)
+                } else {
+                    Ellipse()
+                        .foregroundColor(hoverView ? .primary : symbolColor)
+                        .overlay(
+                            Image(systemName: image)
+                                .foregroundColor(hoverView ? Color("hoverColor") : Color.white)
+                        )
+                        .frame(width: 26, height: 26)
+                        .padding(.leading, 10)
+                }
                 
                 VStack(alignment: .leading) {
                     
