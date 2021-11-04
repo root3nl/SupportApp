@@ -109,4 +109,7 @@ class Preferences: ObservableObject {
     // Boolean to hide the welcome screen after the first time. Should not be managed using MDM.
     @AppStorage("HasSeenWelcomeScreen") var hasSeenWelcomeScreen = false
     
+    @AppStorage("SecondRowLoadingMiddle") var secondRowLoadingMiddle = Bool()
+    @AppStorage("SecondRowLoadingRight") var secondRowLoadingRight = Bool()
+    
 }

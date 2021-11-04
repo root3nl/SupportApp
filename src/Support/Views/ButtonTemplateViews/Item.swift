@@ -167,18 +167,18 @@ struct Item: View {
     
     // Post Distributed Notification
     func postDistributedNotification() {
-        logger.debug("Posting Distributed Notification: \(link ?? "NoLinkSpecified")")
+        logger.debug("Posting Distributed Notification: nl.root3.support.Action")
         
         // Initialize distributed notifications
         let nc = DistributedNotificationCenter.default()
         
         // Define the NSNotification name
-        let name = NSNotification.Name(link ?? "NoLinkSpecified")
+        let name = NSNotification.Name("nl.root3.support.Action")
         
         // Post the notification including all sessions to support LaunchDaemons
-        nc.postNotificationName(name, object: nil, userInfo: nil, options: [.deliverImmediately, .postToAllSessions])
-        
+        nc.postNotificationName(name, object: link, userInfo: nil, options: [.postToAllSessions, .deliverImmediately])
+
         // Close the popover
-        NSApp.deactivate()
+//        NSApp.deactivate()
     }
 }
