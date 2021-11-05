@@ -81,6 +81,7 @@
 		49857E9924D4B58B009B6FBA /* ComputerInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComputerInfo.swift; sourceTree = "<group>"; };
 		49B163AC26FCB154006D57C7 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		49B4952C2642E96A00A6AE64 /* DarkModeBorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeBorder.swift; sourceTree = "<group>"; };
+		A0532BCB2733F35A005CACF2 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -253,6 +254,7 @@
 				Base,
 				nl,
 				fr,
+				de,
 			);
 			mainGroup = 49822CD624B4C3F100E8DE54;
 			packageReferences = (
@@ -326,6 +328,7 @@
 				0AFE0A8425014C6100957B52 /* en */,
 				0AFE0A8625014C8300957B52 /* nl */,
 				49B163AC26FCB154006D57C7 /* fr */,
+				A0532BCB2733F35A005CACF2 /* de */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
