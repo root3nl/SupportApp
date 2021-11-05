@@ -15,6 +15,7 @@ struct ItemSmall: View {
     var link: String?
     var image: String
     var symbolColor: Color
+    var loading: Bool?
     
     // Declare unified logging
     let logger = Logger(subsystem: "nl.root3.support", category: "Action")
@@ -32,10 +33,16 @@ struct ItemSmall: View {
         
         VStack {
         
-            Image(systemName: image)
-                .font(.system(size: 24, weight: .semibold))
-                .foregroundColor(hoverView ? .primary : symbolColor)
-                .frame(width: 24, height: 24)
+            if loading ?? false {
+                ProgressView()
+                    .scaleEffect(0.8)
+                    .frame(width: 24, height: 24)
+            } else {
+                Image(systemName: image)
+                    .font(.system(size: 24, weight: .semibold))
+                    .foregroundColor(hoverView ? .primary : symbolColor)
+                    .frame(width: 24, height: 24)
+            }
 
         Spacer()
 
@@ -69,6 +76,8 @@ struct ItemSmall: View {
                 openLink()
             } else if linkType == "Command" {
                 runCommand()
+            } else if linkType == "DistributedNotification" {
+                postDistributedNotification()
             } else {
                 self.showingAlert.toggle()
                 logger.error("Invalid Link Type: \(linkType!)")
@@ -122,5 +131,22 @@ struct ItemSmall: View {
                 self.showingAlert.toggle()
             }
         }
+    }
+    
+    // Post Distributed Notification
+    func postDistributedNotification() {
+        logger.debug("Posting Distributed Notification: nl.root3.support.Action")
+        
+        // Initialize distributed notifications
+        let nc = DistributedNotificationCenter.default()
+        
+        // Define the NSNotification name
+        let name = NSNotification.Name("nl.root3.support.Action")
+        
+        // Post the notification including all sessions to support LaunchDaemons
+        nc.postNotificationName(name, object: link, userInfo: nil, options: [.postToAllSessions, .deliverImmediately])
+        
+        // Close the popover
+//        NSApp.deactivate()
     }
 }

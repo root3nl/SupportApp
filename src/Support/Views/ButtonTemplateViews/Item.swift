@@ -17,6 +17,7 @@ struct Item: View {
     var symbolColor: Color
     var notificationBadge: Int?
     var notificationBadgeBool: Bool?
+    var loading: Bool?
     
     // Declare unified logging
     let logger = Logger(subsystem: "nl.root3.support", category: "Action")
@@ -41,14 +42,25 @@ struct Item: View {
         ZStack {
             
             HStack {
-                Ellipse()
-                    .foregroundColor(hoverView ? .primary : symbolColor)
-                    .overlay(
-                        Image(systemName: image)
-                            .foregroundColor(hoverView ? Color("hoverColor") : Color.white)
-                    )
-                    .frame(width: 26, height: 26)
-                    .padding(.leading, 10)
+                if loading ?? false {
+                    Ellipse()
+                        .foregroundColor(symbolColor.opacity(0.5))
+                        .overlay(
+                            ProgressView()
+                                .scaleEffect(0.5)
+                        )
+                        .frame(width: 26, height: 26)
+                        .padding(.leading, 10)
+                } else {
+                    Ellipse()
+                        .foregroundColor(hoverView ? .primary : symbolColor)
+                        .overlay(
+                            Image(systemName: image)
+                                .foregroundColor(hoverView ? Color("hoverColor") : Color.white)
+                        )
+                        .frame(width: 26, height: 26)
+                        .padding(.leading, 10)
+                }
                 
                 VStack(alignment: .leading) {
                     
@@ -108,6 +120,8 @@ struct Item: View {
                 openLink()
             } else if linkType == "Command" {
                 runCommand()
+            } else if linkType == "DistributedNotification" {
+                postDistributedNotification()
             } else {
                 self.showingAlert.toggle()
                 logger.error("Invalid Link Type: \(linkType!)")
@@ -161,5 +175,22 @@ struct Item: View {
                 self.showingAlert.toggle()
             }
         }
+    }
+    
+    // Post Distributed Notification
+    func postDistributedNotification() {
+        logger.debug("Posting Distributed Notification: nl.root3.support.Action")
+        
+        // Initialize distributed notifications
+        let nc = DistributedNotificationCenter.default()
+        
+        // Define the NSNotification name
+        let name = NSNotification.Name("nl.root3.support.Action")
+        
+        // Post the notification including all sessions to support LaunchDaemons
+        nc.postNotificationName(name, object: link, userInfo: nil, options: [.postToAllSessions, .deliverImmediately])
+
+        // Close the popover
+//        NSApp.deactivate()
     }
 }
