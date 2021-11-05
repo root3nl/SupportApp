@@ -41,16 +41,14 @@ struct PasswordSubview: View {
         
         // Option to show another subtitle offering to change the local Mac password
         
-//        ItemDouble(title: preferences.passwordLabel, secondTitle: preferences.passwordLabel, subtitle: userinfo.userPasswordExpiryString, secondSubtitle: NSLocalizedString("Change Now", comment: ""), linkType: "Command", link: "open /System/Library/PreferencePanes/Accounts.prefPane", image: "key.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: userinfo.passwordExpiryLimitReached, hoverEffectEnable: true)
+        ItemDouble(title: preferences.passwordLabel, secondTitle: preferences.passwordLabel, subtitle: userinfo.userPasswordExpiryString, secondSubtitle: NSLocalizedString("Change Now", comment: ""), linkType: "Command", link: "open /System/Library/PreferencePanes/Accounts.prefPane", image: "key.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: userinfo.passwordExpiryLimitReached, hoverEffectEnable: true)
         
         // Expirimental view with link to password change view
         
-        InfoItem(title: "Mac " + NSLocalizedString("Password", comment: ""), subtitle: userinfo.userPasswordExpiryString, image: "key.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: userinfo.passwordExpiryLimitReached, hoverEffectEnable: true)
-            .onTapGesture {
-//                withAnimation(.easeOut) {
-                    computerinfo.showPasswordChange.toggle()
-//                }
-            }
+//        InfoItem(title: "Mac " + NSLocalizedString("Password", comment: ""), subtitle: userinfo.userPasswordExpiryString, image: "key.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: userinfo.passwordExpiryLimitReached, hoverEffectEnable: true)
+//            .onTapGesture {
+//                computerinfo.showPasswordChange.toggle()
+//            }
         
     }
 }
