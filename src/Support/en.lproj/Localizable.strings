@@ -7,6 +7,7 @@
 */
 
 "Computer Name" = "Computer Name";
+"Model" = "Model";
 "Last Reboot" = "Last Reboot";
 "RESTART_REGULARLY" = "Please restart your Mac regularly";
 "ADMIN_RECOMMENDS_RESTARTING_EVERY" = "Your administrator recommends restarting your Mac every";

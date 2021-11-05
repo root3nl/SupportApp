@@ -65,7 +65,7 @@ See the MDM deployment section below for more info.
 * MDM support to configure your own branding such as a custom title, logo, SF Symbols and contact methods
 * Notarized
 * Sandboxed
-* Localized in English, Dutch and French
+* Localized in English, Dutch, French and German
 
 ## Features
 
