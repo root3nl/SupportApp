@@ -218,6 +218,7 @@
 				49822CDB24B4C3F100E8DE54 /* Sources */,
 				49822CDC24B4C3F100E8DE54 /* Frameworks */,
 				49822CDD24B4C3F100E8DE54 /* Resources */,
+				49FB1303273B244600650BD3 /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -279,6 +280,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		49FB1303273B244600650BD3 /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n#/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $(date +%Y%m%d%H%M)\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $(date +%s)\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		49822CDB24B4C3F100E8DE54 /* Sources */ = {
@@ -467,7 +489,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 202111005;
+				CURRENT_PROJECT_VERSION = 1636495378;
 				DEVELOPMENT_ASSET_PATHS = "\"Support/Preview Content\"";
 				DEVELOPMENT_TEAM = 98LJ4XBGYK;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -495,7 +517,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 202111005;
+				CURRENT_PROJECT_VERSION = 1636495378;
 				DEVELOPMENT_ASSET_PATHS = "\"Support/Preview Content\"";
 				DEVELOPMENT_TEAM = 98LJ4XBGYK;
 				ENABLE_HARDENED_RUNTIME = YES;
