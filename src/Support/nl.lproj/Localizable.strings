@@ -27,12 +27,12 @@
 "Are you sure you want to quit?" = "Weet je zeker dat je wilt afsluiten?";
 "An error occurred" = "Er was een probleem";
 "Please contact IT support" = "Neem contact op met de servicedesk";
-"Not connected" = "Niet verbonden";
+"Not Connected" = "Niet verbonden";
 "IP Address" = "IP adres";
 "No IP Address" = "Geen IP adres";
 "Password" = "Wachtwoord";
-"Expires today" = "Verloopt vandaag";
-"Never expires" = "Verloopt nooit";
+"Expires Today" = "Verloopt vandaag";
+"Never Expires" = "Verloopt nooit";
 "Expires in " = "Verloopt over ";
 "Expired" = "Verlopen";
 "Change Now" = "Wijzig nu";

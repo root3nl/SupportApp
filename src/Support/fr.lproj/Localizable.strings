@@ -28,12 +28,12 @@
 "Are you sure you want to quit?" = "Voulez-vous vraiment quitter?";
 "An error occurred" = "Une erreur est survenue";
 "Please contact IT support" = "Contactez le support technique";
-"Not connected" = "Non connecté";
+"Not Connected" = "Non connecté";
 "IP Address" = "Adresse IP";
 "No IP Address" = "Pas d'adresse IP";
 "Password" = "Mot de passe";
-"Expires today" = "Expire aujourd'hui'";
-"Never expires" = "N'expire jamais'";
+"Expires Today" = "Expire aujourd'hui'";
+"Never Expires" = "N'expire jamais'";
 "Expires in " = "Expire dans ";
 "Expired" = "Expiré";
 "Change Now" = "Changer maintenant";
