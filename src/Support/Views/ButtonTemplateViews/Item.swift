@@ -175,6 +175,9 @@ struct Item: View {
                 self.showingAlert.toggle()
             }
         }
+        
+        // Close the popover
+        NSApp.deactivate()
     }
     
     // Post Distributed Notification

@@ -297,7 +297,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		49FB1303273B244600650BD3 /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
+			buildActionMask = 12;
 			files = (
 			);
 			inputFileListPaths = (
@@ -309,7 +309,7 @@
 			);
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n#/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $(date +%Y%m%d%H%M)\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $(date +%s)\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n";
 		};

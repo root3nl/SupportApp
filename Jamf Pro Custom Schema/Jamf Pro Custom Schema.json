@@ -317,10 +317,10 @@
       "description": "Apple native (local account or AD), Jamf Connect or Kerberos SSO Extension",
       "type": "string",
       "options": {
-        "enum_titles": ["Apple Native", " Jamf Connect", "Kerberos SSO Extension"],
+        "enum_titles": ["Apple Native", " Jamf Connect", "Kerberos SSO Extension", "NoMAD"],
         "infoText": "Key name: PasswordType"
       },
-      "enum": ["Apple", "JamfConnect", "KerberosSSO"],
+      "enum": ["Apple", "JamfConnect", "KerberosSSO", "Nomad"],
       "links": [
         {
           "rel": "Documentation",

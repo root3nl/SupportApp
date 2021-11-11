@@ -9,10 +9,12 @@ import Foundation
 
 struct KerberosSSOExtension: Codable {
     
-    let passwordExpiresDate: Date
+    let passwordExpiresDate: Date?
+    let userName: String?
     
     enum CodingKeys: String, CodingKey {
         case passwordExpiresDate = "password_expires_date"
+        case userName = "user_name"
     }
     
 }

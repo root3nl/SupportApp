@@ -35,9 +35,19 @@ class UserInfo: ObservableObject {
     // Boolean to show alert and menu bar icon notification badge
     @Published var passwordExpiryLimitReached: Bool = false
     
+    // Static sign in string
+    var signInString = NSLocalizedString("Sign In Here", comment: "")
+    
+    // Static password change string
+    var changeString = NSLocalizedString("Change Now", comment: "")
+    
     // Set preference suite to "com.jamf.connect.state"
     let defaultsJamfConnect = UserDefaults(suiteName: "com.jamf.connect.state")
     
+    // Set prefence suite to "com.trusourcelabs.NoMAD"
+    let defaultsNomad = UserDefaults(suiteName: "com.trusourcelabs.NoMAD")
+    
+    // Set the password string based on password type
     var passwordString: String {
         if preferences.passwordType == "Apple" {
             return userPasswordExpiryString
@@ -45,8 +55,47 @@ class UserInfo: ObservableObject {
             return jcExpiryDate()
         } else if preferences.passwordType == "KerberosSSO" {
             return kerbSSOExpiryDate()
+        } else if preferences.passwordType == "Nomad" {
+            return nomadExpiryDate()
         } else {
             return "Unknown password source"
+        }
+    }
+    
+    // Set the password change string when hovering over the password info item. Show the sign in string when not logged in instead of the password change string.
+    var passwordChangeString: String {
+        if passwordString == signInString {
+            return signInString
+        } else {
+            return changeString
+        }
+    }
+    
+    // Set the password change link based on password type
+    var passwordChangeLink: String {
+        if preferences.passwordType == "Apple" {
+            return "open /System/Library/PreferencePanes/Accounts.prefPane"
+        } else if preferences.passwordType == "JamfConnect" {
+            if defaultsJamfConnect?.bool(forKey: "PasswordCurrent") ?? false {
+                // FIXME: - Need an option to change password using Jamf Connect
+                return "open /System/Library/PreferencePanes/Accounts.prefPane"
+            } else {
+                return "open jamfconnect://signin"
+            }
+        } else if preferences.passwordType == "KerberosSSO" {
+            if passwordChangeString == signInString {
+                return "app-sso -a \(preferences.kerberosRealm)"
+            } else {
+                return "app-sso -c \(preferences.kerberosRealm)"
+            }
+        } else if preferences.passwordType == "Nomad" {
+            if defaultsNomad?.bool(forKey: "SignedIn") ?? false {
+                return "open nomad://passwordchange"
+            } else {
+                return "open nomad://signin"
+            }
+        } else {
+            return "open /System/Library/PreferencePanes/Accounts.prefPane"
         }
     }
     
@@ -134,9 +183,14 @@ class UserInfo: ObservableObject {
     
     // MARK: - Function to get Jamf Connect password expiry
     func jcExpiryDate() -> String {
+        if !(defaultsJamfConnect?.bool(forKey: "PasswordCurrent") ?? false) {
+            return signInString
+        }
+        
         guard let expiryDate = defaultsJamfConnect?.object(forKey: "ComputedPasswordExpireDate") as? Date else {
             return NSLocalizedString("Never Expires", comment: "")
         }
+        
         let expiresInDays = Calendar.current.dateComponents([.day], from: Date(), to: expiryDate).day!
         
         if expiresInDays > 1 {
@@ -146,6 +200,7 @@ class UserInfo: ObservableObject {
         }
     }
     
+    // MARK: - Function to get Kerberos SSO Extension password expiry
     func kerbSSOExpiryDate() -> String {
         
         if preferences.kerberosRealm == "" {
@@ -182,22 +237,49 @@ class UserInfo: ObservableObject {
             // Try to decode JSON output to get password expiry date
             do {
                 let decoded = try decoder.decode(KerberosSSOExtension.self, from: data)
-                let expiresInDays = Calendar.current.dateComponents([.day], from: Date(), to: decoded.passwordExpiresDate).day!
-                
-                if expiresInDays > 1 {
-                    return (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" days", comment: ""))
+               
+                if decoded.passwordExpiresDate != nil && decoded.userName != nil {
+                    let expiresInDays = Calendar.current.dateComponents([.day], from: Date(), to: decoded.passwordExpiresDate!).day!
+                    
+                    if expiresInDays > 1 {
+                        return (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" days", comment: ""))
+                    } else {
+                        return (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" day", comment: ""))
+                    }
+                } else if decoded.passwordExpiresDate == nil && decoded.userName != nil {
+                    return NSLocalizedString("Never Expires", comment: "")
                 } else {
-                    return (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" day", comment: ""))
+                    return signInString
                 }
+                
             } catch {
                 logger.error("\(error.localizedDescription)")
-                return "Not logged in"
+                return error.localizedDescription
             }
         }
     }
     
+    // MARK: - Function to get NoMAD password expiry
+    func nomadExpiryDate() -> String {
+        if !(defaultsNomad?.bool(forKey: "SignedIn") ?? false) {
+            return signInString
+        }
+        
+        guard let expiryDate = defaultsNomad?.object(forKey: "LastPasswordExpireDate") as? Date else {
+            return NSLocalizedString("Never Expires", comment: "")
+        }
+        
+        let expiresInDays = Calendar.current.dateComponents([.day], from: Date(), to: expiryDate).day!
+        
+        if expiresInDays > 1 {
+            return (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" days", comment: ""))
+        } else {
+            return (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" day", comment: ""))
+        }
+        
+    }
+
     // MARK: - Expirimental function to change the local Mac password
-    
     func changePassword() {
         do {
             let node = try ODNode.init(session: session, type: UInt32(kODNodeTypeAuthentication))
