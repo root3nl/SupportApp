@@ -44,7 +44,7 @@ struct Item: View {
             HStack {
                 if loading ?? false {
                     Ellipse()
-                        .foregroundColor(symbolColor.opacity(0.5))
+                        .foregroundColor(Color.gray.opacity(0.5))
                         .overlay(
                             ProgressView()
                                 .scaleEffect(0.5)

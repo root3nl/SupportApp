@@ -41,6 +41,7 @@
 		49857E9A24D4B58B009B6FBA /* ComputerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49857E9924D4B58B009B6FBA /* ComputerInfo.swift */; };
 		498B7001272F460100BFA45E /* KerberosSSOExtensionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498B7000272F460100BFA45E /* KerberosSSOExtensionModel.swift */; };
 		49B4952D2642E96A00A6AE64 /* DarkModeBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B4952C2642E96A00A6AE64 /* DarkModeBorder.swift */; };
+		49F6744E273F2DBC00C47403 /* CustomSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F6744D273F2DBC00C47403 /* CustomSubview.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -83,6 +84,7 @@
 		498B7000272F460100BFA45E /* KerberosSSOExtensionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KerberosSSOExtensionModel.swift; sourceTree = "<group>"; };
 		49B163AC26FCB154006D57C7 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		49B4952C2642E96A00A6AE64 /* DarkModeBorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeBorder.swift; sourceTree = "<group>"; };
+		49F6744D273F2DBC00C47403 /* CustomSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSubview.swift; sourceTree = "<group>"; };
 		A0532BCB2733F35A005CACF2 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -110,6 +112,7 @@
 			isa = PBXGroup;
 			children = (
 				0A4A73802602052800927DAB /* NetworkSubview.swift */,
+				49F6744D273F2DBC00C47403 /* CustomSubview.swift */,
 				0A4A73842602075F00927DAB /* StorageSubview.swift */,
 				0A4A7387260208B500927DAB /* UptimeSubview.swift */,
 				0A4A738A26020A3800927DAB /* ComputerNameSubview.swift */,
@@ -326,6 +329,7 @@
 				0A315E5B2683C88800E9A1F9 /* FeatureView.swift in Sources */,
 				498B7001272F460100BFA45E /* KerberosSSOExtensionModel.swift in Sources */,
 				4976EB8B265317C6006EE097 /* AppView.swift in Sources */,
+				49F6744E273F2DBC00C47403 /* CustomSubview.swift in Sources */,
 				496FE4D12651485E007746ED /* UserInfo.swift in Sources */,
 				4915290D259CCF7A00056B5F /* NotificationBadgeView.swift in Sources */,
 				49857E9A24D4B58B009B6FBA /* ComputerInfo.swift in Sources */,
