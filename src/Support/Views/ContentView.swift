@@ -125,6 +125,10 @@ struct ContentView: View {
                         StorageSubview()
                     case "Uptime":
                         UptimeSubview()
+                    case "CustomA":
+                        CustomASubview()
+                    case "CustomB":
+                        CustomBSubview()
                     default:
                         ComputerNameSubview()
                     }
@@ -143,6 +147,10 @@ struct ContentView: View {
                         StorageSubview()
                     case "Uptime":
                         UptimeSubview()
+                    case "CustomA":
+                        CustomASubview()
+                    case "CustomB":
+                        CustomBSubview()
                     default:
                         MacOSVersionSubview()
                     }
@@ -167,6 +175,10 @@ struct ContentView: View {
                         StorageSubview()
                     case "Uptime":
                         UptimeSubview()
+                    case "CustomA":
+                        CustomASubview()
+                    case "CustomB":
+                        CustomBSubview()
                     default:
                         UptimeSubview()
                     }
@@ -185,11 +197,67 @@ struct ContentView: View {
                         StorageSubview()
                     case "Uptime":
                         UptimeSubview()
+                    case "CustomA":
+                        CustomASubview()
+                    case "CustomB":
+                        CustomBSubview()
                     default:
                         StorageSubview()
                     }
                 }
                 .padding(.horizontal, 10)
+                
+                // MARK: - Third optional horizontal stack with Password and Network as defaults
+                if preferences.customItemSymbolA != "" || preferences.customItemTitleB != "" {
+                    HStack(spacing: 10) {
+                        
+                        // Item left
+                        switch preferences.infoItemFive {
+                        case "ComputerName":
+                            ComputerNameSubview()
+                        case "MacOSVersion":
+                            MacOSVersionSubview()
+                        case "Network":
+                            NetworkSubview()
+                        case "Password":
+                            PasswordSubview()
+                        case "Storage":
+                            StorageSubview()
+                        case "Uptime":
+                            UptimeSubview()
+                        case "CustomA":
+                            CustomASubview()
+                        case "CustomB":
+                            CustomBSubview()
+                        default:
+                            PasswordSubview()
+                        }
+                        
+                        // Item right
+                        switch preferences.infoItemSix {
+                        case "ComputerName":
+                            ComputerNameSubview()
+                        case "MacOSVersion":
+                            MacOSVersionSubview()
+                        case "Network":
+                            NetworkSubview()
+                        case "Password":
+                            PasswordSubview()
+                        case "Storage":
+                            StorageSubview()
+                        case "Uptime":
+                            UptimeSubview()
+                        case "CustomA":
+                            CustomASubview()
+                        case "CustomB":
+                            CustomBSubview()
+                        default:
+                            NetworkSubview()
+                        }
+                        
+                    }
+                    .padding(.horizontal, 10)
+                }
                    
                 // MARK: - Hide row if specified in configuration
                 if !defaults.bool(forKey: "HideFirstRow") {

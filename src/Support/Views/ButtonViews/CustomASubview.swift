@@ -1,5 +1,5 @@
 //
-//  CustomSubview.swift
+//  CustomASubview.swift
 //  Support
 //
 //  Created by Jordy Witteman on 13/11/2021.
@@ -7,10 +7,8 @@
 
 import SwiftUI
 
-struct CustomSubview: View {
-    
-    var preferenceValue: String
-    
+struct CustomASubview: View {
+        
     // Get  computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo
     
@@ -36,7 +34,7 @@ struct CustomSubview: View {
     
     var body: some View {
         
-        Item(title: "Time", subtitle: preferenceValue, linkType: "Command", link: "open /System/Library/PreferencePanes/Network.prefPane", image: "clock.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: false, hoverView: false, animate: false)
+        InfoItem(title: preferences.customItemTitleA, subtitle: defaults.string(forKey: "CustomItemPrefKeyA") ?? "", image: preferences.customItemSymbolA, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: false, hoverView: false)
         
     }
 }

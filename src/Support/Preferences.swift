@@ -45,6 +45,8 @@ class Preferences: ObservableObject {
     @AppStorage("InfoItemTwo") var infoItemTwo: String = "MacOSVersion"
     @AppStorage("InfoItemThree") var infoItemThree: String = "Uptime"
     @AppStorage("InfoItemFour") var infoItemFour: String = "Storage"
+    @AppStorage("InfoItemFive") var infoItemFive: String = ""
+    @AppStorage("InfoItemSix") var infoItemSix: String = ""
     
     // Days of uptime after which a notification badge is shown, disabled by default
     @AppStorage("UptimeDaysLimit") var uptimeDaysLimit: Int = 0
@@ -63,6 +65,15 @@ class Preferences: ObservableObject {
     
     // Percentage of storage used after which a notification badge is shown, disabled by default
     @AppStorage("StorageLimit") var storageLimit: Int = 0
+    
+    // MARK: - Custom Info Items
+    @AppStorage("CustomItemTitleA") var customItemTitleA: String = ""
+    @AppStorage("CustomItemSymbolA") var customItemSymbolA: String = ""
+    @AppStorage("CustomItemCommandA") var customItemCommandA: String = ""
+
+    @AppStorage("CustomItemTitleB") var customItemTitleB: String = ""
+    @AppStorage("CustomItemSymbolB") var customItemSymbolB: String = ""
+    @AppStorage("CustomItemCommandB") var customItemCommandB: String = ""
     
     // MARK: - First row of configurable buttons
     
