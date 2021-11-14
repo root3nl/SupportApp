@@ -34,7 +34,7 @@ struct CustomBSubview: View {
     
     var body: some View {
         
-        Item(title: preferences.customItemTitleB, subtitle: defaults.string(forKey: "CustomItemPrefKeyB"), linkType: "Command", link: "open /System/Library/PreferencePanes/Network.prefPane", image: preferences.customItemSymbolB, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: false, hoverView: false, animate: false)
+        InfoItem(title: preferences.customItemTitleB, subtitle: defaults.string(forKey: "CustomItemPrefKeyB") ?? "", image: preferences.customItemSymbolB, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: false, hoverView: false)
         
     }
 }

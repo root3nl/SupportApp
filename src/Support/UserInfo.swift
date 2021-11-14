@@ -47,21 +47,6 @@ class UserInfo: ObservableObject {
     // Set prefence suite to "com.trusourcelabs.NoMAD"
     let defaultsNomad = UserDefaults(suiteName: "com.trusourcelabs.NoMAD")
     
-    // Set the password string based on password type
-//    var passwordString: String {
-//        if preferences.passwordType == "Apple" {
-//            return userPasswordExpiryString
-//        } else if preferences.passwordType == "JamfConnect" {
-//            return jcExpiryDate()
-//        } else if preferences.passwordType == "KerberosSSO" {
-//            return kerbSSOExpiryDate()
-//        } else if preferences.passwordType == "Nomad" {
-//            return nomadExpiryDate()
-//        } else {
-//            return "Unknown password source"
-//        }
-//    }
-    
     // Set the password change string when hovering over the password info item. Show the sign in string when not logged in instead of the password change string.
     var passwordChangeString: String {
 //        if passwordString == signInString {
@@ -206,7 +191,8 @@ class UserInfo: ObservableObject {
         }
         
         guard let expiryDate = defaultsJamfConnect?.object(forKey: "ComputedPasswordExpireDate") as? Date else {
-            userPasswordExpiryString = NSLocalizedString("Never Expires", comment: "")
+            // Don't show 'Never Expires' because we are not sure Jamf Connect is able to detect it.
+            userPasswordExpiryString = NSLocalizedString("Change Now", comment: "")
             
             // Set boolean to false to hide alert and menu bar icon notification badge
             passwordExpiryLimitReached = false
@@ -215,10 +201,16 @@ class UserInfo: ObservableObject {
         
         let expiresInDays = Calendar.current.dateComponents([.day], from: Date(), to: expiryDate).day!
         
-        if expiresInDays > 1 {
-            userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" days", comment: ""))
+        if expiresInDays == 0 {
+            userPasswordExpiryString = NSLocalizedString("Expires Today", comment: "")
+        } else if expiresInDays < 0 {
+            userPasswordExpiryString = NSLocalizedString("Expired", comment: "")
         } else {
-            userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" day", comment: ""))
+            if expiresInDays > 1 {
+                userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" days", comment: ""))
+            } else {
+                userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" day", comment: ""))
+            }
         }
         
         setNotificationBadge(expiresInDays: expiresInDays)
@@ -230,60 +222,74 @@ class UserInfo: ObservableObject {
         if preferences.kerberosRealm == "" {
             userPasswordExpiryString = "Kerberos Realm Not Set"
         } else {
-            
-            let query = "app-sso -j -i \(preferences.kerberosRealm)"
-            
-            let task = Process()
-            let pipe = Pipe()
-            
-            task.standardOutput = pipe
-            task.standardError = pipe
-            task.launchPath = "/bin/zsh"
-            task.arguments = ["-c", "\(query)"]
-            task.launch()
-            
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            let output = String(data: data, encoding: .utf8)!
-            
-            if !task.isRunning {
-                let status = task.terminationStatus
-                if status == 0 {
-                    logger.debug("\(output)")
-                } else {
-                    logger.error("\(output)")
-                }
-            }
-            
-            // Set JSONDecoder to handle ISO-8601 dates
-            let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = .iso8601
-            
-            // Try to decode JSON output to get password expiry date
-            do {
-                let decoded = try decoder.decode(KerberosSSOExtension.self, from: data)
-               
-                if decoded.passwordExpiresDate != nil && decoded.userName != nil {
-                    let expiresInDays = Calendar.current.dateComponents([.day], from: Date(), to: decoded.passwordExpiresDate!).day!
-                    setNotificationBadge(expiresInDays: expiresInDays)
-                    
-                    if expiresInDays > 1 {
-                        userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" days", comment: ""))
+
+            // Perform on background thread
+            DispatchQueue.global().async { [self] in
+                
+                let query = "app-sso -j -i \(preferences.kerberosRealm)"
+                
+                let task = Process()
+                let pipe = Pipe()
+                
+                task.standardOutput = pipe
+                task.standardError = pipe
+                task.launchPath = "/bin/zsh"
+                task.arguments = ["-c", "\(query)"]
+                task.launch()
+                
+                let data = pipe.fileHandleForReading.readDataToEndOfFile()
+                let output = String(data: data, encoding: .utf8)!
+                
+                if !task.isRunning {
+                    let status = task.terminationStatus
+                    if status == 0 {
+                        logger.debug("\(output)")
                     } else {
-                        userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" day", comment: ""))
+                        logger.error("\(output)")
                     }
-                } else if decoded.passwordExpiresDate == nil && decoded.userName != nil {
-                    userPasswordExpiryString = NSLocalizedString("Never Expires", comment: "")
-                    // Set boolean to false to hide alert and menu bar icon notification badge
-                    passwordExpiryLimitReached = false
-                } else {
-                    userPasswordExpiryString = signInString
-                    // Set boolean to false to hide alert and menu bar icon notification badge
-                    passwordExpiryLimitReached = false
                 }
                 
-            } catch {
-                logger.error("\(error.localizedDescription)")
-                userPasswordExpiryString = error.localizedDescription
+                // Set JSONDecoder to handle ISO-8601 dates
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .iso8601
+                
+                // Publish values back on the main thread
+                DispatchQueue.main.async {
+                    
+                    // Try to decode JSON output to get password expiry date
+                    do {
+                        let decoded = try decoder.decode(KerberosSSOExtension.self, from: data)
+                        
+                        if decoded.passwordExpiresDate != nil && decoded.userName != nil {
+                            let expiresInDays = Calendar.current.dateComponents([.day], from: Date(), to: decoded.passwordExpiresDate!).day!
+                            setNotificationBadge(expiresInDays: expiresInDays)
+                            
+                            if expiresInDays == 0 {
+                                userPasswordExpiryString = NSLocalizedString("Expires Today", comment: "")
+                            } else if expiresInDays < 0 {
+                                userPasswordExpiryString = NSLocalizedString("Expired", comment: "")
+                            } else {
+                                if expiresInDays > 1 {
+                                    userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" days", comment: ""))
+                                } else {
+                                    userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" day", comment: ""))
+                                }
+                            }
+                        } else if decoded.passwordExpiresDate == nil && decoded.userName != nil {
+                            userPasswordExpiryString = NSLocalizedString("Never Expires", comment: "")
+                            // Set boolean to false to hide alert and menu bar icon notification badge
+                            passwordExpiryLimitReached = false
+                        } else {
+                            userPasswordExpiryString = signInString
+                            // Set boolean to false to hide alert and menu bar icon notification badge
+                            passwordExpiryLimitReached = false
+                        }
+                        
+                    } catch {
+                        logger.error("\(error.localizedDescription)")
+                        userPasswordExpiryString = error.localizedDescription
+                    }
+                }
             }
         }
     }
@@ -306,10 +312,16 @@ class UserInfo: ObservableObject {
         
         let expiresInDays = Calendar.current.dateComponents([.day], from: Date(), to: expiryDate).day!
         
-        if expiresInDays > 1 {
-            userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" days", comment: ""))
+        if expiresInDays == 0 {
+            userPasswordExpiryString = NSLocalizedString("Expires Today", comment: "")
+        } else if expiresInDays < 0 {
+            userPasswordExpiryString = NSLocalizedString("Expired", comment: "")
         } else {
-            userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" day", comment: ""))
+            if expiresInDays > 1 {
+                userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" days", comment: ""))
+            } else {
+                userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" day", comment: ""))
+            }
         }
         
         setNotificationBadge(expiresInDays: expiresInDays)

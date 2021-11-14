@@ -208,7 +208,7 @@ struct ContentView: View {
                 .padding(.horizontal, 10)
                 
                 // MARK: - Third optional horizontal stack with Password and Network as defaults
-                if preferences.customItemSymbolA != "" || preferences.customItemTitleB != "" {
+                if preferences.infoItemFive != "" || preferences.infoItemSix != "" {
                     HStack(spacing: 10) {
                         
                         // Item left
