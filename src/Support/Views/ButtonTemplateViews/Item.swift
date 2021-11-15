@@ -79,6 +79,8 @@ struct Item: View {
                         Text(subtitle ?? "")
                             .font(.system(.subheadline, design: .rounded))
                             .lineLimit(2)
+                            // Show placeholder when no initial value is set for Custom Info Items
+                            .redacted(reason: (subtitle == "KeyPlaceholder") ? .placeholder: .init())
                         
                     }
                 }

@@ -69,11 +69,13 @@ class Preferences: ObservableObject {
     // MARK: - Custom Info Items
     @AppStorage("CustomItemTitleA") var customItemTitleA: String = ""
     @AppStorage("CustomItemSymbolA") var customItemSymbolA: String = ""
-    @AppStorage("CustomItemCommandA") var customItemCommandA: String = ""
+    @AppStorage("CustomItemTypeA") var customItemTypeA: String = "App"
+    @AppStorage("CustomItemLinkA") var customItemLinkA: String = ""
 
     @AppStorage("CustomItemTitleB") var customItemTitleB: String = ""
     @AppStorage("CustomItemSymbolB") var customItemSymbolB: String = ""
-    @AppStorage("CustomItemCommandB") var customItemCommandB: String = ""
+    @AppStorage("CustomItemTypeB") var customItemTypeB: String = "App"
+    @AppStorage("CustomItemLinkB") var customItemLinkB: String = ""
     
     // MARK: - First row of configurable buttons
     
@@ -127,7 +129,6 @@ class Preferences: ObservableObject {
     @AppStorage("HasSeenWelcomeScreen") var hasSeenWelcomeScreen = false
     
     // Booleans to integrate with scripts/commands and show ProgressView while active
-    
     @AppStorage("FirstRowLoadingLeft") var firstRowLoadingLeft = Bool()
     @AppStorage("FirstRowLoadingMiddle") var firstRowLoadingMiddle = Bool()
     @AppStorage("FirstRowLoadingRight") var firstRowLoadingRight = Bool()
@@ -135,4 +136,7 @@ class Preferences: ObservableObject {
     @AppStorage("SecondRowLoadingMiddle") var secondRowLoadingMiddle = Bool()
     @AppStorage("SecondRowLoadingRight") var secondRowLoadingRight = Bool()
     
+    // Custom Item placeholders
+    @AppStorage("CustomItemPrefKeyA") var customItemPrefKeyA: String = "KeyPlaceholder"
+    @AppStorage("CustomItemLoadingA") var customItemLoadingA = Bool()
 }

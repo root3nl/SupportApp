@@ -211,10 +211,10 @@
       "description": "Info item shown in the upper left corner",
       "type": "string",
       "options": {
-        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime"],
+        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Custom A", "Custom B"],
         "infoText": "Key name: InfoItemOne"
       },
-      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime"],
+      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "CustomA", "CustomB"],
       "links": [
         {
           "rel": "Documentation",
@@ -227,10 +227,10 @@
       "description": "Info item shown in the upper right corner",
       "type": "string",
       "options": {
-        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime"],
+        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Custom A", "Custom B"],
         "infoText": "Key name: InfoItemTwo"
       },
-      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime"],
+      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "CustomA", "CustomB"],
       "links": [
         {
           "rel": "Documentation",
@@ -243,10 +243,10 @@
       "description": "Info item shown in the second row left",
       "type": "string",
       "options": {
-        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime"],
+        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Custom A", "Custom B"],
         "infoText": "Key name: InfoItemThree"
       },
-      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime"],
+      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "CustomA", "CustomB"],
       "links": [
         {
           "rel": "Documentation",
@@ -259,10 +259,42 @@
       "description": "Info item shown in the second row right",
       "type": "string",
       "options": {
-        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime"],
+        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Custom A", "Custom B"],
         "infoText": "Key name: InfoItemFour"
       },
-      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime"],
+      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "CustomA", "CustomB"],
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "InfoItemFive": {
+      "title": "Info item 5th tile",
+      "description": "Info item shown in the third row left",
+      "type": "string",
+      "options": {
+        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Custom A", "Custom B"],
+        "infoText": "Key name: InfoItemFive"
+      },
+      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "CustomA", "CustomB"],
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "InfoItemSix": {
+      "title": "Info item 6th tile",
+      "description": "Info item shown in the third row right",
+      "type": "string",
+      "options": {
+        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Custom A", "Custom B"],
+        "infoText": "Key name: InfoItemSix"
+      },
+      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "CustomA", "CustomB"],
       "links": [
         {
           "rel": "Documentation",
@@ -780,6 +812,64 @@
       "type": "string",
       "options": {
         "infoText": "Key name: SecondRowSymbolRight"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "CustomItemTitleA": {
+      "title": "",
+      "description": "",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: CustomItemTitleA"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "CustomItemSymbolA": {
+      "title": "",
+      "description": "",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: CustomItemSymbolA"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "CustomItemTypeA": {
+      "title": "",
+      "description": "",
+      "type": "string",
+      "options": {
+        "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script"],
+        "infoText": "Key name: CustomItemTypeA"
+      },
+      "enum": ["App", "URL", "Command", "DistributedNotification"],
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "CustomItemLinkA": {
+      "title": "",
+      "description": "",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: CustomItemLinkA"
       },
       "links": [
         {
