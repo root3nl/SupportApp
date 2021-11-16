@@ -136,7 +136,10 @@ class Preferences: ObservableObject {
     @AppStorage("SecondRowLoadingMiddle") var secondRowLoadingMiddle = Bool()
     @AppStorage("SecondRowLoadingRight") var secondRowLoadingRight = Bool()
     
-    // Custom Item placeholders
+    // Custom Item placeholders and loading effect booleans
     @AppStorage("CustomItemPrefKeyA") var customItemPrefKeyA: String = "KeyPlaceholder"
     @AppStorage("CustomItemLoadingA") var customItemLoadingA = Bool()
+    
+    @AppStorage("CustomItemPrefKeyB") var customItemPrefKeyB: String = "KeyPlaceholder"
+    @AppStorage("CustomItemLoadingB") var customItemLoadingB = Bool()
 }
