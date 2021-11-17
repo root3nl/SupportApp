@@ -328,6 +328,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.computerinfo.getIPAddress()
             self.userinfo.getCurrentUserRecord()
             
+            // Post Distributed Notification to trigger script for custom info items
+            postDistributedNotification()
+            
         }
         // Necessary to make the view active without having to do an extra click
         self.popover.contentViewController?.view.window?.becomeKey()
@@ -362,5 +365,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func openDocumentation() {
         let url = URL(string: "https://github.com/root3nl/SupportApp")
         NSWorkspace.shared.open(url!)
+    }
+    
+    // Post Distributed Notification
+    func postDistributedNotification() {
+        logger.debug("Posting Distributed Notification: nl.root3.support.FinishedLoading")
+        
+        // Initialize distributed notifications
+        let nc = DistributedNotificationCenter.default()
+        
+        // Define the NSNotification name
+        let name = NSNotification.Name("nl.root3.support.FinishedLoading")
+        
+        // Post the notification including all sessions to support LaunchDaemons
+        nc.postNotificationName(name, object: defaults.string(forKey: "LoadingScript"), userInfo: nil, options: [.postToAllSessions, .deliverImmediately])
+
     }
 }
