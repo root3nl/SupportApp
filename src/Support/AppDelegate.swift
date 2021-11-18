@@ -369,16 +369,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     // Post Distributed Notification
     func postDistributedNotification() {
-        logger.debug("Posting Distributed Notification: nl.root3.support.FinishedLoading")
+        logger.debug("Posting Distributed Notification: nl.root3.support.SupportAppeared")
         
         // Initialize distributed notifications
         let nc = DistributedNotificationCenter.default()
         
         // Define the NSNotification name
-        let name = NSNotification.Name("nl.root3.support.FinishedLoading")
+        let name = NSNotification.Name("nl.root3.support.SupportAppeared")
         
         // Post the notification including all sessions to support LaunchDaemons
-        nc.postNotificationName(name, object: defaults.string(forKey: "LoadingScript"), userInfo: nil, options: [.postToAllSessions, .deliverImmediately])
+        nc.postNotificationName(name, object: defaults.string(forKey: "OnAppearScript"), userInfo: nil, options: [.postToAllSessions, .deliverImmediately])
 
     }
 }

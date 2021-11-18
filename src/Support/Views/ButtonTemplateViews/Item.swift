@@ -53,10 +53,10 @@ struct Item: View {
                         .padding(.leading, 10)
                 } else {
                     Ellipse()
-                        .foregroundColor(hoverView ? .primary : symbolColor)
+                        .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
                         .overlay(
                             Image(systemName: image)
-                                .foregroundColor(hoverView ? Color("hoverColor") : Color.white)
+                                .foregroundColor(hoverView && link != "" ? Color("hoverColor") : Color.white)
                         )
                         .frame(width: 26, height: 26)
                         .padding(.leading, 10)
@@ -97,7 +97,7 @@ struct Item: View {
             }
         }
         .frame(width: 176, height: 60)
-        .background(hoverView && hoverEffectEnable ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
+        .background(hoverView && hoverEffectEnable && link != "" ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
         .cornerRadius(10)
         // Apply gray and black border in Dark Mode to better view the buttons like Control Center
         .modifier(DarkModeBorder())

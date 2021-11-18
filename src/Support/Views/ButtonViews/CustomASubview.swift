@@ -34,7 +34,7 @@ struct CustomASubview: View {
     
     var body: some View {
         
-        Item(title: preferences.customItemTitleA, subtitle: preferences.customItemPrefKeyA, linkType: preferences.customItemTypeA, link: preferences.customItemLinkA, image: preferences.customItemSymbolA, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.customItemLoadingA, hoverEffectEnable: false, hoverView: false, animate: false)
+        Item(title: preferences.customItemTitleA, subtitle: preferences.customItemPrefKeyA, linkType: preferences.customItemTypeA, link: preferences.customItemLinkA, image: preferences.customItemSymbolA, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.customItemLoadingA, hoverEffectEnable: true, hoverView: false, animate: false)
         
     }
 }
