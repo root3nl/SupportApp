@@ -116,6 +116,12 @@ struct Item: View {
             }
         }
         .onTapGesture() {
+            // Don't do anything when no link is specified
+            guard link != "" else {
+                logger.debug("No link specified for \(title), button disabled...")
+                return
+            }
+            
             if linkType == "App" {
                 openApp()
             } else if linkType == "URL" {
