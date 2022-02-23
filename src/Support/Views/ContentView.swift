@@ -299,16 +299,11 @@ struct ContentView: View {
                 if preferences.footerText != "" {
                     HStack {
                         
-                        if #available(macOS 12, *) {
-                            Text((try? AttributedString(markdown: preferences.footerText)) ?? AttributedString())
+                        // Supports for markdown through a variable:
+                        // https://blog.eidinger.info/3-surprises-when-using-markdown-in-swiftui
+                        Text(.init(preferences.footerText))
                                 .font(.system(.subheadline, design: .rounded))
                                 .foregroundColor(.secondary)
-                        } else {
-                            // Fallback on earlier versions
-                            Text(preferences.footerText)
-                                .font(.system(.subheadline, design: .rounded))
-                                .foregroundColor(.secondary)
-                        }
                         
                         Spacer()
                         
@@ -321,7 +316,7 @@ struct ContentView: View {
             }
             .padding(.bottom, 10)
         }
-        // MARK: - Run functions the ContentView appears for the first time
+        // MARK: - Run functions when ContentView appears for the first time
         .onAppear {
             computerinfo.getModelIdentifier()
             computerinfo.getModelName()
