@@ -82,11 +82,12 @@ struct ItemDouble: View {
         .modifier(DarkModeBorder())
         .shadow(color: Color.black.opacity(0.2), radius: 4, y: 2)
         .alert(isPresented: $showingAlert) {
-            Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
+            // FIXME: - Adjust when Jamf Connect Password Change can be triggered
+            // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
+            Alert(title: Text(linkType == "JamfConnectPasswordChangeException" ? NSLocalizedString("OPEN_JAMF_CONNECT_MANUALLY", comment: "") : NSLocalizedString("An error occurred", comment: "")), message: Text(linkType == "JamfConnectPasswordChangeException" ? NSLocalizedString("OPEN_JAMF_CONNECT_MANUALLY_TEXT", comment: "") : preferences.errorMessage), dismissButton: .default(Text("OK")))
         }
         .onHover() {
             hover in self.hoverView = hover
-            
         }
         .onTapGesture() {
             if linkType == "App" {
@@ -98,8 +99,14 @@ struct ItemDouble: View {
             } else if linkType == "DistributedNotification" {
                 postDistributedNotification()
             } else {
-                self.showingAlert.toggle()
-                logger.error("Invalid Link Type: \(linkType!)")
+                // FIXME: - Asjust when Jamf Connect Password Change can be triggered
+                // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
+                if linkType == "JamfConnectPasswordChangeException" {
+                    self.showingAlert.toggle()
+                } else {
+                    self.showingAlert.toggle()
+                    logger.error("Invalid Link Type: \(linkType!)")
+                }
             }
         }
     }

@@ -45,3 +45,5 @@
 "Get in touch" = "Neem contact op";
 "GET_IN_TOUCH_TEXT" = "Maak snel een ticket aan of dien een verzoek in";
 "Continue" = "Doorgaan";
+"OPEN_JAMF_CONNECT_MANUALLY" = "Open Jamf Connect";
+"OPEN_JAMF_CONNECT_MANUALLY_TEXT" = "Open Jamf Connect in de menubalk om je wachtwoord te wijzigen";

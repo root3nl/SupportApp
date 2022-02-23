@@ -323,6 +323,7 @@ struct ContentView: View {
             computerinfo.getmacOSVersionName()
             dataLoadingEffect()
         }
+        // MARK: - Show placeholders while loading
         .redacted(reason: placeholdersEnabled ? .placeholder : .init())
     }
     

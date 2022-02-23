@@ -49,7 +49,6 @@ class UserInfo: ObservableObject {
     
     // Set the password change string when hovering over the password info item. Show the sign in string when not logged in instead of the password change string.
     var passwordChangeString: String {
-//        if passwordString == signInString {
         if userPasswordExpiryString == signInString {
             return signInString
         } else {
@@ -57,14 +56,15 @@ class UserInfo: ObservableObject {
         }
     }
     
-    // Set the password change link based on password type
+    // MARK: -  Set the password change link based on password type
     var passwordChangeLink: String {
         if preferences.passwordType == "Apple" {
             return "open /System/Library/PreferencePanes/Accounts.prefPane"
         } else if preferences.passwordType == "JamfConnect" {
             if defaultsJamfConnect?.bool(forKey: "PasswordCurrent") ?? false {
                 // FIXME: - Need an option to change password using Jamf Connect
-                return "open /System/Library/PreferencePanes/Accounts.prefPane"
+                // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
+                return ""
             } else {
                 return "open jamfconnect://signin"
             }
@@ -85,7 +85,7 @@ class UserInfo: ObservableObject {
         }
     }
     
-    // Function to check which password source to check
+    // MARK: - Function to check which password source to check
     func getCurrentUserRecord() {
         if preferences.passwordType == "Apple" {
             applePasswordExpiryDate()
@@ -95,6 +95,8 @@ class UserInfo: ObservableObject {
             kerbSSOExpiryDate()
         } else if preferences.passwordType == "Nomad" {
             nomadExpiryDate()
+        } else if !preferences.passwordType.isEmpty {
+            logger.error("Invalid password type: \(self.preferences.passwordType)")
         }
     }
     
@@ -328,8 +330,8 @@ class UserInfo: ObservableObject {
         
     }
     
+    // MARK: - Determine if notification badge with exclamation mark should be shown in tile
     func setNotificationBadge(expiresInDays: Int) {
-        // Determine if notification badge with exclamation mark should be shown in tile
         if preferences.passwordExpiryLimit > 0 && expiresInDays <= preferences.passwordExpiryLimit {
             // Set boolean to true to show alert and menu bar icon notification badge
             passwordExpiryLimitReached = true
@@ -346,7 +348,6 @@ class UserInfo: ObservableObject {
     func changePassword() {
         do {
             let node = try ODNode.init(session: session, type: UInt32(kODNodeTypeAuthentication))
-//            let node = try ODNode.init(session: session, type: UInt32(kODNodeTypeLocalNodes))
             let query = try ODQuery.init(node: node, forRecordTypes: kODRecordTypeUsers, attribute: kODAttributeTypeRecordName, matchType: UInt32(kODMatchEqualTo), queryValues: currentConsoleUserName, returnAttributes: kODAttributeTypeNativeOnly, maximumResults: 0)
             records = try query.resultsAllowingPartial(false) as! [ODRecord]
         } catch {
