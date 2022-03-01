@@ -22,6 +22,7 @@
 - [Configuration](#configuration)
 - [Advanced configuration](#advanced-configuration)
   * [Populate custom info items](#populate-custom-info-items)
+  * [Jamf variables](#jamf-variables)
 - [How to use SF Symbols](#how-to-use-sf-symbols)
 - [MDM deployment](#mdm-deployment)
   * [Jamf Pro custom JSON Schema](#jamf-pro-custom-json-schema)
