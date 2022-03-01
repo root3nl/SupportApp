@@ -93,7 +93,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         // Create menu items for right click
         menu.addItem(NSMenuItem(title: NSLocalizedString("About Support", comment: ""), action: #selector(AppDelegate.showAbout), keyEquivalent: "i"))
-//        menu.addItem(NSMenuItem(title: NSLocalizedString("Help and Documentation", comment: ""), action: #selector(AppDelegate.openDocumentation), keyEquivalent: "h"))
         menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: NSLocalizedString("Quit Support", comment: ""), action: #selector(NSApplication.shared.terminate(_:)), keyEquivalent: "q"))
                 
@@ -158,6 +157,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 preferences.infoItemTwo,
                 preferences.infoItemThree,
                 preferences.infoItemFour,
+                preferences.infoItemFive,
+                preferences.infoItemSix
             ]
             
             // Show notification badge in menu bar icon when info item when needed
@@ -359,12 +360,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func showAbout() {
         NSApplication.shared.activate(ignoringOtherApps: true)
         NSApp.orderFrontStandardAboutPanel(self)
-    }
-    
-    // MARK: - Open the documentation
-    @objc func openDocumentation() {
-        let url = URL(string: "https://github.com/root3nl/SupportApp")
-        NSWorkspace.shared.open(url!)
     }
     
     // Post Distributed Notification
