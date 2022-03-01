@@ -20,6 +20,8 @@
   * [Notification Icon](#notification-icon)
   * [Welcome Screen](#welcome-screen)
 - [Configuration](#configuration)
+- [Advanced configuration](#advanced-configuration)
+  * [Populate custom info items](#populate-custom-info-items)
 - [How to use SF Symbols](#how-to-use-sf-symbols)
 - [MDM deployment](#mdm-deployment)
   * [Jamf Pro custom JSON Schema](#jamf-pro-custom-json-schema)
@@ -93,6 +95,10 @@ There are a couple of info items with diagnostics available to choose from. A to
 
 * **Mac Password**: Shows when the user's password expires and supports both local and Active Directory accounts. Shows a warning when the expiry reaches the value set in the optional key 'PasswordExpiryLimit'. The text label in the item can be modified using the preference key ‘PasswordLabel’.
 
+* **Custom Item A**: A custom info item to show any information. The title, icon must be configured and optionally a link to open an App, URL or Command. The value below the title must be populated by setting a preference key using a script.
+
+* **Custom Item B**: A custom info item to show any information. The title, icon must be configured and optionally a link to open an App, URL or Command. The value below the title must be populated by setting a preference key using a script.
+
 ### App, link or command shortcuts
 The buttons in the 3rd and 4th row behave as shortcuts to applications or links. Both rows are flexible and can show two or three buttons. The total amount of configurable buttons is possible: 0, 2, 3, 4, 5, 6. You can configure five variables for every of these buttons:
 
@@ -140,6 +146,8 @@ The configuration of the Support app is optimized for use with your MDM solution
 
 Some preference keys like the icon and status bar icon point to a file location. Due to the sandboxed characteristic of the app, not all file locations are allowed. We suggest putting the files in a folder within Application Support such as `/Library/Application Support/Your Company/` where the app can read the contents. Other supported file locations can be found in Apple’s documentation about App Sandbox: https://developer.apple.com/library/archive/documentation/Security/Conceptual/AppSandboxDesignGuide/AppSandboxInDepth/AppSandboxInDepth.html#//apple_ref/doc/uid/TP40011183-CH3-SW17
 
+**Preference domain**: `nl.root3.support`
+
 Below are all available preference keys:
 
 ### General
@@ -165,13 +173,17 @@ All general settings
 Configuration of the top four items with diagnostic information.
 | Preference key | Type | Default value | Description | Example |
 | --- | --- | --- | --- | --- |
-| InfoItemOne | String | ComputerName | Info item shown in the upper left corner | "ComputerName", "MacOSVersion", "Network", "Password", "Storage" or "Uptime" |
-| InfoItemTwo | String | MacOSVersion | Info item shown in the upper right corner | "ComputerName", "MacOSVersion", "Network", "Password", "Storage" or "Uptime" |
-| InfoItemThree | String | Uptime | Info item shown in the second row left | "ComputerName", "MacOSVersion", "Network", "Password", "Storage" or "Uptime" |
-| InfoItemFour | String | Storage | Info item shown in the second row right | "ComputerName", "MacOSVersion", "Network", "Password", "Storage" or "Uptime" |
+| InfoItemOne | String | ComputerName | Info item shown in the upper left corner | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "CustomA" or "CustomB" |
+| InfoItemTwo | String | MacOSVersion | Info item shown in the upper right corner | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "CustomA" or "CustomB" |
+| InfoItemThree | String | Uptime | Info item shown in the second row left | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "CustomA" or "CustomB" |
+| InfoItemFour | String | Storage | Info item shown in the second row right | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "CustomA" or "CustomB" |
+| InfoItemFive | String | - | Info item shown in the third row left | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "CustomA" or "CustomB" |
+| InfoItemSix | String | - | Info item shown in the third row right | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "CustomA" or "CustomB" |
 | UptimeDaysLimit | Integer | 0 (Disabled) | Days of uptime after which a notification badge is shown, disabled by default | 7 |
+| PasswordType | String | Apple | The account type to use with the Password info item: local user account (Apple), Jamf Connect, Kerberos SSO Extension or NoMAD | "Apple", "JamfConnect", "KerberosSSO" or "Nomad" |
 | PasswordExpiryLimit| Integer | 0 (Disabled) | Days until password expiry after which a notification badge is shown, disabled by default | 14 |
 | PasswordLabel| String | Mac Password | Alternative text label shown in the Password info item | "AD Password", "Company Password" |
+| KerberosRealm | String | - | The Kerberos Realm used by the Kerberos SSO Extension, usually the domain name in capitals. Only needed when `PasswordType` is set to "KerberosSSO" | "AD.DOMAIN.TLD" |
 | StorageLimit | Integer | 0 (Disabled) | Percentage of storage used after which a notification badge is shown, disabled by default | 80 |
 
 ### First row of configurable items: Item left
@@ -219,7 +231,7 @@ Configuration of the top four items with diagnostic information.
 | SecondRowLinkMiddle | String | - | The Bundle Identifier of the app, URL or command to open. | “https://yourticketsystem.tld”, “mailto:support@company.tld”, “tel:+31000000000” or “smb://yourfileserver.tld” |
 | SecondRowSymbolMiddle | String | - | The SF Symbol shown in the button. | “paperplane”, “arrowshape.turn.up.right.fill” or any other SF Symbol. Please check the SF Symbols section. |
 
-### Second row of configurable items: Item right**
+### Second row of configurable items: Item right
 | Preference key | Type | Default value | Description | Example |
 | --- | --- | --- | --- | --- |
 | SecondRowTitleRight | String | Phone | The text shown in the button label. | “Call Helpdesk“, “Phone“ |
@@ -227,6 +239,61 @@ Configuration of the top four items with diagnostic information.
 | SecondRowTypeRight | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL** or **Command** |
 | SecondRowLinkRight | String | tel:+31000000000 | The Bundle Identifier of the app, URL or command to open. | “https://yourticketsystem.tld”, “mailto:support@company.tld”, “tel:+31000000000” or “smb://yourfileserver.tld” |
 | SecondRowSymbolRight | String | phone | The SF Symbol shown in the button. | “iphone.homebutton”, “megaphone” or any other SF Symbol. Please check the SF Symbols section. |
+
+## Advanced configuration
+
+### Custom info items
+Below are the preference keys to enable custom info items:
+| Preference key | Type | Default value | Description | Example |
+| --- | --- | --- | --- | --- |
+| CustomItemTitleA | String | - | The title shown in the custom info item. | "Endpoint Security" |
+| CustomItemSymbolA | String | - | The SF Symbol shown in the custom info item. | "checkerboard.shield" |
+| CustomItemTypeA | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL** or **Command** |
+| CustomItemLinkA | String | - | The Bundle Identifier of the app, URL or command to open. | --- |
+| CustomItemTitleB | String | - | The title shown in the custom info item. | "Endpoint Security" |
+| CustomItemSymbolB | String | - | The SF Symbol shown in the custom info item. | "checkerboard.shield" |
+| CustomItemTypeB | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL** or **Command** |
+| CustomItemLinkB | String | - | The Bundle Identifier of the app, URL or command to open. | --- |
+
+#### Populate custom info items
+Custom info items must be populated by setting the value in a preference key within the preference domain `nl.root3.support`. This can be achieved by running custom scripts from your MDM solution.
+
+* Create a custom script and populate the desired value by running the following command: `sudo defaults write /Library/Preferences/nl.root3.support.plist CustomItemPrefKeyA -string "OUTPUTVALUE"`
+* Add the following command to show a placeholder while getting the value: `sudo defaults write /Library/Preferences/nl.root3.support.plist CustomItemPrefKeyA -string "KeyPlaceholder"`
+* Add the following command at the **beginning of the script** to show a progress view while getting the value: `sudo defaults write /Library/Preferences/nl.root3.support.plist CustomItemLoadingA -bool true`
+* Add the following command at the **end of the script** to stop the progress view: `sudo defaults write /Library/Preferences/nl.root3.support.plist CustomItemLoadingA -bool false`
+
+Below a simple example script including loading effect and placeholder while loading
+```
+#!/bin/zsh
+
+# Show progress view while loading
+defaults write /Library/Preferences/nl.root3.support.plist CustomItemLoadingA -bool true
+
+# Show placeholder value while loading
+defaults write /Library/Preferences/nl.root3.support.plist CustomItemPrefKeyA -string "KeyPlaceholder"
+
+# Sleep to simulate loading effect
+sleep 0.5
+
+# Get output value
+filevault_status=$(fdesetup status)
+sip_status=$(if [[ $(csrutil status) == *enabled* ]]; then echo "Enabled"; else echo "Disabled"; fi)
+
+# Set output value
+defaults write /Library/Preferences/nl.root3.support.plist CustomItemPrefKeyA -string "${filevault_status}"
+
+# Stop progress view
+defaults write /Library/Preferences/nl.root3.support.plist CustomItemLoadingA -bool false
+```
+
+### Jamf variables
+When using Jamf Pro as the MDM solution, variables from Jamf Pro can be used in the Configuration Profile values to dynamically populate text like the title, footer or any other text field.
+
+Example
+* Set `title` to "Hi $FULLNAME!"
+
+More information about Jamf variables: https://docs.jamf.com/10.36.0/jamf-pro/documentation/Computer_Configuration_Profiles.html
 
 ## How to use SF Symbols
 We choose to go all the way with SF Symbols as these good looking icons are designed by Apple and give the app a native look and feel. All icons have a symbol name which you can use in the Configuration Profile. As these icons are built into macOS, it automatically shows the correct icon.
@@ -260,6 +327,10 @@ A sample Configuration Profile you can edit to your preferences is provided [**h
 * Buttons may keep a hovered state when mouse cursor moves fast: FB8212902 (**resolved on macOS Monterey**)
 
 ## Changelog
+
+**Version 2.4**
+* Custom Info Items
+* Item won’t show a hover effect when no link is configured, allowing buttons to be static without a clickable action. This applies to both configurable buttons and custom info items.
 
 **Version 2.3**
 * Welcome Screen: an informational window can now optionally be shown when the Support App is opened for the first time. It explains the key features to the user.
