@@ -1,5 +1,9 @@
 # macOS Support App
 
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/root3nl/SupportApp?color=success)
+![Github](https://img.shields.io/badge/macOS-11%2B-green)
+[![Github](https://img.shields.io/badge/Join-TestFlight-blue)](https://testflight.apple.com/join/asmgJsAM)
+
 <img src="/Screenshots/generic_version_2.3.png" width="800">
 
 <img src="/Screenshots/generic_version_2.1.png" width="800">
@@ -9,6 +13,7 @@
 - [Introduction](#introduction)
 - [Requirements](#requirements)
 - [Download](#download)
+  * [TestFlight](#testflight)
 - [Technologies](#technologies)
 - [Features](#features)
   * [Menu Bar Icon](#menu-bar-icon)
@@ -58,6 +63,13 @@ Application (zipped): [**Download**](https://github.com/root3nl/SupportApp/relea
 
 See the MDM deployment section below for more info.
 
+### TestFlight
+You can participate in beta versions of Support App using TestFlight. This requires macOS 12 or higher.
+
+Join TestFlight [**here**](https://testflight.apple.com/join/asmgJsAM)
+
+Note: There may not always be a TestFlight version available.
+
 ## Technologies
 * Written in Swift using SwiftUI
 * All icons are SF Symbols
@@ -94,7 +106,7 @@ There are a couple of info items with diagnostics available to choose from. A to
 
 * **Network**: The current SSID or Ethernet along with the local IPv4 address. The icon indicates the connection type, Wi-Fi or Ethernet. Clicking on this item opens the Network preference pane in System Preferences.
 
-* **Mac Password**: Shows when the user's password expires and supports both local and Active Directory accounts. Shows a warning when the expiry reaches the value set in the optional key 'PasswordExpiryLimit'. The text label in the item can be modified using the preference key ‘PasswordLabel’.
+* **Mac Password**: Shows when the user's password expires and supports both local and Active Directory accounts by default. Alternative supported user sources are Jamf Connect, Kerberos SSO Extension and NoMAD. Shows a warning when the expiry reaches the value set in the optional key 'PasswordExpiryLimit'. The text label in the item can be modified using the preference key ‘PasswordLabel’.
 
 * **Custom Item A**: A custom info item to show any information. The title, icon must be configured and optionally a link to open an App, URL or Command. The value below the title must be populated by setting a preference key using a script.
 
