@@ -66,7 +66,7 @@ See the MDM deployment section below for more info.
 ### TestFlight
 You can participate in beta versions of Support App using TestFlight. This requires macOS 12 or higher.
 
-Join TestFlight [**here**](https://testflight.apple.com/join/asmgJsAM)
+[**Join TestFlight**](https://testflight.apple.com/join/asmgJsAM)
 
 Note: There may not always be a TestFlight version available.
 
