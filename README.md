@@ -1,5 +1,9 @@
 # macOS Support App
 
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/root3nl/SupportApp?color=success)
+![Github](https://img.shields.io/badge/macOS-11%2B-green)
+[![Github](https://img.shields.io/badge/Join-TestFlight-blue)](https://testflight.apple.com/join/asmgJsAM)
+
 <img src="/Screenshots/generic_version_2.3.png" width="800">
 
 <img src="/Screenshots/generic_version_2.1.png" width="800">
@@ -9,6 +13,7 @@
 - [Introduction](#introduction)
 - [Requirements](#requirements)
 - [Download](#download)
+  * [TestFlight](#testflight)
 - [Technologies](#technologies)
 - [Features](#features)
   * [Menu Bar Icon](#menu-bar-icon)
@@ -54,6 +59,13 @@ Package Installer (includes LaunchAgent): [**Download**](https://github.com/root
 Application (zipped): [**Download**](https://github.com/root3nl/SupportApp/releases/latest)
 
 See the MDM deployment section below for more info.
+
+### TestFlight
+You can participate in beta versions of Support App using TestFlight. This requires macOS 12 or higher.
+
+[**Join TestFlight**](https://testflight.apple.com/join/asmgJsAM)
+
+Note: There may not always be a TestFlight version available.
 
 ## Technologies
 * Written in Swift using SwiftUI
