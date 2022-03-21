@@ -138,35 +138,35 @@ class UserInfo: ObservableObject {
                             
                             // Show Today when password expires in less than 24 hours
                             if userPasswordExpires < 86400 && userPasswordExpires > 0 {
-                                userPasswordExpiryString = NSLocalizedString("Expires Today", comment: "")
+                                self.userPasswordExpiryString = NSLocalizedString("Expires Today", comment: "")
                                 
                                 // Show Password never expires when password policy is disabled
                             } else if userPasswordExpires == -1 {
-                                userPasswordExpiryString = NSLocalizedString("Never Expires", comment: "")
+                                self.userPasswordExpiryString = NSLocalizedString("Never Expires", comment: "")
                                 
                                 // Show Password is expired
                             } else if userPasswordExpires == 0 {
-                                userPasswordExpiryString = NSLocalizedString("Expired", comment: "")
+                                self.userPasswordExpiryString = NSLocalizedString("Expired", comment: "")
                                 // Show x days until expiry
                             } else {
-                                userPasswordExpiresInDays = Int(userPasswordExpires / 60 / 60 / 24)
-                                if userPasswordExpiresInDays > 1 {
-                                    userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(userPasswordExpiresInDays)" + NSLocalizedString(" days", comment: ""))
+                                self.userPasswordExpiresInDays = Int(userPasswordExpires / 60 / 60 / 24)
+                                if self.userPasswordExpiresInDays > 1 {
+                                    self.userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(self.userPasswordExpiresInDays)" + NSLocalizedString(" days", comment: ""))
                                 } else {
-                                    userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(userPasswordExpiresInDays)" + NSLocalizedString(" day", comment: ""))
+                                    self.userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(self.userPasswordExpiresInDays)" + NSLocalizedString(" day", comment: ""))
                                 }
                             }
                             
                             // Determine if notification badge with exclamation mark should be shown in tile
-                            if preferences.passwordExpiryLimit > 0 && userPasswordExpiresInDays <= preferences.passwordExpiryLimit {
+                            if self.preferences.passwordExpiryLimit > 0 && self.userPasswordExpiresInDays <= self.preferences.passwordExpiryLimit {
                                 // Only apply when password policy is enabled
                                 if userPasswordExpires != -1 {
                                     // Set boolean to true to show alert and menu bar icon notification badge
-                                    passwordExpiryLimitReached = true
+                                    self.passwordExpiryLimitReached = true
                                 }
                             } else {
                                 // Set boolean to false to hide alert and menu bar icon notification badge
-                                passwordExpiryLimitReached = false
+                                self.passwordExpiryLimitReached = false
                             }
                             
                             // Post changes to notification center
@@ -264,32 +264,32 @@ class UserInfo: ObservableObject {
                         
                         if decoded.passwordExpiresDate != nil && decoded.userName != nil {
                             let expiresInDays = Calendar.current.dateComponents([.day], from: Date(), to: decoded.passwordExpiresDate!).day!
-                            setNotificationBadge(expiresInDays: expiresInDays)
+                            self.setNotificationBadge(expiresInDays: expiresInDays)
                             
                             if expiresInDays == 0 {
-                                userPasswordExpiryString = NSLocalizedString("Expires Today", comment: "")
+                                self.userPasswordExpiryString = NSLocalizedString("Expires Today", comment: "")
                             } else if expiresInDays < 0 {
-                                userPasswordExpiryString = NSLocalizedString("Expired", comment: "")
+                                self.userPasswordExpiryString = NSLocalizedString("Expired", comment: "")
                             } else {
                                 if expiresInDays > 1 {
-                                    userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" days", comment: ""))
+                                    self.userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" days", comment: ""))
                                 } else {
-                                    userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" day", comment: ""))
+                                    self.userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" day", comment: ""))
                                 }
                             }
                         } else if decoded.passwordExpiresDate == nil && decoded.userName != nil {
-                            userPasswordExpiryString = NSLocalizedString("Never Expires", comment: "")
+                            self.userPasswordExpiryString = NSLocalizedString("Never Expires", comment: "")
                             // Set boolean to false to hide alert and menu bar icon notification badge
-                            passwordExpiryLimitReached = false
+                            self.passwordExpiryLimitReached = false
                         } else {
-                            userPasswordExpiryString = signInString
+                            self.userPasswordExpiryString = self.signInString
                             // Set boolean to false to hide alert and menu bar icon notification badge
-                            passwordExpiryLimitReached = false
+                            self.passwordExpiryLimitReached = false
                         }
                         
                     } catch {
-                        logger.error("\(error.localizedDescription)")
-                        userPasswordExpiryString = error.localizedDescription
+                        self.logger.error("\(error.localizedDescription)")
+                        self.userPasswordExpiryString = error.localizedDescription
                     }
                 }
             }
