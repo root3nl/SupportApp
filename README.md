@@ -26,9 +26,11 @@
   * [Welcome Screen](#welcome-screen)
 - [Configuration](#configuration)
 - [Advanced configuration](#advanced-configuration)
-  * [Populate Support App Extensions](#populate-custom-info-items)
-  * [Privileged commands or scripts](#privileged-commands-or-scripts)
+  * [Populate Support App Extensions](#populate-support-app-extensions)
   * [Jamf variables](#jamf-variables)
+  * [Privileged commands or scripts (SupportAppHelper)](#privileged-commands-or-scripts-supportapphelper)
+    * [File locations](#file-locations)
+    * [Security Considerations](#security-considerations)
 - [How to use SF Symbols](#how-to-use-sf-symbols)
 - [MDM deployment](#mdm-deployment)
   * [Jamf Pro custom JSON Schema](#jamf-pro-custom-json-schema)
@@ -302,16 +304,6 @@ defaults write /Library/Preferences/nl.root3.support.plist ExtensionValueA -stri
 defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bool false
 ```
 
-### Privileged commands or scripts
-To allow commands or scripts to be executed with root privileges, the SupportAppHelper is available optionally. This utility is built on Distributed Notifications to allow inter-app communication between the Support App and the SupportAppHelper. The Support App notifies SupportAppHelper and the message contains the preference key set in the Configuration Profile with the command or path to the script. SupportAppHelper listens for new messages using a LaunchDaemon and executes the command or script by requesting the command or path to the script from the Configuration Profile.
-
-More information about Distributed Notifications: https://developer.apple.com/documentation/foundation/distributednotificationcenter
-
-#### Security considerations
-As SupportAppHelper is able to execute scripts or commands with root privileges, it needs to be used responsibly. For most deployments, SupportAppHelper will not be needed and we recommend deploying the Support App without SupportAppHelper. If you're unsure or unfamiliar with this concept, DO NOT use SupportAppHelper.
-
-:information_source: Only values from a Configuration Profile will be used. Values set by `defaults write` will be ignored as it imposes a security risk.
-
 ### Jamf variables
 When using Jamf Pro as the MDM solution, variables from Jamf Pro can be used in the Configuration Profile values to dynamically populate text like the title, footer or any other text field.
 
@@ -319,6 +311,23 @@ Example
 * Set `title` to "Hi $FULLNAME!"
 
 More information about Jamf variables: https://docs.jamf.com/10.36.0/jamf-pro/documentation/Computer_Configuration_Profiles.html
+
+### Privileged commands or scripts (SupportAppHelper)
+To allow commands or scripts to be executed with root privileges, the SupportAppHelper is available optionally. This utility is built on Distributed Notifications to allow inter-app communication between the Support App and the SupportAppHelper. The Support App notifies SupportAppHelper and the message contains the preference key set in the Configuration Profile with the command or path to the script. SupportAppHelper listens for new messages using a LaunchDaemon and executes the command or script by requesting the command or path to the script from the Configuration Profile.
+
+More information about Distributed Notifications: https://developer.apple.com/documentation/foundation/distributednotificationcenter
+
+#### File locations
+The SupportAppHelper installer places two files:
+
+LaunchDaemon: `/Library/LaunchDaemons/nl.root3.support.helper.plist`
+
+Binary: `/usr/local/bin/SupportAppHelper`
+
+#### Security considerations
+As SupportAppHelper is able to execute scripts or commands with root privileges, it needs to be used responsibly. For most deployments, SupportAppHelper will not be needed and we recommend deploying the Support App without SupportAppHelper. If you're unsure or unfamiliar with this concept, DO NOT use SupportAppHelper.
+
+:information_source: Only values from a Configuration Profile will be used. Values set by `defaults write` will be ignored as it imposes a security risk.
 
 ## How to use SF Symbols
 We choose to go all the way with SF Symbols as these good looking icons are designed by Apple and give the app a native look and feel. All icons have a symbol name which you can use in the Configuration Profile. As these icons are built into macOS, it automatically shows the correct icon.
