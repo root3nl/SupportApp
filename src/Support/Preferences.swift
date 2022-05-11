@@ -66,16 +66,16 @@ class Preferences: ObservableObject {
     // Percentage of storage used after which a notification badge is shown, disabled by default
     @AppStorage("StorageLimit") var storageLimit: Int = 0
     
-    // MARK: - Custom Info Items
-    @AppStorage("CustomItemTitleA") var customItemTitleA: String = ""
-    @AppStorage("CustomItemSymbolA") var customItemSymbolA: String = ""
-    @AppStorage("CustomItemTypeA") var customItemTypeA: String = "App"
-    @AppStorage("CustomItemLinkA") var customItemLinkA: String = ""
+    // MARK: - Support App Extensions
+    @AppStorage("ExtensionTitleA") var extensionTitleA: String = ""
+    @AppStorage("ExtensionSymbolA") var extensionSymbolA: String = ""
+    @AppStorage("ExtensionTypeA") var extensionTypeA: String = "App"
+    @AppStorage(extensionLinkAKey) var extensionLinkA: String = ""
 
-    @AppStorage("CustomItemTitleB") var customItemTitleB: String = ""
-    @AppStorage("CustomItemSymbolB") var customItemSymbolB: String = ""
-    @AppStorage("CustomItemTypeB") var customItemTypeB: String = "App"
-    @AppStorage("CustomItemLinkB") var customItemLinkB: String = ""
+    @AppStorage("ExtensionTitleB") var extensionTitleB: String = ""
+    @AppStorage("ExtensionSymbolB") var extensionSymbolB: String = ""
+    @AppStorage("ExtensionTypeB") var extensionTypeB: String = "App"
+    @AppStorage(extensionLinkBKey) var extensionLinkB: String = ""
     
     // MARK: - First row of configurable buttons
     
@@ -83,21 +83,21 @@ class Preferences: ObservableObject {
     @AppStorage("FirstRowTitleLeft") var firstRowTitleLeft: String = "Remote Support"
     @AppStorage("FirstRowSubtitleLeft") var firstRowSubtitleLeft: String = ""
     @AppStorage("FirstRowTypeLeft") var firstRowTypeLeft: String = "App"
-    @AppStorage("FirstRowLinkLeft") var firstRowLinkLeft: String = "com.apple.ScreenSharing"
+    @AppStorage(firstRowLinkLeftKey) var firstRowLinkLeft: String = "com.apple.ScreenSharing"
     @AppStorage("FirstRowSymbolLeft") var firstRowSymbolLeft: String = "cursorarrow"
     
     // UserDefaults for optional button middle (3th row)
     @AppStorage("FirstRowTitleMiddle") var firstRowTitleMiddle: String = ""
     @AppStorage("FirstRowSubtitleMiddle") var firstRowSubtitleMiddle: String = ""
     @AppStorage("FirstRowTypeMiddle") var firstRowTypeMiddle: String = "URL"
-    @AppStorage("FirstRowLinkMiddle") var firstRowLinkMiddle: String = ""
+    @AppStorage(firstRowLinkMiddleKey) var firstRowLinkMiddle: String = ""
     @AppStorage("FirstRowSymbolMiddle") var firstRowSymbolMiddle: String = ""
 
     // UserDefaults for button right (3rd row) with default values
     @AppStorage("FirstRowTitleRight") var firstRowTitleRight: String = "Company Store"
     @AppStorage("FirstRowSubtitleRight") var firstRowSubtitleRight: String = ""
     @AppStorage("FirstRowTypeRight") var firstRowTypeRight: String = "App"
-    @AppStorage("FirstRowLinkRight") var firstRowLinkRight: String = "com.apple.AppStore"
+    @AppStorage(firstRowLinkRightKey) var firstRowLinkRight: String = "com.apple.AppStore"
     @AppStorage("FirstRowSymbolRight") var firstRowSymbolRight: String = "cart.fill"
     
     // MARK: - Second row of configurable buttons
@@ -106,26 +106,38 @@ class Preferences: ObservableObject {
     @AppStorage("SecondRowTitleLeft") var secondRowTitleLeft: String = "Support Ticket"
     @AppStorage("SecondRowSubtitleLeft") var secondRowSubtitleLeft: String = ""
     @AppStorage("SecondRowTypeLeft") var secondRowTypeLeft: String = "URL"
-    @AppStorage("SecondRowLinkLeft") var secondRowLinkLeft: String = "https://yourticketsystem.tld"
+    @AppStorage(secondRowLinkLeftKey) var secondRowLinkLeft: String = "https://yourticketsystem.tld"
     @AppStorage("SecondRowSymbolLeft") var secondRowSymbolLeft: String = "ticket"
     
     // UserDefaults for optional button middle (4th row) with default values
     @AppStorage("SecondRowTitleMiddle") var secondRowTitleMiddle: String = ""
     @AppStorage("SecondRowSubtitleMiddle") var secondRowSubtitleMiddle: String = ""
     @AppStorage("SecondRowTypeMiddle") var secondRowTypeMiddle: String = "URL"
-    @AppStorage("SecondRowLinkMiddle") var secondRowLinkMiddle: String = ""
+    @AppStorage(secondRowLinkMiddleKey) var secondRowLinkMiddle: String = ""
     @AppStorage("SecondRowSymbolMiddle") var secondRowSymbolMiddle: String = ""
     
     // UserDefaults for button right (4th row) with default values
     @AppStorage("SecondRowTitleRight") var secondRowTitleRight: String = "Phone"
     @AppStorage("SecondRowSubtitleRight") var secondRowSubtitleRight: String = ""
     @AppStorage("SecondRowTypeRight") var secondRowTypeRight: String = "URL"
-    @AppStorage("SecondRowLinkRight") var secondRowLinkRight: String = "tel:+31000000000"
+    @AppStorage(secondRowLinkRightKey) var secondRowLinkRight: String = "tel:+31000000000"
     @AppStorage("SecondRowSymbolRight") var secondRowSymbolRight: String = "phone"
- 
-    // MARK: - Non MDM preferences
+     
     
-    // Boolean to hide the welcome screen after the first time. Should not be managed using MDM.
+    // MARK: - Preference Key Names
+    static let firstRowLinkLeftKey = "FirstRowLinkLeft"
+    static let firstRowLinkMiddleKey = "FirstRowLinkMiddle"
+    static let firstRowLinkRightKey = "FirstRowLinkRight"
+    static let secondRowLinkLeftKey = "SecondRowLinkLeft"
+    static let secondRowLinkMiddleKey = "SecondRowLinkMiddle"
+    static let secondRowLinkRightKey = "SecondRowLinkRight"
+    static let extensionLinkAKey = "ExtensionLinkA"
+    static let extensionLinkBKey = "ExtensionLinkB"
+    
+    // MARK: - Non MDM preferences
+    // These preferences are not meant to be managed by MDM but instead handled locally
+    
+    // Boolean to hide the welcome screen after the first time
     @AppStorage("HasSeenWelcomeScreen") var hasSeenWelcomeScreen = false
     
     // Booleans to integrate with scripts/commands and show ProgressView while active
@@ -136,10 +148,11 @@ class Preferences: ObservableObject {
     @AppStorage("SecondRowLoadingMiddle") var secondRowLoadingMiddle = Bool()
     @AppStorage("SecondRowLoadingRight") var secondRowLoadingRight = Bool()
     
-    // Custom Item placeholders and loading effect booleans
-    @AppStorage("CustomItemPrefKeyA") var customItemPrefKeyA: String = "KeyPlaceholder"
-    @AppStorage("CustomItemLoadingA") var customItemLoadingA = Bool()
+    // Custom Item A value and loading effect booleans. Set to "KeyPlaceholder" to default to enable placeholder view
+    @AppStorage("ExtensionValueA") var extensionValueA: String = "KeyPlaceholder"
+    @AppStorage("ExtensionLoadingA") var extensionLoadingA = Bool()
     
-    @AppStorage("CustomItemPrefKeyB") var customItemPrefKeyB: String = "KeyPlaceholder"
-    @AppStorage("CustomItemLoadingB") var customItemLoadingB = Bool()
+    // Custom Item B value and loading effect booleans. Set to "KeyPlaceholder" to default to enable placeholder view
+    @AppStorage("ExtensionValueB") var extensionValueB: String = "KeyPlaceholder"
+    @AppStorage("ExtensionLoadingB") var extensionLoadingB = Bool()
 }

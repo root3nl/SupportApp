@@ -129,10 +129,6 @@ class UserInfo: ObservableObject {
                         // Get seconds until password expires
                         let userPasswordExpires = record.secondsUntilPasswordExpires
                         
-                        // Get the account type
-                        let accountType = record.recordType
-                        logger.debug("Account Type: \(accountType ?? "")")
-                        
                         // Publish values back on the main thread
                         DispatchQueue.main.async {
                             

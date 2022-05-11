@@ -26,7 +26,8 @@
   * [Welcome Screen](#welcome-screen)
 - [Configuration](#configuration)
 - [Advanced configuration](#advanced-configuration)
-  * [Populate custom info items](#populate-custom-info-items)
+  * [Populate Support App Extensions](#populate-custom-info-items)
+  * [Privileged commands or scripts](#privileged-commands-or-scripts)
   * [Jamf variables](#jamf-variables)
 - [How to use SF Symbols](#how-to-use-sf-symbols)
 - [MDM deployment](#mdm-deployment)
@@ -34,6 +35,7 @@
   * [Installer or app bundle](#installer-or-app-bundle)
   * [Sample LaunchAgent](#sample-launchagent)
   * [Sample Configuration Profile](#sample-configuration-profile)
+- [Logging](#logging)
 - [Known issues](#known-issues)
 - [Changelog](#changelog)
 - [Privacy policy](#privacy-policy)
@@ -108,9 +110,9 @@ There are a couple of info items with diagnostics available to choose from. A to
 
 * **Mac Password**: Shows when the user's password expires and supports both local and Active Directory accounts by default. Alternative supported user sources are Jamf Connect, Kerberos SSO Extension and NoMAD. Shows a warning when the expiry reaches the value set in the optional key 'PasswordExpiryLimit'. The text label in the item can be modified using the preference key ‘PasswordLabel’.
 
-* **Custom Item A**: A custom info item to show any information. The title, icon must be configured and optionally a link to open an App, URL or Command. The value below the title must be populated by setting a preference key using a script.
+* **Extension A**: A extension to show any information. The title, icon must be configured and optionally a link to open an App, URL or Command. The value below the title must be populated by setting a preference key using a script.
 
-* **Custom Item B**: A custom info item to show any information. The title, icon must be configured and optionally a link to open an App, URL or Command. The value below the title must be populated by setting a preference key using a script.
+* **Extension B**: A extension to show any information. The title, icon must be configured and optionally a link to open an App, URL or Command. The value below the title must be populated by setting a preference key using a script.
 
 ### App, link or command shortcuts
 The buttons in the 3rd and 4th row behave as shortcuts to applications or links. Both rows are flexible and can show two or three buttons. The total amount of configurable buttons is possible: 0, 2, 3, 4, 5, 6. You can configure five variables for every of these buttons:
@@ -186,12 +188,12 @@ All general settings
 Configuration of the top four items with diagnostic information.
 | Preference key | Type | Default value | Description | Example |
 | --- | --- | --- | --- | --- |
-| InfoItemOne | String | ComputerName | Info item shown in the upper left corner | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "CustomA" or "CustomB" |
-| InfoItemTwo | String | MacOSVersion | Info item shown in the upper right corner | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "CustomA" or "CustomB" |
-| InfoItemThree | String | Uptime | Info item shown in the second row left | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "CustomA" or "CustomB" |
-| InfoItemFour | String | Storage | Info item shown in the second row right | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "CustomA" or "CustomB" |
-| InfoItemFive | String | - | Info item shown in the third row left | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "CustomA" or "CustomB" |
-| InfoItemSix | String | - | Info item shown in the third row right | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "CustomA" or "CustomB" |
+| InfoItemOne | String | ComputerName | Info item shown in the upper left corner | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA" or "ExtensionB" |
+| InfoItemTwo | String | MacOSVersion | Info item shown in the upper right corner | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA" or "ExtensionB" |
+| InfoItemThree | String | Uptime | Info item shown in the second row left | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA" or "ExtensionB" |
+| InfoItemFour | String | Storage | Info item shown in the second row right | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA" or "ExtensionB" |
+| InfoItemFive | String | - | Info item shown in the third row left | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA" or "ExtensionB" |
+| InfoItemSix | String | - | Info item shown in the third row right | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA" or "ExtensionB" |
 | UptimeDaysLimit | Integer | 0 (Disabled) | Days of uptime after which a notification badge is shown, disabled by default | 7 |
 | PasswordType | String | Apple | The account type to use with the Password info item: local user account (Apple), Jamf Connect, Kerberos SSO Extension or NoMAD | "Apple", "JamfConnect", "KerberosSSO" or "Nomad" |
 | PasswordExpiryLimit| Integer | 0 (Disabled) | Days until password expiry after which a notification badge is shown, disabled by default | 14 |
@@ -255,50 +257,60 @@ Configuration of the top four items with diagnostic information.
 
 ## Advanced configuration
 
-### Custom info items
-Below are the preference keys to enable custom info items:
+### Support App Extensions
+Below are the preference keys to enable Support App Extensions:
 | Preference key | Type | Default value | Description | Example |
 | --- | --- | --- | --- | --- |
-| CustomItemTitleA | String | - | The title shown in the custom info item. | "Endpoint Security" |
-| CustomItemSymbolA | String | - | The SF Symbol shown in the custom info item. | "checkerboard.shield" |
-| CustomItemTypeA | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL** or **Command** |
-| CustomItemLinkA | String | - | The Bundle Identifier of the app, URL or command to open. | --- |
-| CustomItemTitleB | String | - | The title shown in the custom info item. | "Endpoint Security" |
-| CustomItemSymbolB | String | - | The SF Symbol shown in the custom info item. | "checkerboard.shield" |
-| CustomItemTypeB | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL** or **Command** |
-| CustomItemLinkB | String | - | The Bundle Identifier of the app, URL or command to open. | --- |
+| ExtensionTitleA | String | - | The title shown in the extension. | "Endpoint Security" |
+| ExtensionSymbolA | String | - | The SF Symbol shown in the extension. | "checkerboard.shield" |
+| ExtensionTypeA | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL** or **Command** |
+| ExtensionLinkA | String | - | The Bundle Identifier of the app, URL or command to open. | --- |
+| ExtensionTitleB | String | - | The title shown in the extension. | "Endpoint Security" |
+| ExtensionSymbolB | String | - | The SF Symbol shown in the extension. | "checkerboard.shield" |
+| ExtensionTypeB | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL** or **Command** |
+| ExtensionLinkB | String | - | The Bundle Identifier of the app, URL or command to open. | --- |
+| OnAppearAction | String | - | Path to script script or command to be executed when the Support App is opened by clicking on the menu bar item. The SupportAppHelper is required for this feature. | `/usr/local/bin/runs_when_support_appears.zsh` |
 
-#### Populate custom info items
-Custom info items must be populated by setting the value in a preference key within the preference domain `nl.root3.support`. This can be achieved by running custom scripts from your MDM solution.
+#### Populate Support App Extensions
+Support App Extensions must be populated by setting the value in a preference key within the preference domain `nl.root3.support`. This can be achieved by running custom scripts from your MDM solution.
 
-* Create a custom script and populate the desired value by running the following command: `sudo defaults write /Library/Preferences/nl.root3.support.plist CustomItemPrefKeyA -string "OUTPUTVALUE"`
-* Add the following command to show a placeholder while getting the value: `sudo defaults write /Library/Preferences/nl.root3.support.plist CustomItemPrefKeyA -string "KeyPlaceholder"`
-* Add the following command at the **beginning of the script** to show a progress view while getting the value: `sudo defaults write /Library/Preferences/nl.root3.support.plist CustomItemLoadingA -bool true`
-* Add the following command at the **end of the script** to stop the progress view: `sudo defaults write /Library/Preferences/nl.root3.support.plist CustomItemLoadingA -bool false`
+* Create a custom script and populate the desired value by running the following command: `sudo defaults write /Library/Preferences/nl.root3.support.plist ExtensionValueA -string "OUTPUT_VALUE_HERE"`
+* Add the following command to show a placeholder while getting the value: `sudo defaults write /Library/Preferences/nl.root3.support.plist ExtensionValueA -string "KeyPlaceholder"`
+* Add the following command at the **beginning of the script** to show a progress view while getting the value: `sudo defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bool true`
+* Add the following command at the **end of the script** to stop the progress view: `sudo defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bool false`
 
 Below a simple example script including loading effect and placeholder while loading
 ```
 #!/bin/zsh
 
-# Show progress view while loading
-defaults write /Library/Preferences/nl.root3.support.plist CustomItemLoadingA -bool true
+# Start spinning indicator
+defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bool true
 
 # Show placeholder value while loading
-defaults write /Library/Preferences/nl.root3.support.plist CustomItemPrefKeyA -string "KeyPlaceholder"
+defaults write /Library/Preferences/nl.root3.support.plist ExtensionValueA -string "KeyPlaceholder"
 
-# Sleep to simulate loading effect
+# Keep loading effect active for 0.5 seconds
 sleep 0.5
 
 # Get output value
-filevault_status=$(fdesetup status)
-sip_status=$(if [[ $(csrutil status) == *enabled* ]]; then echo "Enabled"; else echo "Disabled"; fi)
+command_output=$(PUT_COMMAND_TO_GET_OUTPUT_HERE)
 
 # Set output value
-defaults write /Library/Preferences/nl.root3.support.plist CustomItemPrefKeyA -string "${filevault_status}"
+defaults write /Library/Preferences/nl.root3.support.plist ExtensionValueA -string "${command_output}"
 
-# Stop progress view
-defaults write /Library/Preferences/nl.root3.support.plist CustomItemLoadingA -bool false
+# Stop spinning indicator
+defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bool false
 ```
+
+### Privileged commands or scripts
+To allow commands or scripts to be executed with root privileges, the SupportAppHelper is available optionally. This utility is built on Distributed Notifications to allow inter-app communication between the Support App and the SupportAppHelper. The Support App notifies SupportAppHelper and the message contains the preference key set in the Configuration Profile with the command or path to the script. SupportAppHelper listens for new messages using a LaunchDaemon and executes the command or script by requesting the command or path to the script from the Configuration Profile.
+
+More information about Distributed Notifications: https://developer.apple.com/documentation/foundation/distributednotificationcenter
+
+#### Security considerations
+As SupportAppHelper is able to execute scripts or commands with root privileges, it needs to be used responsibly. For most deployments, SupportAppHelper will not be needed and we recommend deploying the Support App without SupportAppHelper. If you're unsure or unfamiliar with this concept, DO NOT use SupportAppHelper.
+
+:information_source: Only values from a Configuration Profile will be used. Values set by `defaults write` will be ignored as it imposes a security risk.
 
 ### Jamf variables
 When using Jamf Pro as the MDM solution, variables from Jamf Pro can be used in the Configuration Profile values to dynamically populate text like the title, footer or any other text field.
@@ -336,14 +348,22 @@ A sample LaunchAgent to always keep the app alive is provided [**here**](https:/
 ### Sample Configuration Profile
 A sample Configuration Profile you can edit to your preferences is provided [**here**](https://github.com/root3nl/SupportApp/blob/master/Configuration%20Profile%20Sample/Support%20App%20Configuration%20Sample.mobileconfig)
 
+## Logging
+Logs can be viewed from Console or Terminal by filtering the subsystems `nl.root3.support` (Support App) and `nl.root3.support.helper` (SupportAppHelper).
+
+An example to stream current logs in Terminal for troubleshooting:
+```
+log stream --debug --info --predicate 'subsystem contains "nl.root3.support"'
+```
+
 ## Known issues
 * Buttons may keep a hovered state when mouse cursor moves fast: FB8212902 (**resolved on macOS Monterey**)
 
 ## Changelog
 
 **Version 2.4**
-* Custom Info Items
-* Item won’t show a hover effect when no link is configured, allowing buttons to be static without a clickable action. This applies to both configurable buttons and custom info items.
+* Support App Extensions
+* Item won’t show a hover effect when no link is configured, allowing buttons to be static without a clickable action. This applies to both configurable buttons and Support App Extensions.
 
 **Version 2.3**
 * Welcome Screen: an informational window can now optionally be shown when the Support App is opened for the first time. It explains the key features to the user.

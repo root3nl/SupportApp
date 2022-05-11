@@ -373,7 +373,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let name = NSNotification.Name("nl.root3.support.SupportAppeared")
         
         // Post the notification including all sessions to support LaunchDaemons
-        nc.postNotificationName(name, object: defaults.string(forKey: "OnAppearScript"), userInfo: nil, options: [.postToAllSessions, .deliverImmediately])
+        nc.postNotificationName(name, object: nil, userInfo: nil, options: [.postToAllSessions, .deliverImmediately])
 
     }
 }

@@ -1,5 +1,5 @@
 //
-//  CustomASubview.swift
+//  ExtensionASubview.swift
 //  Support
 //
 //  Created by Jordy Witteman on 13/11/2021.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CustomASubview: View {
+struct ExtensionASubview: View {
         
     // Get  computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo
@@ -34,7 +34,7 @@ struct CustomASubview: View {
     
     var body: some View {
         
-        Item(title: preferences.customItemTitleA, subtitle: preferences.customItemPrefKeyA, linkType: preferences.customItemTypeA, link: preferences.customItemLinkA, image: preferences.customItemSymbolA, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.customItemLoadingA, hoverEffectEnable: true, hoverView: false, animate: false)
+        Item(title: preferences.extensionTitleA, subtitle: preferences.extensionValueA, linkType: preferences.extensionTypeA, link: preferences.extensionLinkA, image: preferences.extensionSymbolA, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.extensionLoadingA, linkPrefKey: Preferences.extensionLinkAKey, hoverEffectEnable: true, hoverView: false, animate: false)
         
     }
 }

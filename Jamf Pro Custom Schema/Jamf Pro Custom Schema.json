@@ -211,10 +211,10 @@
       "description": "Info item shown in the upper left corner",
       "type": "string",
       "options": {
-        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Custom A", "Custom B"],
+        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Extension A", "Extension B"],
         "infoText": "Key name: InfoItemOne"
       },
-      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "CustomA", "CustomB"],
+      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA", "ExtensionB"],
       "links": [
         {
           "rel": "Documentation",
@@ -227,10 +227,10 @@
       "description": "Info item shown in the upper right corner",
       "type": "string",
       "options": {
-        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Custom A", "Custom B"],
+        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Extension A", "Extension B"],
         "infoText": "Key name: InfoItemTwo"
       },
-      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "CustomA", "CustomB"],
+      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA", "ExtensionB"],
       "links": [
         {
           "rel": "Documentation",
@@ -243,10 +243,10 @@
       "description": "Info item shown in the second row left",
       "type": "string",
       "options": {
-        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Custom A", "Custom B"],
+        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Extension A", "Extension B"],
         "infoText": "Key name: InfoItemThree"
       },
-      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "CustomA", "CustomB"],
+      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA", "ExtensionB"],
       "links": [
         {
           "rel": "Documentation",
@@ -259,10 +259,10 @@
       "description": "Info item shown in the second row right",
       "type": "string",
       "options": {
-        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Custom A", "Custom B"],
+        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Extension A", "Extension B"],
         "infoText": "Key name: InfoItemFour"
       },
-      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "CustomA", "CustomB"],
+      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA", "ExtensionB"],
       "links": [
         {
           "rel": "Documentation",
@@ -275,10 +275,10 @@
       "description": "Info item shown in the third row left",
       "type": "string",
       "options": {
-        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Custom A", "Custom B"],
+        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Extension A", "Extension B"],
         "infoText": "Key name: InfoItemFive"
       },
-      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "CustomA", "CustomB"],
+      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA", "ExtensionB"],
       "links": [
         {
           "rel": "Documentation",
@@ -291,10 +291,10 @@
       "description": "Info item shown in the third row right",
       "type": "string",
       "options": {
-        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Custom A", "Custom B"],
+        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Extension A", "Extension B"],
         "infoText": "Key name: InfoItemSix"
       },
-      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "CustomA", "CustomB"],
+      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA", "ExtensionB"],
       "links": [
         {
           "rel": "Documentation",
@@ -434,7 +434,7 @@
     },
     "FirstRowLinkLeft": {
       "title": "First Row Left: Link",
-      "description": "The Bundle Identifier of the app or link that should be opened",
+      "description": "The Bundle Identifier of the app, link, command or path to script",
       "type": "string",
       "options": {
         "infoText": "Key name: FirstRowLinkLeft"
@@ -506,7 +506,7 @@
     },
     "FirstRowLinkMiddle": {
       "title": "First Row Middle: Link",
-      "description": "The Bundle Identifier of the app or link that should be opened",
+      "description": "The Bundle Identifier of the app, link, command or path to script",
       "type": "string",
       "options": {
         "infoText": "Key name: FirstRowLinkMiddle"
@@ -578,7 +578,7 @@
     },
     "FirstRowLinkRight": {
       "title": "First Row Right: Link",
-      "description": "The Bundle Identifier of the app or link that should be opened",
+      "description": "The Bundle Identifier of the app, link, command or path to script",
       "type": "string",
       "options": {
         "infoText": "Key name: FirstRowLinkRight"
@@ -650,7 +650,7 @@
     },
     "SecondRowLinkLeft": {
       "title": "Second Row Left: Link",
-      "description": "The Bundle Identifier of the app or link that should be opened.",
+      "description": "The Bundle Identifier of the app, link, command or path to script.",
       "type": "string",
       "options": {
         "infoText": "Key name: SecondRowLinkLeft"
@@ -722,7 +722,7 @@
     },
     "SecondRowLinkMiddle": {
       "title": "Second Row Middle: Link",
-      "description": "The Bundle Identifier of the app or link that should be opened.",
+      "description": "The Bundle Identifier of the app, link, command or path to script.",
       "type": "string",
       "options": {
         "infoText": "Key name: SecondRowLinkMiddle"
@@ -794,7 +794,7 @@
     },
     "SecondRowLinkRight": {
       "title": "Second Row Right: Link",
-      "description": "The Bundle Identifier of the app or link that should be opened.",
+      "description": "The Bundle Identifier of the app, link, command or path to script.",
       "type": "string",
       "options": {
         "infoText": "Key name: SecondRowLinkRight"
@@ -820,12 +820,12 @@
         }
       ]
     },
-    "CustomItemTitleA": {
-      "title": "Custom Info Item Title A",
-      "description": "The text shown in the button label.",
+    "ExtensionTitleA": {
+      "title": "Extension Title A",
+      "description": "The text shown in the Extension.",
       "type": "string",
       "options": {
-        "infoText": "Key name: CustomItemTitleA"
+        "infoText": "Key name: ExtensionTitleA"
       },
       "links": [
         {
@@ -834,12 +834,12 @@
         }
       ]
     },
-    "CustomItemSymbolA": {
-      "title": "Custom Info Item SF Symbol A",
-      "description": "The SF Symbol shown in the button.",
+    "ExtensionSymbolA": {
+      "title": "Extension SF Symbol A",
+      "description": "The SF Symbol shown in the Extension.",
       "type": "string",
       "options": {
-        "infoText": "Key name: CustomItemSymbolA"
+        "infoText": "Key name: ExtensionSymbolA"
       },
       "links": [
         {
@@ -848,13 +848,13 @@
         }
       ]
     },
-    "CustomItemTypeA": {
-      "title": "Custom Info Item Linke Type A",
-      "description": "Type of link the custom info item should open",
+    "ExtensionTypeA": {
+      "title": "Extension Linke Type A",
+      "description": "Type of link the Extension should open.",
       "type": "string",
       "options": {
         "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script"],
-        "infoText": "Key name: CustomItemTypeA"
+        "infoText": "Key name: ExtensionTypeA"
       },
       "enum": ["App", "URL", "Command", "DistributedNotification"],
       "links": [
@@ -864,12 +864,12 @@
         }
       ]
     },
-    "CustomItemLinkA": {
-      "title": "Custom Info Item Link A",
-      "description": "The Bundle Identifier of the app or link that should be opened.",
+    "ExtensionLinkA": {
+      "title": "Extension Link A",
+      "description": "The Bundle Identifier of the app, link, command or path to script.",
       "type": "string",
       "options": {
-        "infoText": "Key name: CustomItemLinkA"
+        "infoText": "Key name: ExtensionLinkA"
       },
       "links": [
         {
@@ -878,12 +878,12 @@
         }
       ]
 		},
-    "CustomItemTitleB": {
-      "title": "Custom Info Item Title B",
-      "description": "The text shown in the button label.",
+    "ExtensionTitleB": {
+      "title": "Extension Title B",
+      "description": "The text shown in the Extension.",
       "type": "string",
       "options": {
-        "infoText": "Key name: CustomItemTitleB"
+        "infoText": "Key name: ExtensionTitleB"
       },
       "links": [
         {
@@ -892,12 +892,12 @@
         }
       ]
     },
-    "CustomItemSymbolB": {
-      "title": "Custom Info Item SF Symbol B",
-      "description": "The SF Symbol shown in the button.",
+    "ExtensionSymbolB": {
+      "title": "Extension SF Symbol B",
+      "description": "The SF Symbol shown in the Extension.",
       "type": "string",
       "options": {
-        "infoText": "Key name: CustomItemSymbolB"
+        "infoText": "Key name: ExtensionSymbolB"
       },
       "links": [
         {
@@ -906,13 +906,13 @@
         }
       ]
     },
-    "CustomItemTypeB": {
-      "title": "Custom Info Item Linke Type B",
-      "description": "Type of link the custom info item should open",
+    "ExtensionTypeB": {
+      "title": "Extension Link Type B",
+      "description": "Type of link the Extension should open",
       "type": "string",
       "options": {
         "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script"],
-        "infoText": "Key name: CustomItemTypeB"
+        "infoText": "Key name: ExtensionTypeB"
       },
       "enum": ["App", "URL", "Command", "DistributedNotification"],
       "links": [
@@ -922,12 +922,12 @@
         }
       ]
     },
-    "CustomItemLinkB": {
-      "title": "Custom Info Item Link B",
-      "description": "The Bundle Identifier of the app or link that should be opened.",
+    "ExtensionLinkB": {
+      "title": "Extension Link B",
+      "description": "The Bundle Identifier of the app, link, command or path to script.",
       "type": "string",
       "options": {
-        "infoText": "Key name: CustomItemLinkB"
+        "infoText": "Key name: ExtensionLinkB"
       },
       "links": [
         {
@@ -936,9 +936,9 @@
         }
       ]
 		},
-    "OnAppearScript": {
-      "title": "On Appear Script",
-      "description": "The script will be executed when the menu bar item is clicked. The SupportAppHelper is required for this feature.",
+    "OnAppearAction": {
+      "title": "On Appear Script/Command",
+      "description": "Path to script script or command to be executed when the Support App is opened by clicking on the menu bar item. The SupportAppHelper is required for this feature.",
       "type": "string",
       "options": {
         "infoText": "Key name: OnAppearScript"

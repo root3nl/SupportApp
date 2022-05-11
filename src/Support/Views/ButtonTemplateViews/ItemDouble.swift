@@ -96,8 +96,6 @@ struct ItemDouble: View {
                 openLink()
             } else if linkType == "Command" {
                 runCommand()
-            } else if linkType == "DistributedNotification" {
-                postDistributedNotification()
             } else {
                 // FIXME: - Asjust when Jamf Connect Password Change can be triggered
                 // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
@@ -161,23 +159,5 @@ struct ItemDouble: View {
         // Close the popover
         NSApp.deactivate()
     }
-    
-    // Post Distributed Notification
-    func postDistributedNotification() {
-        logger.debug("Posting Distributed Notification: \(link ?? "NoLinkSpecified")")
-        
-        // Initialize distributed notifications
-        let nc = DistributedNotificationCenter.default()
-        
-        // Define the NSNotification name
-        let name = NSNotification.Name(link ?? "NoLinkSpecified")
-        
-        // Post the notification including all sessions to support LaunchDaemons
-        nc.postNotificationName(name, object: nil, userInfo: nil, options: [.deliverImmediately, .postToAllSessions])
-        
-        // Close the popover
-        NSApp.deactivate()
-    }
-    
 }
 

@@ -181,8 +181,8 @@ class ComputerInfo: ObservableObject {
             macOSVersionName = "Big Sur"
         case 12:
             macOSVersionName = "Monterey"
-        case 13:
-            macOSVersionName = "Beta"
+//        case 13:
+//            macOSVersionName = "Mammoth"
         default:
             macOSVersionName = ""
         }

@@ -18,6 +18,7 @@ struct Item: View {
     var notificationBadge: Int?
     var notificationBadgeBool: Bool?
     var loading: Bool?
+    var linkPrefKey: String?
     
     // Declare unified logging
     let logger = Logger(subsystem: "nl.root3.support", category: "Action")
@@ -199,9 +200,7 @@ struct Item: View {
         let name = NSNotification.Name("nl.root3.support.Action")
         
         // Post the notification including all sessions to support LaunchDaemons
-        nc.postNotificationName(name, object: link, userInfo: nil, options: [.postToAllSessions, .deliverImmediately])
+        nc.postNotificationName(name, object: linkPrefKey, userInfo: nil, options: [.postToAllSessions, .deliverImmediately])
 
-        // Close the popover
-//        NSApp.deactivate()
     }
 }
