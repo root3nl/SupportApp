@@ -26,8 +26,8 @@
   * [Welcome Screen](#welcome-screen)
 - [Configuration](#configuration)
 - [Advanced configuration](#advanced-configuration)
-  * [Populate Support App Extensions](#populate-support-app-extensions)
-  * [Jamf variables](#jamf-variables)
+  * [How to populate Support App Extensions](#how-to-populate-support-app-extensions)
+  * [Jamf Pro variables](#jamf-pro-variables)
   * [Privileged commands or scripts (SupportAppHelper)](#privileged-commands-or-scripts-supportapphelper)
     * [File locations](#file-locations)
     * [Security Considerations](#security-considerations)
@@ -61,11 +61,16 @@ The easiest and recommended way to configure the app is using a Configuration Pr
 * Any MDM solution supporting custom Configuration Profiles
 
 ## Download
+
+### Support App
 Package Installer (includes LaunchAgent): [**Download**](https://github.com/root3nl/SupportApp/releases/latest)
 
 Application (zipped): [**Download**](https://github.com/root3nl/SupportApp/releases/latest)
 
 See the MDM deployment section below for more info.
+
+### SupportAppHelper
+Package Installer (includes LaunchDaemon): [**Download**](https://github.com/root3nl/SupportApp/releases/latest)
 
 ### TestFlight
 You can participate in beta versions of Support App using TestFlight. This requires macOS 12 or higher.
@@ -260,6 +265,9 @@ Configuration of the top four items with diagnostic information.
 ## Advanced configuration
 
 ### Support App Extensions
+
+Support App Extensions enable administrators to create custom info items and populate those with output from scripts or commands. You can use your MDM solution to run scripts or commands to populate the Support App Extensions. Optionally we provide SupportAppHelper to run scripts or commands everytime the Support App popover appears to make sure data is up to date. Please read [Privileged commands or scripts (SupportAppHelper)](#privileged-commands-or-scripts-supportapphelper) down below for more info.
+
 Below are the preference keys to enable Support App Extensions:
 | Preference key | Type | Default value | Description | Example |
 | --- | --- | --- | --- | --- |
@@ -273,7 +281,7 @@ Below are the preference keys to enable Support App Extensions:
 | ExtensionLinkB | String | - | The Bundle Identifier of the app, URL or command to open. | --- |
 | OnAppearAction | String | - | Path to script script or command to be executed when the Support App is opened by clicking on the menu bar item. The SupportAppHelper is required for this feature. | `/usr/local/bin/runs_when_support_appears.zsh` |
 
-#### Populate Support App Extensions
+#### How to populate Support App Extensions
 Support App Extensions must be populated by setting the value in a preference key within the preference domain `nl.root3.support`. This can be achieved by running custom scripts from your MDM solution.
 
 * Create a custom script and populate the desired value by running the following command: `sudo defaults write /Library/Preferences/nl.root3.support.plist ExtensionValueA -string "OUTPUT_VALUE_HERE"`
@@ -304,18 +312,15 @@ defaults write /Library/Preferences/nl.root3.support.plist ExtensionValueA -stri
 defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bool false
 ```
 
-### Jamf variables
-When using Jamf Pro as the MDM solution, variables from Jamf Pro can be used in the Configuration Profile values to dynamically populate text like the title, footer or any other text field.
-
-Example
-* Set `title` to "Hi $FULLNAME!"
-
-More information about Jamf variables: https://docs.jamf.com/10.36.0/jamf-pro/documentation/Computer_Configuration_Profiles.html
-
 ### Privileged commands or scripts (SupportAppHelper)
 To allow commands or scripts to be executed with root privileges, the SupportAppHelper is available optionally. This utility is built on Distributed Notifications to allow inter-app communication between the Support App and the SupportAppHelper. The Support App notifies SupportAppHelper and the message contains the preference key set in the Configuration Profile with the command or path to the script. SupportAppHelper listens for new messages using a LaunchDaemon and executes the command or script by requesting the command or path to the script from the Configuration Profile.
 
 More information about Distributed Notifications: https://developer.apple.com/documentation/foundation/distributednotificationcenter
+
+#### Use Cases
+There are a couple of use cases SupportAppHelper can help with. For example run a command or script with root privileges:
+* Every time the Support App popover appears to populate Support App Extensions using `OnAppearAction`
+* By clicking on a configurable button
 
 #### File locations
 The SupportAppHelper installer places two files:
@@ -325,9 +330,17 @@ LaunchDaemon: `/Library/LaunchDaemons/nl.root3.support.helper.plist`
 Binary: `/usr/local/bin/SupportAppHelper`
 
 #### Security considerations
-As SupportAppHelper is able to execute scripts or commands with root privileges, it needs to be used responsibly. For most deployments, SupportAppHelper will not be needed and we recommend deploying the Support App without SupportAppHelper. If you're unsure or unfamiliar with this concept, DO NOT use SupportAppHelper.
+As SupportAppHelper is able to execute scripts or commands with root privileges, it needs to be used responsibly. For most deployments, SupportAppHelper will not be needed and we recommend deploying the Support App without SupportAppHelper. If you're unsure or unfamiliar with this concept, DO NOT use SupportAppHelper. This utility is separated from the Support App to avoid compromising the app-sandbox as well.
 
 :information_source: Only values from a Configuration Profile will be used. Values set by `defaults write` will be ignored as it imposes a security risk.
+
+### Jamf Pro variables
+When using Jamf Pro as the MDM solution, variables from Jamf Pro can be used in the Configuration Profile values to dynamically populate text like the title, footer or any other text field.
+
+Example
+* Set `title` to "Hi $FULLNAME!"
+
+More information about Jamf variables: https://docs.jamf.com/10.36.0/jamf-pro/documentation/Computer_Configuration_Profiles.html
 
 ## How to use SF Symbols
 We choose to go all the way with SF Symbols as these good looking icons are designed by Apple and give the app a native look and feel. All icons have a symbol name which you can use in the Configuration Profile. As these icons are built into macOS, it automatically shows the correct icon.
@@ -366,7 +379,7 @@ log stream --debug --info --predicate 'subsystem contains "nl.root3.support"'
 ```
 
 ## Known issues
-* Buttons may keep a hovered state when mouse cursor moves fast: FB8212902 (**resolved on macOS Monterey**)
+* Buttons may keep a hovered state when mouse cursor moves fast: FB8212902 (**resolved in macOS Monterey**)
 
 ## Changelog
 
