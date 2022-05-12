@@ -49,7 +49,7 @@ The Support app is a macOS menu bar app built for organizations to:
 * Offer shortcuts to easily access support channels or other company resources such as a website or a file server
 * Give users a modern and native macOS app with your corporate identity
 
-The app is developed by Root3, specialized in managing Apple devices. Root3 offers consultancy and support for organizations to get the most out of their Apple devices and is based in The Netherlands (Haarlem).
+The app is developed by Root3, specialized in managing Apple devices. Root3 offers consultancy and support for organizations to get the most out of their Apple devices and is based in The Netherlands (Halfweg).
 
 Root3 already had a basic in-house support app written in Objective-C and decided to completely rewrite it in Swift using SwiftUI with an all-new design that looks great on macOS Big Sur. We’ve learned that SwiftUI is the perfect way of creating great looking apps for all Apple platforms with minimal effort. In the development process we decided to make it generic so other organizations can take advantage of it and contribute to the Mac admins community.
 
@@ -117,9 +117,7 @@ There are a couple of info items with diagnostics available to choose from. A to
 
 * **Mac Password**: Shows when the user's password expires and supports both local and Active Directory accounts by default. Alternative supported user sources are Jamf Connect, Kerberos SSO Extension and NoMAD. Shows a warning when the expiry reaches the value set in the optional key 'PasswordExpiryLimit'. The text label in the item can be modified using the preference key ‘PasswordLabel’.
 
-* **Extension A**: A extension to show any information. The title, icon must be configured and optionally a link to open an App, URL or Command. The value below the title must be populated by setting a preference key using a script.
-
-* **Extension B**: A extension to show any information. The title, icon must be configured and optionally a link to open an App, URL or Command. The value below the title must be populated by setting a preference key using a script.
+* **Extension A and B**: Support App Extensions to show any information. The title, icon must be configured and optionally a link to open an App, URL or Command. The value below the title must be populated by setting a preference key using a script. See [How to populate Support App Extensions](#how-to-populate-support-app-extensions) for more information.
 
 ### App, link or command shortcuts
 The buttons in the 3rd and 4th row behave as shortcuts to applications or links. Both rows are flexible and can show two or three buttons. The total amount of configurable buttons is possible: 0, 2, 3, 4, 5, 6. You can configure five variables for every of these buttons:
