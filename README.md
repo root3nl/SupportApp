@@ -28,7 +28,7 @@
 - [Advanced configuration](#advanced-configuration)
   * [How to populate Support App Extensions](#how-to-populate-support-app-extensions)
   * [Jamf Pro variables](#jamf-pro-variables)
-  * [Privileged commands or scripts (SupportAppHelper)](#privileged-commands-or-scripts-supportapphelper)
+  * [Privileged commands or scripts (SupportHelper)](#privileged-commands-or-scripts-supporthelper)
     * [File locations](#file-locations)
     * [Security Considerations](#security-considerations)
 - [How to use SF Symbols](#how-to-use-sf-symbols)
@@ -69,7 +69,7 @@ Application (zipped): [**Download**](https://github.com/root3nl/SupportApp/relea
 
 See the MDM deployment section below for more info.
 
-### SupportAppHelper
+### SupportHelper
 Package Installer (includes LaunchDaemon): [**Download**](https://github.com/root3nl/SupportApp/releases/latest)
 
 ### TestFlight
@@ -264,7 +264,7 @@ Configuration of the top four items with diagnostic information.
 
 ### Support App Extensions
 
-Support App Extensions enable administrators to create custom info items and populate those with output from scripts or commands. You can use your MDM solution to run scripts or commands to populate the Support App Extensions. Optionally we provide SupportAppHelper to run scripts or commands everytime the Support App popover appears to make sure data is up to date. Please read [Privileged commands or scripts (SupportAppHelper)](#privileged-commands-or-scripts-supportapphelper) down below for more info.
+Support App Extensions enable administrators to create custom info items and populate those with output from scripts or commands. You can use your MDM solution to run scripts or commands to populate the Support App Extensions. Optionally we provide SupportHelper to run scripts or commands everytime the Support App popover appears to make sure data is up to date. Please read [Privileged commands or scripts (SupportHelper)](#privileged-commands-or-scripts-supporthelper) down below for more info.
 
 Below are the preference keys to enable Support App Extensions:
 | Preference key | Type | Default value | Description | Example |
@@ -277,15 +277,15 @@ Below are the preference keys to enable Support App Extensions:
 | ExtensionSymbolB | String | - | The SF Symbol shown in the extension. | "checkerboard.shield" |
 | ExtensionTypeB | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL** or **Command** |
 | ExtensionLinkB | String | - | The Bundle Identifier of the app, URL or command to open. | --- |
-| OnAppearAction | String | - | Path to script script or command to be executed when the Support App is opened by clicking on the menu bar item. The SupportAppHelper is required for this feature. | `/usr/local/bin/runs_when_support_appears.zsh` |
+| OnAppearAction | String | - | Path to script script or command to be executed when the Support App is opened by clicking on the menu bar item. The SupportHelper is required for this feature. | `/usr/local/bin/runs_when_support_appears.zsh` |
 
 #### How to populate Support App Extensions
 Support App Extensions must be populated by setting the value in a preference key within the preference domain `nl.root3.support`. This can be achieved by running custom scripts from your MDM solution.
 
 * Create a custom script and populate the desired value by running the following command: `sudo defaults write /Library/Preferences/nl.root3.support.plist ExtensionValueA -string "OUTPUT_VALUE_HERE"`
 * Add the following command to show a placeholder while getting the value: `sudo defaults write /Library/Preferences/nl.root3.support.plist ExtensionValueA -string "KeyPlaceholder"`
-* Add the following command at the **beginning of the script** to show a progress view while getting the value: `sudo defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bool true`
-* Add the following command at the **end of the script** to stop the progress view: `sudo defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bool false`
+* Add the following command at the **beginning of the script** to show a spinning indicator while getting the value: `sudo defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bool true`
+* Add the following command at the **end of the script** to stop the spinning indicator view: `sudo defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bool false`
 
 Below a simple example script including loading effect and placeholder while loading
 ```
@@ -310,25 +310,25 @@ defaults write /Library/Preferences/nl.root3.support.plist ExtensionValueA -stri
 defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bool false
 ```
 
-### Privileged commands or scripts (SupportAppHelper)
-To allow commands or scripts to be executed with root privileges, the SupportAppHelper is available optionally. This utility is built on Distributed Notifications to allow inter-app communication between the Support App and the SupportAppHelper. The Support App notifies SupportAppHelper and the message contains the preference key set in the Configuration Profile with the command or path to the script. SupportAppHelper listens for new messages using a LaunchDaemon and executes the command or script by requesting the command or path to the script from the Configuration Profile.
+### Privileged commands or scripts (SupportHelper)
+To allow commands or scripts to be executed with root privileges, the SupportHelper is available optionally. This utility is built on Distributed Notifications to allow inter-app communication between the Support App and the SupportHelper. The Support App notifies SupportHelper and the message contains the preference key set in the Configuration Profile with the command or path to the script. SupportHelper listens for new messages using a LaunchDaemon and executes the command or script by requesting the command or path to the script from the Configuration Profile.
 
 More information about Distributed Notifications: https://developer.apple.com/documentation/foundation/distributednotificationcenter
 
 #### Use Cases
-There are a couple of use cases SupportAppHelper can help with. For example run a command or script with root privileges:
+There are a couple of use cases SupportHelper can help with. For example run a command or script with root privileges:
 * Every time the Support App popover appears to populate Support App Extensions using `OnAppearAction`
 * By clicking on a configurable button
 
 #### File locations
-The SupportAppHelper installer places two files:
+The SupportHelper installer places two files:
 
 LaunchDaemon: `/Library/LaunchDaemons/nl.root3.support.helper.plist`
 
-Binary: `/usr/local/bin/SupportAppHelper`
+Binary: `/usr/local/bin/SupportHelper`
 
 #### Security considerations
-As SupportAppHelper is able to execute scripts or commands with root privileges, it needs to be used responsibly. For most deployments, SupportAppHelper will not be needed and we recommend deploying the Support App without SupportAppHelper. If you're unsure or unfamiliar with this concept, DO NOT use SupportAppHelper. This utility is separated from the Support App to avoid compromising the app-sandbox as well.
+As SupportHelper is able to execute scripts or commands with root privileges, it needs to be used responsibly. For most deployments, SupportHelper will not be needed and we recommend deploying the Support App without SupportHelper. If you're unsure or unfamiliar with this concept, DO NOT use SupportHelper. This utility is separated from the Support App to avoid compromising the app-sandbox as well.
 
 :information_source: Only values from a Configuration Profile will be used. Values set by `defaults write` will be ignored as it imposes a security risk.
 
@@ -369,7 +369,7 @@ A sample LaunchAgent to always keep the app alive is provided [**here**](https:/
 A sample Configuration Profile you can edit to your preferences is provided [**here**](https://github.com/root3nl/SupportApp/blob/master/Configuration%20Profile%20Sample/Support%20App%20Configuration%20Sample.mobileconfig)
 
 ## Logging
-Logs can be viewed from Console or Terminal by filtering the subsystems `nl.root3.support` (Support App) and `nl.root3.support.helper` (SupportAppHelper).
+Logs can be viewed from Console or Terminal by filtering the subsystems `nl.root3.support` (Support App) and `nl.root3.support.helper` (SupportHelper).
 
 An example to stream current logs in Terminal for troubleshooting:
 ```
@@ -378,6 +378,7 @@ log stream --debug --info --predicate 'subsystem contains "nl.root3.support"'
 
 ## Known issues
 * Buttons may keep a hovered state when mouse cursor moves fast: FB8212902 (**resolved in macOS Monterey**)
+* When Jamf Connect is used as password type, clicking "Change Now" does not allow the user to open the Jamf Connect change password window, but instead triggers an alert. Jamf Connect does not support a URL Scheme for opening the Change Password window. Please upvote this feature request: https://ideas.jamf.com/ideas/JN-I-16087
 
 ## Changelog
 

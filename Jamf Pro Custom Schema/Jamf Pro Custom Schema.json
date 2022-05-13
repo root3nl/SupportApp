@@ -346,10 +346,10 @@
     },
     "PasswordType": {
       "title": "Password type",
-      "description": "Apple native (local account or AD), Jamf Connect or Kerberos SSO Extension",
+      "description": "Password expiry information source: Apple (local account or AD), Jamf Connect or Kerberos SSO Extension",
       "type": "string",
       "options": {
-        "enum_titles": ["Apple Native", " Jamf Connect", "Kerberos SSO Extension", "NoMAD"],
+        "enum_titles": ["Apple", " Jamf Connect", "Kerberos SSO Extension", "NoMAD"],
         "infoText": "Key name: PasswordType"
       },
       "enum": ["Apple", "JamfConnect", "KerberosSSO", "Nomad"],
@@ -418,10 +418,10 @@
     },
     "FirstRowTypeLeft": {
       "title": "First Row Left: Type",
-      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. App by default. For Privileged Command/Script, the SupportAppHelper is required",
+      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. App by default. For Privileged Command/Script, the SupportHelper is required",
       "type": "string",
       "options": {
-        "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script"],
+        "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script (requires SupportHelper)"],
         "infoText": "Key name: FirstRowTypeLeft"
       },
       "enum": ["App", "URL", "Command", "DistributedNotification"],
@@ -490,10 +490,10 @@
     },
     "FirstRowTypeMiddle": {
       "title": "First Row Middle: Type",
-      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. App by default. For Privileged Command/Script, the SupportAppHelper is required",
+      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. App by default. For Privileged Command/Script, the SupportHelper is required",
       "type": "string",
       "options": {
-        "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script"],
+        "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script (requires SupportHelper)"],
         "infoText": "Key name: FirstRowTypeMiddle"
       },
       "enum": ["App", "URL", "Command", "DistributedNotification"],
@@ -562,10 +562,10 @@
     },
     "FirstRowTypeRight": {
       "title": "First Row Right: Type",
-      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. App by default. For Privileged Command/Script, the SupportAppHelper is required",
+      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. App by default. For Privileged Command/Script, the SupportHelper is required",
       "type": "string",
       "options": {
-        "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script"],
+        "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script (requires SupportHelper)"],
         "infoText": "Key name: FirstRowTypeRight"
       },
       "enum": ["App", "URL", "Command", "DistributedNotification"],
@@ -634,10 +634,10 @@
     },
     "SecondRowTypeLeft": {
       "title": "Second Row Left: Type",
-      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. URL by default. For Privileged Command/Script, the SupportAppHelper is required",
+      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. URL by default. For Privileged Command/Script, the SupportHelper is required",
       "type": "string",
       "options": {
-        "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script"],
+        "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script (requires SupportHelper)"],
         "infoText": "Key name: SecondRowTypeLeft"
       },
       "enum": ["App", "URL", "Command", "DistributedNotification"],
@@ -706,10 +706,10 @@
     },
     "SecondRowTypeMiddle": {
       "title": "Second Row Middle: Type",
-      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. URL by default. For Privileged Command/Script, the SupportAppHelper is required",
+      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. URL by default. For Privileged Command/Script, the SupportHelper is required",
       "type": "string",
       "options": {
-        "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script"],
+        "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script (requires SupportHelper)"],
         "infoText": "Key name: SecondRowTypeMiddle"
       },
       "enum": ["App", "URL", "Command", "DistributedNotification"],
@@ -778,10 +778,10 @@
     },
     "SecondRowTypeRight": {
       "title": "Second Row Right: Type",
-      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. URL by default. For Privileged Command/Script, the SupportAppHelper is required",
+      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. URL by default. For Privileged Command/Script, the SupportHelper is required",
       "type": "string",
       "options": {
-        "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script"],
+        "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script (requires SupportHelper)"],
         "infoText": "Key name: SecondRowTypeRight"
       },
       "enum": ["App", "URL", "Command", "DistributedNotification"],
@@ -853,7 +853,7 @@
       "description": "Type of link the Extension should open.",
       "type": "string",
       "options": {
-        "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script"],
+        "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script (requires SupportHelper)"],
         "infoText": "Key name: ExtensionTypeA"
       },
       "enum": ["App", "URL", "Command", "DistributedNotification"],
@@ -911,7 +911,7 @@
       "description": "Type of link the Extension should open",
       "type": "string",
       "options": {
-        "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script"],
+        "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script (requires SupportHelper)"],
         "infoText": "Key name: ExtensionTypeB"
       },
       "enum": ["App", "URL", "Command", "DistributedNotification"],
@@ -938,7 +938,7 @@
 		},
     "OnAppearAction": {
       "title": "On Appear Script/Command",
-      "description": "Path to script script or command to be executed when the Support App is opened by clicking on the menu bar item. The SupportAppHelper is required for this feature.",
+      "description": "Path to script script or command to be executed when the Support App is opened by clicking on the menu bar item. The SupportHelper is required for this feature.",
       "type": "string",
       "options": {
         "infoText": "Key name: OnAppearScript"
