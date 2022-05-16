@@ -49,23 +49,30 @@ struct ContentView: View {
                 QuitButton()
             }
             
-//            HStack {
-//                Spacer()
-//
-//                VStack {
-//                    Spacer()
-//                    Image(systemName: "ellipsis.circle.fill")
-//                        .imageScale(.large)
-//                }
-//            }
-//            .padding(8)
+            // Show "Beta" in the top left corner for beta releases
+            if preferences.betaRelease {
+                HStack {
+                    
+                    VStack {
+                        Text("Beta")
+                            .font(.system(.footnote, design: .rounded))
+                            .foregroundColor(.secondary)
+                        
+                        Spacer()
+                    }
+                    
+                    Spacer()
+                }
+                .padding(8)
+            }
             
             VStack(spacing: 10) {
                 
                 // MARK: - Horizontal stack with Title and Logo
                 HStack(spacing: 10) {
                     
-                    Text(preferences.title).font(.system(size: 20, design: .rounded)).fontWeight(.medium)
+                    // Supports for markdown through a variable:
+                    Text(.init(preferences.title)).font(.system(size: 20, design: .rounded)).fontWeight(.medium)
 
                     Spacer()
                     
