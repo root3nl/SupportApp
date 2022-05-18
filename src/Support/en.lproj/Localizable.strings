@@ -27,12 +27,12 @@
 "Are you sure you want to quit?" = "Are you sure you want to quit?";
 "An error occurred" = "An error occurred";
 "Please contact IT support" = "Please contact IT support";
-"Not connected" = "Not connected";
+"Not Connected" = "Not connected";
 "IP Address" = "IP Address";
 "No IP Address" = "No IP Address";
 "Password" = "Password";
-"Expires today" = "Expires Today";
-"Never expires" = "Never Expires";
+"Expires Today" = "Expires Today";
+"Never Expires" = "Never Expires";
 "Expires in " = "Expires in ";
 "Expired" = "Expired";
 "Change Now" = "Change Now";
