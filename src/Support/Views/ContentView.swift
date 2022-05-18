@@ -54,16 +54,17 @@ struct ContentView: View {
                 HStack {
                     
                     VStack {
-                        Text("Beta")
-                            .font(.system(.footnote, design: .rounded))
-                            .foregroundColor(.secondary)
+                        Text("Beta release")
+                            .font(.system(.subheadline, design: .rounded))
+                            .opacity(0.5)
                         
                         Spacer()
                     }
                     
                     Spacer()
                 }
-                .padding(8)
+                .padding(.leading, 16.0)
+                .padding(.top, 10)
             }
             
             VStack(spacing: 10) {
