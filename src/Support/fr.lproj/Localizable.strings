@@ -46,3 +46,5 @@
 "Get in touch" = "Prendre contact";
 "GET_IN_TOUCH_TEXT" = "Créez simplement un ticket ou soumettez une demande";
 "Continue" = "Continuer";
+"OPEN_JAMF_CONNECT_MANUALLY" = "Please open Jamf Connect";
+"OPEN_JAMF_CONNECT_MANUALLY_TEXT" = "Open Jamf Connect from the menu bar to change your password";

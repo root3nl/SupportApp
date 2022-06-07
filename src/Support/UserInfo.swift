@@ -100,7 +100,7 @@ class UserInfo: ObservableObject {
         }
     }
     
-    // MARK: - Function to get the user record
+    // MARK: - Function to get the user record and password expiry for local and mobile accounts
     // https://gitlab.com/Mactroll/NoMAD/blob/8786704ccf1ae4c1ec0f5efec60fa27a0f4a871f/NoMAD/NoMADUser.swift
     func applePasswordExpiryDate() {
         
@@ -219,6 +219,7 @@ class UserInfo: ObservableObject {
         
         if preferences.kerberosRealm == "" {
             userPasswordExpiryString = "Kerberos Realm Not Set"
+            logger.error("Kerberos Realm is not set, pleases set the key 'KerberosRealm' to the Kerberos Realm used in capitals")
         } else {
 
             // Perform on background thread
