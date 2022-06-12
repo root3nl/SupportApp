@@ -40,13 +40,30 @@ struct PasswordSubview: View {
         }
     }
     
-    // FIXME: - Remove when Jamf Connect Password Change can be triggered
-    // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
+    // Link type for Password item
     var linkType: String {
-        if defaultsJamfConnect?.bool(forKey: "PasswordCurrent") ?? false && preferences.passwordType == "JamfConnect" {
+        if preferences.passwordType == "Apple" {
+            if #available(macOS 13, *) {
+                return "URL"
+            } else {
+                return "Command"
+            }
+        } else if preferences.passwordType == "KerberosSSO"  {
+            return "Command"
+        } else if preferences.passwordType == "Nomad" {
+            return "Command"
+        } else if preferences.passwordType == "JamfConnect" {
+            return "Command"
+        // FIXME: - Remove when Jamf Connect Password Change can be triggered
+        // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
+        } else if defaultsJamfConnect?.bool(forKey: "PasswordCurrent") ?? false && preferences.passwordType == "JamfConnect" {
             return "JamfConnectPasswordChangeException"
         } else {
-            return "Command"
+            if #available(macOS 13, *) {
+                return "URL"
+            } else {
+                return "Command"
+            }
         }
     }
         

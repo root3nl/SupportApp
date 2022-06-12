@@ -159,6 +159,10 @@ struct Item: View {
             self.showingAlert.toggle()
             return }
         NSWorkspace.shared.open(url)
+        
+        // Close the popover
+        NSApp.deactivate()
+
     }
     
     // Run a command as the user
