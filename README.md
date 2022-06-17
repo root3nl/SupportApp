@@ -202,10 +202,9 @@ Configuration of the top four items with diagnostic information.
 | InfoItemFive | String | - | Info item shown in the third row left | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA" or "ExtensionB" |
 | InfoItemSix | String | - | Info item shown in the third row right | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA" or "ExtensionB" |
 | UptimeDaysLimit | Integer | 0 (Disabled) | Days of uptime after which a notification badge is shown, disabled by default | 7 |
-| PasswordType | String | Apple | The account type to use with the Password info item: local user account (Apple), Jamf Connect, Kerberos SSO Extension or NoMAD. For the Kerberos SSO Extension, make sure the key `KerberosRealm` is also set | "Apple", "JamfConnect", "KerberosSSO" or "Nomad" |
+| PasswordType | String | Apple | The account type to use with the Password info item: local user account (Apple), Jamf Connect, Kerberos SSO Extension or NoMAD | "Apple", "JamfConnect", "KerberosSSO" or "Nomad" |
 | PasswordExpiryLimit| Integer | 0 (Disabled) | Days until password expiry after which a notification badge is shown, disabled by default | 14 |
 | PasswordLabel| String | Mac Password | Alternative text label shown in the Password info item | "AD Password", "Company Password" |
-| KerberosRealm | String | - | The Kerberos Realm used by the Kerberos SSO Extension, usually the domain name in capitals. Only needed when `PasswordType` is set to "KerberosSSO" | "AD.DOMAIN.TLD" |
 | StorageLimit | Integer | 0 (Disabled) | Percentage of storage used after which a notification badge is shown, disabled by default | 80 |
 
 ### First row of configurable items: Item left

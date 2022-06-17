@@ -360,20 +360,6 @@
         }
       ]
     },
-    "KerberosRealm": {
-      "title": "Kerberos Realm",
-      "description": "Required when used with Kerberos SSO Extension as PasswordType",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: KerberosRealm"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
     "PasswordLabel": {
       "title": "Password item label",
       "description": "Alternative text label shown in the Password info item",

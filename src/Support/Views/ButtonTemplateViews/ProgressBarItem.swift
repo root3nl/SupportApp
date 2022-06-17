@@ -125,7 +125,7 @@ struct ProgressBarItem: View {
             
         } else {
             
-            guard let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: "com.apple.settings.Storage")
+            guard let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: "com.apple.StorageManagementLauncher")
                     // Show alert when there is an error
             else {
                 self.showingAlert.toggle()

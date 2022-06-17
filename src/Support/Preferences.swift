@@ -157,5 +157,5 @@ class Preferences: ObservableObject {
     @AppStorage("ExtensionLoadingB") var extensionLoadingB = Bool()
     
     // Enable beta release watermark
-    var betaRelease: Bool = true
+    let betaRelease: Bool = false
 }

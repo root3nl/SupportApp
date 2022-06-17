@@ -87,7 +87,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 self.computerinfo.kernelBootTime()
                 self.computerinfo.getStorage()
                 self.computerinfo.getIPAddress()
-                self.userinfo.getCurrentUserRecord()
+                Task {
+                    await self.userinfo.getCurrentUserRecord()
+                }
             }
         }
         
@@ -231,7 +233,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         case "PasswordExpiryLimit":
             // Check password expiry when key PasswordExpiryLimit is changed
             logger.debug("\(keyPath! as NSObject) change to \(self.preferences.passwordExpiryLimit), checking password expiry...")
-            self.userinfo.getCurrentUserRecord()
+            Task {
+                await self.userinfo.getCurrentUserRecord()
+            }
         case "LastUpdatesAvailable":
             logger.debug("\(keyPath! as NSObject) changed to \(self.ASUdefaults!.integer(forKey: "LastUpdatesAvailable"))")
         default:
@@ -327,7 +331,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.computerinfo.kernelBootTime()
             self.computerinfo.getStorage()
             self.computerinfo.getIPAddress()
-            self.userinfo.getCurrentUserRecord()
+            Task {
+                await self.userinfo.getCurrentUserRecord()
+            }
             
             // Post Distributed Notification to trigger script for custom info items
             postDistributedNotification()
@@ -341,7 +347,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func runAtStartup() {
         // Run uptime and storage once at startup
         self.computerinfo.kernelBootTime()
-        self.userinfo.getCurrentUserRecord()
+        Task {
+            await self.userinfo.getCurrentUserRecord()
+        }
         self.computerinfo.getStorage()
     }
     

@@ -35,6 +35,12 @@ class UserInfo: ObservableObject {
     // Boolean to show alert and menu bar icon notification badge
     @Published var passwordExpiryLimitReached: Bool = false
     
+    // Array of detected Kerberos Realms
+    var realmsArray: [String] = []
+    
+    // Kerberos Realm
+    var realm: String = ""
+    
     // Static sign in string
     var signInString = NSLocalizedString("Sign In Here", comment: "")
     
@@ -74,9 +80,9 @@ class UserInfo: ObservableObject {
             }
         } else if preferences.passwordType == "KerberosSSO" {
             if passwordChangeString == signInString {
-                return "app-sso -a \(preferences.kerberosRealm)"
+                return "app-sso -a \(realm)"
             } else {
-                return "app-sso -c \(preferences.kerberosRealm)"
+                return "app-sso -c \(realm)"
             }
         } else if preferences.passwordType == "Nomad" {
             if defaultsNomad?.bool(forKey: "SignedIn") ?? false {
@@ -94,13 +100,13 @@ class UserInfo: ObservableObject {
     }
     
     // MARK: - Function to check which password source to check
-    func getCurrentUserRecord() {
+    func getCurrentUserRecord() async {
         if preferences.passwordType == "Apple" {
             applePasswordExpiryDate()
         } else if preferences.passwordType == "JamfConnect" {
             jcExpiryDate()
         } else if preferences.passwordType == "KerberosSSO" {
-            kerbSSOExpiryDate()
+            await kerbSSOExpiryDate()
         } else if preferences.passwordType == "Nomad" {
             nomadExpiryDate()
         } else if !preferences.passwordType.isEmpty {
@@ -222,80 +228,124 @@ class UserInfo: ObservableObject {
         setNotificationBadge(expiresInDays: expiresInDays)
     }
     
-    // MARK: - Function to get Kerberos SSO Extension password expiry
-    func kerbSSOExpiryDate() {
+    // MARK: - Function to get the Kerberos SSO Extension Realm
+    func getKerbSSORealm() async {
         
-        if preferences.kerberosRealm == "" {
-            userPasswordExpiryString = "Kerberos Realm Not Set"
-            logger.error("Kerberos Realm is not set, pleases set the key 'KerberosRealm' to the Kerberos Realm used in capitals")
-        } else {
-
-            // Perform on background thread
-            DispatchQueue.global().async { [self] in
-                
-                let query = "app-sso -j -i \(preferences.kerberosRealm)"
-                
-                let task = Process()
-                let pipe = Pipe()
-                
-                task.standardOutput = pipe
-                task.standardError = pipe
-                task.launchPath = "/bin/zsh"
-                task.arguments = ["-c", "\(query)"]
-                task.launch()
-                
-                let data = pipe.fileHandleForReading.readDataToEndOfFile()
-                let output = String(data: data, encoding: .utf8)!
-                
-                if !task.isRunning {
-                    let status = task.terminationStatus
-                    if status == 0 {
-                        logger.debug("\(output)")
-                    } else {
-                        logger.error("\(output)")
-                    }
+        let query = "app-sso -j -l"
+        
+        let task = Process()
+        let pipe = Pipe()
+        
+        task.standardOutput = pipe
+        task.standardError = pipe
+        task.launchPath = "/bin/zsh"
+        task.arguments = ["-c", "\(query)"]
+        task.launch()
+        
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        let output = String(data: data, encoding: .utf8)!
+        
+        if !task.isRunning {
+            let status = task.terminationStatus
+            if status == 0 {
+                logger.debug("\(output)")
+            } else {
+                logger.error("\(output)")
+            }
+        }
+        
+        let decoder = JSONDecoder()
+        
+        do {
+            self.realmsArray = try decoder.decode([String].self, from: data)
+        } catch {
+            self.logger.error("Error obtaining Kerberos Realm from Kerberos SSO Extension. Please explicitely set the key 'KerberosRealm' to the Kerberos Realm used in capitals")
+        }
+    }
+    
+    // MARK: - Function to get Kerberos SSO Extension password expiry
+    func kerbSSOExpiryDate() async {
+        
+        // Try to detect Kerberos Realm automatically
+        await getKerbSSORealm()
+        
+        // Exit when no realm was detected
+        guard realmsArray.indices.contains(0) else {
+            userPasswordExpiryString = "Unknown Kerberos Realm"
+            logger.error("Kerberos Realm could not be detected automatically, please check the Configuration Profile with the Kerberos SSO Extension payload")
+            return
+        }
+        
+        // Set realm when it was detected
+        realm = realmsArray[0]
+        logger.debug("Kerberos Realm successfully detected: \(self.realm)")
+        
+        // Query to get password exiry
+        let query = "app-sso -j -i \(realm)"
+        
+        // Perform query on background thread
+        DispatchQueue.global().async { [self] in
+            
+            let task = Process()
+            let pipe = Pipe()
+            
+            task.standardOutput = pipe
+            task.standardError = pipe
+            task.launchPath = "/bin/zsh"
+            task.arguments = ["-c", "\(query)"]
+            task.launch()
+            
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            let output = String(data: data, encoding: .utf8)!
+            
+            if !task.isRunning {
+                let status = task.terminationStatus
+                if status == 0 {
+                    logger.debug("\(output)")
+                } else {
+                    logger.error("\(output)")
                 }
+            }
+            
+            // Set JSONDecoder to handle ISO-8601 dates
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601
+            
+            // Publish values back on the main thread
+            DispatchQueue.main.async {
                 
-                // Set JSONDecoder to handle ISO-8601 dates
-                let decoder = JSONDecoder()
-                decoder.dateDecodingStrategy = .iso8601
-                
-                // Publish values back on the main thread
-                DispatchQueue.main.async {
+                // Try to decode JSON output to get password expiry date
+                do {
+                    let decoded = try decoder.decode(KerberosSSOExtension.self, from: data)
                     
-                    // Try to decode JSON output to get password expiry date
-                    do {
-                        let decoded = try decoder.decode(KerberosSSOExtension.self, from: data)
+                    if decoded.passwordExpiresDate != nil && decoded.userName != nil {
+                        let expiresInDays = Calendar.current.dateComponents([.day], from: Date(), to: decoded.passwordExpiresDate!).day!
+                        self.setNotificationBadge(expiresInDays: expiresInDays)
                         
-                        if decoded.passwordExpiresDate != nil && decoded.userName != nil {
-                            let expiresInDays = Calendar.current.dateComponents([.day], from: Date(), to: decoded.passwordExpiresDate!).day!
-                            self.setNotificationBadge(expiresInDays: expiresInDays)
-                            
-                            if expiresInDays == 0 {
-                                self.userPasswordExpiryString = NSLocalizedString("Expires Today", comment: "")
-                            } else if expiresInDays < 0 {
-                                self.userPasswordExpiryString = NSLocalizedString("Expired", comment: "")
-                            } else {
-                                if expiresInDays > 1 {
-                                    self.userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" days", comment: ""))
-                                } else {
-                                    self.userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" day", comment: ""))
-                                }
-                            }
-                        } else if decoded.passwordExpiresDate == nil && decoded.userName != nil {
-                            self.userPasswordExpiryString = NSLocalizedString("Never Expires", comment: "")
-                            // Set boolean to false to hide alert and menu bar icon notification badge
-                            self.passwordExpiryLimitReached = false
+                        if expiresInDays == 0 {
+                            self.userPasswordExpiryString = NSLocalizedString("Expires Today", comment: "")
+                        } else if expiresInDays < 0 {
+                            self.userPasswordExpiryString = NSLocalizedString("Expired", comment: "")
                         } else {
-                            self.userPasswordExpiryString = self.signInString
-                            // Set boolean to false to hide alert and menu bar icon notification badge
-                            self.passwordExpiryLimitReached = false
+                            if expiresInDays > 1 {
+                                self.userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" days", comment: ""))
+                            } else {
+                                self.userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" day", comment: ""))
+                            }
                         }
-                        
-                    } catch {
-                        self.logger.error("\(error.localizedDescription)")
-                        self.userPasswordExpiryString = error.localizedDescription
+                    } else if decoded.passwordExpiresDate == nil && decoded.userName != nil {
+                        self.userPasswordExpiryString = NSLocalizedString("Never Expires", comment: "")
+                        // Set boolean to false to hide alert and menu bar icon notification badge
+                        self.passwordExpiryLimitReached = false
+                    } else {
+                        self.userPasswordExpiryString = self.signInString
+                        // Set boolean to false to hide alert and menu bar icon notification badge
+                        self.passwordExpiryLimitReached = false
                     }
+                    
+                } catch {
+                    self.logger.error("\(error.localizedDescription)")
+                    self.userPasswordExpiryString = error.localizedDescription
                 }
             }
         }
