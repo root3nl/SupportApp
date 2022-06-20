@@ -49,7 +49,11 @@ struct PasswordSubview: View {
                 return "Command"
             }
         } else if preferences.passwordType == "KerberosSSO"  {
-            return "Command"
+            if userinfo.networkUnavailable {
+                return "KerberosSSOExtensionUnavailable"
+            } else {
+                return "Command"
+            }
         } else if preferences.passwordType == "Nomad" {
             return "Command"
         } else if preferences.passwordType == "JamfConnect" {

@@ -35,6 +35,9 @@ class UserInfo: ObservableObject {
     // Boolean to show alert and menu bar icon notification badge
     @Published var passwordExpiryLimitReached: Bool = false
     
+    // Boolean to show alert when network is unavailable for the Kerberos SSO Extension
+    @Published var networkUnavailable: Bool = false
+    
     // Array of detected Kerberos Realms
     var realmsArray: [String] = []
     
@@ -42,10 +45,13 @@ class UserInfo: ObservableObject {
     var realm: String = ""
     
     // Static sign in string
-    var signInString = NSLocalizedString("Sign In Here", comment: "")
+    let signInString = NSLocalizedString("Sign In Here", comment: "")
     
     // Static password change string
-    var changeString = NSLocalizedString("Change Now", comment: "")
+    let changeString = NSLocalizedString("Change Now", comment: "")
+    
+    // Static password change unavailable string
+    let changeUnavailableString = NSLocalizedString("NETWORK_UNAVAILABLE", comment: "")
     
     // Set preference suite to "com.jamf.connect.state"
     let defaultsJamfConnect = UserDefaults(suiteName: "com.jamf.connect.state")
@@ -58,7 +64,11 @@ class UserInfo: ObservableObject {
         if userPasswordExpiryString == signInString {
             return signInString
         } else {
-            return changeString
+            if networkUnavailable {
+                return changeUnavailableString
+            } else {
+                return changeString
+            }
         }
     }
     
@@ -194,38 +204,44 @@ class UserInfo: ObservableObject {
     
     // MARK: - Function to get Jamf Connect password expiry
     func jcExpiryDate() {
-        guard defaultsJamfConnect?.bool(forKey: "PasswordCurrent") ?? false else {
-            userPasswordExpiryString = signInString
+        
+        // Publish values back on the main thread
+        DispatchQueue.main.async { [self] in
             
-            // Set boolean to false to hide alert and menu bar icon notification badge
-            passwordExpiryLimitReached = false
-            return
-        }
-        
-        guard let expiryDate = defaultsJamfConnect?.object(forKey: "ComputedPasswordExpireDate") as? Date else {
-            // Don't show 'Never Expires' because we are not sure Jamf Connect is able to detect it.
-            userPasswordExpiryString = NSLocalizedString("Change Now", comment: "")
-            
-            // Set boolean to false to hide alert and menu bar icon notification badge
-            passwordExpiryLimitReached = false
-            return
-        }
-        
-        let expiresInDays = Calendar.current.dateComponents([.day], from: Date(), to: expiryDate).day!
-        
-        if expiresInDays == 0 {
-            userPasswordExpiryString = NSLocalizedString("Expires Today", comment: "")
-        } else if expiresInDays < 0 {
-            userPasswordExpiryString = NSLocalizedString("Expired", comment: "")
-        } else {
-            if expiresInDays > 1 {
-                userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" days", comment: ""))
-            } else {
-                userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" day", comment: ""))
+            guard defaultsJamfConnect?.bool(forKey: "PasswordCurrent") ?? false else {
+                userPasswordExpiryString = signInString
+                
+                // Set boolean to false to hide alert and menu bar icon notification badge
+                passwordExpiryLimitReached = false
+                return
             }
+            
+            guard let expiryDate = defaultsJamfConnect?.object(forKey: "ComputedPasswordExpireDate") as? Date else {
+                // Don't show 'Never Expires' because we are not sure Jamf Connect is able to detect it.
+                userPasswordExpiryString = NSLocalizedString("Change Now", comment: "")
+                
+                // Set boolean to false to hide alert and menu bar icon notification badge
+                passwordExpiryLimitReached = false
+                return
+            }
+            
+            let expiresInDays = Calendar.current.dateComponents([.day], from: Date(), to: expiryDate).day!
+            
+            if expiresInDays == 0 {
+                userPasswordExpiryString = NSLocalizedString("Expires Today", comment: "")
+            } else if expiresInDays < 0 {
+                userPasswordExpiryString = NSLocalizedString("Expired", comment: "")
+            } else {
+                if expiresInDays > 1 {
+                    userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" days", comment: ""))
+                } else {
+                    userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" day", comment: ""))
+                }
+            }
+            
+            setNotificationBadge(expiresInDays: expiresInDays)
+            
         }
-        
-        setNotificationBadge(expiresInDays: expiresInDays)
     }
     
     // MARK: - Function to get the Kerberos SSO Extension Realm
@@ -343,6 +359,13 @@ class UserInfo: ObservableObject {
                         self.passwordExpiryLimitReached = false
                     }
                     
+                    // Disable password change and show alert when network is unavailable
+                    if decoded.networkAvailable != "1" {
+                        self.networkUnavailable = true
+                    } else {
+                        self.networkUnavailable = false
+                    }
+                    
                 } catch {
                     self.logger.error("\(error.localizedDescription)")
                     self.userPasswordExpiryString = error.localizedDescription
@@ -353,36 +376,40 @@ class UserInfo: ObservableObject {
     
     // MARK: - Function to get NoMAD password expiry
     func nomadExpiryDate() {
-        guard defaultsNomad?.bool(forKey: "SignedIn") ?? false else {
-            userPasswordExpiryString = signInString
-            // Set boolean to false to hide alert and menu bar icon notification badge
-            passwordExpiryLimitReached = false
-            return
-        }
         
-        guard let expiryDate = defaultsNomad?.object(forKey: "LastPasswordExpireDate") as? Date else {
-            userPasswordExpiryString = NSLocalizedString("Never Expires", comment: "")
-            // Set boolean to false to hide alert and menu bar icon notification badge
-            passwordExpiryLimitReached = false
-            return
-        }
-        
-        let expiresInDays = Calendar.current.dateComponents([.day], from: Date(), to: expiryDate).day!
-        
-        if expiresInDays == 0 {
-            userPasswordExpiryString = NSLocalizedString("Expires Today", comment: "")
-        } else if expiresInDays < 0 {
-            userPasswordExpiryString = NSLocalizedString("Expired", comment: "")
-        } else {
-            if expiresInDays > 1 {
-                userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" days", comment: ""))
-            } else {
-                userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" day", comment: ""))
+        // Publish values back on the main thread
+        DispatchQueue.main.async { [self] in
+            
+            guard defaultsNomad?.bool(forKey: "SignedIn") ?? false else {
+                userPasswordExpiryString = signInString
+                // Set boolean to false to hide alert and menu bar icon notification badge
+                passwordExpiryLimitReached = false
+                return
             }
+            
+            guard let expiryDate = defaultsNomad?.object(forKey: "LastPasswordExpireDate") as? Date else {
+                userPasswordExpiryString = NSLocalizedString("Never Expires", comment: "")
+                // Set boolean to false to hide alert and menu bar icon notification badge
+                passwordExpiryLimitReached = false
+                return
+            }
+            
+            let expiresInDays = Calendar.current.dateComponents([.day], from: Date(), to: expiryDate).day!
+            
+            if expiresInDays == 0 {
+                userPasswordExpiryString = NSLocalizedString("Expires Today", comment: "")
+            } else if expiresInDays < 0 {
+                userPasswordExpiryString = NSLocalizedString("Expired", comment: "")
+            } else {
+                if expiresInDays > 1 {
+                    userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" days", comment: ""))
+                } else {
+                    userPasswordExpiryString = (NSLocalizedString("Expires in ", comment: "") + "\(expiresInDays)" + NSLocalizedString(" day", comment: ""))
+                }
+            }
+            
+            setNotificationBadge(expiresInDays: expiresInDays)
         }
-        
-        setNotificationBadge(expiresInDays: expiresInDays)
-        
     }
     
     // MARK: - Determine if notification badge with exclamation mark should be shown in tile

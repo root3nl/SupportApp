@@ -36,8 +36,29 @@ struct ItemDouble: View {
     // Get preferences or default values
     @ObservedObject var preferences = Preferences()
     
-    // Enable animation
-    //    var animate: Bool
+    // Alert title options
+    var alertTitle: String {
+        switch linkType {
+        case "JamfConnectPasswordChangeException":
+            return NSLocalizedString("OPEN_JAMF_CONNECT_MANUALLY", comment: "")
+        case "KerberosSSOExtensionUnavailable":
+            return NSLocalizedString("NETWORK_UNAVAILABLE", comment: "")
+        default:
+            return NSLocalizedString("An error occurred", comment: "")
+        }
+    }
+    
+    // Alert text options
+    var alertMessage: String {
+        switch linkType {
+        case "JamfConnectPasswordChangeException":
+            return NSLocalizedString("OPEN_JAMF_CONNECT_MANUALLY_TEXT", comment: "")
+        case "KerberosSSOExtensionUnavailable":
+            return NSLocalizedString("NETWORK_UNAVAILABLE_TEXT", comment: "")
+        default:
+            return preferences.errorMessage
+        }
+    }
     
     var body: some View {
         
@@ -62,6 +83,7 @@ struct ItemDouble: View {
                     Text(hoverView && hoverEffectEnable ? secondSubtitle : subtitle)
                         .font(.system(.subheadline, design: .rounded))
                         .lineLimit(2)
+
                 }
                 
                 Spacer()
@@ -84,7 +106,7 @@ struct ItemDouble: View {
         .alert(isPresented: $showingAlert) {
             // FIXME: - Adjust when Jamf Connect Password Change can be triggered
             // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
-            Alert(title: Text(linkType == "JamfConnectPasswordChangeException" ? NSLocalizedString("OPEN_JAMF_CONNECT_MANUALLY", comment: "") : NSLocalizedString("An error occurred", comment: "")), message: Text(linkType == "JamfConnectPasswordChangeException" ? NSLocalizedString("OPEN_JAMF_CONNECT_MANUALLY_TEXT", comment: "") : preferences.errorMessage), dismissButton: .default(Text("OK")))
+            Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")))
         }
         .onHover() {
             hover in self.hoverView = hover
@@ -96,15 +118,16 @@ struct ItemDouble: View {
                 openLink()
             } else if linkType == "Command" {
                 runCommand()
+                
+            // FIXME: - Asjust when Jamf Connect Password Change can be triggered
+            // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
+            } else if linkType == "JamfConnectPasswordChangeException" {
+                self.showingAlert.toggle()
+            } else if linkType == "KerberosSSOExtensionUnavailable" {
+                self.showingAlert.toggle()
             } else {
-                // FIXME: - Asjust when Jamf Connect Password Change can be triggered
-                // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
-                if linkType == "JamfConnectPasswordChangeException" {
-                    self.showingAlert.toggle()
-                } else {
-                    self.showingAlert.toggle()
-                    logger.error("Invalid Link Type: \(linkType!)")
-                }
+                self.showingAlert.toggle()
+                logger.error("Invalid Link Type: \(linkType!)")
             }
         }
     }

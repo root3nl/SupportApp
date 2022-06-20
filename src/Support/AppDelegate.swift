@@ -336,7 +336,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
             
             // Post Distributed Notification to trigger script for custom info items
-            postDistributedNotification()
+            if defaults.string(forKey: "OnAppearAction") != nil {
+                postDistributedNotification()
+            }
             
         }
         // Necessary to make the view active without having to do an extra click

@@ -317,19 +317,19 @@ class ComputerInfo: ObservableObject {
         
         // Get the serial number
         var serialNumber: String {
-                let platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPlatformExpertDevice") )
-
-                guard platformExpert > 0 else {
-                    return "Unknown"
-                }
-
-                guard let serialNumber = (IORegistryEntryCreateCFProperty(platformExpert, kIOPlatformSerialNumberKey as CFString, kCFAllocatorDefault, 0).takeUnretainedValue() as? String)?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) else {
-                    return "Unknown"
-                }
-
-                IOObjectRelease(platformExpert)
-
-                return serialNumber
+            let platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPlatformExpertDevice") )
+            
+            guard platformExpert > 0 else {
+                return "Unknown"
+            }
+            
+            guard let serialNumber = (IORegistryEntryCreateCFProperty(platformExpert, kIOPlatformSerialNumberKey as CFString, kCFAllocatorDefault, 0).takeUnretainedValue() as? String)?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) else {
+                return "Unknown"
+            }
+            
+            IOObjectRelease(platformExpert)
+            
+            return serialNumber
         }
         
         self.logger.debug("Serial Number: \(serialNumber, privacy: .public)")
@@ -390,8 +390,6 @@ class ComputerInfo: ObservableObject {
             return []
         }
     }
-    
-    
     
     // MARK: - Function to get the IP address of the currently first active interface
     // https://stackoverflow.com/questions/30748480/swift-get-devices-wifi-ip-address

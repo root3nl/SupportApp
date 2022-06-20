@@ -49,3 +49,5 @@
 "Continue" = "Continuer";
 "OPEN_JAMF_CONNECT_MANUALLY" = "Please open Jamf Connect";
 "OPEN_JAMF_CONNECT_MANUALLY_TEXT" = "Open Jamf Connect from the menu bar to change your password";
+"NETWORK_UNAVAILABLE" = "Network Unavailable";
+"NETWORK_UNAVAILABLE_TEXT" = "Your organisation's network isn't available. Please check your connection and try again.";
