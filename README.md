@@ -133,6 +133,7 @@ The buttons in the 3rd and 4th row behave as shortcuts to applications or links.
   * App: Bundle Identifier of the app
   * URL: Link to a webpage or other links that would normaly work like PROTOCOL://URL
   * Command: Zsh command or path to a script. Be aware that this will be executed as the user and therefore has its limitations
+  * DistributedNotification: Zsh command or path to a script to run with elevated privileges (requires SupportHelper)
 
 * **Symbol**: The symbol shown in the button, see the SF Symbols section how to use these symbols
 
