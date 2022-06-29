@@ -835,7 +835,7 @@
       ]
     },
     "ExtensionTypeA": {
-      "title": "Extension Linke Type A",
+      "title": "Extension Link Type A",
       "description": "Type of link the Extension should open.",
       "type": "string",
       "options": {

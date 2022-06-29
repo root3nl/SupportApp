@@ -4,11 +4,7 @@
 ![Github](https://img.shields.io/badge/macOS-11%2B-green)
 [![Github](https://img.shields.io/badge/Join-TestFlight-blue)](https://testflight.apple.com/join/asmgJsAM)
 
-<img src="/Screenshots/generic_version_2.4_beta.gif" width="800">
-
-<img src="/Screenshots/generic_version_2.3.png" width="800">
-
-<!-- <img src="/Screenshots/generic_version_2.1.png" width="800"> -->
+<img src="/Screenshots/generic_version_2.4.png" width="800">
 
 <img src="/Screenshots/generic_version_2.1_small.png" width="450"> <img src="/Screenshots/generic_light_mode_cropped.png" width="450"> <img src="/Screenshots/generic_version_2.3_small_dark.png" width="450">
 
@@ -99,7 +95,7 @@ Note: There may not always be a TestFlight version available.
 The Menu Bar Icon can be customized to your own PNG with Alpha Channel or using an SF Symbol. Any image will be shown as template to match the rest of the Menu Bar Extras. Optionally a notification badge can overlay the icon to attract the user's attention when an Apple Software Update is available or any other warning was triggered. Please check the preference key "StatusBarIconNotifierEnabled".
 
 ### Title and logo
-The row above the buttons allow a custom title and company logo. The logo supports several images types like PNG, JPEG and ICNS and will be resized to a maximum height of 48 points. The original aspect ratio will be retained. A PNG with alpha channel is advised to get variable transparency around your logo.
+The row above the buttons allow a custom title and company logo. The title supports both text and Emoji. On macOS Monterey and higher, it supports Markdown as well. The logo supports several images types like PNG, JPEG and ICNS and will be resized to a maximum height of 48 points. The original aspect ratio will be retained. A PNG with alpha channel is advised to get variable transparency around your logo.
 
 ### Color
 All the circles around the symbols have the macOS accent color and will dynamically change with the user's setting in System Preferences --> General. If desired, this color can be customised matching your corporate colors. We recommend keeping the macOS accent color when the color of your choice is too light, as text will be difficult to read.
@@ -313,6 +309,10 @@ defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bo
 
 ### Privileged commands or scripts (SupportHelper)
 To allow commands or scripts to be executed with root privileges, the SupportHelper is available optionally. This utility is built on Distributed Notifications to allow inter-app communication between the Support App and the SupportHelper. The Support App notifies SupportHelper and the message contains the preference key set in the Configuration Profile with the command or path to the script. SupportHelper listens for new messages using a LaunchDaemon and executes the command or script by requesting the command or path to the script from the Configuration Profile.
+
+Below an example to force a MDM check-in using SupportHelper and a custom script:
+
+<img src="/Screenshots/generic_version_2.4_beta.gif" width="800">
 
 More information about Distributed Notifications: https://developer.apple.com/documentation/foundation/distributednotificationcenter
 
