@@ -17,6 +17,8 @@ struct Item: View {
     var symbolColor: Color
     var notificationBadge: Int?
     var notificationBadgeBool: Bool?
+    var loading: Bool?
+    var linkPrefKey: String?
     
     // Declare unified logging
     let logger = Logger(subsystem: "nl.root3.support", category: "Action")
@@ -41,14 +43,25 @@ struct Item: View {
         ZStack {
             
             HStack {
-                Ellipse()
-                    .foregroundColor(hoverView ? .primary : symbolColor)
-                    .overlay(
-                        Image(systemName: image)
-                            .foregroundColor(hoverView ? Color("hoverColor") : Color.white)
-                    )
-                    .frame(width: 26, height: 26)
-                    .padding(.leading, 10)
+                if loading ?? false {
+                    Ellipse()
+                        .foregroundColor(Color.gray.opacity(0.5))
+                        .overlay(
+                            ProgressView()
+                                .scaleEffect(0.5)
+                        )
+                        .frame(width: 26, height: 26)
+                        .padding(.leading, 10)
+                } else {
+                    Ellipse()
+                        .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
+                        .overlay(
+                            Image(systemName: image)
+                                .foregroundColor(hoverView && link != "" ? Color("hoverColor") : Color.white)
+                        )
+                        .frame(width: 26, height: 26)
+                        .padding(.leading, 10)
+                }
                 
                 VStack(alignment: .leading) {
                     
@@ -67,6 +80,8 @@ struct Item: View {
                         Text(subtitle ?? "")
                             .font(.system(.subheadline, design: .rounded))
                             .lineLimit(2)
+                            // Show placeholder when no initial value is set for Custom Info Items
+                            .redacted(reason: (subtitle == "KeyPlaceholder") ? .placeholder: .init())
                         
                     }
                 }
@@ -83,7 +98,7 @@ struct Item: View {
             }
         }
         .frame(width: 176, height: 60)
-        .background(hoverView && hoverEffectEnable ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
+        .background(hoverView && hoverEffectEnable && link != "" ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
         .cornerRadius(10)
         // Apply gray and black border in Dark Mode to better view the buttons like Control Center
         .modifier(DarkModeBorder())
@@ -102,12 +117,20 @@ struct Item: View {
             }
         }
         .onTapGesture() {
+            // Don't do anything when no link is specified
+            guard link != "" else {
+                logger.debug("No link specified for \(title), button disabled...")
+                return
+            }
+            
             if linkType == "App" {
                 openApp()
             } else if linkType == "URL" {
                 openLink()
             } else if linkType == "Command" {
                 runCommand()
+            } else if linkType == "DistributedNotification" {
+                postDistributedNotification()
             } else {
                 self.showingAlert.toggle()
                 logger.error("Invalid Link Type: \(linkType!)")
@@ -136,6 +159,10 @@ struct Item: View {
             self.showingAlert.toggle()
             return }
         NSWorkspace.shared.open(url)
+        
+        // Close the popover
+        NSApp.deactivate()
+
     }
     
     // Run a command as the user
@@ -161,5 +188,23 @@ struct Item: View {
                 self.showingAlert.toggle()
             }
         }
+        
+        // Close the popover
+        NSApp.deactivate()
+    }
+    
+    // Post Distributed Notification
+    func postDistributedNotification() {
+        logger.debug("Posting Distributed Notification: nl.root3.support.Action")
+        
+        // Initialize distributed notifications
+        let nc = DistributedNotificationCenter.default()
+        
+        // Define the NSNotification name
+        let name = NSNotification.Name("nl.root3.support.Action")
+        
+        // Post the notification including all sessions to support LaunchDaemons
+        nc.postNotificationName(name, object: linkPrefKey, userInfo: nil, options: [.postToAllSessions, .deliverImmediately])
+
     }
 }

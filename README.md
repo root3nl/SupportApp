@@ -4,9 +4,7 @@
 ![Github](https://img.shields.io/badge/macOS-11%2B-green)
 [![Github](https://img.shields.io/badge/Join-TestFlight-blue)](https://testflight.apple.com/join/asmgJsAM)
 
-<img src="/Screenshots/generic_version_2.3.png" width="800">
-
-<img src="/Screenshots/generic_version_2.1.png" width="800">
+<img src="/Screenshots/generic_version_2.4.png" width="800">
 
 <img src="/Screenshots/generic_version_2.1_small.png" width="450"> <img src="/Screenshots/generic_light_mode_cropped.png" width="450"> <img src="/Screenshots/generic_version_2.3_small_dark.png" width="450">
 
@@ -25,12 +23,19 @@
   * [Notification Icon](#notification-icon)
   * [Welcome Screen](#welcome-screen)
 - [Configuration](#configuration)
+- [Advanced configuration](#advanced-configuration)
+  * [How to populate Support App Extensions](#how-to-populate-support-app-extensions)
+  * [Jamf Pro variables](#jamf-pro-variables)
+  * [Privileged commands or scripts (SupportHelper)](#privileged-commands-or-scripts-supporthelper)
+    * [File locations](#file-locations)
+    * [Security Considerations](#security-considerations)
 - [How to use SF Symbols](#how-to-use-sf-symbols)
 - [MDM deployment](#mdm-deployment)
   * [Jamf Pro custom JSON Schema](#jamf-pro-custom-json-schema)
   * [Installer or app bundle](#installer-or-app-bundle)
   * [Sample LaunchAgent](#sample-launchagent)
   * [Sample Configuration Profile](#sample-configuration-profile)
+- [Logging](#logging)
 - [Known issues](#known-issues)
 - [Changelog](#changelog)
 - [Privacy policy](#privacy-policy)
@@ -42,7 +47,7 @@ The Support app is a macOS menu bar app built for organizations to:
 * Offer shortcuts to easily access support channels or other company resources such as a website or a file server
 * Give users a modern and native macOS app with your corporate identity
 
-The app is developed by Root3, specialized in managing Apple devices. Root3 offers consultancy and support for organizations to get the most out of their Apple devices and is based in The Netherlands (Haarlem).
+The app is developed by Root3, specialized in managing Apple devices. Root3 offers consultancy and support for organizations to get the most out of their Apple devices and is based in The Netherlands (Halfweg).
 
 Root3 already had a basic in-house support app written in Objective-C and decided to completely rewrite it in Swift using SwiftUI with an all-new design that looks great on macOS Big Sur. We’ve learned that SwiftUI is the perfect way of creating great looking apps for all Apple platforms with minimal effort. In the development process we decided to make it generic so other organizations can take advantage of it and contribute to the Mac admins community.
 
@@ -54,11 +59,16 @@ The easiest and recommended way to configure the app is using a Configuration Pr
 * Any MDM solution supporting custom Configuration Profiles
 
 ## Download
+
+### Support App
 Package Installer (includes LaunchAgent): [**Download**](https://github.com/root3nl/SupportApp/releases/latest)
 
 Application (zipped): [**Download**](https://github.com/root3nl/SupportApp/releases/latest)
 
 See the MDM deployment section below for more info.
+
+### SupportHelper
+Package Installer (includes LaunchDaemon): [**Download**](https://github.com/root3nl/SupportApp/releases/latest)
 
 ### TestFlight
 You can participate in beta versions of Support App using TestFlight. This requires macOS 12 or higher.
@@ -85,7 +95,7 @@ Note: There may not always be a TestFlight version available.
 The Menu Bar Icon can be customized to your own PNG with Alpha Channel or using an SF Symbol. Any image will be shown as template to match the rest of the Menu Bar Extras. Optionally a notification badge can overlay the icon to attract the user's attention when an Apple Software Update is available or any other warning was triggered. Please check the preference key "StatusBarIconNotifierEnabled".
 
 ### Title and logo
-The row above the buttons allow a custom title and company logo. The logo supports several images types like PNG, JPEG and ICNS and will be resized to a maximum height of 48 points. The original aspect ratio will be retained. A PNG with alpha channel is advised to get variable transparency around your logo.
+The row above the buttons allow a custom title and company logo. The title supports both text and Emoji. On macOS Monterey and higher, it supports Markdown as well. The logo supports several images types like PNG, JPEG and ICNS and will be resized to a maximum height of 48 points. The original aspect ratio will be retained. A PNG with alpha channel is advised to get variable transparency around your logo.
 
 ### Color
 All the circles around the symbols have the macOS accent color and will dynamically change with the user's setting in System Preferences --> General. If desired, this color can be customised matching your corporate colors. We recommend keeping the macOS accent color when the color of your choice is too light, as text will be difficult to read.
@@ -103,7 +113,9 @@ There are a couple of info items with diagnostics available to choose from. A to
 
 * **Network**: The current SSID or Ethernet along with the local IPv4 address. The icon indicates the connection type, Wi-Fi or Ethernet. Clicking on this item opens the Network preference pane in System Preferences.
 
-* **Mac Password**: Shows when the user's password expires and supports both local and Active Directory accounts. Shows a warning when the expiry reaches the value set in the optional key 'PasswordExpiryLimit'. The text label in the item can be modified using the preference key ‘PasswordLabel’.
+* **Mac Password**: Shows when the user's password expires and supports both local and Active Directory accounts by default. Alternative supported user sources are Jamf Connect, Kerberos SSO Extension and NoMAD. Shows a warning when the expiry reaches the value set in the optional key 'PasswordExpiryLimit'. The text label in the item can be modified using the preference key ‘PasswordLabel’.
+
+* **Extension A and B**: Support App Extensions to show any information. The title, icon must be configured and optionally a link to open an App, URL, User Command or Privileged Command/Script. The value below the title must be populated by setting a preference key using a script. See [How to populate Support App Extensions](#how-to-populate-support-app-extensions) for more information.
 
 ### App, link or command shortcuts
 The buttons in the 3rd and 4th row behave as shortcuts to applications or links. Both rows are flexible and can show two or three buttons. The total amount of configurable buttons is possible: 0, 2, 3, 4, 5, 6. You can configure five variables for every of these buttons:
@@ -121,6 +133,7 @@ The buttons in the 3rd and 4th row behave as shortcuts to applications or links.
   * App: Bundle Identifier of the app
   * URL: Link to a webpage or other links that would normaly work like PROTOCOL://URL
   * Command: Zsh command or path to a script. Be aware that this will be executed as the user and therefore has its limitations
+  * DistributedNotification: Zsh command or path to a script to run with elevated privileges (requires SupportHelper)
 
 * **Symbol**: The symbol shown in the button, see the SF Symbols section how to use these symbols
 
@@ -152,6 +165,8 @@ The configuration of the Support app is optimized for use with your MDM solution
 
 Some preference keys like the icon and status bar icon point to a file location. Due to the sandboxed characteristic of the app, not all file locations are allowed. We suggest putting the files in a folder within Application Support such as `/Library/Application Support/Your Company/` where the app can read the contents. Other supported file locations can be found in Apple’s documentation about App Sandbox: https://developer.apple.com/library/archive/documentation/Security/Conceptual/AppSandboxDesignGuide/AppSandboxInDepth/AppSandboxInDepth.html#//apple_ref/doc/uid/TP40011183-CH3-SW17
 
+**Preference domain**: `nl.root3.support`
+
 Below are all available preference keys:
 
 ### General
@@ -177,11 +192,14 @@ All general settings
 Configuration of the top four items with diagnostic information.
 | Preference key | Type | Default value | Description | Example |
 | --- | --- | --- | --- | --- |
-| InfoItemOne | String | ComputerName | Info item shown in the upper left corner | "ComputerName", "MacOSVersion", "Network", "Password", "Storage" or "Uptime" |
-| InfoItemTwo | String | MacOSVersion | Info item shown in the upper right corner | "ComputerName", "MacOSVersion", "Network", "Password", "Storage" or "Uptime" |
-| InfoItemThree | String | Uptime | Info item shown in the second row left | "ComputerName", "MacOSVersion", "Network", "Password", "Storage" or "Uptime" |
-| InfoItemFour | String | Storage | Info item shown in the second row right | "ComputerName", "MacOSVersion", "Network", "Password", "Storage" or "Uptime" |
+| InfoItemOne | String | ComputerName | Info item shown in the upper left corner | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA" or "ExtensionB" |
+| InfoItemTwo | String | MacOSVersion | Info item shown in the upper right corner | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA" or "ExtensionB" |
+| InfoItemThree | String | Uptime | Info item shown in the second row left | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA" or "ExtensionB" |
+| InfoItemFour | String | Storage | Info item shown in the second row right | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA" or "ExtensionB" |
+| InfoItemFive | String | - | Info item shown in the third row left | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA" or "ExtensionB" |
+| InfoItemSix | String | - | Info item shown in the third row right | "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA" or "ExtensionB" |
 | UptimeDaysLimit | Integer | 0 (Disabled) | Days of uptime after which a notification badge is shown, disabled by default | 7 |
+| PasswordType | String | Apple | The account type to use with the Password info item: local user account (Apple), Jamf Connect, Kerberos SSO Extension or NoMAD | "Apple", "JamfConnect", "KerberosSSO" or "Nomad" |
 | PasswordExpiryLimit| Integer | 0 (Disabled) | Days until password expiry after which a notification badge is shown, disabled by default | 14 |
 | PasswordLabel| String | Mac Password | Alternative text label shown in the Password info item | "AD Password", "Company Password" |
 | StorageLimit | Integer | 0 (Disabled) | Percentage of storage used after which a notification badge is shown, disabled by default | 80 |
@@ -191,8 +209,8 @@ Configuration of the top four items with diagnostic information.
 | --- | --- | --- | --- | --- |
 | FirstRowTitleLeft | String | Remote Support | The text shown in the button label. | “Share My Screen”, “TeamViewer“, “Software Updates“ “My core application” etc. |
 | FirstRowSubtitleLeft | String | - | Subtitle text will appear under title when the user hovers over the button. Ignored if left empty. | “Click to open“, “Share your screen“ |
-| FirstRowTypeLeft | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL** or **Command** |
-| FirstRowLinkLeft | String | com.apple.ScreenSharing | The Bundle Identifier of the app, URL or command to open. | “com.teamviewer.TeamViewerQS“ (App), “x-apple.systempreferences:com.apple.preferences.softwareupdate“ (URL) |
+| FirstRowTypeLeft | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **DistributedNotification** (Privileged command/script)|
+| FirstRowLinkLeft | String | com.apple.ScreenSharing | The Bundle Identifier of the App, URL or command to open. | “com.teamviewer.TeamViewerQS“ (App), “x-apple.systempreferences:com.apple.preferences.softwareupdate“ (URL) |
 | FirstRowSymbolLeft | String | cursorarrow | The SF Symbol shown in the button. | “binoculars.fill”, “cursorarrow.click.2” or any other SF Symbol. Please check the SF Symbols section. |
 
 ### First row of configurable items: Item middle
@@ -200,8 +218,8 @@ Configuration of the top four items with diagnostic information.
 | --- | --- | --- | --- | --- |
 | FirstRowTitleMiddle | String | - | The text shown in the button label. | “Self Service“, “App Store“ |
 | FirstRowSubtitleMiddle | String | - | Subtitle text will appear under title when the user hovers over the button. Ignored if left empty. | “Click to open”, “Download apps“ |
-| FirstRowTypeMiddle | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL** or **Command** |
-| FirstRowLinkMiddle | String | - | The Bundle Identifier of the app, URL or command to open. | “com.jamfsoftware.selfservice.mac” |
+| FirstRowTypeMiddle | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **DistributedNotification** (Privileged command/script)|
+| FirstRowLinkMiddle | String | - | The Bundle Identifier of the App, URL or command to open. | “com.jamfsoftware.selfservice.mac” |
 | FirstRowSymbolMiddle | String | - | The SF Symbol shown in the button. | “briefcase.fill”, “bag.circle”, “giftcard.fill”, “gift.circle” or any other SF Symbol. Please check the SF Symbols section. |
 
 ### First row of configurable items: Item right
@@ -209,8 +227,8 @@ Configuration of the top four items with diagnostic information.
 | --- | --- | --- | --- | --- |
 | FirstRowTitleRight | String | Company Store | The text shown in the button label. | “Self Service“, “App Store“ |
 | FirstRowSubtitleRight | String | - | Subtitle text will appear under title when the user hovers over the button. Ignored if left empty. | “Click to open”, “Download apps“ |
-| FirstRowTypeRight | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL** or **Command** |
-| FirstRowLinkRight | String | com.apple.AppStore | The Bundle Identifier of the app, URL or command to open. | “com.jamfsoftware.selfservice.mac” |
+| FirstRowTypeRight | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **DistributedNotification** (Privileged command/script)|
+| FirstRowLinkRight | String | com.apple.AppStore | The Bundle Identifier of the App, URL or command to open. | “com.jamfsoftware.selfservice.mac” |
 | FirstRowSymbolRight | String | cart.fill | The SF Symbol shown in the button. | “briefcase.fill”, “bag.circle”, “giftcard.fill”, “gift.circle” or any other SF Symbol. Please check the SF Symbols section. |
 
 ### Second row of configurable items: Item left
@@ -218,8 +236,8 @@ Configuration of the top four items with diagnostic information.
 | --- | --- | --- | --- | --- |
 | SecondRowTitleLeft | String | Support Ticket | The text shown in the button label. | “Create ticket”, “Open incident“ |
 | SecondRowSubtitleLeft | String | - | Subtitle text will replace the title when the user hovers over the button. Ignored if left empty. | “support.company.tld”, “Now”, “Create“ |
-| SecondRowTypeLeft | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL** or **Command** |
-| SecondRowLinkLeft | String | https://yourticketsystem.tld | The Bundle Identifier of the app, URL or command to open. | “https://yourticketsystem.tld”, “mailto:support@company.tld”, “tel:+31000000000” or “smb://yourfileserver.tld” |
+| SecondRowTypeLeft | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **DistributedNotification** (Privileged command/script)|
+| SecondRowLinkLeft | String | https://yourticketsystem.tld | The Bundle Identifier of the App, URL or command to open. | “https://yourticketsystem.tld”, “mailto:support@company.tld”, “tel:+31000000000” or “smb://yourfileserver.tld” |
 | SecondRowSymbolLeft | String | ticket | The SF Symbol shown in the button. | “lifepreserver”, “person.fill.questionmark” or any other SF Symbol. Please check the SF Symbols section. |
 
 ### Second row of configurable items: Item middle
@@ -227,18 +245,102 @@ Configuration of the top four items with diagnostic information.
 | --- | --- | --- | --- | --- |
 | SecondRowTitleMiddle | String | - | The text shown in the button label. | “Send email” |
 | SecondRowSubtitleMiddle | String | - | Subtitle text will replace the title when the user hovers over the button. Ignored if left empty. | “support@company.tld”, “Now” |
-| SecondRowTypeMiddle | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL** or **Command** |
-| SecondRowLinkMiddle | String | - | The Bundle Identifier of the app, URL or command to open. | “https://yourticketsystem.tld”, “mailto:support@company.tld”, “tel:+31000000000” or “smb://yourfileserver.tld” |
+| SecondRowTypeMiddle | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **DistributedNotification** (Privileged command/script)|
+| SecondRowLinkMiddle | String | - | The Bundle Identifier of the App, URL or command to open. | “https://yourticketsystem.tld”, “mailto:support@company.tld”, “tel:+31000000000” or “smb://yourfileserver.tld” |
 | SecondRowSymbolMiddle | String | - | The SF Symbol shown in the button. | “paperplane”, “arrowshape.turn.up.right.fill” or any other SF Symbol. Please check the SF Symbols section. |
 
-### Second row of configurable items: Item right**
+### Second row of configurable items: Item right
 | Preference key | Type | Default value | Description | Example |
 | --- | --- | --- | --- | --- |
 | SecondRowTitleRight | String | Phone | The text shown in the button label. | “Call Helpdesk“, “Phone“ |
 | SecondRowSubtitleRight | String | - | Subtitle text will replace the title when the user hovers over the button. Ignored if left empty. | “+31 00 000 00 00”, “Now”, “Call“ |
-| SecondRowTypeRight | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL** or **Command** |
-| SecondRowLinkRight | String | tel:+31000000000 | The Bundle Identifier of the app, URL or command to open. | “https://yourticketsystem.tld”, “mailto:support@company.tld”, “tel:+31000000000” or “smb://yourfileserver.tld” |
+| SecondRowTypeRight | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **DistributedNotification** (Privileged command/script)|
+| SecondRowLinkRight | String | tel:+31000000000 | The Bundle Identifier of the App, URL or command to open. | “https://yourticketsystem.tld”, “mailto:support@company.tld”, “tel:+31000000000” or “smb://yourfileserver.tld” |
 | SecondRowSymbolRight | String | phone | The SF Symbol shown in the button. | “iphone.homebutton”, “megaphone” or any other SF Symbol. Please check the SF Symbols section. |
+
+## Advanced configuration
+
+### Support App Extensions
+
+Support App Extensions enable administrators to create custom info items and populate those with output from scripts or commands. You can use your MDM solution to run scripts or commands to populate the Support App Extensions. Optionally we provide SupportHelper to run scripts or commands everytime the Support App popover appears to make sure data is up to date. Please read [Privileged commands or scripts (SupportHelper)](#privileged-commands-or-scripts-supporthelper) down below for more info.
+
+Below are the preference keys to enable Support App Extensions:
+| Preference key | Type | Default value | Description | Example |
+| --- | --- | --- | --- | --- |
+| ExtensionTitleA | String | - | The title shown in the extension. | "Endpoint Security" |
+| ExtensionSymbolA | String | - | The SF Symbol shown in the extension. | "checkerboard.shield" |
+| ExtensionTypeA | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **DistributedNotification** (Privileged command/script)|
+| ExtensionLinkA | String | - | The Bundle Identifier of the App, URL or command to open. | --- |
+| ExtensionTitleB | String | - | The title shown in the extension. | "Endpoint Security" |
+| ExtensionSymbolB | String | - | The SF Symbol shown in the extension. | "checkerboard.shield" |
+| ExtensionTypeB | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **DistributedNotification** (Privileged command/script)|
+| ExtensionLinkB | String | - | The Bundle Identifier of the App, URL or command to open. | --- |
+| OnAppearAction | String | - | Path to script script or command to be executed when the Support App is opened by clicking on the menu bar item. The SupportHelper is required for this feature. | `/usr/local/bin/runs_when_support_appears.zsh` |
+
+#### How to populate Support App Extensions
+Support App Extensions must be populated by setting the value in a preference key within the preference domain `nl.root3.support`. This can be achieved by running custom scripts from your MDM solution.
+
+* Create a custom script and populate the desired value by running the following command: `sudo defaults write /Library/Preferences/nl.root3.support.plist ExtensionValueA -string "OUTPUT_VALUE_HERE"`
+* Add the following command to show a placeholder while getting the value: `sudo defaults write /Library/Preferences/nl.root3.support.plist ExtensionValueA -string "KeyPlaceholder"`
+* Add the following command at the **beginning of the script** to show a spinning indicator while getting the value: `sudo defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bool true`
+* Add the following command at the **end of the script** to stop the spinning indicator view: `sudo defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bool false`
+
+Below a simple example script including loading effect and placeholder while loading
+```
+#!/bin/zsh
+
+# Start spinning indicator
+defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bool true
+
+# Show placeholder value while loading
+defaults write /Library/Preferences/nl.root3.support.plist ExtensionValueA -string "KeyPlaceholder"
+
+# Keep loading effect active for 0.5 seconds
+sleep 0.5
+
+# Get output value
+command_output=$(PUT_COMMAND_TO_GET_OUTPUT_HERE)
+
+# Set output value
+defaults write /Library/Preferences/nl.root3.support.plist ExtensionValueA -string "${command_output}"
+
+# Stop spinning indicator
+defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bool false
+```
+
+### Privileged commands or scripts (SupportHelper)
+To allow commands or scripts to be executed with root privileges, the SupportHelper is available optionally. This utility is built on Distributed Notifications to allow inter-app communication between the Support App and the SupportHelper. The Support App notifies SupportHelper and the message contains the preference key set in the Configuration Profile with the command or path to the script. SupportHelper listens for new messages using a LaunchDaemon and executes the command or script by requesting the command or path to the script from the Configuration Profile.
+
+Below an example to force a MDM check-in using SupportHelper and a custom script:
+
+<img src="/Screenshots/generic_version_2.4_beta.gif" width="800">
+
+More information about Distributed Notifications: https://developer.apple.com/documentation/foundation/distributednotificationcenter
+
+#### Use Cases
+There are a couple of use cases SupportHelper can help with. For example run a command or script with root privileges:
+* Every time the Support App popover appears to populate Support App Extensions using `OnAppearAction`
+* By clicking on a configurable button
+
+#### File locations
+The SupportHelper installer places two files:
+
+LaunchDaemon: `/Library/LaunchDaemons/nl.root3.support.helper.plist`
+
+Binary: `/usr/local/bin/SupportHelper`
+
+#### Security considerations
+As SupportHelper is able to execute scripts or commands with root privileges, it needs to be used responsibly. For most deployments, SupportHelper will not be needed and we recommend deploying the Support App without SupportHelper. If you're unsure or unfamiliar with this concept, DO NOT use SupportHelper. This utility is separated from the Support App to avoid compromising the app-sandbox as well.
+
+:information_source: Only values from a Configuration Profile will be used. Values set by `defaults write` will be ignored as it imposes a security risk.
+
+### Jamf Pro variables
+When using Jamf Pro as the MDM solution, variables from Jamf Pro can be used in the Configuration Profile values to dynamically populate text like the title, footer or any other text field.
+
+Example
+* Set `title` to "Hi $FULLNAME!"
+
+More information about Jamf variables: https://docs.jamf.com/10.36.0/jamf-pro/documentation/Computer_Configuration_Profiles.html
 
 ## How to use SF Symbols
 We choose to go all the way with SF Symbols as these good looking icons are designed by Apple and give the app a native look and feel. All icons have a symbol name which you can use in the Configuration Profile. As these icons are built into macOS, it automatically shows the correct icon.
@@ -268,10 +370,27 @@ A sample LaunchAgent to always keep the app alive is provided [**here**](https:/
 ### Sample Configuration Profile
 A sample Configuration Profile you can edit to your preferences is provided [**here**](https://github.com/root3nl/SupportApp/blob/master/Configuration%20Profile%20Sample/Support%20App%20Configuration%20Sample.mobileconfig)
 
+## Logging
+Logs can be viewed from Console or Terminal by filtering the subsystems `nl.root3.support` (Support App) and `nl.root3.support.helper` (SupportHelper).
+
+An example to stream current logs in Terminal for troubleshooting:
+```
+log stream --debug --info --predicate 'subsystem contains "nl.root3.support"'
+```
+
 ## Known issues
-* Buttons may keep a hovered state when mouse cursor moves fast: FB8212902 (**resolved on macOS Monterey**)
+* Buttons may keep a hovered state when mouse cursor moves fast: FB8212902 (**resolved in macOS Monterey**)
+* When Jamf Connect is used as password type, clicking "Change Now" does not allow the user to open the Jamf Connect change password window, but instead triggers an alert. Jamf Connect does not support a URL Scheme for opening the Change Password window. Please upvote this feature request: https://ideas.jamf.com/ideas/JN-I-16087
 
 ## Changelog
+
+**Version 2.4**
+* Support App Extensions: introducing a new way to make your own custom info items and provide relevant information to your end users and create actions. Extensions can show anything you want and can be populated using scripts or commands, for example using your MDM solution. There is support for two Extensions to use in the info item rows.
+* SupportHelper (separately available): there is now support for privileged scripts and commands to run directly from a button in the Support App while preserving the App Sandbox. An optional utility called SupportHelper will be required and handles the execution on behalf of the Support App. This is built on the Distributed Notifications framework to allow inter-app communication. SupportHelper is a separate installer and is not included in the standard Support App installer.
+* Optional info items row: an extra row with info items or Extensions can now be enabled. When enabling this third row, it will show the Password and Network info items by default. The row can show any info item or Extension.
+* New password sources: the Password info item can now be configured to show password expiry information from Jamf Connect, Apple’s Kerberos SSO Extension or NoMAD. Set preference key "PasswordType" to "JamfConnect", "KerberosSSO" or "Nomad".
+* The title text now supports markdown just like the footer text.
+* Items no longer show a hover effect when no link is configured, allowing buttons to be static without a clickable action. This applies to both configurable buttons and Extensions
 
 **Version 2.3**
 * Welcome Screen: an informational window can now optionally be shown when the Support App is opened for the first time. It explains the key features to the user.

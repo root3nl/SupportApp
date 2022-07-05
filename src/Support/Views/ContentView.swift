@@ -49,23 +49,31 @@ struct ContentView: View {
                 QuitButton()
             }
             
-//            HStack {
-//                Spacer()
-//
-//                VStack {
-//                    Spacer()
-//                    Image(systemName: "ellipsis.circle.fill")
-//                        .imageScale(.large)
-//                }
-//            }
-//            .padding(8)
+            // Show "Beta" in the top left corner for beta releases
+            if preferences.betaRelease {
+                HStack {
+                    
+                    VStack {
+                        Text("Beta release")
+                            .font(.system(.subheadline, design: .rounded))
+                            .opacity(0.5)
+                        
+                        Spacer()
+                    }
+                    
+                    Spacer()
+                }
+                .padding(.leading, 16.0)
+                .padding(.top, 10)
+            }
             
             VStack(spacing: 10) {
                 
                 // MARK: - Horizontal stack with Title and Logo
                 HStack(spacing: 10) {
                     
-                    Text(preferences.title).font(.system(size: 20, design: .rounded)).fontWeight(.medium)
+                    // Supports for markdown through a variable:
+                    Text(.init(preferences.title)).font(.system(size: 20, design: .rounded)).fontWeight(.medium)
 
                     Spacer()
                     
@@ -125,6 +133,10 @@ struct ContentView: View {
                         StorageSubview()
                     case "Uptime":
                         UptimeSubview()
+                    case "ExtensionA":
+                        ExtensionASubview()
+                    case "ExtensionB":
+                        ExtensionBSubview()
                     default:
                         ComputerNameSubview()
                     }
@@ -143,6 +155,10 @@ struct ContentView: View {
                         StorageSubview()
                     case "Uptime":
                         UptimeSubview()
+                    case "ExtensionA":
+                        ExtensionASubview()
+                    case "ExtensionB":
+                        ExtensionBSubview()
                     default:
                         MacOSVersionSubview()
                     }
@@ -167,6 +183,10 @@ struct ContentView: View {
                         StorageSubview()
                     case "Uptime":
                         UptimeSubview()
+                    case "ExtensionA":
+                        ExtensionASubview()
+                    case "ExtensionB":
+                        ExtensionBSubview()
                     default:
                         UptimeSubview()
                     }
@@ -185,11 +205,67 @@ struct ContentView: View {
                         StorageSubview()
                     case "Uptime":
                         UptimeSubview()
+                    case "ExtensionA":
+                        ExtensionASubview()
+                    case "ExtensionB":
+                        ExtensionBSubview()
                     default:
                         StorageSubview()
                     }
                 }
                 .padding(.horizontal, 10)
+                
+                // MARK: - Third optional horizontal stack with Password and Network as defaults
+                if preferences.infoItemFive != "" || preferences.infoItemSix != "" {
+                    HStack(spacing: 10) {
+                        
+                        // Item left
+                        switch preferences.infoItemFive {
+                        case "ComputerName":
+                            ComputerNameSubview()
+                        case "MacOSVersion":
+                            MacOSVersionSubview()
+                        case "Network":
+                            NetworkSubview()
+                        case "Password":
+                            PasswordSubview()
+                        case "Storage":
+                            StorageSubview()
+                        case "Uptime":
+                            UptimeSubview()
+                        case "ExtensionA":
+                            ExtensionASubview()
+                        case "ExtensionB":
+                            ExtensionBSubview()
+                        default:
+                            PasswordSubview()
+                        }
+                        
+                        // Item right
+                        switch preferences.infoItemSix {
+                        case "ComputerName":
+                            ComputerNameSubview()
+                        case "MacOSVersion":
+                            MacOSVersionSubview()
+                        case "Network":
+                            NetworkSubview()
+                        case "Password":
+                            PasswordSubview()
+                        case "Storage":
+                            StorageSubview()
+                        case "Uptime":
+                            UptimeSubview()
+                        case "ExtensionA":
+                            ExtensionASubview()
+                        case "ExtensionB":
+                            ExtensionBSubview()
+                        default:
+                            NetworkSubview()
+                        }
+                        
+                    }
+                    .padding(.horizontal, 10)
+                }
                    
                 // MARK: - Hide row if specified in configuration
                 if !defaults.bool(forKey: "HideFirstRow") {
@@ -198,12 +274,12 @@ struct ContentView: View {
                     HStack(spacing: 10) {
                         
                         if preferences.firstRowTitleMiddle != "" {
-                            ItemSmall(title: preferences.firstRowTitleLeft, subtitle: preferences.firstRowSubtitleLeft, linkType: preferences.firstRowTypeLeft, link: preferences.firstRowLinkLeft, image: preferences.firstRowSymbolLeft, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
-                            ItemSmall(title: preferences.firstRowTitleMiddle, subtitle: preferences.firstRowSubtitleMiddle, linkType: preferences.firstRowTypeMiddle, link: preferences.firstRowLinkMiddle, image: preferences.firstRowSymbolMiddle, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
-                            ItemSmall(title: preferences.firstRowTitleRight, subtitle: preferences.firstRowSubtitleRight, linkType: preferences.firstRowTypeRight, link: preferences.firstRowLinkRight, image: preferences.firstRowSymbolRight, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+                            ItemSmall(title: preferences.firstRowTitleLeft, subtitle: preferences.firstRowSubtitleLeft, linkType: preferences.firstRowTypeLeft, link: preferences.firstRowLinkLeft, image: preferences.firstRowSymbolLeft, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.firstRowLoadingLeft, linkPrefKey: Preferences.firstRowLinkLeftKey)
+                            ItemSmall(title: preferences.firstRowTitleMiddle, subtitle: preferences.firstRowSubtitleMiddle, linkType: preferences.firstRowTypeMiddle, link: preferences.firstRowLinkMiddle, image: preferences.firstRowSymbolMiddle, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.firstRowLoadingMiddle, linkPrefKey: Preferences.firstRowLinkMiddleKey)
+                            ItemSmall(title: preferences.firstRowTitleRight, subtitle: preferences.firstRowSubtitleRight, linkType: preferences.firstRowTypeRight, link: preferences.firstRowLinkRight, image: preferences.firstRowSymbolRight, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.firstRowLoadingRight, linkPrefKey: Preferences.firstRowLinkRightKey)
                         } else {
-                            Item(title: preferences.firstRowTitleLeft, subtitle: preferences.firstRowSubtitleLeft, linkType: preferences.firstRowTypeLeft, link: preferences.firstRowLinkLeft, image: preferences.firstRowSymbolLeft, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
-                            Item(title: preferences.firstRowTitleRight, subtitle: preferences.firstRowSubtitleRight, linkType: preferences.firstRowTypeRight, link: preferences.firstRowLinkRight, image: preferences.firstRowSymbolRight, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
+                            Item(title: preferences.firstRowTitleLeft, subtitle: preferences.firstRowSubtitleLeft, linkType: preferences.firstRowTypeLeft, link: preferences.firstRowLinkLeft, image: preferences.firstRowSymbolLeft, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.firstRowLoadingLeft, linkPrefKey: Preferences.firstRowLinkLeftKey, hoverEffectEnable: true, animate: true)
+                            Item(title: preferences.firstRowTitleRight, subtitle: preferences.firstRowSubtitleRight, linkType: preferences.firstRowTypeRight, link: preferences.firstRowLinkRight, image: preferences.firstRowSymbolRight, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.firstRowLoadingRight, linkPrefKey: Preferences.firstRowLinkRightKey, hoverEffectEnable: true, animate: true)
                         }
                     }
                     .padding(.horizontal, 10)
@@ -216,12 +292,12 @@ struct ContentView: View {
                     HStack(spacing: 10) {
                         
                         if preferences.secondRowTitleMiddle != "" {
-                            ItemSmall(title: preferences.secondRowTitleLeft, subtitle: preferences.secondRowSubtitleLeft, linkType: preferences.secondRowTypeLeft, link: preferences.secondRowLinkLeft, image: preferences.secondRowSymbolLeft, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
-                            ItemSmall(title: preferences.secondRowTitleMiddle, subtitle: preferences.secondRowSubtitleMiddle, linkType: preferences.secondRowTypeMiddle, link: preferences.secondRowLinkMiddle, image: preferences.secondRowSymbolMiddle, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
-                            ItemSmall(title: preferences.secondRowTitleRight, subtitle: preferences.secondRowSubtitleRight, linkType: preferences.secondRowTypeRight, link: preferences.secondRowLinkRight, image: preferences.secondRowSymbolRight, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+                            ItemSmall(title: preferences.secondRowTitleLeft, subtitle: preferences.secondRowSubtitleLeft, linkType: preferences.secondRowTypeLeft, link: preferences.secondRowLinkLeft, image: preferences.secondRowSymbolLeft, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.secondRowLoadingLeft, linkPrefKey: Preferences.secondRowLinkLeftKey)
+                            ItemSmall(title: preferences.secondRowTitleMiddle, subtitle: preferences.secondRowSubtitleMiddle, linkType: preferences.secondRowTypeMiddle, link: preferences.secondRowLinkMiddle, image: preferences.secondRowSymbolMiddle, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.secondRowLoadingMiddle, linkPrefKey: Preferences.secondRowLinkMiddleKey)
+                            ItemSmall(title: preferences.secondRowTitleRight, subtitle: preferences.secondRowSubtitleRight, linkType: preferences.secondRowTypeRight, link: preferences.secondRowLinkRight, image: preferences.secondRowSymbolRight, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.secondRowLoadingRight, linkPrefKey: Preferences.secondRowLinkRightKey)
                         } else {
-                            Item(title: preferences.secondRowTitleLeft, subtitle: preferences.secondRowSubtitleLeft, linkType: preferences.secondRowTypeLeft, link: preferences.secondRowLinkLeft, image: preferences.secondRowSymbolLeft, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
-                            Item(title: preferences.secondRowTitleRight, subtitle: preferences.secondRowSubtitleRight, linkType: preferences.secondRowTypeRight, link: preferences.secondRowLinkRight, image: preferences.secondRowSymbolRight, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
+                            Item(title: preferences.secondRowTitleLeft, subtitle: preferences.secondRowSubtitleLeft, linkType: preferences.secondRowTypeLeft, link: preferences.secondRowLinkLeft, image: preferences.secondRowSymbolLeft, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.secondRowLoadingLeft, linkPrefKey: Preferences.secondRowLinkLeftKey, hoverEffectEnable: true, animate: true)
+                            Item(title: preferences.secondRowTitleRight, subtitle: preferences.secondRowSubtitleRight, linkType: preferences.secondRowTypeRight, link: preferences.secondRowLinkRight, image: preferences.secondRowSymbolRight, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.secondRowLoadingRight, linkPrefKey: Preferences.secondRowLinkRightKey, hoverEffectEnable: true, animate: true)
                         }
                     }
                     .padding(.horizontal, 10)
@@ -231,16 +307,11 @@ struct ContentView: View {
                 if preferences.footerText != "" {
                     HStack {
                         
-                        if #available(macOS 12, *) {
-                            Text((try? AttributedString(markdown: preferences.footerText)) ?? AttributedString())
+                        // Supports for markdown through a variable:
+                        // https://blog.eidinger.info/3-surprises-when-using-markdown-in-swiftui
+                        Text(.init(preferences.footerText))
                                 .font(.system(.subheadline, design: .rounded))
                                 .foregroundColor(.secondary)
-                        } else {
-                            // Fallback on earlier versions
-                            Text(preferences.footerText)
-                                .font(.system(.subheadline, design: .rounded))
-                                .foregroundColor(.secondary)
-                        }
                         
                         Spacer()
                         
@@ -253,13 +324,14 @@ struct ContentView: View {
             }
             .padding(.bottom, 10)
         }
-        // MARK: - Run functions the ContentView appears for the first time
+        // MARK: - Run functions when ContentView appears for the first time
         .onAppear {
             computerinfo.getModelIdentifier()
             computerinfo.getModelName()
             computerinfo.getmacOSVersionName()
             dataLoadingEffect()
         }
+        // MARK: - Show placeholders while loading
         .redacted(reason: placeholdersEnabled ? .placeholder : .init())
     }
     

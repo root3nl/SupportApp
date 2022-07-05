@@ -36,6 +36,7 @@
 "Expires in " = "Verloopt over ";
 "Expired" = "Verlopen";
 "Change Now" = "Wijzig nu";
+"Sign In Here" = "Log in";
 " days" = " dagen";
 " day" = " dag";
 "Mac diagnosis" = "Mac diagnose";
@@ -44,4 +45,8 @@
 "EASY_ACCESS_TEXT" = "Krijg toegang tot apps en sites van de organisatie";
 "Get in touch" = "Neem contact op";
 "GET_IN_TOUCH_TEXT" = "Maak snel een ticket aan of dien een verzoek in";
-"Continue" = "Doorgaan";
+"Continue" = "Ga door";
+"OPEN_JAMF_CONNECT_MANUALLY" = "Open Jamf Connect";
+"OPEN_JAMF_CONNECT_MANUALLY_TEXT" = "Open Jamf Connect in de menubalk om je wachtwoord te wijzigen";
+"NETWORK_UNAVAILABLE" = "Netwerk niet beschikbaar";
+"NETWORK_UNAVAILABLE_TEXT" = "Het netwerk van je organisatie is niet beschikbaar. Controleer je verbinding en probeer het opnieuw.";

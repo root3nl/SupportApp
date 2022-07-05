@@ -36,6 +36,7 @@
 "Expires in " = "Läuft ab in ";
 "Expired" = "Abgelaufen";
 "Change Now" = "Jetzt ändern";
+"Sign In Here" = "Sign In Here";
 " days" = " Tage";
 " day" = " Tag";
 "Mac diagnosis" = "Mac Diagnose";
@@ -45,3 +46,7 @@
 "Get in touch" = "Trete in Kontakt";
 "GET_IN_TOUCH_TEXT" = "Erstelle ganz einfach ein Ticket oder Anfrage";
 "Continue" = "Fortfahren";
+"OPEN_JAMF_CONNECT_MANUALLY" = "Please open Jamf Connect";
+"OPEN_JAMF_CONNECT_MANUALLY_TEXT" = "Open Jamf Connect from the menu bar to change your password";
+"NETWORK_UNAVAILABLE" = "Network Unavailable";
+"NETWORK_UNAVAILABLE_TEXT" = "Your organisation's network isn't available. Please check your connection and try again.";

@@ -181,6 +181,8 @@ class ComputerInfo: ObservableObject {
             macOSVersionName = "Big Sur"
         case 12:
             macOSVersionName = "Monterey"
+        case 13:
+            macOSVersionName = "Ventura"
         default:
             macOSVersionName = ""
         }
@@ -258,19 +260,28 @@ class ComputerInfo: ObservableObject {
         sysctlbyname("hw.model", &model, &size, nil, 0)
         self.modelIdentifier = String.init(validatingUTF8: model) ?? ""
         logger.debug("Model Identifier: \(self.modelIdentifier, privacy: .public)")
-        
-        if modelIdentifier.hasPrefix("MacBook") {
+         
+         // Remove all numbers from Model Identifier string
+         var modelIdentifierString = modelIdentifier.components(separatedBy: CharacterSet.decimalDigits).joined()
+         modelIdentifierString = modelIdentifierString.components(separatedBy: CharacterSet.punctuationCharacters).joined()
+         logger.debug("Model Identifier without numbers and comma: \(modelIdentifierString, privacy: .public)")
+         
+        if modelIdentifierString.hasPrefix("MacBook") {
             computerNameIcon = "laptopcomputer"
-        } else if modelIdentifier.hasPrefix("Macmini") {
+        } else if modelIdentifierString.hasPrefix("Macmini") {
             computerNameIcon = "macmini.fill"
-        } else if modelIdentifier.hasPrefix("MacPro") {
-            switch modelIdentifier {
+        } else if modelIdentifierString.hasPrefix("MacPro") {
+            switch modelIdentifierString {
             // Mac Pro Gen 2 is also compatible. Show Gen 2 icon if Model Identifier is MacPro6,1
             case "MacPro6,1":
                 computerNameIcon = "macpro.gen2.fill"
             default:
                 computerNameIcon = "macpro.gen3"
             }
+        } else if modelIdentifierString.hasPrefix("VirtualMac") {
+            computerNameIcon = "macmini"
+        } else if modelIdentifierString == "Mac" {
+            computerNameIcon = "macmini"
         } else {
             computerNameIcon = "desktopcomputer"
         }
@@ -279,38 +290,46 @@ class ComputerInfo: ObservableObject {
     // MARK: - Function to get the base model name and year of introduction   https://github.com/davedelong/Syzygy/blob/master/SyzygyCore/macOS/System.swift
     func getModelName() {
         
+        // Remove all numbers and comma from Model Identifier string
+        var modelIdentifierString = modelIdentifier.components(separatedBy: CharacterSet.decimalDigits).joined()
+        modelIdentifierString = modelIdentifierString.components(separatedBy: CharacterSet.punctuationCharacters).joined()
+        
         // Set the short model name based on the ModelIdentifier
-        if self.modelIdentifier.hasPrefix("MacBookAir") {
+        if modelIdentifierString.hasPrefix("MacBookAir") {
             self.modelShortName = "MacBook Air"
-        } else if self.modelIdentifier.hasPrefix("MacBookPro") {
+        } else if modelIdentifierString.hasPrefix("MacBookPro") {
             self.modelShortName = "MacBook Pro"
-        } else if self.modelIdentifier.hasPrefix("MacBook") && !self.modelIdentifier.hasPrefix("MacBookPro") && !self.modelIdentifier.hasPrefix("MacBookAir") {
+        } else if modelIdentifierString.hasPrefix("MacBook") && !self.modelIdentifier.hasPrefix("MacBookPro") && !self.modelIdentifier.hasPrefix("MacBookAir") {
             self.modelShortName = "MacBook"
-        } else if self.modelIdentifier.hasPrefix("Macmini") {
+        } else if modelIdentifierString.hasPrefix("Macmini") {
             self.modelShortName = "Mac mini"
-        } else if self.modelIdentifier.hasPrefix("MacPro") {
+        } else if modelIdentifierString.hasPrefix("MacPro") {
             self.modelShortName = "Mac Pro"
-        } else if self.modelIdentifier.hasPrefix("iMac") {
+        } else if modelIdentifierString.hasPrefix("iMac") {
             self.modelShortName = "iMac"
+        } else if modelIdentifierString.hasPrefix("VirtualMac") {
+            self.modelShortName = "Apple Virtual Machine"
+        } else if modelIdentifierString == "Mac" {
+            self.modelShortName = "Mac Studio"
         }
         
         self.logger.debug("Short Model Name: \(self.modelShortName, privacy: .public)")
         
         // Get the serial number
         var serialNumber: String {
-                let platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPlatformExpertDevice") )
-
-                guard platformExpert > 0 else {
-                    return "Unknown"
-                }
-
-                guard let serialNumber = (IORegistryEntryCreateCFProperty(platformExpert, kIOPlatformSerialNumberKey as CFString, kCFAllocatorDefault, 0).takeUnretainedValue() as? String)?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) else {
-                    return "Unknown"
-                }
-
-                IOObjectRelease(platformExpert)
-
-                return serialNumber
+            let platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPlatformExpertDevice") )
+            
+            guard platformExpert > 0 else {
+                return "Unknown"
+            }
+            
+            guard let serialNumber = (IORegistryEntryCreateCFProperty(platformExpert, kIOPlatformSerialNumberKey as CFString, kCFAllocatorDefault, 0).takeUnretainedValue() as? String)?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) else {
+                return "Unknown"
+            }
+            
+            IOObjectRelease(platformExpert)
+            
+            return serialNumber
         }
         
         self.logger.debug("Serial Number: \(serialNumber, privacy: .public)")
@@ -371,8 +390,6 @@ class ComputerInfo: ObservableObject {
             return []
         }
     }
-    
-    
     
     // MARK: - Function to get the IP address of the currently first active interface
     // https://stackoverflow.com/questions/30748480/swift-get-devices-wifi-ip-address

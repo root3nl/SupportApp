@@ -87,13 +87,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 self.computerinfo.kernelBootTime()
                 self.computerinfo.getStorage()
                 self.computerinfo.getIPAddress()
-                self.userinfo.getCurrentUserRecord()
+                Task {
+                    await self.userinfo.getCurrentUserRecord()
+                }
             }
         }
         
         // Create menu items for right click
         menu.addItem(NSMenuItem(title: NSLocalizedString("About Support", comment: ""), action: #selector(AppDelegate.showAbout), keyEquivalent: "i"))
-//        menu.addItem(NSMenuItem(title: NSLocalizedString("Help and Documentation", comment: ""), action: #selector(AppDelegate.openDocumentation), keyEquivalent: "h"))
         menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: NSLocalizedString("Quit Support", comment: ""), action: #selector(NSApplication.shared.terminate(_:)), keyEquivalent: "q"))
                 
@@ -158,6 +159,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 preferences.infoItemTwo,
                 preferences.infoItemThree,
                 preferences.infoItemFour,
+                preferences.infoItemFive,
+                preferences.infoItemSix
             ]
             
             // Show notification badge in menu bar icon when info item when needed
@@ -230,7 +233,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         case "PasswordExpiryLimit":
             // Check password expiry when key PasswordExpiryLimit is changed
             logger.debug("\(keyPath! as NSObject) change to \(self.preferences.passwordExpiryLimit), checking password expiry...")
-            self.userinfo.getCurrentUserRecord()
+            Task {
+                await self.userinfo.getCurrentUserRecord()
+            }
         case "LastUpdatesAvailable":
             logger.debug("\(keyPath! as NSObject) changed to \(self.ASUdefaults!.integer(forKey: "LastUpdatesAvailable"))")
         default:
@@ -326,7 +331,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.computerinfo.kernelBootTime()
             self.computerinfo.getStorage()
             self.computerinfo.getIPAddress()
-            self.userinfo.getCurrentUserRecord()
+            Task {
+                await self.userinfo.getCurrentUserRecord()
+            }
+            
+            // Post Distributed Notification to trigger script for custom info items
+            if defaults.string(forKey: "OnAppearAction") != nil {
+                postDistributedNotification()
+            }
             
         }
         // Necessary to make the view active without having to do an extra click
@@ -337,7 +349,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func runAtStartup() {
         // Run uptime and storage once at startup
         self.computerinfo.kernelBootTime()
-        self.userinfo.getCurrentUserRecord()
+        Task {
+            await self.userinfo.getCurrentUserRecord()
+        }
         self.computerinfo.getStorage()
     }
     
@@ -358,9 +372,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         NSApp.orderFrontStandardAboutPanel(self)
     }
     
-    // MARK: - Open the documentation
-    @objc func openDocumentation() {
-        let url = URL(string: "https://github.com/root3nl/SupportApp")
-        NSWorkspace.shared.open(url!)
+    // Post Distributed Notification
+    func postDistributedNotification() {
+        logger.debug("Posting Distributed Notification: nl.root3.support.SupportAppeared")
+        
+        // Initialize distributed notifications
+        let nc = DistributedNotificationCenter.default()
+        
+        // Define the NSNotification name
+        let name = NSNotification.Name("nl.root3.support.SupportAppeared")
+        
+        // Post the notification including all sessions to support LaunchDaemons
+        nc.postNotificationName(name, object: nil, userInfo: nil, options: [.postToAllSessions, .deliverImmediately])
+
     }
 }

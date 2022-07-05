@@ -5,6 +5,7 @@
 //  Created by Jordy Witteman on 30/12/2020.
 //
 
+import os
 import SwiftUI
 
 struct ProgressBarItem: View {
@@ -14,6 +15,9 @@ struct ProgressBarItem: View {
     var symbolColor: Color
     var notificationBadgeBool: Bool?
     var percentage: CGFloat
+    
+    // Declare unified logging
+    let logger = Logger(subsystem: "nl.root3.support", category: "Action")
     
     // Vars to activate hover effect
     @State var hoverEffectEnable: Bool
@@ -100,20 +104,35 @@ struct ProgressBarItem: View {
             hover in self.hoverView = hover
         }
         .onTapGesture() {
-            openApp()
+            openStorageManagement()
         }
     }
     
-    // Open Storage Management with given Bundle Identifier
-    func openApp() {
+    // Open Storage Management
+    func openStorageManagement() {
         
-        guard let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: "com.apple.StorageManagementLauncher")
-                // Show alert when there is an error
-        else {
-            self.showingAlert.toggle()
-            return }
-        let configuration = NSWorkspace.OpenConfiguration()
-        
-        NSWorkspace.shared.openApplication(at: url, configuration: configuration, completionHandler: nil)
+        if #available(macOS 13, *) {
+            
+            guard let url = URL(string: "x-apple.systempreferences:com.apple.settings.Storage")
+                    // Show alert when there is an error
+            else {
+                self.showingAlert.toggle()
+                return }
+            NSWorkspace.shared.open(url)
+            
+            // Close the popover
+            NSApp.deactivate()
+            
+        } else {
+            
+            guard let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: "com.apple.StorageManagementLauncher")
+                    // Show alert when there is an error
+            else {
+                self.showingAlert.toggle()
+                return }
+            let configuration = NSWorkspace.OpenConfiguration()
+            
+            NSWorkspace.shared.openApplication(at: url, configuration: configuration, completionHandler: nil)
+        }
     }
 }

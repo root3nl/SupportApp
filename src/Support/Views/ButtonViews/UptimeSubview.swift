@@ -21,6 +21,7 @@ struct UptimeSubview: View {
     // Dark Mode detection
     @Environment(\.colorScheme) var colorScheme
     
+    // Boolean to show uptime alert when clicked
     @State var uptimeAlert: Bool = false
     
     // Set the custom color for all symbols depending on Light or Dark Mode.

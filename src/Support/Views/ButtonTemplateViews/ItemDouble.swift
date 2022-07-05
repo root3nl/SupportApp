@@ -36,8 +36,29 @@ struct ItemDouble: View {
     // Get preferences or default values
     @ObservedObject var preferences = Preferences()
     
-    // Enable animation
-    //    var animate: Bool
+    // Alert title options
+    var alertTitle: String {
+        switch linkType {
+        case "JamfConnectPasswordChangeException":
+            return NSLocalizedString("OPEN_JAMF_CONNECT_MANUALLY", comment: "")
+        case "KerberosSSOExtensionUnavailable":
+            return NSLocalizedString("NETWORK_UNAVAILABLE", comment: "")
+        default:
+            return NSLocalizedString("An error occurred", comment: "")
+        }
+    }
+    
+    // Alert text options
+    var alertMessage: String {
+        switch linkType {
+        case "JamfConnectPasswordChangeException":
+            return NSLocalizedString("OPEN_JAMF_CONNECT_MANUALLY_TEXT", comment: "")
+        case "KerberosSSOExtensionUnavailable":
+            return NSLocalizedString("NETWORK_UNAVAILABLE_TEXT", comment: "")
+        default:
+            return preferences.errorMessage
+        }
+    }
     
     var body: some View {
         
@@ -62,6 +83,7 @@ struct ItemDouble: View {
                     Text(hoverView && hoverEffectEnable ? secondSubtitle : subtitle)
                         .font(.system(.subheadline, design: .rounded))
                         .lineLimit(2)
+
                 }
                 
                 Spacer()
@@ -82,11 +104,12 @@ struct ItemDouble: View {
         .modifier(DarkModeBorder())
         .shadow(color: Color.black.opacity(0.2), radius: 4, y: 2)
         .alert(isPresented: $showingAlert) {
-            Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
+            // FIXME: - Adjust when Jamf Connect Password Change can be triggered
+            // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
+            Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")))
         }
         .onHover() {
             hover in self.hoverView = hover
-            
         }
         .onTapGesture() {
             if linkType == "App" {
@@ -95,6 +118,13 @@ struct ItemDouble: View {
                 openLink()
             } else if linkType == "Command" {
                 runCommand()
+                
+            // FIXME: - Asjust when Jamf Connect Password Change can be triggered
+            // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
+            } else if linkType == "JamfConnectPasswordChangeException" {
+                self.showingAlert.toggle()
+            } else if linkType == "KerberosSSOExtensionUnavailable" {
+                self.showingAlert.toggle()
             } else {
                 self.showingAlert.toggle()
                 logger.error("Invalid Link Type: \(linkType!)")
@@ -123,6 +153,9 @@ struct ItemDouble: View {
             self.showingAlert.toggle()
             return }
         NSWorkspace.shared.open(url)
+        
+        // Close the popover
+        NSApp.deactivate()
     }
     
     // Run a command as the user
@@ -136,19 +169,21 @@ struct ItemDouble: View {
         task.arguments = ["-c", "\(link ?? "")"]
         task.launch()
         
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        let output = String(data: data, encoding: .utf8)!
+//        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+//        let output = String(data: data, encoding: .utf8)!
         
         if !task.isRunning {
             let status = task.terminationStatus
             if status == 0 {
-                logger.debug("\(output)")
+//                logger.debug("\(output)")
             } else {
-                logger.error("\(output)")
+//                logger.error("\(output)")
                 self.showingAlert.toggle()
             }
         }
+        
+        // Close the popover
+        NSApp.deactivate()
     }
-    
 }
 

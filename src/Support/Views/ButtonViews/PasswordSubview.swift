@@ -21,6 +21,11 @@ struct PasswordSubview: View {
     // Make UserDefaults easy to use
     let defaults = UserDefaults.standard
     
+    // FIXME: - Remove when Jamf Connect Password Change can be triggered
+    // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
+    // Set preference suite to "com.jamf.connect.state"
+    let defaultsJamfConnect = UserDefaults(suiteName: "com.jamf.connect.state")
+    
     // Dark Mode detection
     @Environment(\.colorScheme) var colorScheme
     
@@ -34,6 +39,39 @@ struct PasswordSubview: View {
             return preferences.customColor
         }
     }
+    
+    // Link type for Password item
+    var linkType: String {
+        if preferences.passwordType == "Apple" {
+            if #available(macOS 13, *) {
+                return "URL"
+            } else {
+                return "Command"
+            }
+        } else if preferences.passwordType == "KerberosSSO"  {
+            if userinfo.networkUnavailable {
+                return "KerberosSSOExtensionUnavailable"
+            } else {
+                return "Command"
+            }
+        } else if preferences.passwordType == "Nomad" {
+            return "Command"
+        } else if preferences.passwordType == "JamfConnect" {
+            // FIXME: - Remove when Jamf Connect Password Change can be triggered
+            // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
+            if defaultsJamfConnect?.bool(forKey: "PasswordCurrent") ?? false {
+                return "JamfConnectPasswordChangeException"
+            } else {
+                return "Command"
+            }
+        } else {
+            if #available(macOS 13, *) {
+                return "URL"
+            } else {
+                return "Command"
+            }
+        }
+    }
         
     var body: some View {
 
@@ -41,11 +79,11 @@ struct PasswordSubview: View {
         
         // Option to show another subtitle offering to change the local Mac password
         
-        ItemDouble(title: preferences.passwordLabel, secondTitle: preferences.passwordLabel, subtitle: userinfo.userPasswordExpiryString, secondSubtitle: NSLocalizedString("Change Now", comment: ""), linkType: "Command", link: "open /System/Library/PreferencePanes/Accounts.prefPane", image: "key.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: userinfo.passwordExpiryLimitReached, hoverEffectEnable: true)
+        ItemDouble(title: preferences.passwordLabel, secondTitle: preferences.passwordLabel, subtitle: userinfo.userPasswordExpiryString, secondSubtitle: userinfo.passwordChangeString, linkType: linkType, link: userinfo.passwordChangeLink, image: "key.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: userinfo.passwordExpiryLimitReached, hoverEffectEnable: true)
         
         // Expirimental view with link to password change view
         
-//        InfoItem(title: "Mac " + NSLocalizedString("Password", comment: ""), subtitle: userinfo.userPasswordExpiryString, image: "key.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: userinfo.passwordExpiryLimitReached, hoverEffectEnable: true)
+//        InfoItem(title: "Mac " + NSLocalizedString("Password", comment: ""), subtitle: userinfo.passwordString, image: "key.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: userinfo.passwordExpiryLimitReached, hoverEffectEnable: true)
 //            .onTapGesture {
 //                computerinfo.showPasswordChange.toggle()
 //            }

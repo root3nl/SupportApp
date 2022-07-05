@@ -50,7 +50,7 @@ struct WelcomeView: View {
                 HStack(spacing: 10) {
                     
                     // Use Rounded font like in Reminders app
-                    Text(preferences.title).font(.system(size: 20, design: .rounded)).fontWeight(.medium)
+                    Text(.init(preferences.title)).font(.system(size: 20, design: .rounded)).fontWeight(.medium)
                     
                     Spacer()
                     
