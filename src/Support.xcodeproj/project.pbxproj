@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -43,7 +43,21 @@
 		498B7001272F460100BFA45E /* KerberosSSOExtensionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498B7000272F460100BFA45E /* KerberosSSOExtensionModel.swift */; };
 		49B4952D2642E96A00A6AE64 /* DarkModeBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B4952C2642E96A00A6AE64 /* DarkModeBorder.swift */; };
 		49F6744E273F2DBC00C47403 /* ExtensionASubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F6744D273F2DBC00C47403 /* ExtensionASubview.swift */; };
+		B03F2E5C28734ABD000478BC /* nl.root3.support.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = B03F2E53287340BD000478BC /* nl.root3.support.plist */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B03F2E59287345A7000478BC /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = Contents/Library/LaunchAgents;
+			dstSubfolderSpec = 1;
+			files = (
+				B03F2E5C28734ABD000478BC /* nl.root3.support.plist in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0A24AB432624CABB004208C4 /* NotificationBadgeTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBadgeTextView.swift; sourceTree = "<group>"; };
@@ -88,6 +102,7 @@
 		49B4952C2642E96A00A6AE64 /* DarkModeBorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeBorder.swift; sourceTree = "<group>"; };
 		49F6744D273F2DBC00C47403 /* ExtensionASubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionASubview.swift; sourceTree = "<group>"; };
 		A0532BCB2733F35A005CACF2 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		B03F2E53287340BD000478BC /* nl.root3.support.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = nl.root3.support.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,6 +186,7 @@
 		49822CE124B4C3F100E8DE54 /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				B03F2E53287340BD000478BC /* nl.root3.support.plist */,
 				498B6FFF272F45EF00BFA45E /* Models */,
 				4915290A259CCF2500056B5F /* Views */,
 				0AFE0A8525014C6100957B52 /* Localizable.strings */,
@@ -237,6 +253,7 @@
 				49822CDC24B4C3F100E8DE54 /* Frameworks */,
 				49822CDD24B4C3F100E8DE54 /* Resources */,
 				49FB1303273B244600650BD3 /* Run Script */,
+				B03F2E59287345A7000478BC /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -303,6 +320,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		49FB1303273B244600650BD3 /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 12;
 			files = (
 			);
@@ -511,6 +529,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = Support/Support.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1656517987;
@@ -540,6 +559,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = Support/Support.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1656517987;

@@ -7,6 +7,7 @@
 
 import Cocoa
 import os
+import ServiceManagement
 import SwiftUI
 
 // Popover is based on: https://medium.com/@acwrightdesign/creating-a-macos-menu-bar-application-using-swiftui-54572a5d5f87
@@ -23,6 +24,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     // Unified logging for StatusBarItem
     let logger = Logger(subsystem: "nl.root3.support", category: "StatusBarItem")
+    
+    // Unified logging for LaunchAgent using SMAppService
+    let launchAgentLogger = Logger(subsystem: "nl.root3.support", category: "LaunchAgent")
     
     // Make standard UserDefaults easy to use
     let defaults = UserDefaults.standard
@@ -60,6 +64,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         defaults.addObserver(self, forKeyPath: "UptimeDaysLimit", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "StorageLimit", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "PasswordExpiryLimit", options: .new, context: nil)
+        defaults.addObserver(self, forKeyPath: "AutoOpen", options: .new, context: nil)
         ASUdefaults?.addObserver(self, forKeyPath: "LastUpdatesAvailable", options: .new, context: nil)
         
         // Receive notifications after uptime check
@@ -104,6 +109,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             strongSelf.closePopover(sender: event)
           }
         }
+        
+        // Configure LaunchAgent using SMAppService if available
+        configureLaunchAgent()
     }
     
     // MARK: - Set and update the menu bar icon
@@ -238,6 +246,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         case "LastUpdatesAvailable":
             logger.debug("\(keyPath! as NSObject) changed to \(self.ASUdefaults!.integer(forKey: "LastUpdatesAvailable"))")
+        case "AutoOpen":
+            logger.debug("\(keyPath! as NSObject) change to \(self.defaults.bool(forKey: "AutoOpen"))")
+            self.configureLaunchAgent()
         default:
             logger.debug("Some other change detected...")
         }
@@ -385,5 +396,80 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Post the notification including all sessions to support LaunchDaemons
         nc.postNotificationName(name, object: nil, userInfo: nil, options: [.postToAllSessions, .deliverImmediately])
 
+    }
+    
+    // Use SMAppService to handle optional LaunchAgent on macOS 13 and higher
+    func configureLaunchAgent() {
+        if #available(macOS 13.0, *) {
+            
+            // Set LaunchAgent PLIST name
+            let agent = SMAppService.agent(plistName: "nl.root3.support.plist")
+            launchAgentLogger.debug("LaunchAgent status: \(agent.status.rawValue)")
+            
+            // Set Legacy LaunchAgent file path URL
+            let legacyLAStatus = SMAppService.statusForLegacyPlist(at: URL(filePath: "/Library/LaunchAgents/nl.root3.support.plist"))
+            launchAgentLogger.debug("Legacy LaunchAgent status: \(legacyLAStatus.rawValue)")
+            
+            // Don't register SMAppService when Legacy LaunchAgent is active
+            guard legacyLAStatus != .enabled else {
+                launchAgentLogger.debug("Legacy LaunchAgent is active")
+                return
+            }
+            
+            // Try to register LaunchAgent when enabled in Configuration Profile
+            if defaults.bool(forKey: "AutoOpen") {
+                
+                switch agent.status {
+                case .enabled:
+                    launchAgentLogger.debug("LaunchAgent is already registered and enabled")
+                case .notFound:
+                    launchAgentLogger.error("LaunchAgent not found")
+                    // Try to register LaunchAgent
+                    do {
+                        try agent.register()
+                        launchAgentLogger.debug("LaunchAgent was successfully registered")
+                        
+                        // Terminate the application to avoid running multiple instances of the app
+                        NSApplication.shared.terminate(self)
+                    } catch {
+                        launchAgentLogger.error("Error registering LaunchAgent")
+                        launchAgentLogger.error("\(error, privacy: .public)")
+                    }
+                case .notRegistered:
+                    launchAgentLogger.debug("LaunchAgent is not registered, trying to register...")
+                    // Try to register LaunchAgent
+                    do {
+                        try agent.register()
+                        launchAgentLogger.debug("LaunchAgent was successfully registered")
+                        
+                        // Terminate the application to avoid running multiple instances of the app
+                        NSApplication.shared.terminate(self)
+                    } catch {
+                        launchAgentLogger.error("Error registering LaunchAgent")
+                        launchAgentLogger.error("\(error, privacy: .public)")
+                    }
+                case .requiresApproval:
+                    launchAgentLogger.debug("LaunchAgent requires user approval")
+                    SMAppService.openSystemSettingsLoginItems()
+                default:
+                    launchAgentLogger.error("Unknown error with LaunchAgent")
+                }
+            } else {
+                
+                guard agent.status != .notRegistered else {
+                    launchAgentLogger.debug("LaunchAgent is already unregistered")
+                    return
+                }
+                
+                // Try to unregister LaunchAgent when disabled in Configuration Profile
+                agent.unregister(completionHandler: {error in
+                    if let error = error {
+                        self.launchAgentLogger.error("Error unregistering LaunchAgent: \(error, privacy: .public)")
+                    } else {
+                        self.launchAgentLogger.debug("LaunchAgent successfully unregistered")
+                    }
+                })
+            }
+        }
     }
 }
