@@ -14,62 +14,76 @@
 						<dict>
 							<key>mcx_preference_settings</key>
 							<dict>
-								<key>CustomColor</key>
-								<string>#8cc63f</string>
+								<key>ExtensionLinkA</key>
+								<string>defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bool true; /usr/local/bin/jamf policy; /usr/local/bin/jamf_last_check-in_time.zsh</string>
+								<key>ExtensionSymbolA</key>
+								<string>clock.badge.checkmark.fill</string>
+								<key>ExtensionTitleA</key>
+								<string>Last MDM Check-In</string>
+								<key>ExtensionTypeA</key>
+								<string>DistributedNotification</string>
 								<key>FirstRowLinkLeft</key>
-								<string>com.teamviewer.TeamViewerQS</string>
+								<string>com.teamviewer.TeamViewer</string>
+								<key>FirstRowLinkMiddle</key>
+								<string>https://support.root3.nl</string>
 								<key>FirstRowLinkRight</key>
 								<string>com.jamfsoftware.selfservice.mac</string>
 								<key>FirstRowSubtitleLeft</key>
 								<string>Share your screen</string>
+								<key>FirstRowSubtitleMiddle</key>
+								<string>Now</string>
 								<key>FirstRowSubtitleRight</key>
-								<string>Download apps</string>
+								<string>Download Apps</string>
 								<key>FirstRowSymbolLeft</key>
-								<string>cursorarrow</string>
+								<string>cursorarrow.and.square.on.square.dashed</string>
+								<key>FirstRowSymbolMiddle</key>
+								<string>lifepreserver</string>
 								<key>FirstRowSymbolRight</key>
-								<string>briefcase.fill</string>
+								<string>cart.badge.plus</string>
 								<key>FirstRowTitleLeft</key>
 								<string>Remote Support</string>
+								<key>FirstRowTitleMiddle</key>
+								<string>Get Support</string>
 								<key>FirstRowTitleRight</key>
 								<string>Self Service</string>
 								<key>FirstRowTypeLeft</key>
 								<string>App</string>
+								<key>FirstRowTypeMiddle</key>
+								<string>URL</string>
 								<key>FirstRowTypeRight</key>
 								<string>App</string>
+								<key>FooterText</key>
+								<string>Provided by your **IT department** with ❤️</string>
+								<key>HideFirstRow</key>
+								<false/>
+								<key>HideSecondRow</key>
+								<true/>
+								<key>InfoItemFive</key>
+								<string>Password</string>
+								<key>InfoItemSix</key>
+								<string>ExtensionA</string>
 								<key>Logo</key>
-								<string>/Library/Application Support/Your Company/logo.png</string>
-								<key>SecondRowLinkLeft</key>
-								<string>https://support.root3.nl</string>
-								<key>SecondRowLinkMiddle</key>
-								<string>mailto:support@root3.nl</string>
-								<key>SecondRowLinkRight</key>
-								<string>tel:0031854003030</string>
-								<key>SecondRowSubtitleLeft</key>
-								<string>Open</string>
-								<key>SecondRowSubtitleMiddle</key>
-								<string>Create</string>
-								<key>SecondRowSubtitleRight</key>
-								<string>Call</string>
-								<key>SecondRowSymbolLeft</key>
-								<string>lifepreserver</string>
-								<key>SecondRowSymbolMiddle</key>
-								<string>envelope.badge</string>
-								<key>SecondRowSymbolRight</key>
-								<string>apps.iphone</string>
-								<key>SecondRowTitleLeft</key>
-								<string>Website</string>
-								<key>SecondRowTitleMiddle</key>
-								<string>Email</string>
-								<key>SecondRowTitleRight</key>
-								<string>Phone</string>
-								<key>SecondRowTypeLeft</key>
-								<string>URL</string>
-								<key>SecondRowTypeMiddle</key>
-								<string>URL</string>
-								<key>SecondRowTypeRight</key>
-								<string>URL</string>
+								<string>/Library/Application Support/JAMF/swift-64x64_2x.png</string>
+								<key>NotificationIcon</key>
+								<string>/Library/Application Support/JAMF/swift-64x64_2x.png</string>
+								<key>OnAppearAction</key>
+								<string>/usr/local/bin/jamf_last_check-in_time.zsh</string>
+								<key>PasswordExpiryLimit</key>
+								<integer>14</integer>
+								<key>PasswordLabel</key>
+								<string>Cloud Password</string>
+								<key>PasswordType</key>
+								<string>KerberosSSO</string>
+								<key>ShowWelcomeScreen</key>
+								<true/>
+								<key>StatusBarIconNotifierEnabled</key>
+								<true/>
+								<key>StorageLimit</key>
+								<integer>90</integer>
 								<key>Title</key>
-								<string>Root3 Support</string>
+								<string>Hello **Support App** 2.4</string>
+								<key>UptimeDaysLimit</key>
+								<integer>21</integer>
 							</dict>
 						</dict>
 					</array>
