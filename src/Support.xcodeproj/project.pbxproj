@@ -40,6 +40,7 @@
 		49822CED24B4C3F200E8DE54 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 49822CEB24B4C3F200E8DE54 /* Main.storyboard */; };
 		49857E9824D4B543009B6FBA /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49857E9724D4B543009B6FBA /* Preferences.swift */; };
 		49857E9A24D4B58B009B6FBA /* ComputerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49857E9924D4B58B009B6FBA /* ComputerInfo.swift */; };
+		49871A6F287CC98500715C7C /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49871A6E287CC98500715C7C /* HeaderView.swift */; };
 		498B7001272F460100BFA45E /* KerberosSSOExtensionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498B7000272F460100BFA45E /* KerberosSSOExtensionModel.swift */; };
 		49B4952D2642E96A00A6AE64 /* DarkModeBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B4952C2642E96A00A6AE64 /* DarkModeBorder.swift */; };
 		49F6744E273F2DBC00C47403 /* ExtensionASubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F6744D273F2DBC00C47403 /* ExtensionASubview.swift */; };
@@ -83,6 +84,7 @@
 		49822CEF24B4C3F200E8DE54 /* Support.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Support.entitlements; sourceTree = "<group>"; };
 		49857E9724D4B543009B6FBA /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		49857E9924D4B58B009B6FBA /* ComputerInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComputerInfo.swift; sourceTree = "<group>"; };
+		49871A6E287CC98500715C7C /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		498B7000272F460100BFA45E /* KerberosSSOExtensionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KerberosSSOExtensionModel.swift; sourceTree = "<group>"; };
 		49B163AC26FCB154006D57C7 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		49B4952C2642E96A00A6AE64 /* DarkModeBorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeBorder.swift; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 				4915290C259CCF7A00056B5F /* NotificationBadgeView.swift */,
 				0A24AB432624CABB004208C4 /* NotificationBadgeTextView.swift */,
 				495924F8265C535B00E083AC /* QuitButton.swift */,
+				49871A6E287CC98500715C7C /* HeaderView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -333,6 +336,7 @@
 				498B7001272F460100BFA45E /* KerberosSSOExtensionModel.swift in Sources */,
 				4976EB8B265317C6006EE097 /* AppView.swift in Sources */,
 				49F6744E273F2DBC00C47403 /* ExtensionASubview.swift in Sources */,
+				49871A6F287CC98500715C7C /* HeaderView.swift in Sources */,
 				496FE4D12651485E007746ED /* UserInfo.swift in Sources */,
 				4915290D259CCF7A00056B5F /* NotificationBadgeView.swift in Sources */,
 				49857E9A24D4B58B009B6FBA /* ComputerInfo.swift in Sources */,

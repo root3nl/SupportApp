@@ -310,7 +310,7 @@ class ComputerInfo: ObservableObject {
         } else if modelIdentifierString.hasPrefix("VirtualMac") {
             self.modelShortName = "Apple Virtual Machine"
         } else if modelIdentifierString == "Mac" {
-            self.modelShortName = "Mac Studio"
+            self.modelShortName = "Mac"
         }
         
         self.logger.debug("Short Model Name: \(self.modelShortName, privacy: .public)")
