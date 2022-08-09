@@ -8,6 +8,7 @@
 import CoreWLAN
 import Foundation
 import IOKit
+import IOKit.ps
 import os
 import SwiftUI
 
@@ -281,7 +282,12 @@ class ComputerInfo: ObservableObject {
         } else if modelIdentifierString.hasPrefix("VirtualMac") {
             computerNameIcon = "macmini"
         } else if modelIdentifierString == "Mac" {
-            computerNameIcon = "macmini"
+            // Newer Model Identifiers are generic and don't include the model name. We set the symbol based on if the device has a battery or not
+            if deviceHasBattery() {
+                computerNameIcon = "laptopcomputer"
+            } else {
+                computerNameIcon = "desktopcomputer"
+            }
         } else {
             computerNameIcon = "desktopcomputer"
         }
@@ -465,5 +471,17 @@ class ComputerInfo: ObservableObject {
         
         // Post changes to notification center
         NotificationCenter.default.post(name: Notification.Name.networkState, object: nil)
+    }
+    
+    // Check if device has battery
+    func deviceHasBattery() -> Bool {
+        let snapshot = IOPSCopyPowerSourcesInfo().takeRetainedValue()
+        let powerSourceList = IOPSCopyPowerSourcesList(snapshot).takeRetainedValue() as Array
+        
+        if powerSourceList.count > 0 {
+            return true
+        } else {
+            return false
+        }
     }
 }
