@@ -22,11 +22,14 @@ xattr -d -r com.apple.quarantine "/Applications/Support.app"
 
 # Create the LaunchAgent
 defaults write "/Library/LaunchAgents/${launch_agent}.plist" Label -string "${launch_agent}"
-defaults write "/Library/LaunchAgents/${launch_agent}.plist" ProgramArguments -array -string "/Applications/Support.app/Contents/MacOS/Support"
+defaults write "/Library/LaunchAgents/${launch_agent}.plist" Program -string "/Applications/Support.app/Contents/MacOS/Support"
 # Run every reboot
 defaults write "/Library/LaunchAgents/${launch_agent}.plist" KeepAlive -boolean yes
 # Set ProcessType to Interactive
 defaults write "/Library/LaunchAgents/${launch_agent}.plist" ProcessType -string "Interactive"
+# Add AssociatedBundleIdentifiers to show the app name in Login Item 
+# notification instead of the developer name (macOS 13 and higher)
+defaults write "/Library/LaunchAgents/${launch_agent}.plist" AssociatedBundleIdentifiers -string "${launch_agent}"
 # Set permissions
 chown root:wheel "/Library/LaunchAgents/${launch_agent}.plist"
 chmod 644 "/Library/LaunchAgents/${launch_agent}.plist"

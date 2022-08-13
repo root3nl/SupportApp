@@ -79,6 +79,9 @@ class ComputerInfo: ObservableObject {
     // Mac Model Year
     @Published var modelYear = ""
     
+    // Mac Model Name to display
+    @Published var modelNameString = ""
+    
     // IP address of the currently first active interface
     @Published var ipAddress = String()
     
@@ -280,7 +283,7 @@ class ComputerInfo: ObservableObject {
                 computerNameIcon = "macpro.gen3"
             }
         } else if modelIdentifierString.hasPrefix("VirtualMac") {
-            computerNameIcon = "macmini"
+            computerNameIcon = "server.rack"
         } else if modelIdentifierString == "Mac" {
             // Newer Model Identifiers are generic and don't include the model name. We set the symbol based on if the device has a battery or not
             if deviceHasBattery() {
@@ -296,6 +299,32 @@ class ComputerInfo: ObservableObject {
     // MARK: - Function to get the base model name and year of introduction   https://github.com/davedelong/Syzygy/blob/master/SyzygyCore/macOS/System.swift
     func getModelName() {
         
+#if arch(arm64)
+        
+        let task = Process()
+        let pipe = Pipe()
+        
+        let command = """
+        ioreg -l -c IOPlatformDevice | grep -e "product-name" | cut -d'"' -f 4
+        """
+        
+        DispatchQueue.global().async {
+            task.standardOutput = pipe
+            task.standardError = pipe
+            task.launchPath = "/bin/zsh"
+            task.arguments = ["-c", command]
+            task.launch()
+            
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            
+            // Back to the main thread to publish values
+            DispatchQueue.main.async {
+                self.modelNameString = String(data: data, encoding: .utf8)!
+                self.logger.debug("Model Name: \(self.modelNameString, privacy: .public)")
+            }
+        }
+        
+#else
         // Remove all numbers and comma from Model Identifier string
         var modelIdentifierString = modelIdentifier.components(separatedBy: CharacterSet.decimalDigits).joined()
         modelIdentifierString = modelIdentifierString.components(separatedBy: CharacterSet.punctuationCharacters).joined()
@@ -315,8 +344,6 @@ class ComputerInfo: ObservableObject {
             self.modelShortName = "iMac"
         } else if modelIdentifierString.hasPrefix("VirtualMac") {
             self.modelShortName = "Apple Virtual Machine"
-        } else if modelIdentifierString == "Mac" {
-            self.modelShortName = "Mac"
         }
         
         self.logger.debug("Short Model Name: \(self.modelShortName, privacy: .public)")
@@ -366,6 +393,8 @@ class ComputerInfo: ObservableObject {
                             if matchedModel.indices.contains(0) && matchedYear.indices.contains(0) {
                                 self.modelName = matchedModel[0]
                                 self.modelYear = matchedYear[0]
+                                
+                                self.modelNameString = "\(self.modelName) \(self.modelYear)"
                             } else {
                                 self.logger.debug("Error matching serial number with model and introduction year...")
                             }
@@ -379,6 +408,7 @@ class ComputerInfo: ObservableObject {
                 }
             }
         }
+#endif
     }
     
     // MARK: - Function for matching a regular expression
@@ -475,13 +505,24 @@ class ComputerInfo: ObservableObject {
     
     // Check if device has battery
     func deviceHasBattery() -> Bool {
-        let snapshot = IOPSCopyPowerSourcesInfo().takeRetainedValue()
-        let powerSourceList = IOPSCopyPowerSourcesList(snapshot).takeRetainedValue() as Array
+        logger.debug("Checking if device has InternalBattery...")
+
+        // Set default to false
+        var deviceHasBattery: Bool = false
         
-        if powerSourceList.count > 0 {
-            return true
-        } else {
-            return false
+        let psInfo = IOPSCopyPowerSourcesInfo().takeRetainedValue()
+        let psList = IOPSCopyPowerSourcesList(psInfo).takeRetainedValue() as [CFTypeRef]
+
+        for ps in psList {
+            if let psDesc = IOPSGetPowerSourceDescription(psInfo, ps).takeUnretainedValue() as? [String: Any] {
+                if let type = psDesc[kIOPSTypeKey] as? String {
+                    if type == "InternalBattery" {
+                        deviceHasBattery = true
+                    }
+                }
+            }
         }
+        logger.debug("Device has InternalBattery: \(deviceHasBattery)")
+        return deviceHasBattery
     }
 }

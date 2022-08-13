@@ -53,7 +53,7 @@ struct ComputerNameSubview: View {
     var body: some View {
         
 //        InfoItem(title: NSLocalizedString("Computer Name", comment: ""), subtitle: computerinfo.hostname, image: computerinfo.computerNameIcon, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: false)
-        ItemDouble(title: NSLocalizedString("Computer Name", comment: ""), secondTitle: NSLocalizedString("Model", comment: ""), subtitle: computerinfo.hostname, secondSubtitle: "\(computerinfo.modelShortName) \(computerinfo.modelYear)", linkType: aboutLinkType, link: aboutLink, image: computerinfo.computerNameIcon, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true)
+        ItemDouble(title: NSLocalizedString("Computer Name", comment: ""), secondTitle: NSLocalizedString("Model", comment: ""), subtitle: computerinfo.hostname, secondSubtitle: computerinfo.modelNameString, linkType: aboutLinkType, link: aboutLink, image: computerinfo.computerNameIcon, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true)
         
     }
 }

@@ -4,13 +4,13 @@
 <dict>
 	<key>Label</key>
 	<string>nl.root3.support</string>
-	<key>ProgramArguments</key>
-	<array>
-		<string>/Applications/Support.app/Contents/MacOS/Support</string>
-	</array>
+	<key>Program</key>
+	<string>/Applications/Support.app/Contents/MacOS/Support</string>
 	<key>KeepAlive</key>
 	<true/>
 	<key>ProcessType</key>
 	<string>Interactive</string>
+	<key>AssociatedBundleIdentifiers</key>
+	<string>nl.root3.support</string>
 </dict>
 </plist>
