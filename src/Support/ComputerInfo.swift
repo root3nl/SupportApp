@@ -256,8 +256,8 @@ class ComputerInfo: ObservableObject {
         NotificationCenter.default.post(name: Notification.Name.storageLimit, object: nil)
     }
     
-    // MARK: - Get the Model Identifier to use as icon for Computer Name: https://github.com/Ekhoo/Device/blob/master/Source/macOS/DeviceMacOS.swift
-     func getModelIdentifier() {
+    // MARK: - Get the Model Identifier: https://github.com/Ekhoo/Device/blob/master/Source/macOS/DeviceMacOS.swift
+     func getModelIdentifier() -> String {
         var size : Int = 0
         sysctlbyname("hw.model", nil, &size, nil, 0)
         var model = [CChar](repeating: 0, count: Int(size))
@@ -267,69 +267,80 @@ class ComputerInfo: ObservableObject {
          
          // Remove all numbers from Model Identifier string
          var modelIdentifierString = modelIdentifier.components(separatedBy: CharacterSet.decimalDigits).joined()
-         modelIdentifierString = modelIdentifierString.components(separatedBy: CharacterSet.punctuationCharacters).joined()
          logger.debug("Model Identifier without numbers and comma: \(modelIdentifierString, privacy: .public)")
+         modelIdentifierString = modelIdentifierString.components(separatedBy: CharacterSet.punctuationCharacters).joined()
          
-        if modelIdentifierString.hasPrefix("MacBook") {
-            computerNameIcon = "laptopcomputer"
-        } else if modelIdentifierString.hasPrefix("Macmini") {
-            computerNameIcon = "macmini.fill"
-        } else if modelIdentifierString.hasPrefix("MacPro") {
-            switch modelIdentifierString {
-            // Mac Pro Gen 2 is also compatible. Show Gen 2 icon if Model Identifier is MacPro6,1
-            case "MacPro6,1":
-                computerNameIcon = "macpro.gen2.fill"
-            default:
-                computerNameIcon = "macpro.gen3"
-            }
-        } else if modelIdentifierString.hasPrefix("VirtualMac") {
-            computerNameIcon = "server.rack"
-        } else if modelIdentifierString == "Mac" {
-            // Newer Model Identifiers are generic and don't include the model name. We set the symbol based on if the device has a battery or not
-            if deviceHasBattery() {
-                computerNameIcon = "laptopcomputer"
-            } else {
-                computerNameIcon = "desktopcomputer"
-            }
-        } else {
-            computerNameIcon = "desktopcomputer"
-        }
+         return modelIdentifierString
     }
     
-    // MARK: - Function to get the base model name and year of introduction   https://github.com/davedelong/Syzygy/blob/master/SyzygyCore/macOS/System.swift
+    // MARK: - Function to get the model name and set computer icon
     func getModelName() {
         
 #if arch(arm64)
         
+        // New method for Apple Silicon to get model name and set computer icon
+        
         let task = Process()
         let pipe = Pipe()
         
-        let command = """
+        // Command to get c
+        let computerNameCommand = """
         ioreg -l -c IOPlatformDevice | grep -e "product-name" | cut -d'"' -f 4
         """
         
+        // Move command to background thread
         DispatchQueue.global().async {
             task.standardOutput = pipe
             task.standardError = pipe
             task.launchPath = "/bin/zsh"
-            task.arguments = ["-c", command]
+            task.arguments = ["-c", computerNameCommand]
             task.launch()
             
             let data = pipe.fileHandleForReading.readDataToEndOfFile()
             
             // Back to the main thread to publish values
             DispatchQueue.main.async {
-                self.modelNameString = String(data: data, encoding: .utf8)!
+                // Set the Model Name
+                self.modelNameString = String(data: data, encoding: .utf8)!.trimmingCharacters(in: .whitespacesAndNewlines)
+                
+                // Set the computer symbol based on the Model Name
+                if self.modelNameString.localizedCaseInsensitiveContains("MacBook") {
+                    self.computerNameIcon = "laptopcomputer"
+                } else if self.modelNameString.localizedCaseInsensitiveContains("Mac mini") {
+                    self.computerNameIcon = "macmini.fill"
+                } else if self.modelNameString.localizedCaseInsensitiveContains("Mac Pro") {
+                    // Filled SF Symbols are preferred but version for Mac Pro is only available in macOS 12 and higher
+                    if #available(macOS 12, *) {
+                        self.computerNameIcon = "macpro.gen3.fill"
+                    } else {
+                        self.computerNameIcon = "macpro.gen3"
+                    }
+                } else if self.modelNameString.localizedCaseInsensitiveContains("Mac Studio") {
+                    // SF Symbol for Mac Studio is only available in macOS 13 and higher
+                    if #available(macOS 13, *) {
+                        self.computerNameIcon = "macstudio.fill"
+                    } else {
+                        self.computerNameIcon = "desktopcomputer"
+                    }
+                } else if self.modelNameString.localizedCaseInsensitiveContains("Apple Virtual Machine") {
+                    self.computerNameIcon = "server.rack"
+                } else {
+                    self.computerNameIcon = "desktopcomputer"
+                }
+                
                 self.logger.debug("Model Name: \(self.modelNameString, privacy: .public)")
+                self.logger.debug("Computer SF Symbol: \(self.computerNameIcon, privacy: .public)")
             }
         }
         
 #else
-        // Remove all numbers and comma from Model Identifier string
-        var modelIdentifierString = modelIdentifier.components(separatedBy: CharacterSet.decimalDigits).joined()
-        modelIdentifierString = modelIdentifierString.components(separatedBy: CharacterSet.punctuationCharacters).joined()
+        // Legacy Intel method to get model name and set computer icon
+        // https://github.com/davedelong/Syzygy/blob/master/SyzygyCore/macOS/System.swift
         
-        // Set the short model name based on the ModelIdentifier
+        // Remove all numbers and comma from Model Identifier string
+        let modelIdentifierString = getModelIdentifier()
+        
+        // Set the short model name based on the Model Identifier
         if modelIdentifierString.hasPrefix("MacBookAir") {
             self.modelShortName = "MacBook Air"
         } else if modelIdentifierString.hasPrefix("MacBookPro") {
@@ -344,6 +355,25 @@ class ComputerInfo: ObservableObject {
             self.modelShortName = "iMac"
         } else if modelIdentifierString.hasPrefix("VirtualMac") {
             self.modelShortName = "Apple Virtual Machine"
+        }
+        
+        // Set the computer symbol based on the Model Identifier
+        if modelIdentifierString.hasPrefix("MacBook") {
+            computerNameIcon = "laptopcomputer"
+        } else if modelIdentifierString.hasPrefix("Macmini") {
+            computerNameIcon = "macmini.fill"
+        } else if modelIdentifierString.hasPrefix("MacPro") {
+            switch modelIdentifierString {
+                // Mac Pro Gen 2 is also compatible. Show Gen 2 icon if Model Identifier is MacPro6,1
+            case "MacPro6,1":
+                computerNameIcon = "macpro.gen2.fill"
+            default:
+                computerNameIcon = "macpro.gen3"
+            }
+        } else if modelIdentifierString.hasPrefix("VirtualMac") {
+            computerNameIcon = "server.rack"
+        } else {
+            computerNameIcon = "desktopcomputer"
         }
         
         self.logger.debug("Short Model Name: \(self.modelShortName, privacy: .public)")
@@ -501,28 +531,5 @@ class ComputerInfo: ObservableObject {
         
         // Post changes to notification center
         NotificationCenter.default.post(name: Notification.Name.networkState, object: nil)
-    }
-    
-    // Check if device has battery
-    func deviceHasBattery() -> Bool {
-        logger.debug("Checking if device has InternalBattery...")
-
-        // Set default to false
-        var deviceHasBattery: Bool = false
-        
-        let psInfo = IOPSCopyPowerSourcesInfo().takeRetainedValue()
-        let psList = IOPSCopyPowerSourcesList(psInfo).takeRetainedValue() as [CFTypeRef]
-
-        for ps in psList {
-            if let psDesc = IOPSGetPowerSourceDescription(psInfo, ps).takeUnretainedValue() as? [String: Any] {
-                if let type = psDesc[kIOPSTypeKey] as? String {
-                    if type == "InternalBattery" {
-                        deviceHasBattery = true
-                    }
-                }
-            }
-        }
-        logger.debug("Device has InternalBattery: \(deviceHasBattery)")
-        return deviceHasBattery
     }
 }

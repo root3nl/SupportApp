@@ -282,7 +282,6 @@ struct ContentView: View {
         }
         // MARK: - Run functions when ContentView appears for the first time
         .onAppear {
-            computerinfo.getModelIdentifier()
             computerinfo.getModelName()
             computerinfo.getmacOSVersionName()
             dataLoadingEffect()
