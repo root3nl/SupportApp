@@ -8,7 +8,6 @@
 import CoreWLAN
 import Foundation
 import IOKit
-import IOKit.ps
 import os
 import SwiftUI
 
@@ -67,7 +66,7 @@ class ComputerInfo: ObservableObject {
     // Used capacity in percentage to show user
     @Published var capacityPercentageRounded = Double()
     
-    // SF Symbols icon for Computer Name depending on Model Identifier. Default is "desktopcomputer"
+    // SF Symbols icon for Computer Name depending on Model Identifier or Model Name. Default is "desktopcomputer"
     @Published var computerNameIcon = "desktopcomputer"
     
     // Mac Model Name
@@ -508,8 +507,12 @@ class ComputerInfo: ObservableObject {
                                 address = String(cString: hostname)
                                 selfSignedIP = false
                                 
+                                // Get the wireless interface name
+                                let wirelessInterface = CWWiFiClient.shared().interface()?.interfaceName
+                                logger.debug("Wireless interface name: \(wirelessInterface ?? "Not present", privacy: .public)")
+
                                 // Set the appropriate symbol for the network interface
-                                if name == "en0" {
+                                if name == wirelessInterface {
                                     networkInterfaceSymbol = "wifi"
                                     networkName = CWWiFiClient.shared().interface(withName: nil)?.ssid() ?? "Unknown SSID"
                                 } else {
