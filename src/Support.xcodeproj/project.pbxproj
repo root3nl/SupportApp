@@ -122,7 +122,6 @@
 				493FBB8C27406B5D002A79F9 /* ExtensionBSubview.swift */,
 				0A4A73842602075F00927DAB /* StorageSubview.swift */,
 				0A4A7387260208B500927DAB /* UptimeSubview.swift */,
-				495F74EB28B39A9A00C20304 /* PopoverAlertView.swift */,
 				0A4A738A26020A3800927DAB /* ComputerNameSubview.swift */,
 				0A4A738D26020A6500927DAB /* MacOSVersionSubview.swift */,
 				0AFB04FA263AC23000507B23 /* ModelSubView.swift */,
@@ -146,6 +145,7 @@
 				0A24AB432624CABB004208C4 /* NotificationBadgeTextView.swift */,
 				495924F8265C535B00E083AC /* QuitButton.swift */,
 				49871A6E287CC98500715C7C /* HeaderView.swift */,
+				495F74EB28B39A9A00C20304 /* PopoverAlertView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";

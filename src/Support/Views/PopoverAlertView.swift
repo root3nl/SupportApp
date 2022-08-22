@@ -24,21 +24,22 @@ struct PopoverAlertView: View {
         
         VStack(spacing: 8) {
             
-            Image(nsImage: (NSImage(contentsOfFile: defaults.string(forKey: "NotificationIcon")!) ?? NSImage(named: "DefaultLogo"))!)
-                .resizable()
-                .scaledToFit()
-                .frame(height: 64)
+            // Show custom Notification Icon when specified
+            if defaults.string(forKey: "NotificationIcon") != nil {
+                Image(nsImage: (NSImage(contentsOfFile: defaults.string(forKey: "NotificationIcon")!) ?? NSImage(named: "DefaultLogo"))!)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 48)
+            }
             
             Text(title)
                 // Set frame to 250 to allow multiline text
-//                .padding(.horizontal)
                 .frame(width: 250)
                 .fixedSize()
                 .font(.system(.headline, design: .rounded))
             
             Text(message)
                 // Set frame to 250 to allow multiline text
-//                .padding(.horizontal)
                 .frame(width: 250)
                 .fixedSize()
                 .font(.system(.body, design: .rounded))
@@ -50,6 +51,5 @@ struct PopoverAlertView: View {
             .padding(.top)
         }
         .padding()
-//        .frame(idealWidth: 250, maxWidth: 250, idealHeight: 200, maxHeight: 200)
     }
 }
