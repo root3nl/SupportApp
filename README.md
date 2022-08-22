@@ -137,9 +137,11 @@ The buttons in the 3rd and 4th row behave as shortcuts to applications or links.
 
 * **Symbol**: The symbol shown in the button, see the SF Symbols section how to use these symbols
 
-The rows with configurable items are shown in the screenshot below:
+The rows with all configurable items enabled are shown in the screenshot below:
+* Info items and Support App Extensions in **GREEN**
+* Buttons in **RED**
 
-<img src="/Screenshots/configurable_buttons.png" width="450">
+<img src="/Screenshots/configurable_buttons_2.4.png" width="450">
 
 ### Footer Text
 A footer text can optionally be used to put some additional text at the bottom of the Support App. This supports both text and Emoji. On macOS Monterey and higher, it supports Markdown.
