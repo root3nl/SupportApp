@@ -42,7 +42,7 @@ xattr -d -r com.apple.quarantine "${install_location}"
 
 # Only install Legacy LaunchAgent on macOS 12 and below
 if is-at-least 13.0 ${os_version}; then
-	if ! pgrep -x "Support" ; then
+	if ! pgrep -x "Support"; then
 		# Open Support App to start LaunchAgent registration using SMAppService
 		open "${install_location}"
 	else 

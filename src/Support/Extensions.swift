@@ -7,6 +7,7 @@
 
 import Cocoa
 import Foundation
+import SwiftUI
 
 // Extension to convert Hex colors to NSColor. https://www.hackingwithswift.com/example-code/uicolor/how-to-convert-a-hex-color-to-a-uicolor
 // Slightly modified to append the 1.0 Alpha channel to HEX color
@@ -120,6 +121,27 @@ extension NSImage {
             try imgData.write(to: url)
         }catch let error {
             Swift.print("\(self) Error Function '\(#function)' Line: \(#line) \(error.localizedDescription)")
+        }
+    }
+}
+
+extension View {
+    func modify<T: View>(@ViewBuilder _ modifier: (Self) -> T) -> some View {
+        return modifier(self)
+    }
+}
+
+extension View {
+    /// Applies the given transform if the given condition evaluates to `true`.
+    /// - Parameters:
+    ///   - condition: The condition to evaluate.
+    ///   - transform: The transform to apply to the source `View`.
+    /// - Returns: Either the original `View` or the modified `View` if the condition is `true`.
+    @ViewBuilder func `if`<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
+        if condition {
+            transform(self)
+        } else {
+            self
         }
     }
 }
