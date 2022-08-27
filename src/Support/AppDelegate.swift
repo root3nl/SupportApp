@@ -41,6 +41,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         
+        // Configure LaunchAgent using SMAppService if available
+        configureLaunchAgent()
+        
         // Create the SwiftUI view that provides the window contents.
         let appView = AppView()
 
@@ -109,9 +112,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             strongSelf.closePopover(sender: event)
           }
         }
-        
-        // Configure LaunchAgent using SMAppService if available
-        configureLaunchAgent()
     }
     
     // MARK: - Set and update the menu bar icon
@@ -398,7 +398,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     }
     
-    // Use SMAppService to handle optional LaunchAgent on macOS 13 and higher
+    // Use SMAppService to handle LaunchAgent on macOS 13 and higher
     func configureLaunchAgent() {
         if #available(macOS 13.0, *) {
             
@@ -416,8 +416,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 return
             }
             
-            // Try to register LaunchAgent when enabled in Configuration Profile
-            if defaults.bool(forKey: "AutoOpen") {
+            // Try to register LaunchAgent unless disabled in Configuration Profile
+            if preferences.openAtLogin {
                 
                 switch agent.status {
                 case .enabled:
@@ -451,6 +451,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 case .requiresApproval:
                     launchAgentLogger.debug("LaunchAgent requires user approval")
                     SMAppService.openSystemSettingsLoginItems()
+                    
+                    // Terminate the application to avoid running multiple instances of the app
+                    NSApplication.shared.terminate(self)
                 default:
                     launchAgentLogger.error("Unknown error with LaunchAgent")
                 }
