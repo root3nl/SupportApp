@@ -67,7 +67,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         defaults.addObserver(self, forKeyPath: "UptimeDaysLimit", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "StorageLimit", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "PasswordExpiryLimit", options: .new, context: nil)
-        defaults.addObserver(self, forKeyPath: "AutoOpen", options: .new, context: nil)
+        defaults.addObserver(self, forKeyPath: "OpenAtLogin", options: .new, context: nil)
         ASUdefaults?.addObserver(self, forKeyPath: "LastUpdatesAvailable", options: .new, context: nil)
         
         // Receive notifications after uptime check
@@ -246,8 +246,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         case "LastUpdatesAvailable":
             logger.debug("\(keyPath! as NSObject) changed to \(self.ASUdefaults!.integer(forKey: "LastUpdatesAvailable"))")
-        case "AutoOpen":
-            logger.debug("\(keyPath! as NSObject) change to \(self.defaults.bool(forKey: "AutoOpen"))")
+        case "OpenAtLogin":
+            logger.debug("\(keyPath! as NSObject) change to \(self.defaults.bool(forKey: "OpenAtLogin"))")
             self.configureLaunchAgent()
         default:
             logger.debug("Some other change detected...")
