@@ -51,5 +51,6 @@ struct PopoverAlertView: View {
             .padding(.top)
         }
         .padding()
+        .unredacted()
     }
 }

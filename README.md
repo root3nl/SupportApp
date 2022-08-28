@@ -187,6 +187,7 @@ All general settings
 | ErrorMessage | String | Please contact IT support | Shown when clicking an action results in an error | "Please contact the servicedesk", "Please contact COMPANY_NAME" |
 | ShowWelcomeScreen | Boolean | false | Shows the welcome screen when the Support App is opened for the first time. | true |
 | FooterText | String | - | Text shown at the bottom as footnote | "Provided by your **IT department** with ❤️" |
+| OpenAtLogin | Boolean | true | Launch Support automatically at login and keep it open (macOS 13 and higher). This setting is ignored if a legacy LaunchAgent is installed/active. Disable this if you don't want to open Support at login or use your own LaunchAgent | false |
 
 ### Info items
 Configuration of the top four items with diagnostic information.

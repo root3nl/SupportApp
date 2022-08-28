@@ -40,7 +40,7 @@ uid=$(id -u "${username}")
 # Remove "Downloaded from Internet" warning
 xattr -d -r com.apple.quarantine "${install_location}"
 
-# Only install Legacy LaunchAgent on macOS 12 and below
+# Install Legacy LaunchAgent only on macOS 12 and below
 if is-at-least 13.0 ${os_version}; then
 	if ! pgrep -x "Support"; then
 		# Open Support App to start LaunchAgent registration using SMAppService
@@ -60,18 +60,18 @@ else
 	# Set permissions
 	chown root:wheel "/Library/LaunchAgents/${launch_agent}.plist"
 	chmod 644 "/Library/LaunchAgents/${launch_agent}.plist"
+fi
 
-	# Reload the LaunchAgent
-	if [[ -n "${username}" ]]; then
-		# Unload the LauchAgent
+# Reload Legacy LaunchAgent
+if [[ -n "${username}" ]] && [[ -f "/Library/LaunchAgents/${launch_agent}.plist" ]]; then
+	# Unload the LauchAgent
 	launchctl bootout gui/${uid} "/Library/LaunchAgents/${launch_agent}.plist" &> /dev/null
 
-		# Just to be sure, kill Support App if still running
-		if pgrep -x "Support" ; then
-			killall -9 "Support"
-		fi
-
-		# Load the LaunchAgent
-	launchctl bootstrap gui/${uid} "/Library/LaunchAgents/${launch_agent}.plist"
+	# Just to be sure, kill Support App if still running
+	if pgrep -x "Support" ; then
+		killall -9 "Support"
 	fi
+
+	# Load the LaunchAgent
+	launchctl bootstrap gui/${uid} "/Library/LaunchAgents/${launch_agent}.plist"
 fi
