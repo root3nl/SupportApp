@@ -264,9 +264,9 @@ class UserInfo: ObservableObject {
         if !task.isRunning {
             let status = task.terminationStatus
             if status == 0 {
-                logger.debug("\(output)")
+                logger.debug("\(output, privacy: .public)")
             } else {
-                logger.error("\(output)")
+                logger.error("\(output, privacy: .public)")
             }
         }
         
@@ -294,7 +294,7 @@ class UserInfo: ObservableObject {
         
         // Set realm when it was detected
         realm = realmsArray[0]
-        logger.debug("Kerberos Realm successfully detected: \(self.realm)")
+        logger.debug("Kerberos Realm successfully detected: \(self.realm, privacy: .public)")
         
         // Query to get password exiry
         let query = "app-sso -j -i \(realm)"
@@ -317,9 +317,9 @@ class UserInfo: ObservableObject {
             if !task.isRunning {
                 let status = task.terminationStatus
                 if status == 0 {
-                    logger.debug("\(output)")
+                    logger.debug("\(output, privacy: .public)")
                 } else {
-                    logger.error("\(output)")
+                    logger.error("\(output, privacy: .public)")
                 }
             }
             

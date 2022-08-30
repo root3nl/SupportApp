@@ -206,6 +206,21 @@
         }
       ]
     },
+    "OpenAtLogin": {
+      "title": "Automatically open Support at login",
+      "description": "Enabled by default. Launch Support automatically at login and keep it open (macOS 13 and higher). This setting is ignored if a legacy LaunchAgent is installed/active. Disable this if you don't want to open Support at login or use your own LaunchAgent",
+      "type": "boolean",
+      "options": {
+        "enum_titles": ["Enabled (default)", "Disabled"],
+        "infoText": "Key name: OpenAtLogin"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
     "InfoItemOne": {
       "title": "Info item 1st tile",
       "description": "Info item shown in the upper left corner",

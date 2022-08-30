@@ -2,15 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Label</key>
-	<string>nl.root3.support</string>
-	<key>Program</key>
-	<string>/Applications/Support.app/Contents/MacOS/Support</string>
+	<key>BundleProgram</key>
+	<string>Contents/MacOS/Support</string>
 	<key>KeepAlive</key>
 	<true/>
+	<key>Label</key>
+	<string>nl.root3.support</string>
 	<key>ProcessType</key>
 	<string>Interactive</string>
-	<key>AssociatedBundleIdentifiers</key>
-	<string>nl.root3.support</string>
 </dict>
 </plist>
