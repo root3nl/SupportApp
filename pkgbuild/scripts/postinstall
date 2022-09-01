@@ -64,7 +64,7 @@ fi
 
 # Reload Legacy LaunchAgent
 if [[ -n "${username}" ]] && [[ -f "/Library/LaunchAgents/${launch_agent}.plist" ]]; then
-	# Unload the LauchAgent
+	# Unload the LaunchAgent
 	launchctl bootout gui/${uid} "/Library/LaunchAgents/${launch_agent}.plist" &> /dev/null
 
 	# Just to be sure, kill Support App if still running
