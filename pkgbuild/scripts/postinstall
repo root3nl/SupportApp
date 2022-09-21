@@ -57,6 +57,9 @@ else
 	defaults write "/Library/LaunchAgents/${launch_agent}.plist" KeepAlive -boolean yes
 	# Set ProcessType to Interactive
 	defaults write "/Library/LaunchAgents/${launch_agent}.plist" ProcessType -string "Interactive"
+	# Add AssociatedBundleIdentifiers to show app name in Login Items on 
+	# macOS 13 and higher instead of developer name
+	defaults write "/Library/LaunchAgents/${launch_agent}.plist" AssociatedBundleIdentifiers -string "nl.root3.support"
 	# Set permissions
 	chown root:wheel "/Library/LaunchAgents/${launch_agent}.plist"
 	chmod 644 "/Library/LaunchAgents/${launch_agent}.plist"
@@ -64,8 +67,17 @@ fi
 
 # Reload Legacy LaunchAgent
 if [[ -n "${username}" ]] && [[ -f "/Library/LaunchAgents/${launch_agent}.plist" ]]; then
+
 	# Unload the LaunchAgent
 	launchctl bootout gui/${uid} "/Library/LaunchAgents/${launch_agent}.plist" &> /dev/null
+
+	# Add AssociatedBundleIdentifiers to show app name in Login Items on 
+	# macOS 13 and higher instead of developer name
+	defaults write "/Library/LaunchAgents/${launch_agent}.plist" AssociatedBundleIdentifiers -string "nl.root3.support"
+
+	# Set permissions
+	chown root:wheel "/Library/LaunchAgents/${launch_agent}.plist"
+	chmod 644 "/Library/LaunchAgents/${launch_agent}.plist"
 
 	# Just to be sure, kill Support App if still running
 	if pgrep -x "Support" ; then
