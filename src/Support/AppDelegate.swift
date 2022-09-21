@@ -125,6 +125,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Set the menu bar icon
         if let button = statusBarItem?.button {
             
+            // Notification badge view
+            var statusItemBadgeView: StatusItemBadgeView?
+            
+            // Remove notification badge
+            for view in button.subviews {
+                view.removeFromSuperview()
+            }
+            
             // Use custom status bar icon if set in UserDefaults with fallback to default icon
             if defaults.string(forKey: "StatusBarIcon") != nil {
                 if let customIcon = NSImage(contentsOfFile: defaults.string(forKey: "StatusBarIcon")!) {
@@ -174,30 +182,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             // Show notification badge in menu bar icon when info item when needed
             if (computerinfo.updatesAvailable == 0 || !infoItemsEnabled.contains("MacOSVersion")) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage"))) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
                                 
-                // Create NSTextAttachment to show orange dot image overlay in StatusBarItem. Probably not the best way currently available
-                let image1Attachment = NSTextAttachment()
-                image1Attachment.image  = NSImage(named: "MenuBarOrangeDot")?.resizedCopy(w: 22, h: 22)
-                let attributeString = NSAttributedString(attachment: image1Attachment)
-                button.attributedTitle = attributeString
+                // Create orange notification badge
+                statusItemBadgeView = StatusItemBadgeView(frame: NSRect(x: 14.0, y: -6.0, width: 22, height: 22), color: .systemOrange)
+                
+                if let statusItemBadgeView = statusItemBadgeView {
+                    button.addSubview(statusItemBadgeView)
+                }
                
             } else if (computerinfo.updatesAvailable > 0 && infoItemsEnabled.contains("MacOSVersion")) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
                 
-                // Create NSTextAttachment to show red dot image overlay in StatusBarItem. Probably not the best way currently available
-                let image1Attachment = NSTextAttachment()
-                image1Attachment.image  = NSImage(named: "MenuBarRedDot")?.resizedCopy(w: 22, h: 22)
-                let attributeString = NSAttributedString(attachment: image1Attachment)
-                button.attributedTitle = attributeString
+                // Create red notification badge
+                statusItemBadgeView = StatusItemBadgeView(frame: NSRect(x: 14.0, y: -6.0, width: 22, height: 22), color: .systemRed)
                 
-            // Disable notification badge in menu bar icon
-            } else {
-                
-                // Remove NSTextAttachment
-                let attributeString = NSAttributedString(string: "")
-                button.attributedTitle = attributeString
-                
-                button.alignment = .right
+                if let statusItemBadgeView = statusItemBadgeView {
+                    button.addSubview(statusItemBadgeView)
+                }
             }
-            
+                        
             // Action when clicked on the menu bar icon
             button.action = #selector(self.statusBarButtonClicked)
             
@@ -310,13 +311,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         if let button = statusBarItem?.button {
             
-            // add positioning view as a suview of sender, that is, `statusItem.button`.
-            let positioningView = NSView(frame: button.bounds)
-            
-            // set an identifier for positioning view, so we can easily remove it later.
-            positioningView.identifier = NSUserInterfaceItemIdentifier(rawValue: "positioningView")
-            button.addSubview(positioningView)
-            
             // Disable animation when popover opens
             self.popover.animates = false
             
@@ -326,13 +320,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             // Enable animation again to avoid issues
             self.popover.animates = true
             
-            // move positioning view away
-            button.bounds = button.bounds.offsetBy(dx: 0, dy: button.bounds.height)
-            
-            // adjust the height to match control center
-            if let popoverWindow = popover.contentViewController?.view.window {
-                popoverWindow.setFrame(popoverWindow.frame.offsetBy(dx: 0, dy: 8), display: false)
-            }
+            // Remove popover arrow
+            // https://stackoverflow.com/questions/68744895/swift-ui-macos-menubar-nspopover-no-arrow
+            popover.setValue(true, forKeyPath: "shouldHideAnchor")
             
             // Start monitoring mouse clicks outside the popover
             eventMonitor?.start()
