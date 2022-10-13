@@ -32,7 +32,6 @@ install_location="/Applications/Support.app"
 
 # Get the username of the currently logged in user
 username=$(scutil <<< "show State:/Users/ConsoleUser" | awk '/Name :/ && ! /loginwindow/ { print $3 }')
-echo "Current logged in user: ${username}"
 
 # Get the username ID
 uid=$(id -u "${username}")
@@ -40,11 +39,13 @@ uid=$(id -u "${username}")
 # Remove "Downloaded from Internet" warning
 xattr -d -r com.apple.quarantine "${install_location}"
 
-# Install Legacy LaunchAgent only on macOS 12 and below
-if is-at-least 13.0 ${os_version}; then
+# Open Support App and start modern LaunchAgent registration using SMAppService
+# when enabled and a user is logged in on macOS 13 and higher. 
+# Otherwise fallback to legacy LaunchAgent. SMAppService cannot be used when 
+# there is no user logged in.
+if is-at-least 13.0 ${os_version} && [[ -n "${username}" ]]; then
 	if ! pgrep -x "Support"; then
-		# Open Support App to start LaunchAgent registration using SMAppService
-		open "${install_location}"
+		launchctl asuser ${uid} open "${install_location}"
 	else 
 		# Quit Support App in case it needs to reload after an update
 		killall -9 "Support"
