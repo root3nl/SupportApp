@@ -403,19 +403,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             // Don't register SMAppService when Legacy LaunchAgent is active
             guard legacyLAStatus != .enabled else {
                 launchAgentLogger.debug("Legacy LaunchAgent is active")
-                
-                if agent.status == .enabled {
-                    
-                    // Try to unregister LaunchAgent
-                    agent.unregister(completionHandler: { error in
-                        if let error = error {
-                            self.launchAgentLogger.error("Error unregistering LaunchAgent: \(error, privacy: .public)")
-                        } else {
-                            self.launchAgentLogger.debug("LaunchAgent successfully unregistered")
-                        }
-                    })
-                    
-                }
                 return
             }
             
