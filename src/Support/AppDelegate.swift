@@ -128,6 +128,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             // Notification badge view
             var statusItemBadgeView: StatusItemBadgeView?
             
+            // Boolean to use for custom icon due to different postition of notification badge
+            var imageIsCustom: Bool = false
+            
             // Remove notification badge
             for view in button.subviews {
                 view.removeFromSuperview()
@@ -137,9 +140,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             if defaults.string(forKey: "StatusBarIcon") != nil {
                 if let customIcon = NSImage(contentsOfFile: defaults.string(forKey: "StatusBarIcon")!) {
                     button.image = customIcon
+                    
+                    // FIXME: - will cause impact and has some unexpected results
+                    // Automatically resize custom icon to the fit in the status bar item
+                    // 16x16 is the recommendation assuming the image does not have any additional space around it
+                    // https://bjango.com/articles/designingmenubarextras/
+//                    button.image?.size = NSSize(width: 16, height: 16)
+                    
                     // Render as template to make icon white and match system default
                     button.image?.isTemplate = true
                     logger.debug("StatusBarIcon preference key is set")
+                    
+                    imageIsCustom = true
                 } else {
                     button.image = defaultSFSymbolImage
                     logger.error("StatusBarIcon preference key is set, but no valid image was found. Please check file path/name or permissions. Falling back to default image...")
@@ -183,7 +195,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             if (computerinfo.updatesAvailable == 0 || !infoItemsEnabled.contains("MacOSVersion")) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage"))) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
                                 
                 // Create orange notification badge
-                statusItemBadgeView = StatusItemBadgeView(frame: NSRect(x: 14.0, y: -6.0, width: 22, height: 22), color: .systemOrange)
+                // Use different Y axis for custom icons
+                if imageIsCustom {
+                    statusItemBadgeView = StatusItemBadgeView(frame: NSRect(x: 14, y: -12, width: 22, height: 22), color: .systemOrange)
+                } else {
+                    statusItemBadgeView = StatusItemBadgeView(frame: NSRect(x: 14, y: -6, width: 22, height: 22), color: .systemOrange)
+                }
                 
                 if let statusItemBadgeView = statusItemBadgeView {
                     button.addSubview(statusItemBadgeView)
@@ -192,7 +209,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             } else if (computerinfo.updatesAvailable > 0 && infoItemsEnabled.contains("MacOSVersion")) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
                 
                 // Create red notification badge
-                statusItemBadgeView = StatusItemBadgeView(frame: NSRect(x: 14.0, y: -6.0, width: 22, height: 22), color: .systemRed)
+                // Use different Y axis for custom icons
+                if imageIsCustom {
+                    statusItemBadgeView = StatusItemBadgeView(frame: NSRect(x: 14, y: -12, width: 22, height: 22), color: .systemRed)
+                } else {
+                    statusItemBadgeView = StatusItemBadgeView(frame: NSRect(x: 14, y: -6, width: 22, height: 22), color: .systemRed)
+                }
                 
                 if let statusItemBadgeView = statusItemBadgeView {
                     button.addSubview(statusItemBadgeView)
