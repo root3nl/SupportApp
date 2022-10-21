@@ -5,9 +5,7 @@
 #
 # Copyright 2022 Root3 B.V. All rights reserved.
 #
-# This script will create the Support App Legacy LaunchAgent and reload it when
-# needed on macOS 12 and below. On macOS 13 and higher, the script will open the
-# app to allow registration of the LaunchAgent using SMAppService.
+# This script will create the Support App LaunchAgent and reload it when needed.
 #
 # THE SOFTWARE IS PROVIDED BY ROOT3 B.V. "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
@@ -17,12 +15,6 @@
 # IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # ------------------    edit the variables below this line    ------------------
-
-# Load Requirements
-autoload is-at-least
-
-# macOS Version
-os_version=$(sw_vers -productVersion)
 
 # LaunchAgent label
 launch_agent="nl.root3.support"
@@ -39,43 +31,27 @@ uid=$(id -u "${username}")
 # Remove "Downloaded from Internet" warning
 xattr -d -r com.apple.quarantine "${install_location}"
 
-# Install Legacy LaunchAgent only on macOS 12 and below
-if is-at-least 13.0 ${os_version}; then
-	if ! pgrep -x "Support"; then
-		launchctl asuser ${uid} open "${install_location}"
-	else 
-		# Quit Support App in case it needs to reload after an update
-		killall -9 "Support"
-  	fi
-else
-	# Create the LaunchAgent
-	defaults write "/Library/LaunchAgents/${launch_agent}.plist" Label -string "${launch_agent}"
-	defaults write "/Library/LaunchAgents/${launch_agent}.plist" ProgramArguments -array -string "/Applications/Support.app/Contents/MacOS/Support"
-	# Run every reboot
-	defaults write "/Library/LaunchAgents/${launch_agent}.plist" KeepAlive -boolean yes
-	# Set ProcessType to Interactive
-	defaults write "/Library/LaunchAgents/${launch_agent}.plist" ProcessType -string "Interactive"
-	# Add AssociatedBundleIdentifiers to show app name in Login Items on 
-	# macOS 13 and higher instead of developer name
-	defaults write "/Library/LaunchAgents/${launch_agent}.plist" AssociatedBundleIdentifiers -string "nl.root3.support"
-	# Set permissions
-	chown root:wheel "/Library/LaunchAgents/${launch_agent}.plist"
-	chmod 644 "/Library/LaunchAgents/${launch_agent}.plist"
-fi
+# Create the LaunchAgent
+defaults write "/Library/LaunchAgents/${launch_agent}.plist" Label -string "${launch_agent}"
+defaults write "/Library/LaunchAgents/${launch_agent}.plist" Program -string "${install_location}/Contents/MacOS/Support"
+# Run every reboot
+defaults write "/Library/LaunchAgents/${launch_agent}.plist" KeepAlive -boolean yes
+# Set ProcessType to Interactive
+defaults write "/Library/LaunchAgents/${launch_agent}.plist" ProcessType -string "Interactive"
+# Add AssociatedBundleIdentifiers to show app name in Login Items on 
+# macOS 13 and higher instead of developer name
+defaults write "/Library/LaunchAgents/${launch_agent}.plist" AssociatedBundleIdentifiers -string "nl.root3.support"
+# Set permissions
+chown root:wheel "/Library/LaunchAgents/${launch_agent}.plist"
+chmod 644 "/Library/LaunchAgents/${launch_agent}.plist"
 
-# Reload Legacy LaunchAgent
-if [[ -n "${username}" ]] && [[ -f "/Library/LaunchAgents/${launch_agent}.plist" ]]; then
+# Reload the LaunchAgent
+if [[ -n "${username}" ]]; then
 
 	# Unload the LaunchAgent
-	launchctl bootout gui/${uid} "/Library/LaunchAgents/${launch_agent}.plist" &> /dev/null
-
-	# Add AssociatedBundleIdentifiers to show app name in Login Items on 
-	# macOS 13 and higher instead of developer name
-	defaults write "/Library/LaunchAgents/${launch_agent}.plist" AssociatedBundleIdentifiers -string "nl.root3.support"
-
-	# Set permissions
-	chown root:wheel "/Library/LaunchAgents/${launch_agent}.plist"
-	chmod 644 "/Library/LaunchAgents/${launch_agent}.plist"
+	if launchctl print "gui/${uid}/${launch_agent}" &> /dev/null ; then
+		launchctl bootout gui/${uid} "/Library/LaunchAgents/${launch_agent}.plist" &> /dev/null
+	fi
 
 	# Just to be sure, kill Support App if still running
 	if pgrep -x "Support" ; then
