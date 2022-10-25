@@ -124,7 +124,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         // Set the menu bar icon
         if let button = statusBarItem?.button {
-            
+                        
             // Notification badge view
             var statusItemBadgeView: StatusItemBadgeView?
             
@@ -139,19 +139,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             // Use custom status bar icon if set in UserDefaults with fallback to default icon
             if defaults.string(forKey: "StatusBarIcon") != nil {
                 if let customIcon = NSImage(contentsOfFile: defaults.string(forKey: "StatusBarIcon")!) {
-                    button.image = customIcon
                     
-                    // FIXME: - will cause impact and has some unexpected results
-                    // Automatically resize custom icon to the fit in the status bar item
-                    // 16x16 is the recommendation assuming the image does not have any additional space around it
+                    // When custom image is larger than 22 point, we should resize to 16x16 points as recommended icon size
                     // https://bjango.com/articles/designingmenubarextras/
-//                    button.image?.size = NSSize(width: 16, height: 16)
+                    if customIcon.size.width > 22 || customIcon.size.height > 22 {
+                        customIcon.size = NSSize(width: 16, height: 16)
+                    }
+                    
+                    // Set status bar icon to custom image
+                    button.image = customIcon
                     
                     // Render as template to make icon white and match system default
                     button.image?.isTemplate = true
                     logger.debug("StatusBarIcon preference key is set")
                     
+                    // Set boolean to indicate custom icon. Used for different Y axis with notification badge
                     imageIsCustom = true
+                    
                 } else {
                     button.image = defaultSFSymbolImage
                     logger.error("StatusBarIcon preference key is set, but no valid image was found. Please check file path/name or permissions. Falling back to default image...")
@@ -220,7 +224,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     button.addSubview(statusItemBadgeView)
                 }
             }
-                        
+
             // Action when clicked on the menu bar icon
             button.action = #selector(self.statusBarButtonClicked)
             
