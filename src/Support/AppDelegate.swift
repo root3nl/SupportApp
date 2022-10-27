@@ -39,6 +39,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var userinfo = UserInfo()
     var preferences = Preferences()
     
+    // Create red notification badge view
+    // https://github.com/DeveloperMaris/ToolReleases/blob/master/ToolReleases/PopoverController.swift
+    lazy var redBadge: NSView = {
+        let view = StatusItemBadgeView(frame: NSRect(x: 0, y: 0, width: 0, height: 0), color: .systemRed)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.wantsLayer = true
+        view.layer?.masksToBounds = true
+        return view
+    }()
+    
+    // Create orange notification badge view
+    // https://github.com/DeveloperMaris/ToolReleases/blob/master/ToolReleases/PopoverController.swift
+    lazy var orangeBadge: NSView = {
+        let view = StatusItemBadgeView(frame: NSRect(x: 0, y: 0, width: 0, height: 0), color: .systemOrange)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.wantsLayer = true
+        view.layer?.masksToBounds = true
+        return view
+    }()
+    
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         
         // Configure LaunchAgent using SMAppService if available
@@ -59,6 +79,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         // Create the status item
         statusBarItem = NSStatusBar.system.statusItem(withLength: CGFloat(NSStatusItem.squareLength))
+        
+        // Add notification badges as subviews
+        if let button = statusBarItem?.button {
+            button.addSubview(redBadge)
+            button.addSubview(orangeBadge)
+            
+            // Set layout contraints
+            NSLayoutConstraint.activate([
+                redBadge.trailingAnchor.constraint(equalTo: button.trailingAnchor, constant: -2),
+                redBadge.bottomAnchor.constraint(equalTo: button.bottomAnchor, constant: -12),
+                redBadge.widthAnchor.constraint(equalToConstant: 8),
+                redBadge.heightAnchor.constraint(equalToConstant: 8)
+            ])
+            
+            // Set layout contraints
+            NSLayoutConstraint.activate([
+                orangeBadge.trailingAnchor.constraint(equalTo: button.trailingAnchor, constant: -2),
+                orangeBadge.bottomAnchor.constraint(equalTo: button.bottomAnchor, constant: -12),
+                orangeBadge.widthAnchor.constraint(equalToConstant: 8),
+                orangeBadge.heightAnchor.constraint(equalToConstant: 8)
+            ])
+        }
         
         // Observe changes for UserDefaults
         defaults.addObserver(self, forKeyPath: "StatusBarIcon", options: .new, context: nil)
@@ -124,17 +166,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         // Set the menu bar icon
         if let button = statusBarItem?.button {
-                        
-            // Notification badge view
-            var statusItemBadgeView: StatusItemBadgeView?
             
-            // Boolean to use for custom icon due to different postition of notification badge
-            var imageIsCustom: Bool = false
-            
-            // Remove notification badge
-            for view in button.subviews {
-                view.removeFromSuperview()
-            }
+            // Hide notification badge
+            redBadge.isHidden = true
+            orangeBadge.isHidden = true
             
             // Use custom status bar icon if set in UserDefaults with fallback to default icon
             if defaults.string(forKey: "StatusBarIcon") != nil {
@@ -152,9 +187,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     // Render as template to make icon white and match system default
                     button.image?.isTemplate = true
                     logger.debug("StatusBarIcon preference key is set")
-                    
-                    // Set boolean to indicate custom icon. Used for different Y axis with notification badge
-                    imageIsCustom = true
                     
                 } else {
                     button.image = defaultSFSymbolImage
@@ -199,31 +231,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             if (computerinfo.updatesAvailable == 0 || !infoItemsEnabled.contains("MacOSVersion")) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage"))) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
                                 
                 // Create orange notification badge
-                // Use different Y axis for custom icons
-                if imageIsCustom {
-                    statusItemBadgeView = StatusItemBadgeView(frame: NSRect(x: 14, y: -12, width: 22, height: 22), color: .systemOrange)
-                } else {
-                    statusItemBadgeView = StatusItemBadgeView(frame: NSRect(x: 14, y: -6, width: 22, height: 22), color: .systemOrange)
-                }
-                
-                if let statusItemBadgeView = statusItemBadgeView {
-                    button.addSubview(statusItemBadgeView)
-                }
+                orangeBadge.isHidden = false
                
             } else if (computerinfo.updatesAvailable > 0 && infoItemsEnabled.contains("MacOSVersion")) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
                 
                 // Create red notification badge
-                // Use different Y axis for custom icons
-                if imageIsCustom {
-                    statusItemBadgeView = StatusItemBadgeView(frame: NSRect(x: 14, y: -12, width: 22, height: 22), color: .systemRed)
-                } else {
-                    statusItemBadgeView = StatusItemBadgeView(frame: NSRect(x: 14, y: -6, width: 22, height: 22), color: .systemRed)
-                }
-                
-                if let statusItemBadgeView = statusItemBadgeView {
-                    button.addSubview(statusItemBadgeView)
-                }
+                redBadge.isHidden = false
+    
             }
+            
+            // Force redrawing the button
+            button.display()
 
             // Action when clicked on the menu bar icon
             button.action = #selector(self.statusBarButtonClicked)
