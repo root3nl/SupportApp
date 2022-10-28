@@ -39,7 +39,7 @@ class Preferences: ObservableObject {
     @AppStorage("FooterText") var footerText = ""
     
     // Automatically register modern LaunchAgent on macOS 13 and higher
-    @AppStorage("OpenAtLogin") var openAtLogin: Bool = true
+    @AppStorage("OpenAtLogin") var openAtLogin: Bool = false
     
     // MARK: - Info items
     

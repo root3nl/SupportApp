@@ -31,6 +31,22 @@ uid=$(id -u "${username}")
 # Remove "Downloaded from Internet" warning
 xattr -d -r com.apple.quarantine "${install_location}"
 
+# Load Requirements
+autoload is-at-least
+
+# macOS Version
+os_version=$(sw_vers -productVersion)
+
+# Open the app so the legacy LaunchAgent properly displays the app name and icon
+# in System Settings > General > Login Items
+# Tested and does only work when a user is logged in during the installation
+# Thanks to @PicoMitchell:
+# https://github.com/freegeek-pdx/macOS-Testing-and-Deployment-Scripts/blob/main/fgMIB%20Resources/Prepare%20OS%20Package/fg-prepare-os.sh#L971-L983
+if is-at-least 13.0 ${os_version}; then
+	osascript -l 'JavaScript' -e 'ObjC.import("LaunchServices"); $.LSRegisterURL($.NSURL.fileURLWithPath($.NSProcessInfo.processInfo.environment.objectForKey("/Applications/Support.app")), true)' &> /dev/null
+	launchctl asuser "${uid}" sudo -u "${username}" open -na "${install_location}"
+fi
+
 # Create the LaunchAgent
 defaults write "/Library/LaunchAgents/${launch_agent}.plist" Label -string "${launch_agent}"
 defaults write "/Library/LaunchAgents/${launch_agent}.plist" ProgramArguments -array -string "/Applications/Support.app/Contents/MacOS/Support"
