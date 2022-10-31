@@ -43,7 +43,7 @@ os_version=$(sw_vers -productVersion)
 # Thanks to @PicoMitchell:
 # https://github.com/freegeek-pdx/macOS-Testing-and-Deployment-Scripts/blob/main/fgMIB%20Resources/Prepare%20OS%20Package/fg-prepare-os.sh#L971-L983
 if is-at-least 13.0 ${os_version}; then
-	osascript -l 'JavaScript' -e 'ObjC.import("LaunchServices"); $.LSRegisterURL($.NSURL.fileURLWithPath($.NSProcessInfo.processInfo.environment.objectForKey("/Applications/Support.app")), true)' &> /dev/null
+	OSASCRIPT_ENV_APP_PATH="/Applications/Support.app" osascript -l 'JavaScript' -e 'ObjC.import("LaunchServices"); $.LSRegisterURL($.NSURL.fileURLWithPath($.NSProcessInfo.processInfo.environment.objectForKey("OSASCRIPT_ENV_APP_PATH")), true)' &> /dev/null
 	launchctl asuser "${uid}" sudo -u "${username}" open -na "${install_location}"
 fi
 
