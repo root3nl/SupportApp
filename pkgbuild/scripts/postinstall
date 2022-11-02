@@ -47,16 +47,16 @@ if is-at-least 13.0 ${os_version}; then
 	launchctl asuser "${uid}" sudo -u "${username}" open -na "${install_location}"
 fi
 
-# Create the LaunchAgent
+# Add AssociatedBundleIdentifiers to show app name in Login Items on 
+# macOS 13 and higher instead of developer name
+defaults write "/Library/LaunchAgents/${launch_agent}.plist" AssociatedBundleIdentifiers -array -string "nl.root3.support"
+# Set the Label and ProgramArguments
 defaults write "/Library/LaunchAgents/${launch_agent}.plist" Label -string "${launch_agent}"
 defaults write "/Library/LaunchAgents/${launch_agent}.plist" ProgramArguments -array -string "/Applications/Support.app/Contents/MacOS/Support"
 # Run every reboot
 defaults write "/Library/LaunchAgents/${launch_agent}.plist" KeepAlive -boolean yes
 # Set ProcessType to Interactive
 defaults write "/Library/LaunchAgents/${launch_agent}.plist" ProcessType -string "Interactive"
-# Add AssociatedBundleIdentifiers to show app name in Login Items on 
-# macOS 13 and higher instead of developer name
-defaults write "/Library/LaunchAgents/${launch_agent}.plist" AssociatedBundleIdentifiers -array -string "nl.root3.support"
 # Set permissions
 chown root:wheel "/Library/LaunchAgents/${launch_agent}.plist"
 chmod 644 "/Library/LaunchAgents/${launch_agent}.plist"
