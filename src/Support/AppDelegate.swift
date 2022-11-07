@@ -39,6 +39,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var userinfo = UserInfo()
     var preferences = Preferences()
     
+    // Create red notification badge view
+    // https://github.com/DeveloperMaris/ToolReleases/blob/master/ToolReleases/PopoverController.swift
+    lazy var redBadge: NSView = {
+        let view = StatusItemBadgeView(frame: NSRect(x: 0, y: 0, width: 0, height: 0), color: .systemRed)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.wantsLayer = true
+        view.layer?.masksToBounds = true
+        return view
+    }()
+    
+    // Create orange notification badge view
+    // https://github.com/DeveloperMaris/ToolReleases/blob/master/ToolReleases/PopoverController.swift
+    lazy var orangeBadge: NSView = {
+        let view = StatusItemBadgeView(frame: NSRect(x: 0, y: 0, width: 0, height: 0), color: .systemOrange)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.wantsLayer = true
+        view.layer?.masksToBounds = true
+        return view
+    }()
+    
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         
         // Configure LaunchAgent using SMAppService if available
@@ -59,6 +79,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         // Create the status item
         statusBarItem = NSStatusBar.system.statusItem(withLength: CGFloat(NSStatusItem.squareLength))
+        
+        // Add notification badges as subviews
+        if let button = statusBarItem?.button {
+            button.addSubview(redBadge)
+            button.addSubview(orangeBadge)
+            
+            // Set layout contraints
+            NSLayoutConstraint.activate([
+                redBadge.trailingAnchor.constraint(equalTo: button.trailingAnchor, constant: -2),
+                redBadge.bottomAnchor.constraint(equalTo: button.bottomAnchor, constant: -12),
+                redBadge.widthAnchor.constraint(equalToConstant: 8),
+                redBadge.heightAnchor.constraint(equalToConstant: 8)
+            ])
+            
+            // Set layout contraints
+            NSLayoutConstraint.activate([
+                orangeBadge.trailingAnchor.constraint(equalTo: button.trailingAnchor, constant: -2),
+                orangeBadge.bottomAnchor.constraint(equalTo: button.bottomAnchor, constant: -12),
+                orangeBadge.widthAnchor.constraint(equalToConstant: 8),
+                orangeBadge.heightAnchor.constraint(equalToConstant: 8)
+            ])
+        }
         
         // Observe changes for UserDefaults
         defaults.addObserver(self, forKeyPath: "StatusBarIcon", options: .new, context: nil)
@@ -125,13 +167,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Set the menu bar icon
         if let button = statusBarItem?.button {
             
+            // Hide notification badge
+            redBadge.isHidden = true
+            orangeBadge.isHidden = true
+            
             // Use custom status bar icon if set in UserDefaults with fallback to default icon
             if defaults.string(forKey: "StatusBarIcon") != nil {
                 if let customIcon = NSImage(contentsOfFile: defaults.string(forKey: "StatusBarIcon")!) {
+                    
+                    // When custom image is larger than 22 point, we should resize to 16x16 points as recommended icon size
+                    // https://bjango.com/articles/designingmenubarextras/
+                    if customIcon.size.width > 22 || customIcon.size.height > 22 {
+                        customIcon.size = NSSize(width: 16, height: 16)
+                    }
+                    
+                    // Set status bar icon to custom image
                     button.image = customIcon
+                    
                     // Render as template to make icon white and match system default
                     button.image?.isTemplate = true
                     logger.debug("StatusBarIcon preference key is set")
+                    
                 } else {
                     button.image = defaultSFSymbolImage
                     logger.error("StatusBarIcon preference key is set, but no valid image was found. Please check file path/name or permissions. Falling back to default image...")
@@ -174,30 +230,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             // Show notification badge in menu bar icon when info item when needed
             if (computerinfo.updatesAvailable == 0 || !infoItemsEnabled.contains("MacOSVersion")) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage"))) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
                                 
-                // Create NSTextAttachment to show orange dot image overlay in StatusBarItem. Probably not the best way currently available
-                let image1Attachment = NSTextAttachment()
-                image1Attachment.image  = NSImage(named: "MenuBarOrangeDot")?.resizedCopy(w: 22, h: 22)
-                let attributeString = NSAttributedString(attachment: image1Attachment)
-                button.attributedTitle = attributeString
+                // Create orange notification badge
+                orangeBadge.isHidden = false
                
             } else if (computerinfo.updatesAvailable > 0 && infoItemsEnabled.contains("MacOSVersion")) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
                 
-                // Create NSTextAttachment to show red dot image overlay in StatusBarItem. Probably not the best way currently available
-                let image1Attachment = NSTextAttachment()
-                image1Attachment.image  = NSImage(named: "MenuBarRedDot")?.resizedCopy(w: 22, h: 22)
-                let attributeString = NSAttributedString(attachment: image1Attachment)
-                button.attributedTitle = attributeString
-                
-            // Disable notification badge in menu bar icon
-            } else {
-                
-                // Remove NSTextAttachment
-                let attributeString = NSAttributedString(string: "")
-                button.attributedTitle = attributeString
-                
-                button.alignment = .right
+                // Create red notification badge
+                redBadge.isHidden = false
+    
             }
             
+            // Force redrawing the button
+            button.display()
+
             // Action when clicked on the menu bar icon
             button.action = #selector(self.statusBarButtonClicked)
             
@@ -310,13 +355,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         if let button = statusBarItem?.button {
             
-            // add positioning view as a suview of sender, that is, `statusItem.button`.
-            let positioningView = NSView(frame: button.bounds)
-            
-            // set an identifier for positioning view, so we can easily remove it later.
-            positioningView.identifier = NSUserInterfaceItemIdentifier(rawValue: "positioningView")
-            button.addSubview(positioningView)
-            
             // Disable animation when popover opens
             self.popover.animates = false
             
@@ -326,13 +364,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             // Enable animation again to avoid issues
             self.popover.animates = true
             
-            // move positioning view away
-            button.bounds = button.bounds.offsetBy(dx: 0, dy: button.bounds.height)
-            
-            // adjust the height to match control center
-            if let popoverWindow = popover.contentViewController?.view.window {
-                popoverWindow.setFrame(popoverWindow.frame.offsetBy(dx: 0, dy: 8), display: false)
-            }
+            // Remove popover arrow
+            // https://stackoverflow.com/questions/68744895/swift-ui-macos-menubar-nspopover-no-arrow
+            popover.setValue(true, forKeyPath: "shouldHideAnchor")
             
             // Start monitoring mouse clicks outside the popover
             eventMonitor?.start()
@@ -465,7 +499,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 }
                 
                 // Try to unregister LaunchAgent when disabled in Configuration Profile
-                agent.unregister(completionHandler: {error in
+                agent.unregister(completionHandler: { error in
                     if let error = error {
                         self.launchAgentLogger.error("Error unregistering LaunchAgent: \(error, privacy: .public)")
                     } else {

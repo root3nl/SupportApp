@@ -5,9 +5,7 @@
 #
 # Copyright 2022 Root3 B.V. All rights reserved.
 #
-# This script will create the Support App Legacy LaunchAgent and reload it when
-# needed on macOS 12 and below. On macOS 13 and higher, the script will open the
-# app to allow registration of the LaunchAgent using SMAppService.
+# This script will create the Support App LaunchAgent and reload it when needed.
 #
 # THE SOFTWARE IS PROVIDED BY ROOT3 B.V. "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
@@ -18,12 +16,6 @@
 
 # ------------------    edit the variables below this line    ------------------
 
-# Load Requirements
-autoload is-at-least
-
-# macOS Version
-os_version=$(sw_vers -productVersion)
-
 # LaunchAgent label
 launch_agent="nl.root3.support"
 
@@ -32,7 +24,6 @@ install_location="/Applications/Support.app"
 
 # Get the username of the currently logged in user
 username=$(scutil <<< "show State:/Users/ConsoleUser" | awk '/Name :/ && ! /loginwindow/ { print $3 }')
-echo "Current logged in user: ${username}"
 
 # Get the username ID
 uid=$(id -u "${username}")
@@ -40,32 +31,43 @@ uid=$(id -u "${username}")
 # Remove "Downloaded from Internet" warning
 xattr -d -r com.apple.quarantine "${install_location}"
 
-# Install Legacy LaunchAgent only on macOS 12 and below
+# Load Requirements
+autoload is-at-least
+
+# macOS Version
+os_version=$(sw_vers -productVersion)
+
+# Open the app so the legacy LaunchAgent properly displays the app name and icon
+# in System Settings > General > Login Items
+# Tested and does only work when a user is logged in during the installation
+# Thanks to @PicoMitchell:
+# https://github.com/freegeek-pdx/macOS-Testing-and-Deployment-Scripts/blob/main/fgMIB%20Resources/Prepare%20OS%20Package/fg-prepare-os.sh#L971-L983
 if is-at-least 13.0 ${os_version}; then
-	if ! pgrep -x "Support"; then
-		# Open Support App to start LaunchAgent registration using SMAppService
-		open "${install_location}"
-	else 
-		# Quit Support App in case it needs to reload after an update
-		killall -9 "Support"
-  	fi
-else
-	# Create the LaunchAgent
-	defaults write "/Library/LaunchAgents/${launch_agent}.plist" Label -string "${launch_agent}"
-	defaults write "/Library/LaunchAgents/${launch_agent}.plist" ProgramArguments -array -string "/Applications/Support.app/Contents/MacOS/Support"
-	# Run every reboot
-	defaults write "/Library/LaunchAgents/${launch_agent}.plist" KeepAlive -boolean yes
-	# Set ProcessType to Interactive
-	defaults write "/Library/LaunchAgents/${launch_agent}.plist" ProcessType -string "Interactive"
-	# Set permissions
-	chown root:wheel "/Library/LaunchAgents/${launch_agent}.plist"
-	chmod 644 "/Library/LaunchAgents/${launch_agent}.plist"
+	OSASCRIPT_ENV_APP_PATH="/Applications/Support.app" osascript -l 'JavaScript' -e 'ObjC.import("LaunchServices"); $.LSRegisterURL($.NSURL.fileURLWithPath($.NSProcessInfo.processInfo.environment.objectForKey("OSASCRIPT_ENV_APP_PATH")), true)' &> /dev/null
+	launchctl asuser "${uid}" sudo -u "${username}" open -na "${install_location}"
 fi
 
-# Reload Legacy LaunchAgent
-if [[ -n "${username}" ]] && [[ -f "/Library/LaunchAgents/${launch_agent}.plist" ]]; then
-	# Unload the LauchAgent
-	launchctl bootout gui/${uid} "/Library/LaunchAgents/${launch_agent}.plist" &> /dev/null
+# Add AssociatedBundleIdentifiers to show app name in Login Items on 
+# macOS 13 and higher instead of developer name
+defaults write "/Library/LaunchAgents/${launch_agent}.plist" AssociatedBundleIdentifiers -array -string "nl.root3.support"
+# Set the Label and ProgramArguments
+defaults write "/Library/LaunchAgents/${launch_agent}.plist" Label -string "${launch_agent}"
+defaults write "/Library/LaunchAgents/${launch_agent}.plist" ProgramArguments -array -string "/Applications/Support.app/Contents/MacOS/Support"
+# Run every reboot
+defaults write "/Library/LaunchAgents/${launch_agent}.plist" KeepAlive -boolean yes
+# Set ProcessType to Interactive
+defaults write "/Library/LaunchAgents/${launch_agent}.plist" ProcessType -string "Interactive"
+# Set permissions
+chown root:wheel "/Library/LaunchAgents/${launch_agent}.plist"
+chmod 644 "/Library/LaunchAgents/${launch_agent}.plist"
+
+# Reload the LaunchAgent
+if [[ -n "${username}" ]]; then
+
+	# Unload the LaunchAgent
+	if launchctl print "gui/${uid}/${launch_agent}" &> /dev/null ; then
+		launchctl bootout gui/${uid} "/Library/LaunchAgents/${launch_agent}.plist" &> /dev/null
+	fi
 
 	# Just to be sure, kill Support App if still running
 	if pgrep -x "Support" ; then

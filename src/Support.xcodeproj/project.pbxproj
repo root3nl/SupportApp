@@ -32,6 +32,7 @@
 		496C2FE1271477B800D51EE1 /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496C2FE0271477B800D51EE1 /* NotificationNames.swift */; };
 		496FE4D12651485E007746ED /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496FE4D02651485E007746ED /* UserInfo.swift */; };
 		496FE4D326514C59007746ED /* PasswordSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496FE4D226514C59007746ED /* PasswordSubview.swift */; };
+		4972476828DBB1AB007194F0 /* StatusItemBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4972476728DBB1AB007194F0 /* StatusItemBadgeView.swift */; };
 		4976EB892653151A006EE097 /* ChangePassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4976EB882653151A006EE097 /* ChangePassword.swift */; };
 		4976EB8B265317C6006EE097 /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4976EB8A265317C6006EE097 /* AppView.swift */; };
 		49822CE324B4C3F100E8DE54 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49822CE224B4C3F100E8DE54 /* AppDelegate.swift */; };
@@ -88,6 +89,7 @@
 		496C2FE0271477B800D51EE1 /* NotificationNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNames.swift; sourceTree = "<group>"; };
 		496FE4D02651485E007746ED /* UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
 		496FE4D226514C59007746ED /* PasswordSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordSubview.swift; sourceTree = "<group>"; };
+		4972476728DBB1AB007194F0 /* StatusItemBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemBadgeView.swift; sourceTree = "<group>"; };
 		4976EB882653151A006EE097 /* ChangePassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePassword.swift; sourceTree = "<group>"; };
 		4976EB8A265317C6006EE097 /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 		49822CDF24B4C3F100E8DE54 /* Support.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Support.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -161,6 +163,7 @@
 				495924F8265C535B00E083AC /* QuitButton.swift */,
 				49871A6E287CC98500715C7C /* HeaderView.swift */,
 				495F74EB28B39A9A00C20304 /* PopoverAlertView.swift */,
+				4972476728DBB1AB007194F0 /* StatusItemBadgeView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -358,6 +361,7 @@
 				4976EB8B265317C6006EE097 /* AppView.swift in Sources */,
 				49F6744E273F2DBC00C47403 /* ExtensionASubview.swift in Sources */,
 				49871A6F287CC98500715C7C /* HeaderView.swift in Sources */,
+				4972476828DBB1AB007194F0 /* StatusItemBadgeView.swift in Sources */,
 				496FE4D12651485E007746ED /* UserInfo.swift in Sources */,
 				4915290D259CCF7A00056B5F /* NotificationBadgeView.swift in Sources */,
 				49857E9A24D4B58B009B6FBA /* ComputerInfo.swift in Sources */,
@@ -551,7 +555,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 2.4.1;
+				MARKETING_VERSION = 2.4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = nl.root3.support;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -581,7 +585,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 2.4.1;
+				MARKETING_VERSION = 2.4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = nl.root3.support;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
