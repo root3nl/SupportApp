@@ -137,9 +137,11 @@ The buttons in the 3rd and 4th row behave as shortcuts to applications or links.
 
 * **Symbol**: The symbol shown in the button, see the SF Symbols section how to use these symbols
 
-The rows with configurable items are shown in the screenshot below:
+The rows with all configurable items enabled are shown in the screenshot below:
+* Info items and Support App Extensions in **GREEN**
+* Buttons in **RED**
 
-<img src="/Screenshots/configurable_buttons.png" width="450">
+<img src="/Screenshots/configurable_buttons_2.4.png" width="450">
 
 ### Footer Text
 A footer text can optionally be used to put some additional text at the bottom of the Support App. This supports both text and Emoji. On macOS Monterey and higher, it supports Markdown.
@@ -268,18 +270,18 @@ Support App Extensions enable administrators to create custom info items and pop
 Below are the preference keys to enable Support App Extensions:
 | Preference key | Type | Default value | Description | Example |
 | --- | --- | --- | --- | --- |
-| ExtensionTitleA | String | - | The title shown in the extension. | "Endpoint Security" |
-| ExtensionSymbolA | String | - | The SF Symbol shown in the extension. | "checkerboard.shield" |
+| ExtensionTitleA | String | - | The title shown in the extension. | "Last Check-In" |
+| ExtensionSymbolA | String | - | The SF Symbol shown in the extension. | "clock.badge.checkmark.fill" |
 | ExtensionTypeA | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **DistributedNotification** (Privileged command/script)|
-| ExtensionLinkA | String | - | The Bundle Identifier of the App, URL or command to open. | --- |
-| ExtensionTitleB | String | - | The title shown in the extension. | "Endpoint Security" |
-| ExtensionSymbolB | String | - | The SF Symbol shown in the extension. | "checkerboard.shield" |
+| ExtensionLinkA | String | - | The Bundle Identifier of the App, URL or command to open. | `defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bool true; /usr/local/bin/jamf policy; /usr/local/bin/jamf_last_check-in_time.zsh` |
+| ExtensionTitleB | String | - | The title shown in the extension. | "Account Privileges" |
+| ExtensionSymbolB | String | - | The SF Symbol shown in the extension. | "wallet.pass.fill" |
 | ExtensionTypeB | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **DistributedNotification** (Privileged command/script)|
-| ExtensionLinkB | String | - | The Bundle Identifier of the App, URL or command to open. | --- |
+| ExtensionLinkB | String | - | The Bundle Identifier of the App, URL or command to open. | `/usr/local/bin/sap_privileges_change_permissions.zsh` |
 | OnAppearAction | String | - | Path to script script or command to be executed when the Support App is opened by clicking on the menu bar item. The SupportHelper is required for this feature. | `/usr/local/bin/runs_when_support_appears.zsh` |
 
 #### How to populate Support App Extensions
-Support App Extensions must be populated by setting the value in a preference key within the preference domain `nl.root3.support`. This can be achieved by running custom scripts from your MDM solution.
+Support App Extensions must be populated by setting the value in a preference key within the preference domain `nl.root3.support`. This can be achieved by running custom scripts from your MDM solution or using the `OnAppearAction` combined with SupportHelper. This last option will allow you to update the Support App Extension values every time the Support App popover appears by running the script.
 
 * Create a custom script and populate the desired value by running the following command: `sudo defaults write /Library/Preferences/nl.root3.support.plist ExtensionValueA -string "OUTPUT_VALUE_HERE"`
 * Add the following command to show a placeholder while getting the value: `sudo defaults write /Library/Preferences/nl.root3.support.plist ExtensionValueA -string "KeyPlaceholder"`
@@ -309,6 +311,10 @@ defaults write /Library/Preferences/nl.root3.support.plist ExtensionValueA -stri
 defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bool false
 ```
 
+:information_source: When using more than one Support App Extension combined with `OnAppearAction`, it's best to update the values in one script instead of chaining multiple scripts to have the best experience
+
+:information_source: Please do not forget to make the script executable: `sudo chmod +x /PATH/TO/SCRIPT`
+
 ### Privileged commands or scripts (SupportHelper)
 To allow commands or scripts to be executed with root privileges, the SupportHelper is available optionally. This utility is built on Distributed Notifications to allow inter-app communication between the Support App and the SupportHelper. The Support App notifies SupportHelper and the message contains the preference key set in the Configuration Profile with the command or path to the script. SupportHelper listens for new messages using a LaunchDaemon and executes the command or script by requesting the command or path to the script from the Configuration Profile.
 
@@ -321,6 +327,7 @@ More information about Distributed Notifications: https://developer.apple.com/do
 #### Use Cases
 There are a couple of use cases SupportHelper can help with. For example run a command or script with root privileges:
 * Every time the Support App popover appears to populate Support App Extensions using `OnAppearAction`
+* Extension Attributes (Jamf Pro) by adding the commands to populate the Support App Extension to the EA
 * By clicking on a configurable button
 
 #### File locations
