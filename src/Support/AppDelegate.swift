@@ -42,21 +42,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // Create red notification badge view
     // https://github.com/DeveloperMaris/ToolReleases/blob/master/ToolReleases/PopoverController.swift
     lazy var redBadge: NSView = {
-        let view = StatusItemBadgeView(frame: NSRect(x: 0, y: 0, width: 0, height: 0), color: .systemRed)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.wantsLayer = true
-        view.layer?.masksToBounds = true
-        return view
+        StatusItemBadgeView(frame: .zero, color: .systemRed)
     }()
     
     // Create orange notification badge view
     // https://github.com/DeveloperMaris/ToolReleases/blob/master/ToolReleases/PopoverController.swift
     lazy var orangeBadge: NSView = {
-        let view = StatusItemBadgeView(frame: NSRect(x: 0, y: 0, width: 0, height: 0), color: .systemOrange)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.wantsLayer = true
-        view.layer?.masksToBounds = true
-        return view
+        StatusItemBadgeView(frame: .zero, color: .orange)
     }()
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {

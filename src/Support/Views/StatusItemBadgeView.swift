@@ -17,6 +17,8 @@ class StatusItemBadgeView: NSView {
     init(frame frameRect: NSRect, color : NSColor) {
         self.color = color
         super.init(frame: frameRect)
+        translatesAutoresizingMaskIntoConstraints = false
+        wantsLayer = true
     }
     
     required init?(coder: NSCoder) {
@@ -30,5 +32,14 @@ class StatusItemBadgeView: NSView {
         fillColor.set()
         path.fill()
     }
-    
+
+    override func layout() {
+        super.layout()
+        layer?.masksToBounds = true
+        layer?.backgroundColor = color.cgColor
+
+        layer?.borderColor = NSColor.windowBackgroundColor.cgColor
+        layer?.borderWidth = 0.5
+        layer?.cornerRadius = frame.size.height / 2.0
+    }
 }
