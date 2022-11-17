@@ -26,6 +26,7 @@
 		49152916259CD2C300056B5F /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49152915259CD2C300056B5F /* Item.swift */; };
 		49152919259CD32200056B5F /* ItemSmall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49152918259CD32200056B5F /* ItemSmall.swift */; };
 		4915291C259CD38800056B5F /* EffectsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4915291B259CD38800056B5F /* EffectsView.swift */; };
+		4939A0C829259B7B00731363 /* LogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4939A0C729259B7B00731363 /* LogoView.swift */; };
 		493FBB8D27406B5D002A79F9 /* ExtensionBSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493FBB8C27406B5D002A79F9 /* ExtensionBSubview.swift */; };
 		495924F9265C535B00E083AC /* QuitButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495924F8265C535B00E083AC /* QuitButton.swift */; };
 		495F74EC28B39A9A00C20304 /* PopoverAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495F74EB28B39A9A00C20304 /* PopoverAlertView.swift */; };
@@ -83,6 +84,7 @@
 		49152915259CD2C300056B5F /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		49152918259CD32200056B5F /* ItemSmall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSmall.swift; sourceTree = "<group>"; };
 		4915291B259CD38800056B5F /* EffectsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectsView.swift; sourceTree = "<group>"; };
+		4939A0C729259B7B00731363 /* LogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogoView.swift; sourceTree = "<group>"; };
 		493FBB8C27406B5D002A79F9 /* ExtensionBSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBSubview.swift; sourceTree = "<group>"; };
 		495924F8265C535B00E083AC /* QuitButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuitButton.swift; sourceTree = "<group>"; };
 		495F74EB28B39A9A00C20304 /* PopoverAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PopoverAlertView.swift; path = Support/Views/PopoverAlertView.swift; sourceTree = SOURCE_ROOT; };
@@ -164,6 +166,7 @@
 				49871A6E287CC98500715C7C /* HeaderView.swift */,
 				495F74EB28B39A9A00C20304 /* PopoverAlertView.swift */,
 				4972476728DBB1AB007194F0 /* StatusItemBadgeView.swift */,
+				4939A0C729259B7B00731363 /* LogoView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -369,6 +372,7 @@
 				0A4A738E26020A6500927DAB /* MacOSVersionSubview.swift in Sources */,
 				490B145E258A55B90048D8AF /* Extensions.swift in Sources */,
 				0AFB04FB263AC23000507B23 /* ModelSubView.swift in Sources */,
+				4939A0C829259B7B00731363 /* LogoView.swift in Sources */,
 				0AC50A7524FFE6E100AE62D0 /* EventMonitor.swift in Sources */,
 				49B4952D2642E96A00A6AE64 /* DarkModeBorder.swift in Sources */,
 				49152919259CD32200056B5F /* ItemSmall.swift in Sources */,
