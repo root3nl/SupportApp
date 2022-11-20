@@ -17,16 +17,15 @@ struct Item: View {
     var symbolColor: Color
     var notificationBadge: Int?
     var notificationBadgeBool: Bool?
+    var deferralsRemaining: Int?
     var loading: Bool?
     var linkPrefKey: String?
-    
-    // Declare unified logging
-    let logger = Logger(subsystem: "nl.root3.support", category: "Action")
     
     // Vars to activate hover effect
     @State var hoverEffectEnable: Bool
     @State var hoverView = false
     
+    // Var to show subtitle when on hover
     @State var showSubtitle = false
     
     // Var to show alert when no or invalid BundleID is given
@@ -34,6 +33,9 @@ struct Item: View {
     
     // Get preferences or default values
     @ObservedObject var preferences = Preferences()
+    
+    // Declare unified logging
+    let logger = Logger(subsystem: "nl.root3.support", category: "Action")
     
     // Enable animation
     var animate: Bool
@@ -90,7 +92,7 @@ struct Item: View {
             }
             
             if notificationBadge != nil && notificationBadge! > 0 {
-                NotificationBadgeView(badgeCounter: notificationBadge!)
+                NotificationBadgeView(badgeCounter: notificationBadge!, deferralsRemaining: deferralsRemaining)
             }
             
             if notificationBadgeBool ?? false {

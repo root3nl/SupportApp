@@ -51,3 +51,4 @@
 "OPEN_JAMF_CONNECT_MANUALLY_TEXT" = "Ouvrez Jamf Connect depuis la barre des menus pour changer votre mot de passe";
 "NETWORK_UNAVAILABLE" = "Réseau indisponible";
 "NETWORK_UNAVAILABLE_TEXT" = "Le réseau de votre organisation n'est pas disponible. Veuillez vérifier votre connexion et tentez une nouvelle fois.";
+"DEFERRALS" = "reports";

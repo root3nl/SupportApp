@@ -32,12 +32,28 @@ struct MacOSVersionSubview: View {
         }
     }
     
+    // Calculate remaining deferrals
+    var deferralsRemaining: Int? {
+        
+        var remaining: Int?
+        
+        if let maximumManagedDoItLaterDeferralCount = computerinfo.maximumManagedDoItLaterDeferralCount, let managedDoItLaterDeferralCount = computerinfo.managedDoItLaterDeferralCount {
+            
+            let remainingNumber = maximumManagedDoItLaterDeferralCount - managedDoItLaterDeferralCount
+            
+            if remainingNumber >= 0 {
+                remaining = remainingNumber
+            }
+        }
+        return remaining
+    }
+    
     var body: some View {
         
         if computerinfo.systemVersionPatch == 0 {
-            Item(title: "macOS \(computerinfo.macOSVersionName)", subtitle: "\(computerinfo.systemVersionMajor).\(computerinfo.systemVersionMinor)", linkType: "URL", link: "x-apple.systempreferences:com.apple.preferences.softwareupdate", image: "applelogo", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: computerinfo.updatesAvailable, hoverEffectEnable: true, animate: false)
+            Item(title: "macOS \(computerinfo.macOSVersionName)", subtitle: "\(computerinfo.systemVersionMajor).\(computerinfo.systemVersionMinor)", linkType: "URL", link: "x-apple.systempreferences:com.apple.preferences.softwareupdate", image: "applelogo", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: computerinfo.updatesAvailable, deferralsRemaining: deferralsRemaining, hoverEffectEnable: true, animate: false)
         } else {
-            Item(title: "macOS \(computerinfo.macOSVersionName)", subtitle: "\(computerinfo.systemVersionMajor).\(computerinfo.systemVersionMinor).\(computerinfo.systemVersionPatch)", linkType: "URL", link: "x-apple.systempreferences:com.apple.preferences.softwareupdate", image: "applelogo", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: computerinfo.updatesAvailable, hoverEffectEnable: true, animate: false)
+            Item(title: "macOS \(computerinfo.macOSVersionName)", subtitle: "\(computerinfo.systemVersionMajor).\(computerinfo.systemVersionMinor).\(computerinfo.systemVersionPatch)", linkType: "URL", link: "x-apple.systempreferences:com.apple.preferences.softwareupdate", image: "applelogo", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: computerinfo.updatesAvailable, deferralsRemaining: deferralsRemaining, hoverEffectEnable: true, animate: false)
         }
         
     }

@@ -50,3 +50,4 @@
 "OPEN_JAMF_CONNECT_MANUALLY_TEXT" = "Open Jamf Connect in de menubalk om je wachtwoord te wijzigen";
 "NETWORK_UNAVAILABLE" = "Netwerk niet beschikbaar";
 "NETWORK_UNAVAILABLE_TEXT" = "Het netwerk van je organisatie is niet beschikbaar. Controleer je verbinding en probeer het opnieuw.";
+"DEFERRALS" = "uitstelmogelijkheden";

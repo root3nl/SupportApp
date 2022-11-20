@@ -36,6 +36,12 @@ class ComputerInfo: ObservableObject {
     // Get Available Software Updates
     @AppStorage("LastUpdatesAvailable", store: UserDefaults(suiteName: "com.apple.SoftwareUpdate")) var updatesAvailable: Int = 0
         
+    // Get MaxUserDeferrals from ScheduleOSUpdate MDM command on macOS 12 and higher
+    @AppStorage("MaximumManagedDoItLaterDeferralCount", store: UserDefaults(suiteName: "com.apple.SoftwareUpdate")) var maximumManagedDoItLaterDeferralCount: Int?
+    
+    // Get current deferral count from ScheduleOSUpdate MDM command on macOS 12 and higher
+    @AppStorage("ManagedDoItLaterDeferralCount", store: UserDefaults(suiteName: "com.apple.SoftwareUpdate")) var managedDoItLaterDeferralCount: Int?
+
     // Computer name
     @Published var hostname = String()
     
