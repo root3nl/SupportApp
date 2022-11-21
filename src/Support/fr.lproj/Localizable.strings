@@ -52,3 +52,4 @@
 "NETWORK_UNAVAILABLE" = "Réseau indisponible";
 "NETWORK_UNAVAILABLE_TEXT" = "Le réseau de votre organisation n'est pas disponible. Veuillez vérifier votre connexion et tentez une nouvelle fois.";
 "DEFERRALS" = "reports";
+"DEFERRAL" = "report";

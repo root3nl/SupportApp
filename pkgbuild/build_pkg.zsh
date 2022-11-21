@@ -32,7 +32,7 @@ app_name="Support"
 bundle_identifier="nl.root3.support"
 
 # App Version
-version="2.4.2"
+version=$1
 
 # Path to folder with payload
 payload="payload"
@@ -53,6 +53,12 @@ signing_identity="Developer ID Installer: Root3 B.V. (98LJ4XBGYK)"
 keychain_profile="Root3"
 
 # ---------------------    do not edit below this line    ----------------------
+
+# Exit when nu version is specified
+if [[ -z ${version} ]]; then
+    echo "No version specified, add version as argument when running this script"
+    exit 1
+fi
 
 # Get the username of the currently logged in user
 username=$(scutil <<< "show State:/Users/ConsoleUser" | awk '/Name :/ && ! /loginwindow/ { print $3 }')

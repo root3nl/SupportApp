@@ -40,12 +40,12 @@ struct NotificationBadgeView: View {
                 // Show deferrals remaining from ScheduleOSUpdate MDM command on macOS 12 and higher
                 if deferralsRemaining != nil {
                     if #available(macOS 12.0, *) {
-                        Text("\(deferralsRemaining!) " + NSLocalizedString("DEFERRALS", comment: ""))
+                        Text("\(deferralsRemaining!) " + (deferralsRemaining! == 1 ? NSLocalizedString("DEFERRAL", comment: "") : NSLocalizedString("DEFERRALS", comment: "")))
                             .font(.system(.subheadline, design: .rounded))
                             .fontWeight(.medium)
                             .foregroundColor(.orange)
                             .padding(.horizontal, 6)
-                            .background(.ultraThickMaterial)
+//                            .background(.ultraThickMaterial)
 //                            .background(Color.orange)
                             .clipShape(Capsule())
                             .overlay(
