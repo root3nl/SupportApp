@@ -11,7 +11,7 @@
 # - Make sure an Keychain profile is stored for notarytool
 # - Export .app to pkguild folder
 # - Navigate to folder: pkgbuild/payload
-# - Run the script
+# - Run the script: /build_pkg.zsh TARGET_VERSION_HERE
 #
 # THE SOFTWARE IS PROVIDED BY ROOT3 B.V. "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
@@ -32,7 +32,7 @@ app_name="Support"
 bundle_identifier="nl.root3.support"
 
 # App Version
-version="2.4.2"
+version=$1
 
 # Path to folder with payload
 payload="payload"
@@ -54,20 +54,34 @@ keychain_profile="Root3"
 
 # ---------------------    do not edit below this line    ----------------------
 
+# Exit when nu version is specified
+if [[ -z ${version} ]]; then
+    echo "No version specified, add version as argument when running this script"
+    exit 1
+fi
+
 # Get the username of the currently logged in user
 username=$(scutil <<< "show State:/Users/ConsoleUser" | awk '/Name :/ && ! /loginwindow/ { print $3 }')
 
 # NFS Home Directory of user
 nfs_home_directory=$(dscl . read /Users/${username} NFSHomeDirectory | awk '{print $2}')
 
-# Build, sign and export pkg to Downloads folder
+# Build and export pkg to Downloads folder
 pkgbuild --component-plist "${component_plist}" \
     --root "${payload}" \
     --scripts "${scripts}" \
     --install-location "${install_location}" \
     --identifier "${bundle_identifier}" \
-    --sign "${signing_identity}" \
     --version "${version}" \
+    "${nfs_home_directory}/Downloads/${app_name} ${version}_unsigned.pkg"
+
+# Create distribution package to support InstallApplication MDM command
+productbuild --package "${nfs_home_directory}/Downloads/${app_name} ${version}_unsigned.pkg" \
+    "${nfs_home_directory}/Downloads/${app_name} ${version}_dist.pkg"
+
+# Sign package
+productsign --sign "${signing_identity}" \
+    "${nfs_home_directory}/Downloads/${app_name} ${version}_dist.pkg" \
     "${nfs_home_directory}/Downloads/${app_name} ${version}.pkg"
 
 # Submit pkg to notarytool
