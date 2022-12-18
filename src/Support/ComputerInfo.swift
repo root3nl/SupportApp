@@ -32,10 +32,13 @@ class ComputerInfo: ObservableObject {
     var capacity = Double()
     var totalCapacity = Double()
     var modelIdentifier = String()
-    
+
     // Get Available Software Updates
     @AppStorage("LastUpdatesAvailable", store: UserDefaults(suiteName: "com.apple.SoftwareUpdate")) var updatesAvailable: Int = 0
-        
+    
+    // Number of major macOS Software Updates
+    @Published var majorVersionUpdates: Int = 0
+    
     // Computer name
     @Published var hostname = String()
     
@@ -534,5 +537,40 @@ class ComputerInfo: ObservableObject {
         
         // Post changes to notification center
         NotificationCenter.default.post(name: Notification.Name.networkState, object: nil)
+    }
+    
+    // MARK: - Get Array of RecommendedUpdates from com.apple.SoftwareUpdate
+    func getRecommendedUpdates() {
+        
+        let userDefaultsSoftwareUpdates = UserDefaults(suiteName: "com.apple.SoftwareUpdate")
+        let recommendedUpdates = userDefaultsSoftwareUpdates?.array(forKey: "RecommendedUpdates") ?? []
+        
+        var decodedItems: [SoftwareUpdateModel] = []
+        majorVersionUpdates = 0
+
+        do {
+            // Convert UserDefaults to JSON data
+            let data = try JSONSerialization.data(withJSONObject: recommendedUpdates, options: [])
+            
+            // Decode JSON data
+            let decoder = JSONDecoder()
+            decodedItems = try decoder.decode([SoftwareUpdateModel].self, from: data)
+            
+        } catch {
+            logger.error("Error getting RecommendedUpdates...")
+        }
+        
+        // Loop through all available updates and decrease number of updates when available macOS version is higher than current major version
+        for item in decodedItems {
+            if item.displayName.contains("macOS") {
+                if let version = item.displayVersion?.components(separatedBy: ".")[0] {
+                    logger.debug("macOS update found: macOS \(version, privacy: .public)")
+                    if Int(version) ?? 0 > systemVersionMajor {
+                        logger.debug("macOS version \(version, privacy: .public) is higher than the current macOS version, update will be hidden")
+                        majorVersionUpdates += 1
+                    }
+                }
+            }
+        }
     }
 }

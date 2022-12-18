@@ -227,6 +227,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 preferences.infoItemSix
             ]
             
+            // Number of available software updates
+            var updatesAvailable = computerinfo.updatesAvailable
+            
+            // If configured, ignore major macOS version updates
+            if preferences.deferMajorVersions {
+                updatesAvailable -= computerinfo.majorVersionUpdates
+            }
+            
             // Show notification badge in menu bar icon when info item when needed
             if (computerinfo.updatesAvailable == 0 || !infoItemsEnabled.contains("MacOSVersion")) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage"))) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
                                 
@@ -291,6 +299,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         case "LastUpdatesAvailable":
             logger.debug("\(keyPath! as NSObject) changed to \(self.ASUdefaults!.integer(forKey: "LastUpdatesAvailable"))")
+            self.computerinfo.getRecommendedUpdates()
         case "OpenAtLogin":
             logger.debug("\(keyPath! as NSObject) change to \(self.defaults.bool(forKey: "OpenAtLogin"))")
             self.configureLaunchAgent()
@@ -376,6 +385,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.computerinfo.kernelBootTime()
             self.computerinfo.getStorage()
             self.computerinfo.getIPAddress()
+            self.computerinfo.getRecommendedUpdates()
             Task {
                 await self.userinfo.getCurrentUserRecord()
             }
@@ -398,6 +408,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             await self.userinfo.getCurrentUserRecord()
         }
         self.computerinfo.getStorage()
+        self.computerinfo.getRecommendedUpdates()
     }
     
     // MARK: - Close the popover
