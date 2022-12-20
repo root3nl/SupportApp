@@ -182,6 +182,7 @@ All general settings
 | StatusBarIcon | String | Root3 Logo | Path to the status bar icon shown in the menu bar. Recommended: PNG, 16x16 points. Icons larger than 22 points will automatically be resized to 16 points. A subfolder in `/Library/Application Support/` is the recommended location due to sandboxing | `/Library/Application Support/Your Company/statusbaricon.png` |
 | StatusBarIconSFSymbol | String | Root3 Logo | Custom status bar icon using an SF Symbol. Ignored when StatusBarIcon is also set | “lifepreserver” |
 | StatusBarIconNotifierEnabled | Boolean | false | Shows a small notification badge in the Status Bar Icon when an info items triggers a warning or notification | true |
+| HideMajorUpdates | Boolean | false | Ignore macOS major updates. This will prevent the menu bar icon and the macOS version info item from showing an available major update. Only applicable to macOS 12.3 and higher | true |
 | CustomColor | String | macOS Accent Color | Custom color for all symbols. Leave empty to use macOS Accent Color. We recommend not to use a very light color as text may become hard to read | HEX color in RGB format like "#8cc63f" |
 | CustomColorDarkMode | String | macOS Accent Color | Custom color for all symbols in Dark Mode. Leave empty to use macOS Accent Color or CustomColor if specified. We recommend not to use a very dark color as text may become hard to read | HEX color in RGB format like "#8cc63f" |
 | HideFirstRow | Boolean | false | Hides the first row of configurable items. | true |

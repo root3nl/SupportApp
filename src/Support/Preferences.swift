@@ -41,8 +41,8 @@ class Preferences: ObservableObject {
     // Automatically register modern LaunchAgent on macOS 13 and higher
     @AppStorage("OpenAtLogin") var openAtLogin: Bool = false
     
-    // Defer major version updates for macOS
-    @AppStorage("DeferMajorVersions") var deferMajorVersions: Bool = false
+    // Hide major updates for macOS
+    @AppStorage("HideMajorUpdates") var hideMajorUpdates: Bool = false
     
     // MARK: - Info items
     

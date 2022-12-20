@@ -34,7 +34,7 @@ struct MacOSVersionSubview: View {
     
     // Calculate number of updates to show
     var updatesAvailable: Int {
-        if preferences.deferMajorVersions {
+        if preferences.hideMajorUpdates {
             return computerinfo.updatesAvailable - computerinfo.majorVersionUpdates
         } else {
             return computerinfo.updatesAvailable

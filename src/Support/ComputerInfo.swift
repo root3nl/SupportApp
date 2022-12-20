@@ -541,11 +541,14 @@ class ComputerInfo: ObservableObject {
     
     // MARK: - Get Array of RecommendedUpdates from com.apple.SoftwareUpdate
     func getRecommendedUpdates() {
+        logger.debug("Checking RecommendedUpdates for macOS updates and versions...")
         
         let userDefaultsSoftwareUpdates = UserDefaults(suiteName: "com.apple.SoftwareUpdate")
         let recommendedUpdates = userDefaultsSoftwareUpdates?.array(forKey: "RecommendedUpdates") ?? []
         
         var decodedItems: [SoftwareUpdateModel] = []
+        
+        // Reset major version updates to 0
         majorVersionUpdates = 0
 
         do {
@@ -555,21 +558,28 @@ class ComputerInfo: ObservableObject {
             // Decode JSON data
             let decoder = JSONDecoder()
             decodedItems = try decoder.decode([SoftwareUpdateModel].self, from: data)
+            logger.debug("Successfully decoded RecommendedUpdates...")
             
         } catch {
             logger.error("Error getting RecommendedUpdates...")
         }
         
+        logger.debug("\(decodedItems.count) updates found")
+        
         // Loop through all available updates and decrease number of updates when available macOS version is higher than current major version
         for item in decodedItems {
             if item.displayName.contains("macOS") {
                 if let version = item.displayVersion?.components(separatedBy: ".")[0] {
-                    logger.debug("macOS update found: macOS \(version, privacy: .public)")
+                    logger.debug("macOS update found: \(item.displayName, privacy: .public)")
                     if Int(version) ?? 0 > systemVersionMajor {
-                        logger.debug("macOS version \(version, privacy: .public) is higher than the current macOS version, update will be hidden")
+                        logger.debug("macOS version \(version, privacy: .public) is higher than the current macOS version, update will be hidden when DeferMajorVersions is enabled")
                         majorVersionUpdates += 1
                     }
+                } else {
+                    logger.error("Error getting macOS version from \(item.displayName)")
                 }
+            } else {
+                logger.debug("\(item.displayName) is not a macOS update")
             }
         }
     }

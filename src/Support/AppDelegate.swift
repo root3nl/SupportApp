@@ -111,6 +111,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         defaults.addObserver(self, forKeyPath: "PasswordExpiryLimit", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "OpenAtLogin", options: .new, context: nil)
         ASUdefaults?.addObserver(self, forKeyPath: "LastUpdatesAvailable", options: .new, context: nil)
+        ASUdefaults?.addObserver(self, forKeyPath: "RecommendedUpdates", options: .new, context: nil)
         
         // Receive notifications after uptime check
         NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.uptimeDaysLimit, object: nil)
@@ -231,17 +232,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             var updatesAvailable = computerinfo.updatesAvailable
             
             // If configured, ignore major macOS version updates
-            if preferences.deferMajorVersions {
+            if preferences.hideMajorUpdates {
+                logger.debug("HideMajorUpdates is enabled, hiding \(self.computerinfo.majorVersionUpdates) major macOS updates")
                 updatesAvailable -= computerinfo.majorVersionUpdates
             }
             
             // Show notification badge in menu bar icon when info item when needed
-            if (computerinfo.updatesAvailable == 0 || !infoItemsEnabled.contains("MacOSVersion")) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage"))) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
+            if (updatesAvailable == 0 || !infoItemsEnabled.contains("MacOSVersion")) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage"))) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
                                 
                 // Create orange notification badge
                 orangeBadge.isHidden = false
                
-            } else if (computerinfo.updatesAvailable > 0 && infoItemsEnabled.contains("MacOSVersion")) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
+            } else if (updatesAvailable > 0 && infoItemsEnabled.contains("MacOSVersion")) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
                 
                 // Create red notification badge
                 redBadge.isHidden = false
@@ -298,7 +300,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 await self.userinfo.getCurrentUserRecord()
             }
         case "LastUpdatesAvailable":
-            logger.debug("\(keyPath! as NSObject) changed to \(self.ASUdefaults!.integer(forKey: "LastUpdatesAvailable"))")
+            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.ASUdefaults!.integer(forKey: "LastUpdatesAvailable"))")
+        case "RecommendedUpdates":
+            logger.debug("\(keyPath! as NSObject, privacy: .public) changed, checking update contents...")
             self.computerinfo.getRecommendedUpdates()
         case "OpenAtLogin":
             logger.debug("\(keyPath! as NSObject) change to \(self.defaults.bool(forKey: "OpenAtLogin"))")
@@ -385,7 +389,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.computerinfo.kernelBootTime()
             self.computerinfo.getStorage()
             self.computerinfo.getIPAddress()
-            self.computerinfo.getRecommendedUpdates()
             Task {
                 await self.userinfo.getCurrentUserRecord()
             }
