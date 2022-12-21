@@ -391,6 +391,7 @@ log stream --debug --info --predicate 'subsystem contains "nl.root3.support"'
 ```
 
 ## Known issues
+* All available software updates (minor and major) are shown in the menu bar icon and the macOS version info item, even when the update is deferred using a Restrictions Configuration Profile from MDM. macOS collects all available updates in `/Library/Preferences/com.apple.SoftwareUpdate.plist` regardless of any deferral configurations. Only major OS updates can be hidden using the `HideMajorUpdates` key for macOS 12.3 and later.
 * Buttons may keep a hovered state when mouse cursor moves fast: FB8212902 (**resolved in macOS Monterey**)
 * When Jamf Connect is used as password type, clicking "Change Now" does not allow the user to open the Jamf Connect change password window, but instead triggers an alert. Jamf Connect does not support a URL Scheme for opening the Change Password window. Please upvote this feature request: https://ideas.jamf.com/ideas/JN-I-16087
 
