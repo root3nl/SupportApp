@@ -301,9 +301,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         case "LastUpdatesAvailable":
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.ASUdefaults!.integer(forKey: "LastUpdatesAvailable"))")
-        case "RecommendedUpdates":
-            logger.debug("\(keyPath! as NSObject, privacy: .public) changed, checking update contents...")
             self.computerinfo.getRecommendedUpdates()
+//        case "RecommendedUpdates":
+//            logger.debug("\(keyPath! as NSObject, privacy: .public) changed, checking update contents...")
+//            self.computerinfo.getRecommendedUpdates()
         case "OpenAtLogin":
             logger.debug("\(keyPath! as NSObject) change to \(self.defaults.bool(forKey: "OpenAtLogin"))")
             self.configureLaunchAgent()

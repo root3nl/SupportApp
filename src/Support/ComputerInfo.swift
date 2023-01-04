@@ -594,7 +594,7 @@ class ComputerInfo: ObservableObject {
                     }
                 // Report but ignore any non-macOS updates, such as application updates
                 } else {
-                    self.logger.debug("\(item.displayName) is not a macOS update")
+                    self.logger.debug("\(item.displayName, privacy: .public) is not a macOS update")
                 }
             }
         }
