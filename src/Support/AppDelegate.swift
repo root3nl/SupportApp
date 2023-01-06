@@ -283,32 +283,32 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         switch keyPath {
         case "StatusBarIcon":
-            logger.debug("\(keyPath! as NSObject) changed to \(self.defaults.string(forKey: "StatusBarIcon") ?? "")")
+            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.defaults.string(forKey: "StatusBarIcon") ?? "", privacy: .public)")
         case "StatusBarIconSFSymbol":
-            logger.debug("\(keyPath! as NSObject) changed to \(self.defaults.string(forKey: "StatusBarIconSFSymbol") ?? "")")
+            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.defaults.string(forKey: "StatusBarIconSFSymbol") ?? "", privacy: .public)")
         case "StatusBarIconNotifierEnabled":
-            logger.debug("\(keyPath! as NSObject) changed to \(self.defaults.bool(forKey: "StatusBarIconNotifierEnabled"))")
+            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.defaults.bool(forKey: "StatusBarIconNotifierEnabled"), privacy: .public)")
         case "UptimeDaysLimit":
             // Check uptime when key UptimeDaysLimit is changed
-            logger.debug("\(keyPath! as NSObject) changed to \(self.preferences.uptimeDaysLimit), checking uptime...")
+            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.preferences.uptimeDaysLimit, privacy: .public), checking uptime...")
             self.computerinfo.kernelBootTime()
         case "StorageLimit":
             // Check storage when key StorageLimit is changed
-            logger.debug("\(keyPath! as NSObject) changed to \(self.preferences.storageLimit), checking storage...")
+            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.preferences.storageLimit, privacy: .public), checking storage...")
             self.computerinfo.getStorage()
         case "PasswordExpiryLimit":
             // Check password expiry when key PasswordExpiryLimit is changed
-            logger.debug("\(keyPath! as NSObject) change to \(self.preferences.passwordExpiryLimit), checking password expiry...")
+            logger.debug("\(keyPath! as NSObject, privacy: .public) change to \(self.preferences.passwordExpiryLimit, privacy: .public), checking password expiry...")
             Task {
                 await self.userinfo.getCurrentUserRecord()
             }
         case "LastUpdatesAvailable":
-            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.ASUdefaults!.integer(forKey: "LastUpdatesAvailable"))")
+            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.ASUdefaults!.integer(forKey: "LastUpdatesAvailable"), privacy: .public)")
         case "RecommendedUpdates":
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed, checking update contents...")
             self.computerinfo.getRecommendedUpdates()
         case "OpenAtLogin":
-            logger.debug("\(keyPath! as NSObject) change to \(self.defaults.bool(forKey: "OpenAtLogin"))")
+            logger.debug("\(keyPath! as NSObject) change to \(self.defaults.bool(forKey: "OpenAtLogin"), privacy: .public)")
             self.configureLaunchAgent()
         default:
             logger.debug("Some other change detected...")
