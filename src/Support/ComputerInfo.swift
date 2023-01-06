@@ -98,6 +98,10 @@ class ComputerInfo: ObservableObject {
     
     // MARK: - Function to get uptime
     func kernelBootTime() {
+        
+        // Set current status to compare with new status when function completes
+        let oldUptimeLimitReached = uptimeLimitReached
+        
         // We use the same underlying code as uptime uses in macOS. Sources: https://worthdoingbadly.com/uptimekext/, https://gist.github.com/nyg/d81308a92fbf7e9c44c5f72db5ee2171
         var mib = [ CTL_KERN, KERN_BOOTTIME ]
         var bootTime = timeval()
@@ -170,7 +174,11 @@ class ComputerInfo: ObservableObject {
         }
         
         // Post changes to notification center
-        NotificationCenter.default.post(name: Notification.Name.uptimeDaysLimit, object: nil)
+        if oldUptimeLimitReached != uptimeLimitReached {
+            NotificationCenter.default.post(name: Notification.Name.uptimeDaysLimit, object: nil)
+        } else {
+            logger.debug("Uptime Days Limit status did not change, no need to reload StatusBarItem")
+        }
     }
     
     // MARK: - Function to get computer name
@@ -255,7 +263,7 @@ class ComputerInfo: ObservableObject {
         }
         
         // Post changes to notification center
-        NotificationCenter.default.post(name: Notification.Name.storageLimit, object: nil)
+//        NotificationCenter.default.post(name: Notification.Name.storageLimit, object: nil)
     }
     
     // MARK: - Get the Model Identifier: https://github.com/Ekhoo/Device/blob/master/Source/macOS/DeviceMacOS.swift
@@ -466,6 +474,9 @@ class ComputerInfo: ObservableObject {
         var address: String?
         var ifaddr: UnsafeMutablePointer<ifaddrs>? = nil
         
+        // Set current IP to compare with new IP when function completes
+//        let oldIPAdress = ipAddress
+        
         // Set symbol when not connected
         networkInterfaceSymbol = "wifi.slash"
         networkName = NSLocalizedString("Not Connected", comment: "")
@@ -535,12 +546,19 @@ class ComputerInfo: ObservableObject {
         logger.debug("IP address: \(address ?? "No IP Address", privacy: .public)")
         ipAddress = address ?? NSLocalizedString("No IP Address", comment: "")
         
-        // Post changes to notification center
-        NotificationCenter.default.post(name: Notification.Name.networkState, object: nil)
+        // Post changes to notification center when IP is different
+//        if ipAddress != oldIPAdress {
+//            NotificationCenter.default.post(name: Notification.Name.networkState, object: nil)
+//        } else {
+//            logger.debug("IP Address did not change, no need to reload StatusBarItem")
+//        }
     }
     
     // MARK: - Get Array of RecommendedUpdates from com.apple.SoftwareUpdate
     func getRecommendedUpdates() {
+        
+        // Set current status to compare with new status when function completes
+        let oldMajorVersionUpdates = majorVersionUpdates
         
         logger.debug("Checking RecommendedUpdates for macOS updates and versions...")
         
@@ -552,9 +570,6 @@ class ComputerInfo: ObservableObject {
         
         // Create empty array for decoded RecommendedUpdates UserDefaults data
         var decodedItems: [SoftwareUpdateModel] = []
-        
-        // Reset major version updates to 0
-        majorVersionUpdates = 0
 
         // Move decoding of RecommendedUpdates to background thread
         DispatchQueue.global().async {
@@ -572,7 +587,16 @@ class ComputerInfo: ObservableObject {
                 self.logger.error("Error getting RecommendedUpdates...")
             }
             
-            self.logger.debug("\(decodedItems.count) updates found")
+            // Return when decoded RecommendedUpdates array is empty
+            guard !decodedItems.isEmpty else {
+                self.logger.debug("RecommendedUpdates is empty...")
+                return
+            }
+            
+            // Reset major version updates to 0
+            var majorVersionUpdatesTemp = 0
+            
+            self.logger.debug("Updates found: \(decodedItems.count)")
             
             // Loop through all available updates and decrease number of updates when available macOS version is higher than current major version
             for item in decodedItems {
@@ -584,17 +608,28 @@ class ComputerInfo: ObservableObject {
                         // Convert to integer and compare with current major OS version. If higher, increase number of major OS updates
                         if Int(version) ?? 0 > self.systemVersionMajor {
                             self.logger.debug("macOS version \(version, privacy: .public) is higher than the current macOS version, update will be hidden when DeferMajorVersions is enabled")
-                            // Back to the main thread to publish values
-                            DispatchQueue.main.async {
-                                self.majorVersionUpdates += 1
-                            }
+                            majorVersionUpdatesTemp += 1
                         }
                     } else {
                         self.logger.error("Error getting macOS version from \(item.displayName)")
                     }
-                // Report but ignore any non-macOS updates, such as application updates
+                    // Report but ignore any non-macOS updates, such as application updates
                 } else {
                     self.logger.debug("\(item.displayName, privacy: .public) is not a macOS update")
+                }
+            }
+            
+            self.logger.debug("Major macOS updates found: \(majorVersionUpdatesTemp)")
+            
+            // Back to the main thread to publish values
+            DispatchQueue.main.async {
+                self.majorVersionUpdates = majorVersionUpdatesTemp
+                
+                // Post changes to notification center
+                if oldMajorVersionUpdates != majorVersionUpdatesTemp {
+                    NotificationCenter.default.post(name: Notification.Name.majorVersionUpdates, object: nil)
+                } else {
+                    self.logger.debug("Number of Major macOS Updates did not change, no need to reload StatusBarItem")
                 }
             }
         }

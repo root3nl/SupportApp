@@ -128,6 +128,9 @@ class UserInfo: ObservableObject {
     // https://gitlab.com/Mactroll/NoMAD/blob/8786704ccf1ae4c1ec0f5efec60fa27a0f4a871f/NoMAD/NoMADUser.swift
     func applePasswordExpiryDate() {
         
+        // Set current status to compare with new status when function completes
+        let oldPasswordExpiryLimitReached = passwordExpiryLimitReached
+        
         DispatchQueue.global().async { [self] in
             do {
                 let node = try ODNode.init(session: session, type: UInt32(kODNodeTypeAuthentication))
@@ -190,7 +193,11 @@ class UserInfo: ObservableObject {
                             }
                             
                             // Post changes to notification center
-                            NotificationCenter.default.post(name: Notification.Name.passwordExpiryLimit, object: nil)
+                            if oldPasswordExpiryLimitReached != self.passwordExpiryLimitReached {
+                                NotificationCenter.default.post(name: Notification.Name.passwordExpiryLimit, object: nil)
+                            } else {
+                                self.logger.debug("Pasword Expiry Limit did not change, no need to reload StatusBarItem")
+                            }
                             
                         }
                         
@@ -414,6 +421,10 @@ class UserInfo: ObservableObject {
     
     // MARK: - Determine if notification badge with exclamation mark should be shown in tile
     func setNotificationBadge(expiresInDays: Int) {
+        
+        // Set current status to compare with new status when function completes
+        let oldPasswordExpiryLimitReached = passwordExpiryLimitReached
+        
         if preferences.passwordExpiryLimit > 0 && expiresInDays <= preferences.passwordExpiryLimit {
             // Set boolean to true to show alert and menu bar icon notification badge
             passwordExpiryLimitReached = true
@@ -423,7 +434,11 @@ class UserInfo: ObservableObject {
         }
         
         // Post changes to notification center
-        NotificationCenter.default.post(name: Notification.Name.passwordExpiryLimit, object: nil)
+        if oldPasswordExpiryLimitReached != self.passwordExpiryLimitReached {
+            NotificationCenter.default.post(name: Notification.Name.passwordExpiryLimit, object: nil)
+        } else {
+            logger.debug("Pasword Expiry Limit did not change, no need to reload StatusBarItem")
+        }
     }
 
     // MARK: - Expirimental function to change the local Mac password

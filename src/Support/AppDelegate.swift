@@ -117,10 +117,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.uptimeDaysLimit, object: nil)
         
         // Receive notifications after network check
-        NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.networkState, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.networkState, object: nil)
         
         // Receive notification after password expiry check
         NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.passwordExpiryLimit, object: nil)
+        
+        // Receive notification after major macOS update check
+        NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.majorVersionUpdates, object: nil)
         
         // Run functions at startup
         runAtStartup()
@@ -301,10 +304,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         case "LastUpdatesAvailable":
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.ASUdefaults!.integer(forKey: "LastUpdatesAvailable"))")
+        case "RecommendedUpdates":
+            logger.debug("\(keyPath! as NSObject, privacy: .public) changed, checking update contents...")
             self.computerinfo.getRecommendedUpdates()
-//        case "RecommendedUpdates":
-//            logger.debug("\(keyPath! as NSObject, privacy: .public) changed, checking update contents...")
-//            self.computerinfo.getRecommendedUpdates()
         case "OpenAtLogin":
             logger.debug("\(keyPath! as NSObject) change to \(self.defaults.bool(forKey: "OpenAtLogin"))")
             self.configureLaunchAgent()
