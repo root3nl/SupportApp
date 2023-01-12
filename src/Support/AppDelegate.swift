@@ -216,7 +216,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 // Use default icon in all other cases
             } else {
                 button.image = defaultSFSymbolImage
-                logger.debug("No preference key is set, using default image...")
+                logger.debug("No custom Status Bar Item icon is set, using default image...")
             }
             
             // Set notification counter next to the menu bar icon if enabled. https://www.hackingwithswift.com/example-code/system/how-to-insert-images-into-an-attributed-string-with-nstextattachment

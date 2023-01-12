@@ -607,11 +607,11 @@ class ComputerInfo: ObservableObject {
                         self.logger.debug("macOS update found: \(item.displayName, privacy: .public)")
                         // Convert to integer and compare with current major OS version. If higher, increase number of major OS updates
                         if Int(version) ?? 0 > self.systemVersionMajor {
-                            self.logger.debug("macOS version \(version, privacy: .public) is higher than the current macOS version, update will be hidden when DeferMajorVersions is enabled")
+                            self.logger.debug("macOS version \(version, privacy: .public) is higher than the current macOS version (\(self.systemVersionMajor)), update will be hidden when DeferMajorVersions is enabled")
                             majorVersionUpdatesTemp += 1
                         }
                     } else {
-                        self.logger.error("Error getting macOS version from \(item.displayName)")
+                        self.logger.error("Error getting macOS version from \(item.displayName, privacy: .public)")
                     }
                     // Report but ignore any non-macOS updates, such as application updates
                 } else {
