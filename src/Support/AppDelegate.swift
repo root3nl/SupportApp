@@ -415,6 +415,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         self.computerinfo.getStorage()
         self.computerinfo.getRecommendedUpdates()
+        
+        if #available(macOS 13, *) {
+            self.computerinfo.getRSRVersion()
+        }
     }
     
     // MARK: - Close the popover
