@@ -663,6 +663,7 @@ class ComputerInfo: ObservableObject {
             // Back to the main thread to publish values
             DispatchQueue.main.async {
                 self.rapidSecurityResponseVersion = String(data: data, encoding: .utf8)!.trimmingCharacters(in: .whitespacesAndNewlines)
+                self.logger.debug("Rapid Security Reponse version: \(self.rapidSecurityResponseVersion)")
             }
         }
     }
