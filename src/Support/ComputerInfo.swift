@@ -205,6 +205,9 @@ class ComputerInfo: ObservableObject {
     // MARK: - Function to get storage data
     func getStorage() {
         
+        // Set current status to compare with new status when function completes
+        let oldStorageLimitReached = storageLimitReached
+        
         // Calculate available capacity
         let fileURL = URL(fileURLWithPath:"/")
         do {
@@ -263,7 +266,11 @@ class ComputerInfo: ObservableObject {
         }
         
         // Post changes to notification center
-//        NotificationCenter.default.post(name: Notification.Name.storageLimit, object: nil)
+        if oldStorageLimitReached != storageLimitReached {
+            NotificationCenter.default.post(name: Notification.Name.storageLimit, object: nil)
+        } else {
+            self.logger.debug("Storage Limit did not change, no need to reload StatusBarItem")
+        }
     }
     
     // MARK: - Get the Model Identifier: https://github.com/Ekhoo/Device/blob/master/Source/macOS/DeviceMacOS.swift
