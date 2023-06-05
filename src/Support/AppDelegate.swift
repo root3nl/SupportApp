@@ -119,6 +119,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Receive notifications after network check
 //        NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.networkState, object: nil)
         
+        // Receive notification after storage check
+        NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.storageLimit, object: nil)
+        
         // Receive notification after password expiry check
         NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.passwordExpiryLimit, object: nil)
         
