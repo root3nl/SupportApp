@@ -44,7 +44,7 @@ struct PopoverAlertView: View {
                 .fixedSize()
                 .font(.system(.body, design: .rounded))
                         
-            Button("Close", action: {
+            Button(NSLocalizedString("CLOSE", comment: ""), action: {
                 self.uptimeAlert.toggle()
             })
             .buttonStyle(.borderedProminent)
