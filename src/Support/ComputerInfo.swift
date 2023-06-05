@@ -96,6 +96,9 @@ class ComputerInfo: ObservableObject {
     // Ethernet or SSID when connected
     @Published var networkName = NSLocalizedString("Not Connected", comment: "")
     
+    // Rapid Security Response version
+    @Published var rapidSecurityResponseVersion: String = ""
+    
     // MARK: - Function to get uptime
     func kernelBootTime() {
         
@@ -631,6 +634,36 @@ class ComputerInfo: ObservableObject {
                 } else {
                     self.logger.debug("Number of Major macOS Updates did not change, no need to reload StatusBarItem")
                 }
+            }
+        }
+    }
+    
+    @available(macOS 13, *)
+    // MARK: - Get optional Rapid Security Response version
+    func getRSRVersion() {
+        
+        let task = Process()
+        let pipe = Pipe()
+        
+        // Command to get Rapid Security Response version
+        let RSRCommand = """
+        /usr/bin/sw_vers -productVersionExtra
+        """
+        
+        // Move command to background thread
+        DispatchQueue.global().async {
+            task.standardOutput = pipe
+            task.standardError = pipe
+            task.launchPath = "/bin/zsh"
+            task.arguments = ["-c", RSRCommand]
+            task.launch()
+            
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            
+            // Back to the main thread to publish values
+            DispatchQueue.main.async {
+                self.rapidSecurityResponseVersion = String(data: data, encoding: .utf8)!.trimmingCharacters(in: .whitespacesAndNewlines)
+                self.logger.debug("Rapid Security Reponse version: \(self.rapidSecurityResponseVersion)")
             }
         }
     }
