@@ -1,0 +1,53 @@
+/*
+  Localizable.strings Spanish
+  Support
+
+  Created by Jovicom on 05/03/2023.
+  
+*/
+
+"Computer Name" = "Nombre de equipo";
+"Model" = "Modelo";
+"Last Reboot" = "Dias sin reiniciar";
+"RESTART_REGULARLY" = "Por favor, reinicia tu Mac regularmente";
+"ADMIN_RECOMMENDS_RESTARTING_EVERY" = "Se recomienda reiniciar el Mac cada";
+"ago" = "";
+"minute" = "minuto";
+"minutes" = "minutos";
+"hour" = "hora";
+"hours" = "horas";
+"day" = "dia";
+"days" = "dias";
+"Used" = "Usado";
+"Available" = "Disponible";
+"About Support" = "Acerca de Support";
+"Help and Documentation" = "Ayuda y Documentación";
+"Quit Support" = "Salir Support";
+"Quit" = "Salir";
+"Are you sure you want to quit?" = "¿Estas seguro de salir?";
+"An error occurred" = "Ha ocurrido un error";
+"Please contact IT support" = "Por favor, contacta con soporte IT";
+"Not Connected" = "Sin conectar";
+"IP Address" = "Dirección IP";
+"No IP Address" = "Sin dirección IP";
+"Password" = "Contraseña";
+"Expires Today" = "Caduca hoy";
+"Never Expires" = "Nunca caduca";
+"Expires in " = "Caduca el ";
+"Expired" = "Caducada";
+"Change Now" = "Cambiar ahora";
+"Sign In Here" = "Loguéate aquí";
+" days" = " dias";
+" day" = " dia";
+"Mac diagnosis" = "Diagnosis del Mac";
+"MAC_DIAGNOSIS_TEXT" = "Un vistazo rápido de tu Mac para ayudarte a mantenerlo óptimo";
+"Easy access" = "Fácil acceso";
+"EASY_ACCESS_TEXT" = "Accede a los recursos de tu organización como apps y sitios web";
+"Get in touch" = "Ponerse en contacto";
+"GET_IN_TOUCH_TEXT" = "Crea facilmente un ticket o sube una consulta";
+"Continue" = "Continuar";
+"OPEN_JAMF_CONNECT_MANUALLY" = "Por favor, abre Jamf Connect";
+"OPEN_JAMF_CONNECT_MANUALLY_TEXT" = "Abre Jamf Connect desde la barra de menus para cambiar tu contraseña";
+"NETWORK_UNAVAILABLE" = "Red no disponible";
+"NETWORK_UNAVAILABLE_TEXT" = "La red de tu organización no está disponible. Por favor, chequea tu conexión e inténtalo de nuevo.";
+"CLOSE" = "Cerrar";

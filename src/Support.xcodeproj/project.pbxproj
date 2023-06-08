@@ -20,6 +20,7 @@
 		0AFB04FD263B422900507B23 /* ItemDouble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFB04FC263B422900507B23 /* ItemDouble.swift */; };
 		0AFE0A8325014C6100957B52 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0AFE0A8525014C6100957B52 /* Localizable.strings */; };
 		490B145E258A55B90048D8AF /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490B145D258A55B90048D8AF /* Extensions.swift */; };
+		490CE0A8294FC144005BC01D /* SoftwareUpdateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490CE0A7294FC144005BC01D /* SoftwareUpdateModel.swift */; };
 		4915290D259CCF7A00056B5F /* NotificationBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4915290C259CCF7A00056B5F /* NotificationBadgeView.swift */; };
 		49152910259CD09400056B5F /* InfoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4915290F259CD09400056B5F /* InfoItem.swift */; };
 		49152913259CD19900056B5F /* ProgressBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49152912259CD19900056B5F /* ProgressBarItem.swift */; };
@@ -78,6 +79,7 @@
 		0AFE0A8425014C6100957B52 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0AFE0A8625014C8300957B52 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		490B145D258A55B90048D8AF /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		490CE0A7294FC144005BC01D /* SoftwareUpdateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoftwareUpdateModel.swift; sourceTree = "<group>"; };
 		4915290C259CCF7A00056B5F /* NotificationBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBadgeView.swift; sourceTree = "<group>"; };
 		4915290F259CD09400056B5F /* InfoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoItem.swift; sourceTree = "<group>"; };
 		49152912259CD19900056B5F /* ProgressBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarItem.swift; sourceTree = "<group>"; };
@@ -87,6 +89,7 @@
 		4939A0C729259B7B00731363 /* LogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogoView.swift; sourceTree = "<group>"; };
 		493FBB8C27406B5D002A79F9 /* ExtensionBSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBSubview.swift; sourceTree = "<group>"; };
 		495924F8265C535B00E083AC /* QuitButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuitButton.swift; sourceTree = "<group>"; };
+		495B6E6E2A2E3E4E006B575D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		495F74EB28B39A9A00C20304 /* PopoverAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PopoverAlertView.swift; path = Support/Views/PopoverAlertView.swift; sourceTree = SOURCE_ROOT; };
 		496C2FE0271477B800D51EE1 /* NotificationNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNames.swift; sourceTree = "<group>"; };
 		496FE4D02651485E007746ED /* UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
@@ -230,6 +233,7 @@
 			isa = PBXGroup;
 			children = (
 				498B7000272F460100BFA45E /* KerberosSSOExtensionModel.swift */,
+				490CE0A7294FC144005BC01D /* SoftwareUpdateModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -302,6 +306,7 @@
 				nl,
 				fr,
 				de,
+				es,
 			);
 			mainGroup = 49822CD624B4C3F100E8DE54;
 			packageReferences = (
@@ -384,6 +389,7 @@
 				4976EB892653151A006EE097 /* ChangePassword.swift in Sources */,
 				495924F9265C535B00E083AC /* QuitButton.swift in Sources */,
 				49152913259CD19900056B5F /* ProgressBarItem.swift in Sources */,
+				490CE0A8294FC144005BC01D /* SoftwareUpdateModel.swift in Sources */,
 				0A4A7388260208B500927DAB /* UptimeSubview.swift in Sources */,
 				49822CE324B4C3F100E8DE54 /* AppDelegate.swift in Sources */,
 				0A4A73852602075F00927DAB /* StorageSubview.swift in Sources */,
@@ -405,6 +411,7 @@
 				0AFE0A8625014C8300957B52 /* nl */,
 				49B163AC26FCB154006D57C7 /* fr */,
 				A0532BCB2733F35A005CACF2 /* de */,
+				495B6E6E2A2E3E4E006B575D /* es */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -559,7 +566,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 2.4.2;
+				MARKETING_VERSION = 2.5;
 				PRODUCT_BUNDLE_IDENTIFIER = nl.root3.support;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -589,7 +596,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 2.4.2;
+				MARKETING_VERSION = 2.5;
 				PRODUCT_BUNDLE_IDENTIFIER = nl.root3.support;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

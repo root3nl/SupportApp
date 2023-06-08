@@ -105,6 +105,21 @@
         }
       ]
     },
+    "HideMajorUpdates": {
+      "title": "Hide major macOS updates",
+      "description": "Ignore macOS major updates. This will prevent the menu bar icon and the macOS version info item from showing an available major update. Only applicable to macOS 12.3 and higher",
+      "type": "boolean",
+      "options": {
+        "enum_titles": ["Hide", "Show"],
+        "infoText": "Key name: HideMajorUpdates"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
     "CustomColor": {
       "title": "Custom Color",
       "description": "HEX color in RGB format. Example: #8cc63f. Leave empty to use macOS Accent Color",

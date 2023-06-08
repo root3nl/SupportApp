@@ -182,6 +182,7 @@ All general settings
 | StatusBarIcon | String | Root3 Logo | Path to the status bar icon shown in the menu bar. Recommended: PNG, 16x16 points. Icons larger than 22 points will automatically be resized to 16 points. A subfolder in `/Library/Application Support/` is the recommended location due to sandboxing | `/Library/Application Support/Your Company/statusbaricon.png` |
 | StatusBarIconSFSymbol | String | Root3 Logo | Custom status bar icon using an SF Symbol. Ignored when StatusBarIcon is also set | “lifepreserver” |
 | StatusBarIconNotifierEnabled | Boolean | false | Shows a small notification badge in the Status Bar Icon when an info items triggers a warning or notification | true |
+| HideMajorUpdates | Boolean | false | Ignore macOS major updates. This will prevent the menu bar icon and the macOS version info item from showing an available major update. Only applicable to macOS 12.3 and higher | true |
 | CustomColor | String | macOS Accent Color | Custom color for all symbols. Leave empty to use macOS Accent Color. We recommend not to use a very light color as text may become hard to read | HEX color in RGB format like "#8cc63f" |
 | CustomColorDarkMode | String | macOS Accent Color | Custom color for all symbols in Dark Mode. Leave empty to use macOS Accent Color or CustomColor if specified. We recommend not to use a very dark color as text may become hard to read | HEX color in RGB format like "#8cc63f" |
 | HideFirstRow | Boolean | false | Hides the first row of configurable items. | true |
@@ -390,6 +391,7 @@ log stream --debug --info --predicate 'subsystem contains "nl.root3.support"'
 ```
 
 ## Known issues
+* All available software updates (minor and major) are shown in the menu bar icon and the macOS version info item, even when the update is deferred using a Restrictions Configuration Profile from MDM. macOS collects all available updates in `/Library/Preferences/com.apple.SoftwareUpdate.plist` regardless of any deferral configurations. Only major OS updates can be hidden using the `HideMajorUpdates` key for macOS 12.3 and later.
 * Buttons may keep a hovered state when mouse cursor moves fast: FB8212902 (**resolved in macOS Monterey**)
 * When Jamf Connect is used as password type, clicking "Change Now" does not allow the user to open the Jamf Connect change password window, but instead triggers an alert. Jamf Connect does not support a URL Scheme for opening the Change Password window. Please upvote this feature request: https://ideas.jamf.com/ideas/JN-I-16087
 

@@ -42,21 +42,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // Create red notification badge view
     // https://github.com/DeveloperMaris/ToolReleases/blob/master/ToolReleases/PopoverController.swift
     lazy var redBadge: NSView = {
-        let view = StatusItemBadgeView(frame: NSRect(x: 0, y: 0, width: 0, height: 0), color: .systemRed)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.wantsLayer = true
-        view.layer?.masksToBounds = true
-        return view
+        StatusItemBadgeView(frame: .zero, color: .systemRed)
     }()
     
     // Create orange notification badge view
     // https://github.com/DeveloperMaris/ToolReleases/blob/master/ToolReleases/PopoverController.swift
     lazy var orangeBadge: NSView = {
-        let view = StatusItemBadgeView(frame: NSRect(x: 0, y: 0, width: 0, height: 0), color: .systemOrange)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.wantsLayer = true
-        view.layer?.masksToBounds = true
-        return view
+        StatusItemBadgeView(frame: .zero, color: .systemOrange)
     }()
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -111,15 +103,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         defaults.addObserver(self, forKeyPath: "PasswordExpiryLimit", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "OpenAtLogin", options: .new, context: nil)
         ASUdefaults?.addObserver(self, forKeyPath: "LastUpdatesAvailable", options: .new, context: nil)
+        ASUdefaults?.addObserver(self, forKeyPath: "RecommendedUpdates", options: .new, context: nil)
         
         // Receive notifications after uptime check
         NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.uptimeDaysLimit, object: nil)
         
         // Receive notifications after network check
-        NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.networkState, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.networkState, object: nil)
+        
+        // Receive notification after storage check
+        NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.storageLimit, object: nil)
         
         // Receive notification after password expiry check
         NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.passwordExpiryLimit, object: nil)
+        
+        // Receive notification after major macOS update check
+        NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.majorVersionUpdates, object: nil)
         
         // Run functions at startup
         runAtStartup()
@@ -212,7 +211,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 // Use default icon in all other cases
             } else {
                 button.image = defaultSFSymbolImage
-                logger.debug("No preference key is set, using default image...")
+                logger.debug("No custom Status Bar Item icon is set, using default image...")
             }
             
             // Set notification counter next to the menu bar icon if enabled. https://www.hackingwithswift.com/example-code/system/how-to-insert-images-into-an-attributed-string-with-nstextattachment
@@ -227,13 +226,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 preferences.infoItemSix
             ]
             
+            // Number of available software updates
+            var updatesAvailable = computerinfo.updatesAvailable
+            
+            // If configured, ignore major macOS version updates
+            if preferences.hideMajorUpdates {
+                logger.debug("HideMajorUpdates is enabled, hiding \(self.computerinfo.majorVersionUpdates) major macOS updates")
+                updatesAvailable -= computerinfo.majorVersionUpdates
+            }
+            
             // Show notification badge in menu bar icon when info item when needed
-            if (computerinfo.updatesAvailable == 0 || !infoItemsEnabled.contains("MacOSVersion")) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage"))) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
+            if (updatesAvailable == 0 || !infoItemsEnabled.contains("MacOSVersion")) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage"))) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
                                 
                 // Create orange notification badge
                 orangeBadge.isHidden = false
                
-            } else if (computerinfo.updatesAvailable > 0 && infoItemsEnabled.contains("MacOSVersion")) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
+            } else if (updatesAvailable > 0 && infoItemsEnabled.contains("MacOSVersion")) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
                 
                 // Create red notification badge
                 redBadge.isHidden = false
@@ -270,29 +278,32 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         switch keyPath {
         case "StatusBarIcon":
-            logger.debug("\(keyPath! as NSObject) changed to \(self.defaults.string(forKey: "StatusBarIcon") ?? "")")
+            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.defaults.string(forKey: "StatusBarIcon") ?? "", privacy: .public)")
         case "StatusBarIconSFSymbol":
-            logger.debug("\(keyPath! as NSObject) changed to \(self.defaults.string(forKey: "StatusBarIconSFSymbol") ?? "")")
+            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.defaults.string(forKey: "StatusBarIconSFSymbol") ?? "", privacy: .public)")
         case "StatusBarIconNotifierEnabled":
-            logger.debug("\(keyPath! as NSObject) changed to \(self.defaults.bool(forKey: "StatusBarIconNotifierEnabled"))")
+            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.defaults.bool(forKey: "StatusBarIconNotifierEnabled"), privacy: .public)")
         case "UptimeDaysLimit":
             // Check uptime when key UptimeDaysLimit is changed
-            logger.debug("\(keyPath! as NSObject) changed to \(self.preferences.uptimeDaysLimit), checking uptime...")
+            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.preferences.uptimeDaysLimit, privacy: .public), checking uptime...")
             self.computerinfo.kernelBootTime()
         case "StorageLimit":
             // Check storage when key StorageLimit is changed
-            logger.debug("\(keyPath! as NSObject) changed to \(self.preferences.storageLimit), checking storage...")
+            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.preferences.storageLimit, privacy: .public), checking storage...")
             self.computerinfo.getStorage()
         case "PasswordExpiryLimit":
             // Check password expiry when key PasswordExpiryLimit is changed
-            logger.debug("\(keyPath! as NSObject) change to \(self.preferences.passwordExpiryLimit), checking password expiry...")
+            logger.debug("\(keyPath! as NSObject, privacy: .public) change to \(self.preferences.passwordExpiryLimit, privacy: .public), checking password expiry...")
             Task {
                 await self.userinfo.getCurrentUserRecord()
             }
         case "LastUpdatesAvailable":
-            logger.debug("\(keyPath! as NSObject) changed to \(self.ASUdefaults!.integer(forKey: "LastUpdatesAvailable"))")
+            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.ASUdefaults!.integer(forKey: "LastUpdatesAvailable"), privacy: .public)")
+        case "RecommendedUpdates":
+            logger.debug("\(keyPath! as NSObject, privacy: .public) changed, checking update contents...")
+            self.computerinfo.getRecommendedUpdates()
         case "OpenAtLogin":
-            logger.debug("\(keyPath! as NSObject) change to \(self.defaults.bool(forKey: "OpenAtLogin"))")
+            logger.debug("\(keyPath! as NSObject) change to \(self.defaults.bool(forKey: "OpenAtLogin"), privacy: .public)")
             self.configureLaunchAgent()
         default:
             logger.debug("Some other change detected...")
@@ -398,6 +409,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             await self.userinfo.getCurrentUserRecord()
         }
         self.computerinfo.getStorage()
+        self.computerinfo.getRecommendedUpdates()
+        
+        if #available(macOS 13, *) {
+            self.computerinfo.getRSRVersion()
+        }
     }
     
     // MARK: - Close the popover

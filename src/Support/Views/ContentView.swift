@@ -267,7 +267,7 @@ struct ContentView: View {
                         // https://blog.eidinger.info/3-surprises-when-using-markdown-in-swiftui
                         Text(.init(preferences.footerText))
                                 .font(.system(.subheadline, design: .rounded))
-                                .foregroundColor(.secondary)
+                                .foregroundColor(colorScheme == .dark ? .white.opacity(0.5) : .black.opacity(0.5))
                         
                         Spacer()
                         
