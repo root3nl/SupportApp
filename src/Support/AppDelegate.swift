@@ -48,7 +48,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // Create orange notification badge view
     // https://github.com/DeveloperMaris/ToolReleases/blob/master/ToolReleases/PopoverController.swift
     lazy var orangeBadge: NSView = {
-        StatusItemBadgeView(frame: .zero, color: .orange)
+        StatusItemBadgeView(frame: .zero, color: .systemOrange)
     }()
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
