@@ -158,6 +158,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // MARK: - Set and update the menu bar icon
     @objc func setStatusBarIcon() {
         
+        // Empty initializer with URL to local Status Bar Item, either directly from the Configuration Profile or the local download location for remote image
+        var localIconURL: String = ""
+        
         // Define the default menu bar icon
         let defaultSFSymbol = NSImage(systemSymbolName: "lifepreserver", accessibilityDescription: nil)
         let config = NSImage.SymbolConfiguration(textStyle: .body, scale: .large)
@@ -171,13 +174,44 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             orangeBadge.isHidden = true
             
             // Use custom status bar icon if set in UserDefaults with fallback to default icon
-            if defaults.string(forKey: "StatusBarIcon") != nil {
-                if let customIcon = NSImage(contentsOfFile: defaults.string(forKey: "StatusBarIcon")!) {
+            if let defaultsStatusBarIcon = defaults.string(forKey: "StatusBarIcon") {
+                                
+                // If image is a remote URL, download the image and store in container Documents folder
+                if defaultsStatusBarIcon.hasPrefix("https") {
+                                        
+                    do {
+                        logger.debug("Downloading Remote StatusBarIcon from URL...")
+                        if let downloadedIconURL = try getRemoteStatusBarItem(url: defaultsStatusBarIcon) {
+                            localIconURL = downloadedIconURL.path
+                        }
+                    } catch {
+                        logger.error("\(error.localizedDescription)")
+                    }
+                    
+                } else {
+                    // Set image to file URL from Configuration Profile
+                    localIconURL = defaultsStatusBarIcon
+                }
+                
+                if let customIcon = NSImage(contentsOfFile: localIconURL) {
                     
                     // When custom image is larger than 22 point, we should resize to 16x16 points as recommended icon size
                     // https://bjango.com/articles/designingmenubarextras/
-                    if customIcon.size.width > 22 || customIcon.size.height > 22 {
-                        customIcon.size = NSSize(width: 16, height: 16)
+                    // The aspect ratio will be preserved
+                    let maxSize: CGFloat = 22
+                    let targetSize: CGFloat = 16
+
+                    if customIcon.size.width > maxSize || customIcon.size.height > maxSize {
+                        var newWidth = targetSize
+                        var newHeight = targetSize
+                        
+                        if customIcon.size.width > customIcon.size.height {
+                            newHeight = (targetSize / customIcon.size.width) * customIcon.size.height
+                        } else {
+                            newWidth = (targetSize / customIcon.size.height) * customIcon.size.width
+                        }
+                        
+                        customIcon.size = NSSize(width: newWidth, height: newHeight)
                     }
                     
                     // Set status bar icon to custom image
@@ -524,5 +558,53 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 })
             }
         }
+    }
+    
+    // MARK: - Function to fetch remote image to container Documents folder
+    func getRemoteStatusBarItem(url: String) throws -> URL? {
+                
+        guard let url = URL(string: url) else {
+            return nil
+        }
+        
+        guard let container = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "nl.root3.support") else {
+            return nil
+        }
+        let documentsFolder = container.appendingPathComponent("Documents", isDirectory: true)
+        let fileURL = documentsFolder.appendingPathComponent("menu_bar_icon.\(url.pathExtension)")
+        
+        // Remove file if it already exists
+        if FileManager.default.fileExists(atPath: fileURL.path) {
+            do {
+                try FileManager.default.removeItem(at: fileURL)
+            } catch {
+                logger.error("\(error.localizedDescription)")
+            }
+        }
+        
+        // Create a semaphore to wait for the file removal
+        let semaphore = DispatchSemaphore(value: 0)
+        
+        URLSession.shared.downloadTask(with: url) { data, response, error in
+            
+            if let data = data {
+                
+                do {
+                    try FileManager.default.moveItem(atPath: data.path, toPath: fileURL.path)
+                    // Signal the semaphore to continue
+                    semaphore.signal()
+                }
+                catch {
+                    self.logger.error("\(error.localizedDescription)")
+                }
+            }
+            
+        }
+        .resume()
+        
+        // Wait for the semaphore to be signaled
+        semaphore.wait()
+        
+        return fileURL
     }
 }
