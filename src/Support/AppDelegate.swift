@@ -51,8 +51,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         StatusItemBadgeView(frame: .zero, color: .systemOrange)
     }()
     
-    // Save current URL to StatusBarItem at runtime. While the app runs we detect if the URL is still the same during reloads of the StatusBarItem. Only if it changes, the image should be downloaded again.
-    var currentStatusBarItemUrl: String = ""
+    // Save current URL to StatusBarItem. While the app runs we detect if the URL is still the same during reloads of the StatusBarItem. Only if it changes, the image should be downloaded again.
+    @AppStorage("LastKnownStatusBarItemUrl") var lastKnownStatusBarItemUrl: String = ""
+    
+    // Save current URL to Notification icon. While the app runs we detect if the URL is still the same during reloads of the StatusBarItem. Only if it changes, the image should be downloaded again.
+    @AppStorage("LastKnownNotificationIconUrl") var lastKnownNotificationIconUrl: String = ""
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         
@@ -175,10 +178,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             redBadge.isHidden = true
             orangeBadge.isHidden = true
             
-            // Use custom status bar icon if set in UserDefaults with fallback to default icon
+            // Use custom Notification Icon if set in UserDefaults with fallback to default icon
             if let defaultsStatusBarIcon = defaults.string(forKey: "StatusBarIcon") {
                 
-                // Empty initializer with URL to local Status Bar Item, either directly from the Configuration Profile or the local download location for remote image
+                // Empty initializer with URL to local Notification Icon, either directly from the Configuration Profile or the local download location for remote image
                 var localIconURL: String = ""
                 
                 // If image is a remote URL, download the image and store in container Documents folder
@@ -189,25 +192,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                         // Boolean new URL
                         var newURL: Bool
                         
-                        // Detect if the URL changed during runtime to check whether to download the image again
-                        if defaultsStatusBarIcon != currentStatusBarItemUrl {
-                            logger.debug("Downloading Remote StatusBarIcon from URL")
+                        // Detect if the URL changed to check whether to download the image again
+                        if defaultsStatusBarIcon != lastKnownStatusBarItemUrl {
                             newURL = true
                         } else {
-                            logger.debug("URL for StatusBarIcon is unchanged, no need to download image again")
                             newURL = false
                         }
                         
-                        if let downloadedIconURL = try getRemoteStatusBarItemImage(url: defaultsStatusBarIcon, newURL: newURL) {
+                        if let downloadedIconURL = try getRemoteImage(url: defaultsStatusBarIcon, newURL: newURL, filename: "menu_bar_icon", logName: "StatusBarIcon") {
                             localIconURL = downloadedIconURL.path
                         }
                         
-                        // Set current URL
-                        currentStatusBarItemUrl = defaultsStatusBarIcon
-                        
                     } catch {
+                        logger.error("Failed to download StatusBarIcon")
                         logger.error("\(error.localizedDescription)")
                     }
+                    
+                    // Set current URL
+                    lastKnownStatusBarItemUrl = defaultsStatusBarIcon
                     
                 } else {
                     // Set image to file URL from Configuration Profile
@@ -318,10 +320,50 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     // MARK: - Set Custom Notification Icon
     func setNotificationIcon() {
+        
         // Set custom alert icon if specified
-        if defaults.string(forKey: "NotificationIcon") != nil {
+        if let defaultsNotificationIcon = defaults.string(forKey: "NotificationIcon") {
+            
             logger.debug("Notification icon configured...")
-            if let appIconImage = NSImage(contentsOfFile: defaults.string(forKey: "NotificationIcon") ?? "") {
+            
+            // Empty initializer with URL to local Status Bar Item, either directly from the Configuration Profile or the local download location for remote image
+            var localNotificationIconURL: String = ""
+            
+            // If image is a remote URL, download the image and store in container Documents folder
+            if defaultsNotificationIcon.hasPrefix("https") {
+                                    
+                do {
+                    
+                    // Boolean new URL
+                    var newURL: Bool
+                    
+                    // Detect if the URL changed to check whether to download the image again
+                    if defaultsNotificationIcon != lastKnownNotificationIconUrl {
+                        newURL = true
+                    } else {
+                        newURL = false
+                    }
+                    
+                    if let downloadedIconURL = try getRemoteImage(url: defaultsNotificationIcon, newURL: newURL, filename: "notification_icon", logName: "Notification Icon") {
+                        localNotificationIconURL = downloadedIconURL.path
+                    }
+                    
+                    // Set current URL
+                    lastKnownNotificationIconUrl = defaultsNotificationIcon
+                    
+                } catch {
+                    logger.error("Failed to download Notification Icon")
+                    logger.error("\(error.localizedDescription)")
+                }
+                
+            } else {
+                // Set image to file URL from Configuration Profile
+                logger.debug("Notification Icon is local file")
+                
+                localNotificationIconURL = defaultsNotificationIcon
+            }
+            
+            if let appIconImage = NSImage(contentsOfFile: localNotificationIconURL) {
                 appIconImage.setName("NSApplicationIcon")
                 NSApplication.shared.applicationIconImage = appIconImage
             } else {
@@ -583,33 +625,40 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
-    // MARK: - Function to fetch remote StatusBarItem to container Documents folder
-    func getRemoteStatusBarItemImage(url: String, newURL: Bool) throws -> URL? {
-                
+    // MARK: - Function to fetch remote image to container Documents folder
+    func getRemoteImage(url: String, newURL: Bool, filename: String, logName: String) throws -> URL? {
+                     
         guard let url = URL(string: url) else {
             return nil
         }
         
+        // Path to App Sandbox container
         guard let container = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "nl.root3.support") else {
             return nil
         }
-        let documentsFolder = container.appendingPathComponent("Documents", isDirectory: true)
-        let fileURL = documentsFolder.appendingPathComponent("menu_bar_icon.\(url.pathExtension)")
         
-        // Just return the URL and avoid downloading the image again
-        if !newURL {
-            return fileURL
-        }
+        let documentsFolder = container.appendingPathComponent("Documents", isDirectory: true)
+        let fileURL = documentsFolder.appendingPathComponent("\(filename).\(url.pathExtension)")
         
         // Remove file if it already exists
         if FileManager.default.fileExists(atPath: fileURL.path) {
+            
+            // Just return the URL and avoid downloading the image again
+            if !newURL {
+                logger.debug("URL for \(logName) is unchanged, no need to download image again")
+                return fileURL
+            }
+            
             do {
+                logger.debug("Removing \(logName)")
                 try FileManager.default.removeItem(at: fileURL)
             } catch {
                 logger.error("\(error.localizedDescription)")
             }
         }
         
+        logger.debug("Downloading remote \(logName) from URL")
+                        
         // Create a semaphore to wait for the file removal
         let semaphore = DispatchSemaphore(value: 0)
         
@@ -619,13 +668,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 
                 do {
                     try FileManager.default.moveItem(atPath: data.path, toPath: fileURL.path)
-                    // Signal the semaphore to continue
-                    semaphore.signal()
                 }
                 catch {
                     self.logger.error("\(error.localizedDescription)")
                 }
             }
+            
+            // Signal the semaphore to continue
+            semaphore.signal()
             
         }
         .resume()
@@ -635,57 +685,4 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         return fileURL
     }
-    
-//    // MARK: - Function to fetch remote notification icon to container Documents folder
-//    func getRemoteNotificationImage(url: String, newURL: Bool) throws -> URL? {
-//
-//        guard let url = URL(string: url) else {
-//            return nil
-//        }
-//
-//        guard let container = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "nl.root3.support") else {
-//            return nil
-//        }
-//        let documentsFolder = container.appendingPathComponent("Documents", isDirectory: true)
-//        let fileURL = documentsFolder.appendingPathComponent("notification_icon.\(url.pathExtension)")
-//
-//        // Just return the URL and avoid downloading the image again
-//        if !newURL {
-//            return fileURL
-//        }
-//
-//        // Remove file if it already exists
-//        if FileManager.default.fileExists(atPath: fileURL.path) {
-//            do {
-//                try FileManager.default.removeItem(at: fileURL)
-//            } catch {
-//                logger.error("\(error.localizedDescription)")
-//            }
-//        }
-//
-//        // Create a semaphore to wait for the file removal
-//        let semaphore = DispatchSemaphore(value: 0)
-//
-//        URLSession.shared.downloadTask(with: url) { data, response, error in
-//
-//            if let data = data {
-//
-//                do {
-//                    try FileManager.default.moveItem(atPath: data.path, toPath: fileURL.path)
-//                    // Signal the semaphore to continue
-//                    semaphore.signal()
-//                }
-//                catch {
-//                    self.logger.error("\(error.localizedDescription)")
-//                }
-//            }
-//
-//        }
-//        .resume()
-//
-//        // Wait for the semaphore to be signaled
-//        semaphore.wait()
-//
-//        return fileURL
-//    }
 }

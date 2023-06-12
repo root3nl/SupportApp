@@ -26,10 +26,9 @@ struct PopoverAlertView: View {
             
             // Show custom Notification Icon when specified
             if defaults.string(forKey: "NotificationIcon") != nil {
-                Image(nsImage: (NSImage(contentsOfFile: defaults.string(forKey: "NotificationIcon")!) ?? NSImage(named: "DefaultLogo"))!)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 48)
+                LogoView(logo: defaults.string(forKey: "NotificationIcon")!)
+            } else {
+                LogoView(logo: "default")
             }
             
             Text(title)
