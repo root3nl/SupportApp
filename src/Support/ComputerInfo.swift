@@ -99,6 +99,9 @@ class ComputerInfo: ObservableObject {
     // Rapid Security Response version
     @Published var rapidSecurityResponseVersion: String = ""
     
+    // Create empty array for decoded RecommendedUpdates UserDefaults data
+    @Published var recommendedUpdates: [SoftwareUpdateModel] = []
+    
     // MARK: - Function to get uptime
     func kernelBootTime() {
         
@@ -578,7 +581,7 @@ class ComputerInfo: ObservableObject {
         let userDefaultsSoftwareUpdates = UserDefaults(suiteName: "com.apple.SoftwareUpdate")
         
         // Create empty array for RecommendedUpdates UserDefaults data
-        let recommendedUpdates = userDefaultsSoftwareUpdates?.array(forKey: "RecommendedUpdates") ?? []
+        let recommendedUpdatesArray = userDefaultsSoftwareUpdates?.array(forKey: "RecommendedUpdates") ?? []
         
         // Create empty array for decoded RecommendedUpdates UserDefaults data
         var decodedItems: [SoftwareUpdateModel] = []
@@ -588,7 +591,7 @@ class ComputerInfo: ObservableObject {
             
             do {
                 // Convert UserDefaults to JSON data
-                let data = try JSONSerialization.data(withJSONObject: recommendedUpdates, options: [])
+                let data = try JSONSerialization.data(withJSONObject: recommendedUpdatesArray, options: [])
                 
                 // Decode JSON data
                 let decoder = JSONDecoder()
@@ -608,10 +611,12 @@ class ComputerInfo: ObservableObject {
             // Reset major version updates to 0
             var majorVersionUpdatesTemp = 0
             
-            self.logger.debug("Updates found: \(decodedItems.count)")
+            print(self.recommendedUpdates)
+            
+            self.logger.debug("Updates found: \(self.recommendedUpdates.count)")
             
             // Loop through all available updates and decrease number of updates when available macOS version is higher than current major version
-            for item in decodedItems {
+            for item in self.recommendedUpdates {
                 // Filter updates with "macOS" in Display Name
                 if item.displayName.contains("macOS") {
                     // Get digits from Display Version separated by a dot to get the major version
@@ -636,6 +641,7 @@ class ComputerInfo: ObservableObject {
             // Back to the main thread to publish values
             DispatchQueue.main.async {
                 self.majorVersionUpdates = majorVersionUpdatesTemp
+                self.recommendedUpdates = decodedItems
                 
                 // Post changes to notification center
                 if oldMajorVersionUpdates != majorVersionUpdatesTemp {

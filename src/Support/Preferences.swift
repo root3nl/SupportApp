@@ -44,6 +44,9 @@ class Preferences: ObservableObject {
     // Hide major updates for macOS
     @AppStorage("HideMajorUpdates") var hideMajorUpdates: Bool = false
     
+    // Optional text to show in the Managed Updates view
+    @AppStorage("UpdateText") var updateText: String = ""
+    
     // MARK: - Info items
     
     // Version 2.2 new preferences for modular info items

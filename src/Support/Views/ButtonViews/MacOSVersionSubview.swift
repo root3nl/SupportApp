@@ -43,12 +43,13 @@ struct MacOSVersionSubview: View {
     
     var body: some View {
         
-        if computerinfo.systemVersionPatch == 0 {
-            Item(title: "macOS \(computerinfo.macOSVersionName)", subtitle: "\(computerinfo.systemVersionMajor).\(computerinfo.systemVersionMinor)" + " \(computerinfo.rapidSecurityResponseVersion)", linkType: "URL", link: "x-apple.systempreferences:com.apple.preferences.softwareupdate", image: "applelogo", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: updatesAvailable, hoverEffectEnable: true, animate: false)
-        } else {
-            Item(title: "macOS \(computerinfo.macOSVersionName)", subtitle: "\(computerinfo.systemVersionMajor).\(computerinfo.systemVersionMinor).\(computerinfo.systemVersionPatch)" + " \(computerinfo.rapidSecurityResponseVersion)", linkType: "URL", link: "x-apple.systempreferences:com.apple.preferences.softwareupdate", image: "applelogo", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: updatesAvailable, hoverEffectEnable: true, animate: false)
+        Group {
+            if computerinfo.systemVersionPatch == 0 {
+                Item(title: "macOS \(computerinfo.macOSVersionName)", subtitle: "\(computerinfo.systemVersionMajor).\(computerinfo.systemVersionMinor)" + " \(computerinfo.rapidSecurityResponseVersion)", linkType: "URL", link: "x-apple.systempreferences:com.apple.preferences.softwareupdate", image: "applelogo", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: updatesAvailable, updateView: true, hoverEffectEnable: true, animate: false)
+            } else {
+                Item(title: "macOS \(computerinfo.macOSVersionName)", subtitle: "\(computerinfo.systemVersionMajor).\(computerinfo.systemVersionMinor).\(computerinfo.systemVersionPatch)" + " \(computerinfo.rapidSecurityResponseVersion)", linkType: "URL", link: "x-apple.systempreferences:com.apple.preferences.softwareupdate", image: "applelogo", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: updatesAvailable, updateView: true, hoverEffectEnable: true, animate: false)
+            }
         }
-        
     }
 }
 

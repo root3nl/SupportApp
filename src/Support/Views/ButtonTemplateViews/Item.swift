@@ -19,6 +19,7 @@ struct Item: View {
     var notificationBadgeBool: Bool?
     var loading: Bool?
     var linkPrefKey: String?
+    var updateView: Bool?
     
     // Declare unified logging
     let logger = Logger(subsystem: "nl.root3.support", category: "Action")
@@ -95,6 +96,10 @@ struct Item: View {
             
             if notificationBadgeBool ?? false {
                 NotificationBadgeTextView(badgeCounter: "!")
+            }
+            
+            if updateView != nil && notificationBadge! > 0 {
+                UpdateView(color: symbolColor)
             }
         }
         .frame(width: 176, height: 60)

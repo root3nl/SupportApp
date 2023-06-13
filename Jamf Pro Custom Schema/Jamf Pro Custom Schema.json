@@ -120,6 +120,20 @@
         }
       ]
     },
+    "UpdateText": {
+      "title": "Update Text",
+      "description": "Optional text to shown in the macOS Managed Updates popover to tell users about the updates",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: UpdateText"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
     "CustomColor": {
       "title": "Custom Color",
       "description": "HEX color in RGB format. Example: #8cc63f. Leave empty to use macOS Accent Color",
