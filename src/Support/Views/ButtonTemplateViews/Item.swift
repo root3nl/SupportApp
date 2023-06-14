@@ -19,7 +19,7 @@ struct Item: View {
     var notificationBadgeBool: Bool?
     var loading: Bool?
     var linkPrefKey: String?
-    var updateView: Bool?
+//    var updateView: Bool?
     
     // Declare unified logging
     let logger = Logger(subsystem: "nl.root3.support", category: "Action")
@@ -90,17 +90,19 @@ struct Item: View {
                 Spacer()
             }
             
+            // Optionally show notification badge with counter
             if notificationBadge != nil && notificationBadge! > 0 {
                 NotificationBadgeView(badgeCounter: notificationBadge!)
             }
             
+            // Optionally show notification badge with warning
             if notificationBadgeBool ?? false {
                 NotificationBadgeTextView(badgeCounter: "!")
             }
             
-            if updateView != nil && notificationBadge! > 0 {
-                UpdateView(color: symbolColor)
-            }
+//            if updateView != nil && notificationBadge! > 0 {
+//                UpdateView(color: symbolColor)
+//            }
         }
         .frame(width: 176, height: 60)
         .background(hoverView && hoverEffectEnable && link != "" ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
