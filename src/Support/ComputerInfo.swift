@@ -610,13 +610,11 @@ class ComputerInfo: ObservableObject {
             
             // Reset major version updates to 0
             var majorVersionUpdatesTemp = 0
-            
-            print(self.recommendedUpdates)
-            
-            self.logger.debug("Updates found: \(self.recommendedUpdates.count)")
+                        
+            self.logger.debug("Updates found: \(decodedItems.count)")
             
             // Loop through all available updates and decrease number of updates when available macOS version is higher than current major version
-            for item in self.recommendedUpdates {
+            for item in decodedItems {
                 // Filter updates with "macOS" in Display Name
                 if item.displayName.contains("macOS") {
                     // Get digits from Display Version separated by a dot to get the major version

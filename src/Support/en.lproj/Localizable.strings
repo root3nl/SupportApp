@@ -51,3 +51,8 @@
 "NETWORK_UNAVAILABLE" = "Network Unavailable";
 "NETWORK_UNAVAILABLE_TEXT" = "Your organisation's network isn't available. Please check your connection and try again.";
 "CLOSE" = "Close";
+"UPDATES_AVAILABLE" = "Updates Available";
+"NO_UPDATES_AVAILABLE" = "No updates available";
+"UPDATE_NOW" = "Update Now";
+"SETTINGS" = "Settings";
+"YOUR_MAC_IS_UP_TO_DATE" = "Your Mac is up to date";

@@ -51,3 +51,8 @@
 "NETWORK_UNAVAILABLE" = "Réseau indisponible";
 "NETWORK_UNAVAILABLE_TEXT" = "Le réseau de votre organisation n'est pas disponible. Veuillez vérifier votre connexion et tentez une nouvelle fois.";
 "CLOSE" = "Ferme";
+"UPDATES_AVAILABLE" = "Mises à jour disponibles";
+"NO_UPDATES_AVAILABLE" = "Aucune mise à jour disponible";
+"UPDATE_NOW" = "Mettre à jour maintenant";
+"SETTINGS" = "Paramètres";
+"YOUR_MAC_IS_UP_TO_DATE" = "Votre Mac est à jour";

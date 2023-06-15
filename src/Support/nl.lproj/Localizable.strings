@@ -51,3 +51,8 @@
 "NETWORK_UNAVAILABLE" = "Netwerk niet beschikbaar";
 "NETWORK_UNAVAILABLE_TEXT" = "Het netwerk van je organisatie is niet beschikbaar. Controleer je verbinding en probeer het opnieuw.";
 "CLOSE" = "Sluit";
+"UPDATES_AVAILABLE" = "Updates beschikbaar";
+"NO_UPDATES_AVAILABLE" = "Geen updates beschikbaar";
+"UPDATE_NOW" = "Nu bijwerken";
+"SETTINGS" = "Instellingen";
+"YOUR_MAC_IS_UP_TO_DATE" = "Je Mac is up-to-date";

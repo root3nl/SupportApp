@@ -30,7 +30,7 @@ struct UpdateView: View {
             
             HStack {
                 
-                Text(updateCounter > 0 ? "Updates Available" : "No updates available")
+                Text(updateCounter > 0 ? NSLocalizedString("UPDATES_AVAILABLE", comment: "") : NSLocalizedString("NO_UPDATES_AVAILABLE", comment: ""))
                     .font(.system(.headline, design: .rounded))
                 
                 Spacer()
@@ -40,9 +40,9 @@ struct UpdateView: View {
                     openSoftwareUpdate()
                 }) {
                     if updateCounter > 0 {
-                        Text("Update Now")
+                        Text(NSLocalizedString("UPDATE_NOW", comment: ""))
                     } else {
-                        Text("Settings")
+                        Text(NSLocalizedString("SETTINGS", comment: ""))
                     }
                 }
                 .modify {
@@ -96,8 +96,8 @@ struct UpdateView: View {
                     
                     VStack {
                         
-                        Text("You're all set")
-                            .font(.system(.title, design: .rounded))
+                        Text(NSLocalizedString("YOUR_MAC_IS_UP_TO_DATE", comment: ""))
+                            .font(.system(.title2, design: .rounded))
                             .fontWeight(.medium)
                         
                         Image(systemName: "checkmark.circle")
@@ -128,41 +128,6 @@ struct UpdateView: View {
         }
 
         NSWorkspace.shared.open(url)
-
-        DispatchQueue.global().async {
-            let process = Process()
-            let outputPipe = Pipe()
-            
-            process.standardOutput = outputPipe
-            process.standardError = outputPipe
-            process.launchPath = "/usr/sbin/softwareupdate"
-            process.arguments = ["-d", "-a"]
-            
-            do {
-                try process.run()
-            } catch {
-                logger.error("\(error.localizedDescription)")
-                return
-            }
-            
-            let data = outputPipe.fileHandleForReading.readDataToEndOfFile()
-            let output = String(data: data, encoding: .utf8)!
-            
-            // Stream script output to Unified Logging
-            outputPipe.fileHandleForReading.readabilityHandler = { fileHandle in
-                let data = fileHandle.availableData
-                if data.isEmpty {
-                    outputPipe.fileHandleForReading.readabilityHandler = nil
-                    return
-                }
-                if let outputString = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .newlines) {
-                    logger.log("\(outputString, privacy: .public)")
-                }
-            }
-            
-            process.waitUntilExit()
-
-        }
         
         // Close the popover
         NSApp.deactivate()
