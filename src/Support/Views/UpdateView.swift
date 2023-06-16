@@ -28,38 +28,35 @@ struct UpdateView: View {
         
         VStack(alignment: .leading, spacing: 8) {
             
-            HStack {
+            if updateCounter > 0 {
                 
-                Text(updateCounter > 0 ? NSLocalizedString("UPDATES_AVAILABLE", comment: "") : NSLocalizedString("NO_UPDATES_AVAILABLE", comment: ""))
-                    .font(.system(.headline, design: .rounded))
-                
-                Spacer()
-                
-                Button(action: {
-                    showPopover = false
-                    openSoftwareUpdate()
-                }) {
-                    if updateCounter > 0 {
-                        Text(NSLocalizedString("UPDATE_NOW", comment: ""))
-                    } else {
-                        Text(NSLocalizedString("SETTINGS", comment: ""))
-                    }
-                }
-                .modify {
-                    if #available(macOS 12, *) {
-                        if updateCounter > 0 {
-                            $0.buttonStyle(.borderedProminent)
+                HStack {
+                    
+                    Text(updateCounter > 0 ? NSLocalizedString("UPDATES_AVAILABLE", comment: "") : NSLocalizedString("NO_UPDATES_AVAILABLE", comment: ""))
+                        .font(.system(.headline, design: .rounded))
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        showPopover = false
+                        openSoftwareUpdate()
+                    }) {
+                        if #available(macOS 13, *) {
+                            Text(NSLocalizedString("SYSTEM_SETTINGS", comment: ""))
                         } else {
-                            $0.buttonStyle(.bordered)
+                            Text(NSLocalizedString("SYSTEM_PREFERENCES", comment: ""))
+                        }
+                        //                    }
+                    }
+                    .modify {
+                        if #available(macOS 12, *) {
+                            $0.buttonStyle(.borderedProminent)
                         }
                     }
                 }
-            }
-            
-            Divider()
-                .padding(2)
-            
-            if updateCounter > 0 {
+                
+                Divider()
+                    .padding(2)
                 
                 ForEach(computerinfo.recommendedUpdates, id: \.self) { update in
                     
@@ -86,8 +83,8 @@ struct UpdateView: View {
                         
                         Spacer()
                     }
-                    
                 }
+                
             } else {
                 
                 HStack {

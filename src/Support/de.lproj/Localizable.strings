@@ -54,5 +54,6 @@
 "UPDATES_AVAILABLE" = "Updates verfügbar";
 "NO_UPDATES_AVAILABLE" = "Keine Updates verfügbar";
 "UPDATE_NOW" = "Jetzt aktualisieren";
-"SETTINGS" = "Einstellungen";
+"SYSTEM_SETTINGS" = "Systemeinstellungen";
+"SYSTEM_PREFERENCES" = "Systemeinstellungen";
 "YOUR_MAC_IS_UP_TO_DATE" = "Ihr Mac ist auf dem neuesten Stand";
