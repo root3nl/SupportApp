@@ -34,7 +34,7 @@ struct ExtensionBSubview: View {
     
     var body: some View {
         
-        Item(title: preferences.extensionTitleB, subtitle: preferences.extensionValueB, linkType: preferences.extensionTypeB, link: preferences.extensionLinkB, image: preferences.extensionSymbolB, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.extensionLoadingB, linkPrefKey: Preferences.extensionLinkBKey, hoverEffectEnable: true, hoverView: false, animate: false)
+        Item(title: preferences.extensionTitleB, subtitle: preferences.extensionValueB, linkType: preferences.extensionTypeB, link: preferences.extensionLinkB, image: preferences.extensionSymbolB, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: preferences.extensionAlertB, loading: preferences.extensionLoadingB, linkPrefKey: Preferences.extensionLinkBKey, hoverEffectEnable: true, hoverView: false, animate: false)
         
     }
 }
