@@ -57,7 +57,7 @@ struct MacOSVersionSubview: View {
             self.showUpdatePopover.toggle()
         }
         .popover(isPresented: $showUpdatePopover, arrowEdge: .leading) {
-            UpdateView(updateCounter: updatesAvailable)
+            UpdateView(updateCounter: updatesAvailable, color: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
         }
     }
 }

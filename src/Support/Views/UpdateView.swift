@@ -23,6 +23,7 @@ struct UpdateView: View {
     
     // Update counter
     var updateCounter: Int
+    var color: Color
             
     var body: some View {
         
@@ -46,7 +47,6 @@ struct UpdateView: View {
                         } else {
                             Text(NSLocalizedString("SYSTEM_PREFERENCES", comment: ""))
                         }
-                        //                    }
                     }
                     .modify {
                         if #available(macOS 12, *) {
@@ -97,10 +97,15 @@ struct UpdateView: View {
                             .font(.system(.title2, design: .rounded))
                             .fontWeight(.medium)
                         
-                        Image(systemName: "checkmark.circle")
+                        Image(systemName: "checkmark.circle.fill")
                             .resizable()
                             .frame(width: 50, height: 50)
-                            .foregroundColor(.green)
+                            .foregroundColor(color)
+                            .modify {
+                                if #available(macOS 12, *) {
+                                    $0.symbolRenderingMode(.multicolor)
+                                }
+                            }
                         
                     }
                     
