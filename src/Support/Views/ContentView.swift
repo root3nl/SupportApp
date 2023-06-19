@@ -73,110 +73,11 @@ struct ContentView: View {
                 HeaderView()
                 
                 // MARK: - First horizontal stack with Computer Name and macOS version as defaults
-                HStack(spacing: 10) {
-                    
-                    // Item left
-                    switch preferences.infoItemOne {
-                    case "ComputerName":
-                        ComputerNameSubview()
-                    case "MacOSVersion":
-                        MacOSVersionSubview()
-                    case "Network":
-                        NetworkSubview()
-                    case "Password":
-                        PasswordSubview()
-                    case "Storage":
-                        StorageSubview()
-                    case "Uptime":
-                        UptimeSubview()
-                    case "ExtensionA":
-                        ExtensionASubview()
-                    case "ExtensionB":
-                        ExtensionBSubview()
-                    default:
-                        ComputerNameSubview()
-                    }
-                    
-                    // Item right
-                    switch preferences.infoItemTwo {
-                    case "ComputerName":
-                        ComputerNameSubview()
-                    case "MacOSVersion":
-                        MacOSVersionSubview()
-                    case "Network":
-                        NetworkSubview()
-                    case "Password":
-                        PasswordSubview()
-                    case "Storage":
-                        StorageSubview()
-                    case "Uptime":
-                        UptimeSubview()
-                    case "ExtensionA":
-                        ExtensionASubview()
-                    case "ExtensionB":
-                        ExtensionBSubview()
-                    default:
-                        MacOSVersionSubview()
-                    }
-                    
-                }
-                .padding(.horizontal, 10)
-                
-                // MARK: - Second horizontal stack with Uptime and StorageView as defaults
-                HStack(spacing: 10) {
-                    
-                    // Item left
-                    switch preferences.infoItemThree {
-                    case "ComputerName":
-                        ComputerNameSubview()
-                    case "MacOSVersion":
-                        MacOSVersionSubview()
-                    case "Network":
-                        NetworkSubview()
-                    case "Password":
-                        PasswordSubview()
-                    case "Storage":
-                        StorageSubview()
-                    case "Uptime":
-                        UptimeSubview()
-                    case "ExtensionA":
-                        ExtensionASubview()
-                    case "ExtensionB":
-                        ExtensionBSubview()
-                    default:
-                        UptimeSubview()
-                    }
-                    
-                    // Item right
-                    switch preferences.infoItemFour {
-                    case "ComputerName":
-                        ComputerNameSubview()
-                    case "MacOSVersion":
-                        MacOSVersionSubview()
-                    case "Network":
-                        NetworkSubview()
-                    case "Password":
-                        PasswordSubview()
-                    case "Storage":
-                        StorageSubview()
-                    case "Uptime":
-                        UptimeSubview()
-                    case "ExtensionA":
-                        ExtensionASubview()
-                    case "ExtensionB":
-                        ExtensionBSubview()
-                    default:
-                        StorageSubview()
-                    }
-                }
-                .padding(.horizontal, 10)
-                
-                // MARK: - Third optional horizontal stack with Password and Network as defaults
-                if preferences.infoItemFive != "" || preferences.infoItemSix != "" {
+                if !preferences.hideFirstRowInfoItems {
                     HStack(spacing: 10) {
                         
                         // Item left
-                        switch preferences.infoItemFive {
+                        switch preferences.infoItemOne {
                         case "ComputerName":
                             ComputerNameSubview()
                         case "MacOSVersion":
@@ -194,11 +95,11 @@ struct ContentView: View {
                         case "ExtensionB":
                             ExtensionBSubview()
                         default:
-                            PasswordSubview()
+                            ComputerNameSubview()
                         }
                         
                         // Item right
-                        switch preferences.infoItemSix {
+                        switch preferences.infoItemTwo {
                         case "ComputerName":
                             ComputerNameSubview()
                         case "MacOSVersion":
@@ -216,15 +117,121 @@ struct ContentView: View {
                         case "ExtensionB":
                             ExtensionBSubview()
                         default:
-                            NetworkSubview()
+                            MacOSVersionSubview()
                         }
                         
                     }
                     .padding(.horizontal, 10)
                 }
+                
+                // MARK: - Second horizontal stack with Uptime and StorageView as defaults
+                if !preferences.hideSecondRowInfoItems {
+                    HStack(spacing: 10) {
+                        
+                        // Item left
+                        switch preferences.infoItemThree {
+                        case "ComputerName":
+                            ComputerNameSubview()
+                        case "MacOSVersion":
+                            MacOSVersionSubview()
+                        case "Network":
+                            NetworkSubview()
+                        case "Password":
+                            PasswordSubview()
+                        case "Storage":
+                            StorageSubview()
+                        case "Uptime":
+                            UptimeSubview()
+                        case "ExtensionA":
+                            ExtensionASubview()
+                        case "ExtensionB":
+                            ExtensionBSubview()
+                        default:
+                            UptimeSubview()
+                        }
+                        
+                        // Item right
+                        switch preferences.infoItemFour {
+                        case "ComputerName":
+                            ComputerNameSubview()
+                        case "MacOSVersion":
+                            MacOSVersionSubview()
+                        case "Network":
+                            NetworkSubview()
+                        case "Password":
+                            PasswordSubview()
+                        case "Storage":
+                            StorageSubview()
+                        case "Uptime":
+                            UptimeSubview()
+                        case "ExtensionA":
+                            ExtensionASubview()
+                        case "ExtensionB":
+                            ExtensionBSubview()
+                        default:
+                            StorageSubview()
+                        }
+                    }
+                    .padding(.horizontal, 10)
+                }
+                
+                // MARK: - Third optional horizontal stack with Password and Network as defaults
+                if preferences.infoItemFive != "" || preferences.infoItemSix != "" {
+                    if !preferences.hideThirdRowInfoItems {
+                        HStack(spacing: 10) {
+                            
+                            // Item left
+                            switch preferences.infoItemFive {
+                            case "ComputerName":
+                                ComputerNameSubview()
+                            case "MacOSVersion":
+                                MacOSVersionSubview()
+                            case "Network":
+                                NetworkSubview()
+                            case "Password":
+                                PasswordSubview()
+                            case "Storage":
+                                StorageSubview()
+                            case "Uptime":
+                                UptimeSubview()
+                            case "ExtensionA":
+                                ExtensionASubview()
+                            case "ExtensionB":
+                                ExtensionBSubview()
+                            default:
+                                PasswordSubview()
+                            }
+                            
+                            // Item right
+                            switch preferences.infoItemSix {
+                            case "ComputerName":
+                                ComputerNameSubview()
+                            case "MacOSVersion":
+                                MacOSVersionSubview()
+                            case "Network":
+                                NetworkSubview()
+                            case "Password":
+                                PasswordSubview()
+                            case "Storage":
+                                StorageSubview()
+                            case "Uptime":
+                                UptimeSubview()
+                            case "ExtensionA":
+                                ExtensionASubview()
+                            case "ExtensionB":
+                                ExtensionBSubview()
+                            default:
+                                NetworkSubview()
+                            }
+                            
+                        }
+                        .padding(.horizontal, 10)
+                    }
+                }
                    
                 // MARK: - Hide row if specified in configuration
-                if !defaults.bool(forKey: "HideFirstRow") {
+                // MARK: - Key 'HideFirstRow' is deprecated, please use 'HideFirstRowButtons'
+                if !defaults.bool(forKey: "HideFirstRow") && !preferences.hideFirstRowButtons {
 
                     // MARK: - Horizontal stack with 2 or 3 configurable action buttons
                     HStack(spacing: 10) {
@@ -242,7 +249,8 @@ struct ContentView: View {
                 }
                 
                 // MARK: - Hide row if specified in configuration
-                if !defaults.bool(forKey: "HideSecondRow") {
+                // MARK: - Key 'HideSecondRow' is deprecated, please use 'HideSecondRowButtons'
+                if !defaults.bool(forKey: "HideSecondRow") && !preferences.hideSecondRowButtons {
                 
                     // MARK: - Horizontal stack with 2 or 3 configurable action buttons
                     HStack(spacing: 10) {

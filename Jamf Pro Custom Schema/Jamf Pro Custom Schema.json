@@ -162,13 +162,13 @@
         }
       ]
     },
-    "HideFirstRow": {
-      "title": "Hide the first row",
-      "description": "Hide the first row with configurable items",
+    "HideFirstRowInfoItems": {
+      "title": "Hide first row Info Items",
+      "description": "Hide the first row with Info Items",
       "type": "boolean",
       "options": {
         "enum_titles": ["Hide", "Show"],
-        "infoText": "Key name: HideFirstRow"
+        "infoText": "Key name: HideFirstRowInfoItems"
       },
       "links": [
         {
@@ -177,13 +177,58 @@
         }
       ]
     },
-    "HideSecondRow": {
-      "title": "Hide the second row",
+    "HideSecondRowInfoItems": {
+      "title": "Hide second row Info Items",
+      "description": "Hide the second row with Info Items",
+      "type": "boolean",
+      "options": {
+        "enum_titles": ["Hide", "Show"],
+        "infoText": "Key name: HideSecondRowInfoItems"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "HideThirdRowInfoItems": {
+      "title": "Hide third row Info Items",
+      "description": "Hide the third row with Info Items",
+      "type": "boolean",
+      "options": {
+        "enum_titles": ["Hide", "Show"],
+        "infoText": "Key name: HideThirdRowInfoItems"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "HideFirstRowButtons": {
+      "title": "Hide first row configurable buttons",
+      "description": "Hide the first row with configurable items",
+      "type": "boolean",
+      "options": {
+        "enum_titles": ["Hide", "Show"],
+        "infoText": "Key name: HideFirstRowButtons"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "HideSecondRowButtons": {
+      "title": "Hide second row configurable buttons",
       "description": "Hide the second row with configurable items",
       "type": "boolean",
       "options": {
         "enum_titles": ["Hide", "Show"],
-        "infoText": "Key name: HideSecondRow"
+        "infoText": "Key name: HideSecondRowButtons"
       },
       "links": [
         {
