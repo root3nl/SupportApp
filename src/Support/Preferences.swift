@@ -160,10 +160,12 @@ class Preferences: ObservableObject {
     // Custom Item A value and loading effect booleans. Set to "KeyPlaceholder" to default to enable placeholder view
     @AppStorage("ExtensionValueA") var extensionValueA: String = "KeyPlaceholder"
     @AppStorage("ExtensionLoadingA") var extensionLoadingA = Bool()
+    @AppStorage("ExtensionAlertA") var extensionAlertA = Bool()
     
     // Custom Item B value and loading effect booleans. Set to "KeyPlaceholder" to default to enable placeholder view
     @AppStorage("ExtensionValueB") var extensionValueB: String = "KeyPlaceholder"
     @AppStorage("ExtensionLoadingB") var extensionLoadingB = Bool()
+    @AppStorage("ExtensionAlertB") var extensionAlertB = Bool()
     
     // Enable beta release watermark
     let betaRelease: Bool = false

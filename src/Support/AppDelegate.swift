@@ -17,7 +17,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     var popover: NSPopover!
     var eventMonitor: EventMonitor?
-    var timer: Timer?
+//    var timer: Timer?
     var timerFiveMinutes: Timer?
     let menu = NSMenu()
     var statusBarItem: NSStatusItem?
@@ -111,6 +111,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         ASUdefaults?.addObserver(self, forKeyPath: "LastUpdatesAvailable", options: .new, context: nil)
         ASUdefaults?.addObserver(self, forKeyPath: "RecommendedUpdates", options: .new, context: nil)
         
+        // Observe changes for Extensions A and B
+        defaults.addObserver(self, forKeyPath: "ExtensionAlertA", options: .new, context: nil)
+        defaults.addObserver(self, forKeyPath: "ExtensionAlertB", options: .new, context: nil)
+        
         // Receive notifications after uptime check
         NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.uptimeDaysLimit, object: nil)
         
@@ -155,9 +159,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 
         // Event monitor to hide popover when clicked outside the popover.
         eventMonitor = EventMonitor(mask: [.leftMouseDown, .rightMouseDown]) { [weak self] event in
-          if let strongSelf = self, strongSelf.popover.isShown {
-            strongSelf.closePopover(sender: event)
-          }
+            if let strongSelf = self, strongSelf.popover.isShown {
+                strongSelf.closePopover(sender: event)
+            }
         }
     }
     
@@ -295,7 +299,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
             
             // Show notification badge in menu bar icon when info item when needed
-            if (updatesAvailable == 0 || !infoItemsEnabled.contains("MacOSVersion")) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage"))) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
+            if (updatesAvailable == 0 || !infoItemsEnabled.contains("MacOSVersion")) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage")) || (preferences.extensionAlertA && infoItemsEnabled.contains("ExtensionA")) || (preferences.extensionAlertB && infoItemsEnabled.contains("ExtensionB"))) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
                                 
                 // Create orange notification badge
                 orangeBadge.isHidden = false
@@ -402,8 +406,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed, checking update contents...")
             self.computerinfo.getRecommendedUpdates()
         case "OpenAtLogin":
-            logger.debug("\(keyPath! as NSObject) change to \(self.defaults.bool(forKey: "OpenAtLogin"), privacy: .public)")
+            logger.debug("\(keyPath! as NSObject) changed to \(self.defaults.bool(forKey: "OpenAtLogin"), privacy: .public)")
             self.configureLaunchAgent()
+        case "ExtensionAlertA":
+            logger.debug("\(keyPath! as NSObject) changed to \(self.preferences.extensionAlertA, privacy: .public)")
+        case "ExtensionAlertB":
+            logger.debug("\(keyPath! as NSObject) changed to \(self.preferences.extensionAlertB, privacy: .public)")
         default:
             logger.debug("Some other change detected...")
         }
@@ -517,13 +525,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     // MARK: - Close the popover
     func closePopover(sender: Any?) {
-        popover.performClose(sender)
+//        popover.performClose(sender)
+        popover.close()
         
         // Stop monitoring mouse clicks outside the popover
         eventMonitor?.stop()
         
         // Stop timer when popover closes
-        timer?.invalidate()
+//        timer?.invalidate()
     }
 
     // MARK: - Show the standard about window
