@@ -100,10 +100,13 @@ struct UpdateView: View {
                         Image(systemName: "checkmark.circle.fill")
                             .resizable()
                             .frame(width: 50, height: 50)
-                            .foregroundColor(color)
                             .modify {
                                 if #available(macOS 12, *) {
-                                    $0.symbolRenderingMode(.multicolor)
+                                    $0.symbolRenderingMode(.palette)
+                                        .foregroundStyle(.white, color)
+                                } else {
+                                    $0.foregroundColor(color)
+
                                 }
                             }
                         
