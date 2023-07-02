@@ -145,3 +145,24 @@ extension View {
         }
     }
 }
+
+// MARK: - String extension to replace local variables
+extension String {
+    
+    func replaceLocalVariables(computerInfo: ComputerInfo, userInfo: UserInfo) -> String {
+        var newString = self
+        let localVariables = [
+            ("%COMPUTERNAME%", computerInfo.hostname),
+            ("%FULLNAME%", userInfo.fullName),
+            ("%MACOSVERSION%", computerInfo.macOSVersionName),
+            ("%IPADDRESS%", computerInfo.ipAddress)
+        ]
+    
+        // Loop through all possible local variables and replace when found
+        for (original, replacement) in localVariables {
+            newString = newString.replacingOccurrences(of: original, with: replacement)
+        }
+        return newString
+    }
+
+}

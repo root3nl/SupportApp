@@ -24,7 +24,9 @@ struct HeaderView: View {
         HStack(spacing: 10) {
             
             // Supports for markdown through a variable:
-            Text(.init(preferences.title)).font(.system(size: 20, design: .rounded)).fontWeight(.medium)
+            Text(.init(preferences.title))
+                .font(.system(size: 20, design: .rounded))
+                .fontWeight(.medium)
 
             Spacer()
             
