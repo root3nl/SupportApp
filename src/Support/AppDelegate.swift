@@ -496,6 +496,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.computerinfo.getIPAddress()
             Task {
                 await self.userinfo.getCurrentUserRecord()
+                await self.userinfo.getUserFullName()
             }
             
             // Post Distributed Notification to trigger script for custom info items
@@ -514,6 +515,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.computerinfo.kernelBootTime()
         Task {
             await self.userinfo.getCurrentUserRecord()
+            await self.userinfo.getUserFullName()
         }
         self.computerinfo.getStorage()
         self.computerinfo.getRecommendedUpdates()

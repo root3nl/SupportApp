@@ -15,6 +15,9 @@ struct ContentView: View {
     // Get  computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo
     
+    // Get user info from functions in class
+    @EnvironmentObject var userinfo: UserInfo
+    
     // Get preferences or default values
     @StateObject var preferences = Preferences()
     
@@ -273,7 +276,7 @@ struct ContentView: View {
                         
                         // Supports for markdown through a variable:
                         // https://blog.eidinger.info/3-surprises-when-using-markdown-in-swiftui
-                        Text(.init(preferences.footerText))
+                        Text(.init(preferences.footerText.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))
                                 .font(.system(.subheadline, design: .rounded))
                                 .foregroundColor(colorScheme == .dark ? .white.opacity(0.5) : .black.opacity(0.5))
                         
@@ -291,7 +294,6 @@ struct ContentView: View {
         // MARK: - Run functions when ContentView appears for the first time
         .onAppear {
             computerinfo.getModelName()
-            computerinfo.getmacOSVersionName()
             dataLoadingEffect()
         }
         // MARK: - Show placeholders while loading

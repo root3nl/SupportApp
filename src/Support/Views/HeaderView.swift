@@ -9,6 +9,12 @@ import SwiftUI
 
 struct HeaderView: View {
     
+    // Get computer info from functions in class
+    @EnvironmentObject var computerinfo: ComputerInfo
+    
+    // Get user info from functions in class
+    @EnvironmentObject var userinfo: UserInfo
+    
     // Get preferences or default values
     @StateObject var preferences = Preferences()
     
@@ -24,7 +30,9 @@ struct HeaderView: View {
         HStack(spacing: 10) {
             
             // Supports for markdown through a variable:
-            Text(.init(preferences.title)).font(.system(size: 20, design: .rounded)).fontWeight(.medium)
+            Text(.init(preferences.title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))
+                .font(.system(size: 20, design: .rounded))
+                .fontWeight(.medium)
 
             Spacer()
             
