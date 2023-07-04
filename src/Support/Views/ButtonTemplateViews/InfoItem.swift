@@ -12,7 +12,8 @@ struct InfoItem: View {
     var subtitle: String
     var image: String
     var symbolColor: Color
-    var notificationBadge: Bool?
+    var notificationBadge: Int?
+    var notificationBadgeBool: Bool?
     
     // Vars to activate hover effect
     @State var hoverEffectEnable: Bool
@@ -42,9 +43,16 @@ struct InfoItem: View {
                 Spacer()
             }
             
-            if notificationBadge ?? false {
+            // Optionally show notification badge with counter
+            if notificationBadge != nil && notificationBadge! > 0 {
+                NotificationBadgeView(badgeCounter: notificationBadge!)
+            }
+            
+            // Optionally show notification badge with warning
+            if notificationBadgeBool ?? false {
                 NotificationBadgeTextView(badgeCounter: "!")
             }
+
         }
         .frame(width: 176, height: 60)
         .background(hoverView && hoverEffectEnable ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))

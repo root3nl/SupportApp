@@ -38,34 +38,19 @@ struct HeaderView: View {
             
             // Logo shown in the top right corner
             if colorScheme == .light && defaults.string(forKey: "Logo") != nil {
-                Image(nsImage: (NSImage(contentsOfFile: defaults.string(forKey: "Logo")!) ?? NSImage(named: "DefaultLogo"))!)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 48)
+                LogoView(logo: defaults.string(forKey: "Logo")!)
             // Show different logo in Dark Mode when LogoDarkMode is also set
             } else if colorScheme == .dark && defaults.string(forKey: "Logo") != nil {
                 if defaults.string(forKey: "LogoDarkMode") != nil {
-                    Image(nsImage: (NSImage(contentsOfFile: defaults.string(forKey: "LogoDarkMode")!) ?? NSImage(named: "DefaultLogo"))!)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 48)
+                    LogoView(logo: defaults.string(forKey: "LogoDarkMode")!)
                 } else if defaults.string(forKey: "Logo") != nil && defaults.string(forKey: "LogoDarkMode") == nil {
-                    Image(nsImage: (NSImage(contentsOfFile: defaults.string(forKey: "Logo")!) ?? NSImage(named: "DefaultLogo"))!)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 48)
+                    LogoView(logo: defaults.string(forKey: "Logo")!)
                 } else {
-                    Image("DefaultLogo")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 48)
+                    LogoView(logo: "default")
                 }
             // Show default logo in all other cases
             } else {
-                Image("DefaultLogo")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 48, height: 48)
+                LogoView(logo: "default")
             }
             
         }

@@ -119,6 +119,12 @@ class ComputerInfo: ObservableObject {
     // Ethernet or SSID when connected
     @Published var networkName = NSLocalizedString("Not Connected", comment: "")
     
+    // Rapid Security Response version
+    @Published var rapidSecurityResponseVersion: String = ""
+    
+    // Create empty array for decoded RecommendedUpdates UserDefaults data
+    @Published var recommendedUpdates: [SoftwareUpdateModel] = []
+    
     // MARK: - Function to get uptime
     func kernelBootTime() {
         
@@ -213,6 +219,9 @@ class ComputerInfo: ObservableObject {
     // MARK: - Function to get storage data
     func getStorage() {
         
+        // Set current status to compare with new status when function completes
+        let oldStorageLimitReached = storageLimitReached
+        
         // Calculate available capacity
         let fileURL = URL(fileURLWithPath:"/")
         do {
@@ -271,7 +280,11 @@ class ComputerInfo: ObservableObject {
         }
         
         // Post changes to notification center
-//        NotificationCenter.default.post(name: Notification.Name.storageLimit, object: nil)
+        if oldStorageLimitReached != storageLimitReached {
+            NotificationCenter.default.post(name: Notification.Name.storageLimit, object: nil)
+        } else {
+            self.logger.debug("Storage Limit did not change, no need to reload StatusBarItem")
+        }
     }
     
     // MARK: - Get the Model Identifier: https://github.com/Ekhoo/Device/blob/master/Source/macOS/DeviceMacOS.swift
@@ -579,7 +592,7 @@ class ComputerInfo: ObservableObject {
         let userDefaultsSoftwareUpdates = UserDefaults(suiteName: "com.apple.SoftwareUpdate")
         
         // Create empty array for RecommendedUpdates UserDefaults data
-        let recommendedUpdates = userDefaultsSoftwareUpdates?.array(forKey: "RecommendedUpdates") ?? []
+        let recommendedUpdatesArray = userDefaultsSoftwareUpdates?.array(forKey: "RecommendedUpdates") ?? []
         
         // Create empty array for decoded RecommendedUpdates UserDefaults data
         var decodedItems: [SoftwareUpdateModel] = []
@@ -589,7 +602,7 @@ class ComputerInfo: ObservableObject {
             
             do {
                 // Convert UserDefaults to JSON data
-                let data = try JSONSerialization.data(withJSONObject: recommendedUpdates, options: [])
+                let data = try JSONSerialization.data(withJSONObject: recommendedUpdatesArray, options: [])
                 
                 // Decode JSON data
                 let decoder = JSONDecoder()
@@ -608,7 +621,7 @@ class ComputerInfo: ObservableObject {
             
             // Reset major version updates to 0
             var majorVersionUpdatesTemp = 0
-            
+                        
             self.logger.debug("Updates found: \(decodedItems.count)")
             
             // Loop through all available updates and decrease number of updates when available macOS version is higher than current major version
@@ -637,6 +650,7 @@ class ComputerInfo: ObservableObject {
             // Back to the main thread to publish values
             DispatchQueue.main.async {
                 self.majorVersionUpdates = majorVersionUpdatesTemp
+                self.recommendedUpdates = decodedItems
                 
                 // Post changes to notification center
                 if oldMajorVersionUpdates != majorVersionUpdatesTemp {
@@ -644,6 +658,36 @@ class ComputerInfo: ObservableObject {
                 } else {
                     self.logger.debug("Number of Major macOS Updates did not change, no need to reload StatusBarItem")
                 }
+            }
+        }
+    }
+    
+    @available(macOS 13, *)
+    // MARK: - Get optional Rapid Security Response version
+    func getRSRVersion() {
+        
+        let task = Process()
+        let pipe = Pipe()
+        
+        // Command to get Rapid Security Response version
+        let RSRCommand = """
+        /usr/bin/sw_vers -productVersionExtra
+        """
+        
+        // Move command to background thread
+        DispatchQueue.global().async {
+            task.standardOutput = pipe
+            task.standardError = pipe
+            task.launchPath = "/bin/zsh"
+            task.arguments = ["-c", RSRCommand]
+            task.launch()
+            
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            
+            // Back to the main thread to publish values
+            DispatchQueue.main.async {
+                self.rapidSecurityResponseVersion = String(data: data, encoding: .utf8)!.trimmingCharacters(in: .whitespacesAndNewlines)
+                self.logger.debug("Rapid Security Reponse version: \(self.rapidSecurityResponseVersion)")
             }
         }
     }

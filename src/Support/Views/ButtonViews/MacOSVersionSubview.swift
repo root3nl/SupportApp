@@ -21,6 +21,9 @@ struct MacOSVersionSubview: View {
     // Dark Mode detection
     @Environment(\.colorScheme) var colorScheme
     
+    // Boolean to show UpdateView as popover
+    @State var showUpdatePopover: Bool = false
+    
     // Set the custom color for all symbols depending on Light or Dark Mode.
     var customColor: String {
         if colorScheme == .light && defaults.string(forKey: "CustomColor") != nil {
@@ -43,8 +46,19 @@ struct MacOSVersionSubview: View {
     
     var body: some View {
         
-        Item(title: "macOS \(computerinfo.macOSVersionName)", subtitle: computerinfo.macOSVersion, linkType: "URL", link: "x-apple.systempreferences:com.apple.preferences.softwareupdate", image: "applelogo", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: updatesAvailable, hoverEffectEnable: true, animate: false)
-        
+        Group {
+            if computerinfo.systemVersionPatch == 0 {
+                InfoItem(title: "macOS \(computerinfo.macOSVersionName)", subtitle: "\(computerinfo.systemVersionMajor).\(computerinfo.systemVersionMinor)" + " \(computerinfo.rapidSecurityResponseVersion)", image: "applelogo", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: updatesAvailable, hoverEffectEnable: true)
+            } else {
+                InfoItem(title: "macOS \(computerinfo.macOSVersionName)", subtitle: "\(computerinfo.systemVersionMajor).\(computerinfo.systemVersionMinor).\(computerinfo.systemVersionPatch)" + " \(computerinfo.rapidSecurityResponseVersion)", image: "applelogo", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: updatesAvailable, hoverEffectEnable: true)
+            }
+        }
+        .onTapGesture {
+            self.showUpdatePopover.toggle()
+        }
+        .popover(isPresented: $showUpdatePopover, arrowEdge: .leading) {
+            UpdateView(updateCounter: updatesAvailable, color: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+        }
     }
 }
 

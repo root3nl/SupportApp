@@ -17,7 +17,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     var popover: NSPopover!
     var eventMonitor: EventMonitor?
-    var timer: Timer?
+//    var timer: Timer?
     var timerFiveMinutes: Timer?
     let menu = NSMenu()
     var statusBarItem: NSStatusItem?
@@ -42,22 +42,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // Create red notification badge view
     // https://github.com/DeveloperMaris/ToolReleases/blob/master/ToolReleases/PopoverController.swift
     lazy var redBadge: NSView = {
-        let view = StatusItemBadgeView(frame: NSRect(x: 0, y: 0, width: 0, height: 0), color: .systemRed)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.wantsLayer = true
-        view.layer?.masksToBounds = true
-        return view
+        StatusItemBadgeView(frame: .zero, color: .systemRed)
     }()
     
     // Create orange notification badge view
     // https://github.com/DeveloperMaris/ToolReleases/blob/master/ToolReleases/PopoverController.swift
     lazy var orangeBadge: NSView = {
-        let view = StatusItemBadgeView(frame: NSRect(x: 0, y: 0, width: 0, height: 0), color: .systemOrange)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.wantsLayer = true
-        view.layer?.masksToBounds = true
-        return view
+        StatusItemBadgeView(frame: .zero, color: .systemOrange)
     }()
+    
+    // Save current URL to StatusBarItem. While the app runs we detect if the URL is still the same during reloads of the StatusBarItem. Only if it changes, the image should be downloaded again.
+    @AppStorage("LastKnownStatusBarItemUrl") var lastKnownStatusBarItemUrl: String = ""
+    
+    // Save current URL to Notification icon. While the app runs we detect if the URL is still the same during reloads of the StatusBarItem. Only if it changes, the image should be downloaded again.
+    @AppStorage("LastKnownNotificationIconUrl") var lastKnownNotificationIconUrl: String = ""
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         
@@ -113,11 +111,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         ASUdefaults?.addObserver(self, forKeyPath: "LastUpdatesAvailable", options: .new, context: nil)
         ASUdefaults?.addObserver(self, forKeyPath: "RecommendedUpdates", options: .new, context: nil)
         
+        // Observe changes for Extensions A and B
+        defaults.addObserver(self, forKeyPath: "ExtensionAlertA", options: .new, context: nil)
+        defaults.addObserver(self, forKeyPath: "ExtensionAlertB", options: .new, context: nil)
+        
         // Receive notifications after uptime check
         NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.uptimeDaysLimit, object: nil)
         
         // Receive notifications after network check
 //        NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.networkState, object: nil)
+        
+        // Receive notification after storage check
+        NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.storageLimit, object: nil)
         
         // Receive notification after password expiry check
         NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.passwordExpiryLimit, object: nil)
@@ -154,14 +159,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 
         // Event monitor to hide popover when clicked outside the popover.
         eventMonitor = EventMonitor(mask: [.leftMouseDown, .rightMouseDown]) { [weak self] event in
-          if let strongSelf = self, strongSelf.popover.isShown {
-            strongSelf.closePopover(sender: event)
-          }
+            if let strongSelf = self, strongSelf.popover.isShown {
+                strongSelf.closePopover(sender: event)
+            }
         }
     }
     
     // MARK: - Set and update the menu bar icon
     @objc func setStatusBarIcon() {
+        
+        logger.debug("Setting StatusBarItem")
         
         // Define the default menu bar icon
         let defaultSFSymbol = NSImage(systemSymbolName: "lifepreserver", accessibilityDescription: nil)
@@ -175,14 +182,65 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             redBadge.isHidden = true
             orangeBadge.isHidden = true
             
-            // Use custom status bar icon if set in UserDefaults with fallback to default icon
-            if defaults.string(forKey: "StatusBarIcon") != nil {
-                if let customIcon = NSImage(contentsOfFile: defaults.string(forKey: "StatusBarIcon")!) {
+            // Use custom Notification Icon if set in UserDefaults with fallback to default icon
+            if let defaultsStatusBarIcon = defaults.string(forKey: "StatusBarIcon") {
+                
+                // Empty initializer with URL to local Notification Icon, either directly from the Configuration Profile or the local download location for remote image
+                var localIconURL: String = ""
+                
+                // If image is a remote URL, download the image and store in container Documents folder
+                if defaultsStatusBarIcon.hasPrefix("https") {
+                                        
+                    do {
+                        
+                        // Boolean new URL
+                        var newURL: Bool
+                        
+                        // Detect if the URL changed to check whether to download the image again
+                        if defaultsStatusBarIcon != lastKnownStatusBarItemUrl {
+                            newURL = true
+                        } else {
+                            newURL = false
+                        }
+                        
+                        if let downloadedIconURL = try getRemoteImage(url: defaultsStatusBarIcon, newURL: newURL, filename: "menu_bar_icon", logName: "StatusBarIcon") {
+                            localIconURL = downloadedIconURL.path
+                        }
+                        
+                    } catch {
+                        logger.error("Failed to download StatusBarIcon")
+                        logger.error("\(error.localizedDescription)")
+                    }
+                    
+                    // Set current URL
+                    lastKnownStatusBarItemUrl = defaultsStatusBarIcon
+                    
+                } else {
+                    // Set image to file URL from Configuration Profile
+                    logger.debug("StatusBarIcon is local file")
+                    
+                    localIconURL = defaultsStatusBarIcon
+                }
+                
+                if let customIcon = NSImage(contentsOfFile: localIconURL) {
                     
                     // When custom image is larger than 22 point, we should resize to 16x16 points as recommended icon size
                     // https://bjango.com/articles/designingmenubarextras/
-                    if customIcon.size.width > 22 || customIcon.size.height > 22 {
-                        customIcon.size = NSSize(width: 16, height: 16)
+                    // The aspect ratio will be preserved
+                    let maxSize: CGFloat = 22
+                    let targetSize: CGFloat = 16
+
+                    if customIcon.size.width > maxSize || customIcon.size.height > maxSize {
+                        var newWidth = targetSize
+                        var newHeight = targetSize
+                        
+                        if customIcon.size.width > customIcon.size.height {
+                            newHeight = (targetSize / customIcon.size.width) * customIcon.size.height
+                        } else {
+                            newWidth = (targetSize / customIcon.size.height) * customIcon.size.width
+                        }
+                        
+                        customIcon.size = NSSize(width: newWidth, height: newHeight)
                     }
                     
                     // Set status bar icon to custom image
@@ -241,7 +299,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
             
             // Show notification badge in menu bar icon when info item when needed
-            if (updatesAvailable == 0 || !infoItemsEnabled.contains("MacOSVersion")) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage"))) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
+            if (updatesAvailable == 0 || !infoItemsEnabled.contains("MacOSVersion")) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage")) || (preferences.extensionAlertA && infoItemsEnabled.contains("ExtensionA")) || (preferences.extensionAlertB && infoItemsEnabled.contains("ExtensionB"))) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
                                 
                 // Create orange notification badge
                 orangeBadge.isHidden = false
@@ -266,10 +324,50 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     // MARK: - Set Custom Notification Icon
     func setNotificationIcon() {
+        
         // Set custom alert icon if specified
-        if defaults.string(forKey: "NotificationIcon") != nil {
+        if let defaultsNotificationIcon = defaults.string(forKey: "NotificationIcon") {
+            
             logger.debug("Notification icon configured...")
-            if let appIconImage = NSImage(contentsOfFile: defaults.string(forKey: "NotificationIcon") ?? "") {
+            
+            // Empty initializer with URL to local Status Bar Item, either directly from the Configuration Profile or the local download location for remote image
+            var localNotificationIconURL: String = ""
+            
+            // If image is a remote URL, download the image and store in container Documents folder
+            if defaultsNotificationIcon.hasPrefix("https") {
+                                    
+                do {
+                    
+                    // Boolean new URL
+                    var newURL: Bool
+                    
+                    // Detect if the URL changed to check whether to download the image again
+                    if defaultsNotificationIcon != lastKnownNotificationIconUrl {
+                        newURL = true
+                    } else {
+                        newURL = false
+                    }
+                    
+                    if let downloadedIconURL = try getRemoteImage(url: defaultsNotificationIcon, newURL: newURL, filename: "notification_icon", logName: "Notification Icon") {
+                        localNotificationIconURL = downloadedIconURL.path
+                    }
+                    
+                    // Set current URL
+                    lastKnownNotificationIconUrl = defaultsNotificationIcon
+                    
+                } catch {
+                    logger.error("Failed to download Notification Icon")
+                    logger.error("\(error.localizedDescription)")
+                }
+                
+            } else {
+                // Set image to file URL from Configuration Profile
+                logger.debug("Notification Icon is local file")
+                
+                localNotificationIconURL = defaultsNotificationIcon
+            }
+            
+            if let appIconImage = NSImage(contentsOfFile: localNotificationIconURL) {
                 appIconImage.setName("NSApplicationIcon")
                 NSApplication.shared.applicationIconImage = appIconImage
             } else {
@@ -308,8 +406,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed, checking update contents...")
             self.computerinfo.getRecommendedUpdates()
         case "OpenAtLogin":
-            logger.debug("\(keyPath! as NSObject) change to \(self.defaults.bool(forKey: "OpenAtLogin"), privacy: .public)")
+            logger.debug("\(keyPath! as NSObject) changed to \(self.defaults.bool(forKey: "OpenAtLogin"), privacy: .public)")
             self.configureLaunchAgent()
+        case "ExtensionAlertA":
+            logger.debug("\(keyPath! as NSObject) changed to \(self.preferences.extensionAlertA, privacy: .public)")
+        case "ExtensionAlertB":
+            logger.debug("\(keyPath! as NSObject) changed to \(self.preferences.extensionAlertB, privacy: .public)")
         default:
             logger.debug("Some other change detected...")
         }
@@ -417,17 +519,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         self.computerinfo.getStorage()
         self.computerinfo.getRecommendedUpdates()
+        
+        if #available(macOS 13, *) {
+            self.computerinfo.getRSRVersion()
+        }
     }
     
     // MARK: - Close the popover
     func closePopover(sender: Any?) {
-        popover.performClose(sender)
+//        popover.performClose(sender)
+        popover.close()
         
         // Stop monitoring mouse clicks outside the popover
         eventMonitor?.stop()
         
         // Stop timer when popover closes
-        timer?.invalidate()
+//        timer?.invalidate()
     }
 
     // MARK: - Show the standard about window
@@ -527,5 +634,66 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 })
             }
         }
+    }
+    
+    // MARK: - Function to fetch remote image to container Documents folder
+    func getRemoteImage(url: String, newURL: Bool, filename: String, logName: String) throws -> URL? {
+                     
+        guard let url = URL(string: url) else {
+            return nil
+        }
+        
+        // Path to App Sandbox container
+        guard let container = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "nl.root3.support") else {
+            return nil
+        }
+        
+        let documentsFolder = container.appendingPathComponent("Documents", isDirectory: true)
+        let fileURL = documentsFolder.appendingPathComponent("\(filename).\(url.pathExtension)")
+        
+        // Remove file if it already exists
+        if FileManager.default.fileExists(atPath: fileURL.path) {
+            
+            // Just return the URL and avoid downloading the image again
+            if !newURL {
+                logger.debug("URL for \(logName) is unchanged, no need to download image again")
+                return fileURL
+            }
+            
+            do {
+                logger.debug("Removing \(logName)")
+                try FileManager.default.removeItem(at: fileURL)
+            } catch {
+                logger.error("\(error.localizedDescription)")
+            }
+        }
+        
+        logger.debug("Downloading remote \(logName) from URL")
+                        
+        // Create a semaphore to wait for the file removal
+        let semaphore = DispatchSemaphore(value: 0)
+        
+        URLSession.shared.downloadTask(with: url) { data, response, error in
+            
+            if let data = data {
+                
+                do {
+                    try FileManager.default.moveItem(atPath: data.path, toPath: fileURL.path)
+                }
+                catch {
+                    self.logger.error("\(error.localizedDescription)")
+                }
+            }
+            
+            // Signal the semaphore to continue
+            semaphore.signal()
+            
+        }
+        .resume()
+        
+        // Wait for the semaphore to be signaled
+        semaphore.wait()
+        
+        return fileURL
     }
 }

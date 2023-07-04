@@ -32,9 +32,27 @@ struct NetworkSubview: View {
         }
     }
     
+    // Link Network Preference Pane
+    var networkLink: String {
+        if #available(macOS 13, *) {
+            return "x-apple.systempreferences:com.apple.Network-Settings.extension"
+        } else {
+            return "open /System/Library/PreferencePanes/Network.prefPane"
+        }
+    }
+    
+    // Link type for Network Preference Pane
+    var networkLinkType: String {
+        if #available(macOS 13, *) {
+            return "URL"
+        } else {
+            return "Command"
+        }
+    }
+    
     var body: some View {
         
-        Item(title: computerinfo.networkName, subtitle: computerinfo.ipAddress, linkType: "Command", link: "open /System/Library/PreferencePanes/Network.prefPane", image: computerinfo.networkInterfaceSymbol, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: computerinfo.selfSignedIP, hoverEffectEnable: true, hoverView: false, animate: false)
+        Item(title: computerinfo.networkName, subtitle: computerinfo.ipAddress, linkType: networkLinkType, link: networkLink, image: computerinfo.networkInterfaceSymbol, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: computerinfo.selfSignedIP, hoverEffectEnable: true, hoverView: false, animate: false)
         
     }
 }
