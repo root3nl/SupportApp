@@ -46,19 +46,13 @@ struct MacOSVersionSubview: View {
     
     var body: some View {
         
-        Group {
-            if computerinfo.systemVersionPatch == 0 {
-                InfoItem(title: "macOS \(computerinfo.macOSVersionName)", subtitle: "\(computerinfo.systemVersionMajor).\(computerinfo.systemVersionMinor)" + " \(computerinfo.rapidSecurityResponseVersion)", image: "applelogo", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: updatesAvailable, hoverEffectEnable: true)
-            } else {
-                InfoItem(title: "macOS \(computerinfo.macOSVersionName)", subtitle: "\(computerinfo.systemVersionMajor).\(computerinfo.systemVersionMinor).\(computerinfo.systemVersionPatch)" + " \(computerinfo.rapidSecurityResponseVersion)", image: "applelogo", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: updatesAvailable, hoverEffectEnable: true)
+        InfoItem(title: "macOS \(computerinfo.macOSVersionName)", subtitle: computerinfo.macOSVersion, image: "applelogo", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: updatesAvailable, hoverEffectEnable: true)
+            .onTapGesture {
+                self.showUpdatePopover.toggle()
             }
-        }
-        .onTapGesture {
-            self.showUpdatePopover.toggle()
-        }
-        .popover(isPresented: $showUpdatePopover, arrowEdge: .leading) {
-            UpdateView(updateCounter: updatesAvailable, color: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
-        }
+            .popover(isPresented: $showUpdatePopover, arrowEdge: .leading) {
+                UpdateView(updateCounter: updatesAvailable, color: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+            }
     }
 }
 

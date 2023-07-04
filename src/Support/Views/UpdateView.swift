@@ -15,6 +15,9 @@ struct UpdateView: View {
     // Get  computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo
     
+    // Get user info from functions in class
+    @EnvironmentObject var userinfo: UserInfo
+    
     // Get preferences or default values
     @StateObject var preferences = Preferences()
       
@@ -77,7 +80,7 @@ struct UpdateView: View {
                         
                         // Supports for markdown through a variable:
                         // https://blog.eidinger.info/3-surprises-when-using-markdown-in-swiftui
-                        Text(.init(preferences.updateText))
+                        Text(.init(preferences.updateText.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))
                             .font(.system(.headline, design: .rounded))
                             .fontWeight(.medium)
                         

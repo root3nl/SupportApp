@@ -17,7 +17,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     var popover: NSPopover!
     var eventMonitor: EventMonitor?
-//    var timer: Timer?
+    var timer: Timer?
     var timerFiveMinutes: Timer?
     let menu = NSMenu()
     var statusBarItem: NSStatusItem?
@@ -519,6 +519,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         self.computerinfo.getStorage()
         self.computerinfo.getRecommendedUpdates()
+        self.computerinfo.getModelName()
         
         if #available(macOS 13, *) {
             self.computerinfo.getRSRVersion()
@@ -534,7 +535,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         eventMonitor?.stop()
         
         // Stop timer when popover closes
-//        timer?.invalidate()
+        timer?.invalidate()
     }
 
     // MARK: - Show the standard about window

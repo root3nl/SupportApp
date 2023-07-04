@@ -293,7 +293,6 @@ struct ContentView: View {
         }
         // MARK: - Run functions when ContentView appears for the first time
         .onAppear {
-            computerinfo.getModelName()
             dataLoadingEffect()
         }
         // MARK: - Show placeholders while loading

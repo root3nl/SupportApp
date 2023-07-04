@@ -30,10 +30,16 @@ class ComputerInfo: ObservableObject {
     
     var macOSVersion: String {
         if self.systemVersionPatch == 0 {
-            let version = "\(systemVersionMajor).\(systemVersionMinor)"
+            var version = "\(systemVersionMajor).\(systemVersionMinor)"
+            if !rapidSecurityResponseVersion.isEmpty {
+                version += " \(rapidSecurityResponseVersion)"
+            }
             return version
         } else {
-            let version = "\(systemVersionMajor).\(systemVersionMinor).\(systemVersionPatch)"
+            var version = "\(systemVersionMajor).\(systemVersionMinor).\(systemVersionPatch)"
+            if !rapidSecurityResponseVersion.isEmpty {
+                version += " \(rapidSecurityResponseVersion)"
+            }
             return version
         }
     }
