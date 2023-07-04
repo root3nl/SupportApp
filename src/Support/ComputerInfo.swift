@@ -28,6 +28,32 @@ class ComputerInfo: ObservableObject {
     let systemVersionMinor = ProcessInfo.processInfo.operatingSystemVersion.minorVersion
     let systemVersionPatch = ProcessInfo.processInfo.operatingSystemVersion.patchVersion
     
+    var macOSVersion: String {
+        if self.systemVersionPatch == 0 {
+            let version = "\(systemVersionMajor).\(systemVersionMinor)"
+            return version
+        } else {
+            let version = "\(systemVersionMajor).\(systemVersionMinor).\(systemVersionPatch)"
+            return version
+        }
+    }
+    
+    // macOS Version Name
+    var macOSVersionName: String {
+        switch systemVersionMajor {
+        case 11:
+            return "Big Sur"
+        case 12:
+            return "Monterey"
+        case 13:
+            return "Ventura"
+        case 14:
+            return "Sonoma"
+        default:
+            return ""
+        }
+    }
+    
     // Initialize some needed values
     var capacity = Double()
     var totalCapacity = Double()
@@ -41,9 +67,6 @@ class ComputerInfo: ObservableObject {
     
     // Computer name
     @Published var hostname = String()
-    
-    // macOS Version Name
-    @Published var macOSVersionName = String()
     
     // Rounded uptime
     @Published var uptimeRounded = Int()
@@ -187,21 +210,6 @@ class ComputerInfo: ObservableObject {
         logger.debug("Computer name: \(self.hostname, privacy: .public)")
     }
     
-    // MARK: - Function to get macOS Version Name
-    func getmacOSVersionName() {
-        let version = systemVersionMajor
-        switch version {
-        case 11:
-            macOSVersionName = "Big Sur"
-        case 12:
-            macOSVersionName = "Monterey"
-        case 13:
-            macOSVersionName = "Ventura"
-        default:
-            macOSVersionName = ""
-        }
-    }
-    
     // MARK: - Function to get storage data
     func getStorage() {
         
@@ -315,10 +323,13 @@ class ComputerInfo: ObservableObject {
                 
                 // Set the computer symbol based on the Model Name
                 if self.modelNameString.localizedCaseInsensitiveContains("MacBook") {
+                    self.modelShortName = "MacBook"
                     self.computerNameIcon = "laptopcomputer"
                 } else if self.modelNameString.localizedCaseInsensitiveContains("Mac mini") {
+                    self.modelShortName = "Mac mini"
                     self.computerNameIcon = "macmini.fill"
                 } else if self.modelNameString.localizedCaseInsensitiveContains("Mac Pro") {
+                    self.modelShortName = "Mac Pro"
                     // Filled SF Symbols are preferred but version for Mac Pro is only available in macOS 12 and higher
                     if #available(macOS 12, *) {
                         self.computerNameIcon = "macpro.gen3.fill"
@@ -326,6 +337,7 @@ class ComputerInfo: ObservableObject {
                         self.computerNameIcon = "macpro.gen3"
                     }
                 } else if self.modelNameString.localizedCaseInsensitiveContains("Mac Studio") {
+                    self.modelShortName = "Mac Studio"
                     // SF Symbol for Mac Studio is only available in macOS 13 and higher
                     if #available(macOS 13, *) {
                         self.computerNameIcon = "macstudio.fill"
@@ -333,6 +345,7 @@ class ComputerInfo: ObservableObject {
                         self.computerNameIcon = "desktopcomputer"
                     }
                 } else if self.modelNameString.localizedCaseInsensitiveContains("Apple Virtual Machine") {
+                    self.modelShortName = "Apple Virtual Machine"
                     self.computerNameIcon = "server.rack"
                 } else {
                     self.computerNameIcon = "desktopcomputer"

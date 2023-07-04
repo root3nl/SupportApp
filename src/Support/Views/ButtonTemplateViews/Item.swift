@@ -20,6 +20,12 @@ struct Item: View {
     var loading: Bool?
     var linkPrefKey: String?
     
+    // Get computer info from functions in class
+    @EnvironmentObject var computerinfo: ComputerInfo
+    
+    // Get user info from functions in class
+    @EnvironmentObject var userinfo: UserInfo
+    
     // Declare unified logging
     let logger = Logger(subsystem: "nl.root3.support", category: "Action")
     
@@ -65,19 +71,19 @@ struct Item: View {
                 
                 VStack(alignment: .leading) {
                     
-                    Text(title)
+                    Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
                         .font(.system(.body, design: .rounded)).fontWeight(.medium)
                         .lineLimit(2)
                     
                     if subtitle != "" && hoverView && showSubtitle {
                         // Show the subtitle when hover animation is enabled
-                        Text(subtitle ?? "")
+                        Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
                             .font(.system(.subheadline, design: .rounded))
                             .lineLimit(2)
                         
                     } else if !animate {
                         // Always show the subtitle when hover animation is disabled
-                        Text(subtitle ?? "")
+                        Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
                             .font(.system(.subheadline, design: .rounded))
                             .lineLimit(2)
                             // Show placeholder when no initial value is set for Custom Info Items

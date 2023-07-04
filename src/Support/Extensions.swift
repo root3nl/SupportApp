@@ -153,9 +153,14 @@ extension String {
         var newString = self
         let localVariables = [
             ("%COMPUTERNAME%", computerInfo.hostname),
+            ("%MODELNAME%", computerInfo.modelNameString),
+            ("%MODELSHORTNAME%", computerInfo.modelShortName),
             ("%FULLNAME%", userInfo.fullName),
-            ("%MACOSVERSION%", computerInfo.macOSVersionName),
-            ("%IPADDRESS%", computerInfo.ipAddress)
+            ("%MACOSVERSION%", computerInfo.macOSVersion),
+            ("%MACOSVERSIONNAME%", computerInfo.macOSVersionName),
+            ("%IPADDRESS%", computerInfo.ipAddress),
+            ("%SSID%", computerInfo.networkName),
+            ("%UPDATESAVAILABLE%", "\(computerInfo.updatesAvailable)")
         ]
     
         // Loop through all possible local variables and replace when found
