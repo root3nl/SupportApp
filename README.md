@@ -47,10 +47,9 @@ The Support app is a macOS menu bar app built for organizations to:
 * Offer shortcuts to easily access support channels or other company resources such as a website or a file server
 * Give users a modern and native macOS app with your corporate identity
 
-The app is developed by Root3, specialized in managing Apple devices. Root3 offers consultancy and support for organizations to get the most out of their Apple devices and is based in The Netherlands (Halfweg).
+The app is developed by Root3, specialized in managing Apple devices. Root3 offers managed workplaces, consultancy and support for organizations to get the most out of their Apple devices and is based in The Netherlands (Halfweg).
 
 Root3 already had a basic in-house support app written in Objective-C and decided to completely rewrite it in Swift using SwiftUI with an all-new design that looks great on macOS Big Sur. We’ve learned that SwiftUI is the perfect way of creating great looking apps for all Apple platforms with minimal effort. In the development process we decided to make it generic so other organizations can take advantage of it and contribute to the Mac admins community.
-
 
 The easiest and recommended way to configure the app is using a Configuration Profile and your MDM solution.
 
@@ -75,7 +74,8 @@ You can participate in beta versions of Support App using TestFlight. This requi
 
 [**Join TestFlight**](https://testflight.apple.com/join/asmgJsAM)
 
-Note: There may not always be a TestFlight version available.
+> **Note**
+> There may not always be a TestFlight version available.
 
 ## Technologies
 * Written in Swift using SwiftUI
@@ -87,15 +87,24 @@ Note: There may not always be a TestFlight version available.
 * MDM support to configure your own branding such as a custom title, logo, SF Symbols and contact methods
 * Notarized
 * Sandboxed
-* Localized in English, Dutch, French and German
+* Localized in English, Dutch, French, German and Spanish
 
 ## Features
 
 ### Menu Bar Icon
-The Menu Bar Icon can be customized to your own PNG with Alpha Channel or using an SF Symbol. Any image will be shown as template to match the rest of the Menu Bar Extras. Icons larger than 22 points will automatically be resized to the recommended 16 points. Optionally a notification badge can overlay the icon to attract the user's attention when an Apple Software Update is available or any other warning was triggered. Please check the preference key "StatusBarIconNotifierEnabled".
+The Menu Bar Icon can be customized to your own image such as a PNG with Alpha Channel, an image from URL or an SF Symbol. Any image will be shown as template to match the rest of the Menu Bar Extras. Icons larger than 22 points will automatically be resized to the recommended 16 points and the aspect ration will be preserved. Optionally a notification badge can overlay the icon to attract the user's attention when an Apple Software Update is available or any other warning was triggered. Please check the preference key `StatusBarIconNotifierEnabled`.
+
+> **Note**
+> When using a local file, make sure to put the image in a folder accessible from the App Sandbox. We recommend a subfolder in `/Library/Application Support/` such as `/Library/Application Support/MyOrganization`
+
+> **Note**
+> When using an file from URL, the image will be downloaded once when the Support App opens and will be used for subsequent launches of the app, to avoid unnecessary downloads and use cases where the Mac has no internet connection at startup. To use a new icon, the URL must be changed for the Support App to trigger a new download.
 
 ### Title and logo
-The row above the buttons allow a custom title and company logo. The title supports both text and Emoji. On macOS Monterey and higher, it supports Markdown as well. The logo supports several images types like PNG, JPEG and ICNS and will be resized to a maximum height of 48 points. The original aspect ratio will be retained. A PNG with alpha channel is advised to get variable transparency around your logo.
+The row above the buttons allow a custom title and company logo. The title supports both text and Emoji. On macOS Monterey and higher, it supports Markdown as well. The logo supports a remote URL or several images types like PNG, JPEG and ICNS and will be resized to a maximum height of 48 points. The original aspect ratio will be retained. A PNG with alpha channel is advised to get variable transparency around your logo.
+
+> **Note**
+> When using a local file, make sure to put the image in a folder accessible from the App Sandbox. We recommend a subfolder in `/Library/Application Support/` such as `/Library/Application Support/MyOrganization`
 
 ### Color
 All the circles around the symbols have the macOS accent color and will dynamically change with the user's setting in System Preferences --> General. If desired, this color can be customised matching your corporate colors. We recommend keeping the macOS accent color when the color of your choice is too light, as text will be difficult to read.
@@ -105,17 +114,17 @@ There are a couple of info items with diagnostics available to choose from. A to
 
 * **Computer Name** (default): The current computer name will be displayed here. Especially helpful when your organisation has a difficult naming convention and users want to do things like AirDrop.
 
-* **macOS version** (default): The current version of macOS including major, minor and patch version as well as the marketing name. The marketing name will be easier to understand for your end users. A notification badge will be shown when an Apple Software Update is available. Clicking on this item opens the Software Update preference pane.
+* **macOS version** (default): The current version of macOS including major, minor and patch version as well as the marketing name. The marketing name will be easier to understand for your end users. A notification badge will be shown when an Apple Software Update is available. Clicking on this item shows more details and allows the user to initiate the update in System Settings.
 
-* **Last Reboot** (default): The current uptime. When troubleshooting some issue, the first thing you would like to do is a reboot when the uptime is high. The optional preference key ‘UptimeDaysLimit’ can be used to configure the maximum amount of uptime days recommended by the organization. Exceeding this limit results in a badge counter with exclamation mark in the info item.
+* **Last Reboot** (default): The current uptime. When troubleshooting some issue, the first thing you would like to do is a reboot when the uptime is high. The optional preference key `UptimeDaysLimit` can be used to configure the maximum amount of uptime days recommended by the organization. Exceeding this limit results in a badge counter with exclamation mark in the info item.
 
-* **Storage Used** (default): The storage percentage used on the boot drive. When hovering with the mouse, the available storage is shown. Clicking on this item opens the macOS built-in Storage Management app. The optional preference key ‘StorageLimit’ can be used to configure the maximum percentage of used storage recommended by the organization. Exceeding this limit results in a badge counter with exclamation mark in the info item.
+* **Storage Used** (default): The storage percentage used on the boot drive. When hovering with the mouse, the available storage is shown. Clicking on this item opens the macOS built-in Storage Management app. The optional preference key `StorageLimit` can be used to configure the maximum percentage of used storage recommended by the organization. Exceeding this limit results in a badge counter with exclamation mark in the info item.
 
 * **Network**: The current SSID or Ethernet along with the local IPv4 address. The icon indicates the connection type, Wi-Fi or Ethernet. Clicking on this item opens the Network preference pane in System Preferences.
 
-* **Mac Password**: Shows when the user's password expires and supports both local and Active Directory accounts by default. Alternative supported user sources are Jamf Connect, Kerberos SSO Extension and NoMAD. Shows a warning when the expiry reaches the value set in the optional key 'PasswordExpiryLimit'. The text label in the item can be modified using the preference key ‘PasswordLabel’.
+* **Mac Password**: Shows when the user's password expires and supports both local and Active Directory accounts by default. Alternative supported user sources are Jamf Connect, Kerberos SSO Extension and NoMAD. Shows a warning when the expiry reaches the value set in the optional key `PasswordExpiryLimit`. The text label in the item can be modified using the preference key `PasswordLabel`.
 
-* **Extension A and B**: Support App Extensions to show any information. The title, icon must be configured and optionally a link to open an App, URL, User Command or Privileged Command/Script. The value below the title must be populated by setting a preference key using a script. See [How to populate Support App Extensions](#how-to-populate-support-app-extensions) for more information.
+* **Extension A and B**: Support App Extensions to show any information. The title, icon must be configured and optionally a link to open an App, URL, User Command or Privileged Command/Script. The value below the title of the Extension must be populated by setting a preference key using a script or command. Extensions can also trigger an orange notification badge alert in both the Extension and menu bar icon. See [How to populate Support App Extensions](#how-to-populate-support-app-extensions) for more information.
 
 ### App, link or command shortcuts
 The buttons in the 3rd and 4th row behave as shortcuts to applications or links. Both rows are flexible and can show two or three buttons. The total amount of configurable buttons is possible: 0, 2, 3, 4, 5, 6. You can configure five variables for every of these buttons:
@@ -144,23 +153,35 @@ The rows with all configurable items enabled are shown in the screenshot below:
 <img src="/Screenshots/configurable_buttons_2.4.png" width="450">
 
 ### Footer Text
-A footer text can optionally be used to put some additional text at the bottom of the Support App. This supports both text and Emoji. On macOS Monterey and higher, it supports Markdown.
+A footer text can optionally be used to put some additional text at the bottom of the Support App. This supports both text and Emoji. On macOS Monterey and higher, it supports Markdown. Use the preference key `FooterText` to configure the footer.
 
 ### Notification Icon
-The icon shown in alerts and the about window can be modified by using the preference key 'NotificationIcon'.
+The icon shown in alerts and the about window can be modified by using the preference key `NotificationIcon`.
 
 See an example below:
 
 <img src="/Screenshots/custom_alert.png" width="350">
 
-**Note**: modifying the app icon when it is not running would compromise the App Sandbox and we decided not to implement this. We suggest hiding the app by running the following command: `sudo chflags hidden "/Applications/Support.app"`
+> **Note**
+> When using a local file, make sure to put the image in a folder accessible from the App Sandbox. We recommend a subfolder in `/Library/Application Support/` such as `/Library/Application Support/MyOrganization`
+
+> **Note**
+> When using an file from URL, the image will be downloaded once when the Support App opens and will be used for subsequent launches of the app, to avoid unnecessary downloads and use cases where the Mac has no internet connection at startup. To use a new icon, the URL must be changed for the Support App to trigger a new download.
+
+> **Note**
+> Modifying the app icon when it is not running would compromise the App Sandbox and we decided not to implement this. We suggest hiding the app by running the following command: `sudo chflags hidden "/Applications/Support.app"`
 
 ### Welcome Screen
-An informational window can optionally be shown when the Support App is opened for the first time. It explains the key features to the user before all data is shown. This can be set using the preference key ‘ShowWelcomeScreen’.
+An informational window can optionally be shown when the Support App is opened for the first time. It explains the key features to the user before all data is shown. This can be set using the preference key `ShowWelcomeScreen`.
 
 See an example below:
 
 <img src="/Screenshots/welcome_screen.png" width="500">
+
+### Software Update integration
+The Support App show the current version of macOS and shows a notification badge if there is an update or upgrade available. Clicking the info item shows a popover with more details like the name of the update(s) available and also allows organizations to add a custom text. This can be used to provide more context and explain the user about the organization's update policy or anything else. The text string supports Markdown to style it further and include links.
+
+The popover allows the user to open System Settings and install the update or upgrade. If there is no update or upgrade available, the popover simply shows "Your Mac is up to date".
 
 ## Configuration
 The configuration of the Support app is optimized for use with your MDM solution. The easiest way to configure the app is using a Configuration Profile so you can use whatever MDM solution you like, as long as it supports custom Configuration Profiles.
@@ -176,17 +197,21 @@ All general settings
 | Preference key | Type | Default value | Description | Example |
 | --- | --- | --- | --- | --- |
 | Title | String | Support | Text shown in the top left corner when the app opens. | “Your Company Name“, “IT Helpdesk“ etc. |
-| Logo | String | App Icon | Path to the logo shown in the top right corner when the app opens. Scales to 48 points maximum height. A subfolder in `/Library/Application Support/` is the recommended location due to sandboxing | `/Library/Application Support/Your Company/logo.png` |
-| LogoDarkMode | String | App Icon | Path to the logo shown in the top right corner when the app opens for Dark Mode. Scales to 48 points maximum height. A subfolder in `/Library/Application Support/` is the recommended location due to sandboxing | `/Library/Application Support/Your Company/logo_darkmode.png` |
-| NotificationIcon | String | App Icon | Path to a custom square image to be shown in alerts and the about window. | `/Library/Application Support/Your Company/logo.png` |
-| StatusBarIcon | String | Root3 Logo | Path to the status bar icon shown in the menu bar. Recommended: PNG, 16x16 points. Icons larger than 22 points will automatically be resized to 16 points. A subfolder in `/Library/Application Support/` is the recommended location due to sandboxing | `/Library/Application Support/Your Company/statusbaricon.png` |
+| Logo | String | App Icon | Remote URL or path to the logo shown in the top right corner when the app opens. Scales to 48 points maximum height. A subfolder in `/Library/Application Support/` is the recommended location due to sandboxing | `/Library/Application Support/Your Company/logo.png` or `https://domain.tld/url_to_image.png`|
+| LogoDarkMode | String | App Icon | Remote URL or path to the logo shown in the top right corner when the app opens for Dark Mode. Scales to 48 points maximum height. A subfolder in `/Library/Application Support/` is the recommended location due to sandboxing | `/Library/Application Support/Your Company/logo_darkmode.png` or `https://domain.tld/url_to_image.png` |
+| NotificationIcon | String | App Icon | Remote URL or path to a custom square image to be shown in alerts and the about window. | `/Library/Application Support/Your Company/logo.png` or `https://domain.tld/url_to_image.png` |
+| StatusBarIcon | String | Root3 Logo | Remote URL or path to the status bar icon shown in the menu bar. Recommended: PNG, 16x16 points. Icons larger than 22 points will automatically be resized to 16 points. A subfolder in `/Library/Application Support/` is the recommended location due to sandboxing | `/Library/Application Support/Your Company/statusbaricon.png` or `https://domain.tld/url_to_image.png` |
 | StatusBarIconSFSymbol | String | Root3 Logo | Custom status bar icon using an SF Symbol. Ignored when StatusBarIcon is also set | “lifepreserver” |
 | StatusBarIconNotifierEnabled | Boolean | false | Shows a small notification badge in the Status Bar Icon when an info items triggers a warning or notification | true |
 | HideMajorUpdates | Boolean | false | Ignore macOS major updates. This will prevent the menu bar icon and the macOS version info item from showing an available major update. Only applicable to macOS 12.3 and higher | true |
+| UpdateText | String | - | The text shown below the software update details popover | "Your organization requires you to update as soon as possible. [More info...](https://URL_TO_YOUR_UPDATE_POLICY)" |
 | CustomColor | String | macOS Accent Color | Custom color for all symbols. Leave empty to use macOS Accent Color. We recommend not to use a very light color as text may become hard to read | HEX color in RGB format like "#8cc63f" |
 | CustomColorDarkMode | String | macOS Accent Color | Custom color for all symbols in Dark Mode. Leave empty to use macOS Accent Color or CustomColor if specified. We recommend not to use a very dark color as text may become hard to read | HEX color in RGB format like "#8cc63f" |
-| HideFirstRow | Boolean | false | Hides the first row of configurable items. | true |
-| HideSecondRow | Boolean | false | Hides the second row of configurable items. | true |
+| HideFirstRowInfoItems | Boolean | false | Hides the first row of info items. | true |
+| HideSecondRowInfoItems | Boolean | false | Hides the second row of info items. | true |
+| HideThirdRowInfoItems | Boolean | false | Hides the third row of info items. | true |
+| HideFirstRowButtons | Boolean | false | Hides the first row of configurable items. | true |
+| HideSecondRowButtons | Boolean | false | Hides the second row of configurable items. | true |
 | ErrorMessage | String | Please contact IT support | Shown when clicking an action results in an error | "Please contact the servicedesk", "Please contact COMPANY_NAME" |
 | ShowWelcomeScreen | Boolean | false | Shows the welcome screen when the Support App is opened for the first time. | true |
 | FooterText | String | - | Text shown at the bottom as footnote | "Provided by your **IT department** with ❤️" |
@@ -281,6 +306,9 @@ Below are the preference keys to enable Support App Extensions:
 | ExtensionLinkB | String | - | The Bundle Identifier of the App, URL or command to open. | `/usr/local/bin/sap_privileges_change_permissions.zsh` |
 | OnAppearAction | String | - | Path to script script or command to be executed when the Support App is opened by clicking on the menu bar item. The SupportHelper is required for this feature. | `/usr/local/bin/runs_when_support_appears.zsh` |
 
+> **Warning**
+> Both Support App Extensions have other preference keys `ExtensionValueA` and `ExtensionValueB` but those keys are meant to be dynamically set and changed by a script or command, not by MDM. Once set, the default placeholder will disappear and show the output from the preference keys.
+
 #### How to populate Support App Extensions
 Support App Extensions must be populated by setting the value in a preference key within the preference domain `nl.root3.support`. This can be achieved by running custom scripts from your MDM solution or using the `OnAppearAction` combined with SupportHelper. This last option will allow you to update the Support App Extension values every time the Support App popover appears by running the script.
 
@@ -308,13 +336,22 @@ command_output=$(PUT_COMMAND_TO_GET_OUTPUT_HERE)
 # Set output value
 defaults write /Library/Preferences/nl.root3.support.plist ExtensionValueA -string "${command_output}"
 
+# Trigger an orange warning notification badge depending on the output you decide
+if [[ "${command_output}" == "OUTPUT_IS_BAD" ]]; then
+ defaults write /Library/Preferences/nl.root3.support.plist ExtensionAlertA -bool true
+else
+ defaults write /Library/Preferences/nl.root3.support.plist ExtensionAlertA -bool false
+fi
+
 # Stop spinning indicator
 defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bool false
 ```
 
-:information_source: When using more than one Support App Extension combined with `OnAppearAction`, it's best to update the values in one script instead of chaining multiple scripts to have the best experience
+> **Note**
+> When using more than one Support App Extension combined with `OnAppearAction`, it's best to update the values in one script instead of chaining multiple scripts to have the best experience
 
-:information_source: Please do not forget to make the script executable: `sudo chmod +x /PATH/TO/SCRIPT`
+> **Note**
+> Please do not forget to make the script executable: `sudo chmod +x /PATH/TO/SCRIPT`
 
 ### Privileged commands or scripts (SupportHelper)
 To allow commands or scripts to be executed with root privileges, the SupportHelper is available optionally. This utility is built on Distributed Notifications to allow inter-app communication between the Support App and the SupportHelper. The Support App notifies SupportHelper and the message contains the preference key set in the Configuration Profile with the command or path to the script. SupportHelper listens for new messages using a LaunchDaemon and executes the command or script by requesting the command or path to the script from the Configuration Profile.
@@ -343,8 +380,22 @@ As SupportHelper is able to execute scripts or commands with root privileges, it
 
 :information_source: Only values from a Configuration Profile will be used. Values set by `defaults write` will be ignored as it imposes a security risk.
 
+### Local Variables
+The Support App supports local variables with device and user details, which can be used across the app like the title, footer, buttons or any other text field.
+
+The following local variables are available with an example:
+* %COMPUTERNAME%: the current computer name
+* %MODELNAME%: the model name, like MacBook Air (M2, 2022)
+* %MODELSHORTNAME%: the short model name like MacBook
+* %FULLNAME%: the full name of the local macOS user account
+* %MACOSVERSION%: the macOS version, like 13.4.1
+* %MACOSVERSIONNAME%:  the macOS version marketing name, like Ventura
+* %IPADDRESS%: the current IP address
+* %SSID%: the current wireless network name (SSID)
+* %UPDATESAVAILABLE%: the number of updates available
+
 ### Jamf Pro variables
-When using Jamf Pro as the MDM solution, variables from Jamf Pro can be used in the Configuration Profile values to dynamically populate text like the title, footer or any other text field.
+When using Jamf Pro as the MDM solution, variables from Jamf Pro can also be used in the Configuration Profile values to dynamically populate text fields.
 
 Example
 * Set `title` to "Hi $FULLNAME!"
