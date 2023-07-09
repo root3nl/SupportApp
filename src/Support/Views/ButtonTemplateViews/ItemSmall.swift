@@ -129,10 +129,12 @@ struct ItemSmall: View {
         let task = Process()
         let pipe = Pipe()
         
+        let command = link?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)
+        
         task.standardOutput = pipe
         task.standardError = pipe
         task.launchPath = "/bin/zsh"
-        task.arguments = ["-c", "\(link ?? "")"]
+        task.arguments = ["-c", "\(command ?? "")"]
         task.launch()
         
         let data = pipe.fileHandleForReading.readDataToEndOfFile()

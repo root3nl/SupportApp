@@ -156,6 +156,7 @@ extension String {
             ("%MODELNAME%", computerInfo.modelNameString),
             ("%MODELSHORTNAME%", computerInfo.modelShortName),
             ("%FULLNAME%", userInfo.fullName),
+            ("%USERNAME%", userInfo.currentConsoleUserName),
             ("%MACOSVERSION%", computerInfo.macOSVersion),
             ("%MACOSVERSIONNAME%", computerInfo.macOSVersionName),
             ("%IPADDRESS%", computerInfo.ipAddress),
