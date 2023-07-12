@@ -24,9 +24,13 @@
   * [Welcome Screen](#welcome-screen)
 - [Configuration](#configuration)
 - [Advanced configuration](#advanced-configuration)
-  * [How to populate Support App Extensions](#how-to-populate-support-app-extensions)
-  * [Jamf Pro variables](#jamf-pro-variables)
-  * [Privileged commands or scripts (SupportHelper)](#privileged-commands-or-scripts-supporthelper)
+  * [Support App Extensions](#support-app-extensions)
+    * [How to populate Support App Extensions](#how-to-populate-support-app-extensions)
+  * [Variables](#variables)
+    * [Built-in local variables](#built-in-local-variables)
+    * [MDM variables](#mdm-variables)
+      * [Jamf Pro variables](#jamf-pro-variables)
+  * [Privileged commands or scripts with SupportHelper](#privileged-commands-or-scripts-with-supporthelper)
     * [File locations](#file-locations)
     * [Security Considerations](#security-considerations)
 - [How to use SF Symbols](#how-to-use-sf-symbols)
@@ -353,7 +357,7 @@ defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bo
 > **Note**
 > Please do not forget to make the script executable: `sudo chmod +x /PATH/TO/SCRIPT`
 
-### Privileged commands or scripts (SupportHelper)
+### Privileged commands or scripts with SupportHelper
 To allow commands or scripts to be executed with root privileges, the SupportHelper is available optionally. This utility is built on Distributed Notifications to allow inter-app communication between the Support App and the SupportHelper. The Support App notifies SupportHelper and the message contains the preference key set in the Configuration Profile with the command or path to the script. SupportHelper listens for new messages using a LaunchDaemon and executes the command or script by requesting the command or path to the script from the Configuration Profile.
 
 Below an example to force a MDM check-in using SupportHelper and a custom script:
@@ -364,9 +368,13 @@ More information about Distributed Notifications: https://developer.apple.com/do
 
 #### Use Cases
 There are a couple of use cases SupportHelper can help with. For example run a command or script with root privileges:
-* Every time the Support App popover appears to populate Support App Extensions using `OnAppearAction`
+* Every time the Support App popover appears, populate Support App Extensions using `OnAppearAction`
 * Extension Attributes (Jamf Pro) by adding the commands to populate the Support App Extension to the EA
-* By clicking on a configurable button
+* Executing a background task by clicking on a configurable button. Some examples:
+  * Request an MDM check-in or inventory depending on your MDM solution
+  * Requesting temporary admin permissions (for example in conjuntion with SAP Privileges)
+  * Collecting logs such as `sudo sysdiagnose` and sending the output somewhere else
+  * Any other action requiring root privileges, especially when users have standard permissions
 
 #### File locations
 The SupportHelper installer places two files:
@@ -378,29 +386,43 @@ Binary: `/usr/local/bin/SupportHelper`
 #### Security considerations
 As SupportHelper is able to execute scripts or commands with root privileges, it needs to be used responsibly. For most deployments, SupportHelper will not be needed and we recommend deploying the Support App without SupportHelper. If you're unsure or unfamiliar with this concept, DO NOT use SupportHelper. This utility is separated from the Support App to avoid compromising the app-sandbox as well.
 
-:information_source: Only values from a Configuration Profile will be used. Values set by `defaults write` will be ignored as it imposes a security risk.
+> **Note**
+> Only values from a Configuration Profile will be used. Values set by `defaults write` will be ignored as it imposes a security risk.
 
-### Local Variables
-The Support App supports local variables with device and user details, which can be used across the app like the title, footer, buttons or any other text field.
+### Variables
 
-The following local variables are available with an example:
-* %COMPUTERNAME%: the current computer name
-* %MODELNAME%: the model name, like MacBook Air (M2, 2022)
-* %MODELSHORTNAME%: the short model name like MacBook
-* %FULLNAME%: the full name of the local macOS user account
-* %MACOSVERSION%: the macOS version, like 13.4.1
-* %MACOSVERSIONNAME%:  the macOS version marketing name, like Ventura
-* %IPADDRESS%: the current IP address
-* %SSID%: the current wireless network name (SSID)
-* %UPDATESAVAILABLE%: the number of updates available
+You can use variables to dynamically populate text fields, like the title, footer, buttons or any other text field. You have the option to use Local Variables built-in the Support App and are MDM agnostic, or use MDM specific variables if available in your MDM solution.
 
-### Jamf Pro variables
+> **Note**
+> Using Built-in Local Variables or MDM variables depends on the use case you want to achieve or the available variables and you may use both if needed.
+
+#### Built-in local variables
+The Support App supports local variables with device and user details and work independently from your MDM solution.
+
+The following built-in local variables are available with an example:
+* **%COMPUTERNAME%**: the current computer name/hostname
+* **%MODELNAME%**: the model name, like MacBook Air (M2, 2022)
+* **%MODELSHORTNAME%**: the short model name like MacBook or iMac
+* **%FULLNAME%**: the full name of the local macOS user account
+* **%USERNAME%**: the username of the local macOS user account
+* **%MACOSVERSION%**: the macOS version, like 13.4.1
+* **%MACOSVERSIONNAME%**:  the macOS version marketing name, like Ventura or Sonoma
+* **%SERIALNUMBER%**: the devices serial number
+* **%IPADDRESS%**: the current IP address
+* **%UPDATESAVAILABLE%**: the number of updates available
+
+Example
+* Set `title` to "Hi %FULLNAME%!"
+
+#### MDM variables
+
+##### Jamf Pro variables
 When using Jamf Pro as the MDM solution, variables from Jamf Pro can also be used in the Configuration Profile values to dynamically populate text fields.
 
 Example
 * Set `title` to "Hi $FULLNAME!"
 
-More information about Jamf variables: https://docs.jamf.com/10.36.0/jamf-pro/documentation/Computer_Configuration_Profiles.html
+More information about Jamf variables: https://learn.jamf.com/bundle/jamf-pro-documentation-current/page/Computer_Configuration_Profiles.html
 
 ## How to use SF Symbols
 We choose to go all the way with SF Symbols as these good looking icons are designed by Apple and give the app a native look and feel. All icons have a symbol name which you can use in the Configuration Profile. As these icons are built into macOS, it automatically shows the correct icon.
