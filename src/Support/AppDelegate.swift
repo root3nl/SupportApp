@@ -516,6 +516,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         Task {
             await self.userinfo.getCurrentUserRecord()
             await self.userinfo.getUserFullName()
+            await self.computerinfo.getSerialNumber()
         }
         self.computerinfo.getStorage()
         self.computerinfo.getRecommendedUpdates()

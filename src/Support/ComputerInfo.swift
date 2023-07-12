@@ -131,6 +131,9 @@ class ComputerInfo: ObservableObject {
     // Create empty array for decoded RecommendedUpdates UserDefaults data
     @Published var recommendedUpdates: [SoftwareUpdateModel] = []
     
+    // Serial number
+    @Published var deviceSerialNumber: String = ""
+    
     // MARK: - Function to get uptime
     func kernelBootTime() {
         
@@ -560,7 +563,7 @@ class ComputerInfo: ObservableObject {
                                 // Set the appropriate symbol for the network interface
                                 if name == wirelessInterface {
                                     networkInterfaceSymbol = "wifi"
-                                    networkName = CWWiFiClient.shared().interface(withName: nil)?.ssid() ?? "Unknown SSID"
+                                    networkName = CWWiFiClient.shared().interface(withName: wirelessInterface)?.ssid() ?? "Unknown SSID"
                                 } else {
                                     networkInterfaceSymbol = "rectangle.connected.to.line.below"
                                     networkName = "Ethernet"
@@ -584,6 +587,30 @@ class ComputerInfo: ObservableObject {
 //        } else {
 //            logger.debug("IP Address did not change, no need to reload StatusBarItem")
 //        }
+    }
+    
+    // MARK: - Get the serial number
+    func getSerialNumber() {
+        
+        DispatchQueue.global().async {
+            let platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPlatformExpertDevice") )
+            
+            guard platformExpert > 0 else {
+                return
+            }
+            
+            guard let serialNumber = (IORegistryEntryCreateCFProperty(platformExpert, kIOPlatformSerialNumberKey as CFString, kCFAllocatorDefault, 0).takeUnretainedValue() as? String)?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) else {
+                return
+            }
+            
+            IOObjectRelease(platformExpert)
+            
+            // Back to the main thread to publish values
+            DispatchQueue.main.async {
+                self.deviceSerialNumber = serialNumber
+            }
+            
+        }
     }
     
     // MARK: - Get Array of RecommendedUpdates from com.apple.SoftwareUpdate

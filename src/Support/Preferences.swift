@@ -36,7 +36,7 @@ class Preferences: ObservableObject {
     @AppStorage("HideQuit") var hideQuit: Bool = true
     
     // Text shown at the bottom as footnote
-    @AppStorage("FooterText") var footerText = ""
+    @AppStorage("FooterText") var footerText: String = ""
     
     // Automatically register modern LaunchAgent on macOS 13 and higher
     @AppStorage("OpenAtLogin") var openAtLogin: Bool = false

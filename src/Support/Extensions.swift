@@ -159,9 +159,11 @@ extension String {
             ("%USERNAME%", userInfo.currentConsoleUserName),
             ("%MACOSVERSION%", computerInfo.macOSVersion),
             ("%MACOSVERSIONNAME%", computerInfo.macOSVersionName),
+            ("%SERIALNUMBER%", computerInfo.deviceSerialNumber),
             ("%IPADDRESS%", computerInfo.ipAddress),
             ("%SSID%", computerInfo.networkName),
-            ("%UPDATESAVAILABLE%", "\(computerInfo.updatesAvailable)")
+            ("%UPDATESAVAILABLE%", "\(computerInfo.updatesAvailable)"),
+            ("\\n", "\n")
         ]
     
         // Loop through all possible local variables and replace when found
