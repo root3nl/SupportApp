@@ -33,6 +33,7 @@ struct HeaderView: View {
             Text(.init(preferences.title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))
                 .font(.system(size: 20, design: .rounded))
                 .fontWeight(.medium)
+                .fixedSize()
 
             Spacer()
             
