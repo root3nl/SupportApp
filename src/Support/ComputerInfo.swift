@@ -557,13 +557,15 @@ class ComputerInfo: ObservableObject {
                                 selfSignedIP = false
                                 
                                 // Get the wireless interface name
-                                let wirelessInterface = CWWiFiClient.shared().interface()?.interfaceName
+                                let client = CWWiFiClient.shared()
+                                let wirelessInterface = client.interface()?.interfaceName
                                 logger.debug("Wireless interface name: \(wirelessInterface ?? "Not present", privacy: .public)")
 
                                 // Set the appropriate symbol for the network interface
                                 if name == wirelessInterface {
                                     networkInterfaceSymbol = "wifi"
-                                    networkName = CWWiFiClient.shared().interface(withName: wirelessInterface)?.ssid() ?? "Unknown SSID"
+                                    // MARK: - macOS 14 no longer returns the SSID as a design change now requires the app having access to Location Services. For the Support App this does not make sense and we should fallback to just "Wi-Fi" on macOS 14+: https://developer.apple.com/forums/thread/732431
+                                    networkName = client.interface()?.ssid() ?? "Wi-Fi"
                                 } else {
                                     networkInterfaceSymbol = "rectangle.connected.to.line.below"
                                     networkName = "Ethernet"
