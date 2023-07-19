@@ -1,5 +1,5 @@
 //
-//  MoreInfoView.swift
+//  UpdateView.swift
 //  Support
 //
 //  Created by Jordy Witteman on 13/06/2023.

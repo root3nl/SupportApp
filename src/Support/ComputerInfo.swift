@@ -471,7 +471,8 @@ class ComputerInfo: ObservableObject {
                                 
                                 self.modelNameString = "\(self.modelName) \(self.modelYear)"
                             } else {
-                                self.logger.debug("Error matching serial number with model and introduction year...")
+                                self.logger.debug("Error matching serial number with model and introduction year, falling back to model shortname")
+                                self.modelNameString = modelShortName
                             }
                             
                             self.logger.debug("Full Model Name: \(self.modelName, privacy: .public)")
