@@ -400,16 +400,16 @@ You can use variables to dynamically populate text fields, like the title, foote
 The Support App supports local variables with device and user details and work independently from your MDM solution.
 
 The following built-in local variables are available with an example:
-* **$Local.COMPUTERNAME$**: the current computer name/hostname
-* **$Local.MODELNAME$**: the model name, like MacBook Air (M2, 2022)
-* **$Local.MODELSHORTNAME$**: the short model name like MacBook or iMac
-* **$Local.FULLNAME$**: the full name of the local macOS user account
-* **$Local.USERNAME$**: the username of the local macOS user account
-* **$Local.MACOSVERSION$**: the macOS version, like 13.4.1
-* **$Local.MACOSVERSIONNAME$**:  the macOS version marketing name, like Ventura or Sonoma
-* **$Local.SERIALNUMBER$**: the devices serial number
-* **$Local.IPADDRESS$**: the current IP address
-* **$Local.UPDATESAVAILABLE$**: the number of updates available
+* **'$Local.COMPUTERNAME$'**: the current computer name/hostname
+* **'$Local.MODELNAME$'**: the model name, like MacBook Air (M2, 2022)
+* **'$Local.MODELSHORTNAME$'**: the short model name like MacBook or iMac
+* **'$Local.FULLNAME$'**: the full name of the local macOS user account
+* **'$Local.USERNAME$'**: the username of the local macOS user account
+* **'$Local.MACOSVERSION$'**: the macOS version, like 13.4.1
+* **'$Local.MACOSVERSIONNAME$'**:  the macOS version marketing name, like Ventura or Sonoma
+* **'$Local.SERIALNUMBER$'**: the devices serial number
+* **'$Local.IPADDRESS$'**: the current IP address
+* **'$Local.UPDATESAVAILABLE$'**: the number of updates available
 
 Example
 * Set `title` to "Hi %FULLNAME%!"
