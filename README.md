@@ -401,7 +401,7 @@ The Support App supports local variables with device and user details and work i
 
 The following built-in local variables are available with an example:
 * **'$Local.COMPUTERNAME$'**: the current computer name/hostname
-* **'$Local.MODELNAME$'**: the model name, like MacBook Air (M2, 2022)
+* **'$Local.MODELNAME$'**: the model name, like MacBook Air (M2, 2022). Apple Silicon only
 * **'$Local.MODELSHORTNAME$'**: the short model name like MacBook or iMac
 * **'$Local.FULLNAME$'**: the full name of the local macOS user account
 * **'$Local.USERNAME$'**: the username of the local macOS user account
