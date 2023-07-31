@@ -124,7 +124,7 @@ There are a couple of info items with diagnostics available to choose from. A to
 
 * **Storage Used** (default): The storage percentage used on the boot drive. When hovering with the mouse, the available storage is shown. Clicking on this item opens the macOS built-in Storage Management app. The optional preference key `StorageLimit` can be used to configure the maximum percentage of used storage recommended by the organization. Exceeding this limit results in a badge counter with exclamation mark in the info item.
 
-* **Network**: The current SSID or Ethernet along with the local IPv4 address. The icon indicates the connection type, Wi-Fi or Ethernet. Clicking on this item opens the Network preference pane in System Preferences.
+* **Network**: The active network interface type (Wi-Fi or Ethernet) along with the local IPv4 address. The icon indicates the connection type, Wi-Fi or Ethernet. Clicking on this item opens the Network preference pane in System Preferences. On macOS 13 or earlier, the current SSID name is shown. Due to privacy restrictions, macOS 14 and later show "Wi-Fi" instead of the SSID name.
 
 * **Mac Password**: Shows when the user's password expires and supports both local and Active Directory accounts by default. Alternative supported user sources are Jamf Connect, Kerberos SSO Extension and NoMAD. Shows a warning when the expiry reaches the value set in the optional key `PasswordExpiryLimit`. The text label in the item can be modified using the preference key `PasswordLabel`.
 
@@ -400,19 +400,24 @@ You can use variables to dynamically populate text fields, like the title, foote
 The Support App supports local variables with device and user details and work independently from your MDM solution.
 
 The following built-in local variables are available with an example:
-* **'$Local.COMPUTERNAME$'**: the current computer name/hostname
-* **'$Local.MODELNAME$'**: the model name, like MacBook Air (M2, 2022). Apple Silicon only
-* **'$Local.MODELSHORTNAME$'**: the short model name like MacBook or iMac
-* **'$Local.FULLNAME$'**: the full name of the local macOS user account
-* **'$Local.USERNAME$'**: the username of the local macOS user account
-* **'$Local.MACOSVERSION$'**: the macOS version, like 13.4.1
-* **'$Local.MACOSVERSIONNAME$'**:  the macOS version marketing name, like Ventura or Sonoma
-* **'$Local.SERIALNUMBER$'**: the devices serial number
-* **'$Local.IPADDRESS$'**: the current IP address
-* **'$Local.UPDATESAVAILABLE$'**: the number of updates available
+* **$LocalComputerName**: the current computer name/hostname
+* **$LocalModelName**: the model name, like MacBook Air (M2, 2022). Apple Silicon only
+* **$LocalModelShortName**: the short model name like MacBook or iMac
+* **$LocalFullName**: the full name of the local macOS user account
+* **$LocalUserName**: the username of the local macOS user account
+* **$LocalMacosVersion**: the macOS version, like 13.4.1
+* **$LocalMacosVersionName**:  the macOS version marketing name, like Ventura or Sonoma
+* **$LocalSerialNumber**: the devices serial number
+* **$LocalIpAddress**: the current IP address
+* **$LocalUpdatesAvailable**: the number of updates available
 
-Example
-* Set `title` to "Hi %FULLNAME%!"
+Examples
+* Set `title` to: "Hi $LocalFullName!"
+* Set `FooterText` to: "Provided by IT with ❤️\nSerial Number: $LocalSerialNumber"
+* Set `UpdateText` including Markdown features to: "Your $LocalModelShortName has \**$LocalUpdatesAvailable update(s)** available. Please update as soon as possible.\n[More info](https://LINK-TO-UPDATE-POLICY)"
+
+> **Note**
+> Built-in local variables are case **sensitive**
 
 #### MDM variables
 
