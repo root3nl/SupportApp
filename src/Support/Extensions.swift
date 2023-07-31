@@ -152,16 +152,16 @@ extension String {
     func replaceLocalVariables(computerInfo: ComputerInfo, userInfo: UserInfo) -> String {
         var newString = self
         let localVariables = [
-            ("$Local.COMPUTERNAME$", computerInfo.hostname),
-            ("$Local.MODELNAME$", computerInfo.modelNameString),
-            ("$Local.MODELSHORTNAME$", computerInfo.modelShortName),
-            ("$Local.FULLNAME$", userInfo.fullName),
-            ("$Local.USERNAME$", userInfo.currentConsoleUserName),
-            ("$Local.MACOSVERSION$", computerInfo.macOSVersion),
-            ("$Local.MACOSVERSIONNAME$", computerInfo.macOSVersionName),
-            ("$Local.SERIALNUMBER$", computerInfo.deviceSerialNumber),
-            ("$Local.IPADDRESS$", computerInfo.ipAddress),
-            ("$Local.UPDATESAVAILABLE$", "\(computerInfo.updatesAvailable)"),
+            ("$LocalComputerName", computerInfo.hostname),
+            ("$LocalModelName", computerInfo.modelNameString),
+            ("$LocalModelShortName", computerInfo.modelShortName),
+            ("$LocalFullName", userInfo.fullName),
+            ("$LocalUserName", userInfo.currentConsoleUserName),
+            ("$LocalMacosVersion", computerInfo.macOSVersion),
+            ("$LocalMacosVersionName", computerInfo.macOSVersionName),
+            ("$LocalSerialNumber", computerInfo.deviceSerialNumber),
+            ("$LocalIpAddress", computerInfo.ipAddress),
+            ("$LocalUpdatesAvailable", "\(computerInfo.updatesAvailable)"),
             ("\\n", "\n")
         ]
     
