@@ -24,6 +24,7 @@
   * [Footer Text](#footer-text)
   * [Notification Icon](#notification-icon)
   * [Welcome Screen](#welcome-screen)
+  * [Software Update Integration](#software-update-integration)
 - [Configuration](#configuration)
 - [Advanced configuration](#advanced-configuration)
   * [Support App Extensions](#support-app-extensions)
@@ -188,6 +189,8 @@ See an example below:
 The Support App show the current version of macOS and shows a notification badge if there is an update or upgrade available. Clicking the info item shows a popover with more details like the name of the update(s) available and also allows organizations to add a custom text. This can be used to provide more context and explain the user about the organization's update policy or anything else. The text string supports Markdown to style it further and include links.
 
 The popover allows the user to open System Settings and install the update or upgrade. If there is no update or upgrade available, the popover simply shows "Your Mac is up to date".
+
+<img src="/Screenshots/software_update_integration.png" width="500">
 
 ## Configuration
 The configuration of the Support app is optimized for use with your MDM solution. The easiest way to configure the app is using a Configuration Profile so you can use whatever MDM solution you like, as long as it supports custom Configuration Profiles.
