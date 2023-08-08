@@ -4,9 +4,11 @@
 ![Github](https://img.shields.io/badge/macOS-11%2B-green)
 [![Github](https://img.shields.io/badge/Join-TestFlight-blue)](https://testflight.apple.com/join/asmgJsAM)
 
+<img src="/Screenshots/generic_version_2.5.png" width="800">
+
 <img src="/Screenshots/generic_version_2.4.png" width="800">
 
-<img src="/Screenshots/generic_version_2.1_small.png" width="450"> <img src="/Screenshots/generic_light_mode_cropped.png" width="450"> <img src="/Screenshots/generic_version_2.3_small_dark.png" width="450">
+<img src="/Screenshots/generic_light_mode_cropped.png" height="300"> <img src="/Screenshots/generic_version_2.3_small_dark.png" height="300">
 
 - [Introduction](#introduction)
 - [Requirements](#requirements)
@@ -369,11 +371,13 @@ More information about Distributed Notifications: https://developer.apple.com/do
 #### Use Cases
 There are a couple of use cases SupportHelper can help with. For example run a command or script with root privileges:
 * Every time the Support App popover appears, populate Support App Extensions using `OnAppearAction`
-* Extension Attributes (Jamf Pro) by adding the commands to populate the Support App Extension to the EA
+* Extension Attributes (Jamf Pro) by adding the commands to populate the Support App Extension to the EA:
+  * Show device compliance information, such as the macOS Security Compliance Project Failed Results Count
 * Executing a background task by clicking on a configurable button. Some examples:
   * Request an MDM check-in or inventory depending on your MDM solution
   * Requesting temporary admin permissions (for example in conjuntion with SAP Privileges)
   * Collecting logs such as `sudo sysdiagnose` and sending the output somewhere else
+  * Run device compliance remediation, such as the macOS Security Compliance Project Remediation Script
   * Any other action requiring root privileges, especially when users have standard permissions
 
 #### File locations
@@ -414,7 +418,7 @@ The following built-in local variables are available with an example:
 Examples
 * Set `title` to: "Hi $LocalFullName!"
 * Set `FooterText` to: "Provided by IT with ❤️\nSerial Number: $LocalSerialNumber"
-* Set `UpdateText` including Markdown features to: "Your $LocalModelShortName has \**$LocalUpdatesAvailable update(s)** available. Please update as soon as possible.\n[More info](https://LINK-TO-UPDATE-POLICY)"
+* Set `UpdateText` including Markdown features to: "Your $LocalModelShortName has \**$LocalUpdatesAvailable update(s)** available. Please update as soon as possible.\n\[More info](https://LINK-TO-UPDATE-POLICY)"
 
 > **Note**
 > Built-in local variables are case **sensitive**
