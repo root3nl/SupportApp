@@ -155,7 +155,7 @@ The buttons in the 3rd and 4th row behave as shortcuts to applications or links.
 
 The rows with all configurable items enabled are shown in the screenshot below:
 * Info items and Support App Extensions in **GREEN**
-* Buttons in **RED**
+* Buttons in **ORANGE**
 
 <img src="/Screenshots/configurable_buttons_2.4.png" width="450">
 
@@ -186,7 +186,7 @@ See an example below:
 <img src="/Screenshots/welcome_screen.png" width="500">
 
 ### Software Update integration
-The Support App show the current version of macOS and shows a notification badge if there is an update or upgrade available. Clicking the info item shows a popover with more details like the name of the update(s) available and also allows organizations to add a custom text. This can be used to provide more context and explain the user about the organization's update policy or anything else. The text string supports Markdown to style it further and include links.
+The Support App shows the current version of macOS and a notification badge if there is an update or upgrade available. Clicking the info item shows a popover with more details like the name of the update(s) available and also allows organizations to add a custom text. This can be used to provide more context and explain the user about the organization's update policy or anything else. The text string supports Markdown to style it further and include links. Please check [Built-in local variables](#built-in-local-variables) for an example using Markdown and variables.
 
 The popover allows the user to open System Settings and install the update or upgrade. If there is no update or upgrade available, the popover simply shows "Your Mac is up to date".
 
@@ -305,15 +305,15 @@ Support App Extensions enable administrators to create custom info items and pop
 Below are the preference keys to enable Support App Extensions:
 | Preference key | Type | Default value | Description | Example |
 | --- | --- | --- | --- | --- |
-| ExtensionTitleA | String | - | The title shown in the extension. | "Last Check-In" |
-| ExtensionSymbolA | String | - | The SF Symbol shown in the extension. | "clock.badge.checkmark.fill" |
+| ExtensionTitleA | String | - | The title shown in the extension. | "Last Check-In", "Compliance" |
+| ExtensionSymbolA | String | - | The SF Symbol shown in the extension. | "clock.badge.checkmark.fill",  |
 | ExtensionTypeA | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **DistributedNotification** (Privileged command/script)|
-| ExtensionLinkA | String | - | The Bundle Identifier of the App, URL or command to open. | `defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bool true; /usr/local/bin/jamf policy; /usr/local/bin/jamf_last_check-in_time.zsh` |
+| ExtensionLinkA | String | - | The Bundle Identifier of the App, URL or command to open. | `defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bool true; /usr/local/bin/jamf policy; `[`/usr/local/bin/jamf_last_check-in_time.zsh`](https://github.com/root3nl/SupportApp/blob/master/Extension%20Sample%20Scripts/jamf_last_check-in_time.zsh) |
 | ExtensionTitleB | String | - | The title shown in the extension. | "Account Privileges" |
 | ExtensionSymbolB | String | - | The SF Symbol shown in the extension. | "wallet.pass.fill" |
 | ExtensionTypeB | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **DistributedNotification** (Privileged command/script)|
-| ExtensionLinkB | String | - | The Bundle Identifier of the App, URL or command to open. | `/usr/local/bin/sap_privileges_change_permissions.zsh` |
-| OnAppearAction | String | - | Path to script script or command to be executed when the Support App is opened by clicking on the menu bar item. The SupportHelper is required for this feature. | `/usr/local/bin/runs_when_support_appears.zsh` |
+| ExtensionLinkB | String | - | The Bundle Identifier of the App, URL or command to open. | [`/usr/local/bin/sap_privileges_change_permissions.zsh`](https://github.com/root3nl/SupportApp/blob/master/Extension%20Sample%20Scripts/sap_privileges_change_permissions.zsh) |
+| OnAppearAction | String | - | Path to script script or command to be executed when the Support App is opened by clicking on the menu bar item. The SupportHelper is required for this feature. | `/usr/local/bin/runs_when_support_appears.zsh` such as [`/usr/local/bin/user_permissions.zsh`](https://github.com/root3nl/SupportApp/blob/master/Extension%20Sample%20Scripts/user_permissions.zsh) or [`/usr/local/bin/jamf_last_check-in_time.zsh`](https://github.com/root3nl/SupportApp/blob/master/Extension%20Sample%20Scripts/jamf_last_check-in_time.zsh) |
 
 > **Warning**
 > Both Support App Extensions have other preference keys `ExtensionValueA` and `ExtensionValueB` but those keys are meant to be dynamically set and changed by a script or command, not by MDM. Once set, the default placeholder will disappear and show the output from the preference keys.
@@ -456,7 +456,7 @@ More information about the JSON Schema feature in Jamf Pro: https://docs.jamf.co
 <img src="/Screenshots/jamf_pro_custom_schema.png" width="800">
 
 ### Installer or app bundle
-Depending on your preference or MDM solution you can use either the installer or zipped app bundle. The installer includes a LaunchAgent and is the recommended method.
+Depending on your preference or MDM solution you can use either the installer or zipped app bundle. The installer includes a LaunchAgent and is the recommended method to make sure the app stays open and relaunches automatically.
 
 ### Sample LaunchAgent
 A sample LaunchAgent to always keep the app alive is provided [**here**](https://github.com/root3nl/SupportApp/blob/master/LaunchAgent%20Sample/nl.root3.support.plist)
