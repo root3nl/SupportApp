@@ -1016,7 +1016,7 @@
       "description": "Path to script script or command to be executed when the Support App is opened by clicking on the menu bar item. The SupportHelper is required for this feature.",
       "type": "string",
       "options": {
-        "infoText": "Key name: OnAppearScript"
+        "infoText": "Key name: OnAppearAction"
       },
       "links": [
         {
