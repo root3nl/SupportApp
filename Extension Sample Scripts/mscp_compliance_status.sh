@@ -14,6 +14,14 @@
 # REQUIREMENTS:
 # - An active mSCP baseline
 #
+# EXAMPLE:
+# Here's an example how to configure the Support App preferences for Extension A
+# - ExtensionTitleA: Compliance
+# - ExtensionSymbolA: lock.fill
+# - ExtensionTypeA: DistributedNotification
+# - ExtensionLinkA: /usr/local/bin/compliance_status.sh
+# - OnAppearAction: /usr/local/bin/compliance_status.sh
+#
 # THE SOFTWARE IS PROVIDED BY ROOT3 B.V. "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 # MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
