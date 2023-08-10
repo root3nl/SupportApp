@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-gui-script minSpecVersion="2">
+    <title>Support App</title>
+    <pkg-ref id="nl.root3.support"/>
+    <options customize="never" require-scripts="false" hostArchitectures="x86_64,arm64"/>
+    <volume-check>
+        <allowed-os-versions>
+            <os-version min="11"/>
+        </allowed-os-versions>
+    </volume-check>
+    <choices-outline>
+        <line choice="default">
+            <line choice="nl.root3.support"/>
+        </line>
+    </choices-outline>
+    <choice id="default"/>
+    <choice id="nl.root3.support" visible="false">
+        <pkg-ref id="nl.root3.support"/>
+    </choice>
+    <pkg-ref id="nl.root3.support" version="%SUPPORT_VERSION%" onConclusion="none">Support_component.pkg</pkg-ref>
+</installer-gui-script>

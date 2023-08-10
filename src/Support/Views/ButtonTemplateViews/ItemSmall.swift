@@ -18,6 +18,12 @@ struct ItemSmall: View {
     var loading: Bool?
     var linkPrefKey: String?
     
+    // Get computer info from functions in class
+    @EnvironmentObject var computerinfo: ComputerInfo
+    
+    // Get user info from functions in class
+    @EnvironmentObject var userinfo: UserInfo
+    
     // Declare unified logging
     let logger = Logger(subsystem: "nl.root3.support", category: "Action")
     
@@ -49,10 +55,10 @@ struct ItemSmall: View {
 
             // Optionally show a subtitle when user hovers over button
             if subtitle != "" && hoverView {
-                Text(subtitle ?? "")
+                Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
                     .font(.system(.subheadline, design: .rounded))
             } else {
-                Text(title)
+                Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
                     .font(.system(.subheadline, design: .rounded))
 
             }
@@ -123,10 +129,12 @@ struct ItemSmall: View {
         let task = Process()
         let pipe = Pipe()
         
+        let command = link?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)
+        
         task.standardOutput = pipe
         task.standardError = pipe
         task.launchPath = "/bin/zsh"
-        task.arguments = ["-c", "\(link ?? "")"]
+        task.arguments = ["-c", "\(command ?? "")"]
         task.launch()
         
         let data = pipe.fileHandleForReading.readDataToEndOfFile()

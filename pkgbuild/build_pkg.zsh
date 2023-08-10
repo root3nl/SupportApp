@@ -43,6 +43,12 @@ scripts="scripts"
 # Path to Component plist
 component_plist="Support-component.plist"
 
+# Requirements plist
+requirements_plist="requirements.plist"
+
+# Distribution xml
+distribution_xml="distribution.xml"
+
 # Install location
 install_location="/Applications"
 
@@ -66,6 +72,9 @@ username=$(scutil <<< "show State:/Users/ConsoleUser" | awk '/Name :/ && ! /logi
 # NFS Home Directory of user
 nfs_home_directory=$(dscl . read /Users/${username} NFSHomeDirectory | awk '{print $2}')
 
+# Create directory
+mkdir -p "${nfs_home_directory}/Downloads/${app_name}_${version}"
+
 # Build and export pkg to Downloads folder
 pkgbuild --component-plist "${component_plist}" \
     --root "${payload}" \
@@ -73,24 +82,31 @@ pkgbuild --component-plist "${component_plist}" \
     --install-location "${install_location}" \
     --identifier "${bundle_identifier}" \
     --version "${version}" \
-    "${nfs_home_directory}/Downloads/${app_name} ${version}_unsigned.pkg"
+    "${nfs_home_directory}/Downloads/${app_name}_${version}/Support_component.pkg"
+
+# Create basic Distribution file
+# productbuild --synthesize \
+#     --package "${nfs_home_directory}/Downloads/${app_name}_${version}/Support_component.pkg" \
+#     --product "${requirements_plist}" \
+#     "${nfs_home_directory}/Downloads/${app_name}_${version}/distribution.xml"
 
 # Create distribution package to support InstallApplication MDM command
-productbuild --package "${nfs_home_directory}/Downloads/${app_name} ${version}_unsigned.pkg" \
-    "${nfs_home_directory}/Downloads/${app_name} ${version}_dist.pkg"
+productbuild --distribution "${distribution_xml}" \
+    --package-path "${nfs_home_directory}/Downloads/${app_name}_${version}/" \
+    "${nfs_home_directory}/Downloads/${app_name}_${version}/${app_name} ${version}_dist.pkg"
 
 # Sign package
 productsign --sign "${signing_identity}" \
-    "${nfs_home_directory}/Downloads/${app_name} ${version}_dist.pkg" \
-    "${nfs_home_directory}/Downloads/${app_name} ${version}.pkg"
+    "${nfs_home_directory}/Downloads/${app_name}_${version}/${app_name} ${version}_dist.pkg" \
+    "${nfs_home_directory}/Downloads/${app_name}_${version}/${app_name} ${version}.pkg"
 
 # Submit pkg to notarytool
-xcrun notarytool submit "${nfs_home_directory}/Downloads/${app_name} ${version}.pkg" \
+xcrun notarytool submit "${nfs_home_directory}/Downloads/${app_name}_${version}/${app_name} ${version}.pkg" \
     --keychain-profile "${keychain_profile}" \
     --wait
 
 # Staple the notarization ticket to the pkg
-xcrun stapler staple "${nfs_home_directory}/Downloads/${app_name} ${version}.pkg"
+xcrun stapler staple "${nfs_home_directory}/Downloads/${app_name}_${version}/${app_name} ${version}.pkg"
 
 # Check the notarization ticket validity
-spctl --assess -vv --type install "${nfs_home_directory}/Downloads/${app_name} ${version}.pkg"
+spctl --assess -vv --type install "${nfs_home_directory}/Downloads/${app_name}_${version}/${app_name} ${version}.pkg"

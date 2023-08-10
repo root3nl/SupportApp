@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SoftwareUpdateModel: Identifiable, Codable {
+struct SoftwareUpdateModel: Identifiable, Codable, Hashable {
     
     var id: String
     var displayName: String

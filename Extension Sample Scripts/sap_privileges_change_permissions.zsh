@@ -46,4 +46,4 @@ else
 fi
 
 # Run Support App Extension to report new permission status
-"/usr/local/bin/sap_privileges_status.zsh"
+"/usr/local/bin/user_permissions.zsh"

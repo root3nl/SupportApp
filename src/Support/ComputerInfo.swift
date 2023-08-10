@@ -28,6 +28,38 @@ class ComputerInfo: ObservableObject {
     let systemVersionMinor = ProcessInfo.processInfo.operatingSystemVersion.minorVersion
     let systemVersionPatch = ProcessInfo.processInfo.operatingSystemVersion.patchVersion
     
+    var macOSVersion: String {
+        if self.systemVersionPatch == 0 {
+            var version = "\(systemVersionMajor).\(systemVersionMinor)"
+            if !rapidSecurityResponseVersion.isEmpty {
+                version += " \(rapidSecurityResponseVersion)"
+            }
+            return version
+        } else {
+            var version = "\(systemVersionMajor).\(systemVersionMinor).\(systemVersionPatch)"
+            if !rapidSecurityResponseVersion.isEmpty {
+                version += " \(rapidSecurityResponseVersion)"
+            }
+            return version
+        }
+    }
+    
+    // macOS Version Name
+    var macOSVersionName: String {
+        switch systemVersionMajor {
+        case 11:
+            return "Big Sur"
+        case 12:
+            return "Monterey"
+        case 13:
+            return "Ventura"
+        case 14:
+            return "Sonoma"
+        default:
+            return ""
+        }
+    }
+    
     // Initialize some needed values
     var capacity = Double()
     var totalCapacity = Double()
@@ -41,9 +73,6 @@ class ComputerInfo: ObservableObject {
     
     // Computer name
     @Published var hostname = String()
-    
-    // macOS Version Name
-    @Published var macOSVersionName = String()
     
     // Rounded uptime
     @Published var uptimeRounded = Int()
@@ -95,6 +124,15 @@ class ComputerInfo: ObservableObject {
     
     // Ethernet or SSID when connected
     @Published var networkName = NSLocalizedString("Not Connected", comment: "")
+    
+    // Rapid Security Response version
+    @Published var rapidSecurityResponseVersion: String = ""
+    
+    // Create empty array for decoded RecommendedUpdates UserDefaults data
+    @Published var recommendedUpdates: [SoftwareUpdateModel] = []
+    
+    // Serial number
+    @Published var deviceSerialNumber: String = ""
     
     // MARK: - Function to get uptime
     func kernelBootTime() {
@@ -187,23 +225,11 @@ class ComputerInfo: ObservableObject {
         logger.debug("Computer name: \(self.hostname, privacy: .public)")
     }
     
-    // MARK: - Function to get macOS Version Name
-    func getmacOSVersionName() {
-        let version = systemVersionMajor
-        switch version {
-        case 11:
-            macOSVersionName = "Big Sur"
-        case 12:
-            macOSVersionName = "Monterey"
-        case 13:
-            macOSVersionName = "Ventura"
-        default:
-            macOSVersionName = ""
-        }
-    }
-    
     // MARK: - Function to get storage data
     func getStorage() {
+        
+        // Set current status to compare with new status when function completes
+        let oldStorageLimitReached = storageLimitReached
         
         // Calculate available capacity
         let fileURL = URL(fileURLWithPath:"/")
@@ -263,7 +289,11 @@ class ComputerInfo: ObservableObject {
         }
         
         // Post changes to notification center
-//        NotificationCenter.default.post(name: Notification.Name.storageLimit, object: nil)
+        if oldStorageLimitReached != storageLimitReached {
+            NotificationCenter.default.post(name: Notification.Name.storageLimit, object: nil)
+        } else {
+            self.logger.debug("Storage Limit did not change, no need to reload StatusBarItem")
+        }
     }
     
     // MARK: - Get the Model Identifier: https://github.com/Ekhoo/Device/blob/master/Source/macOS/DeviceMacOS.swift
@@ -315,10 +345,13 @@ class ComputerInfo: ObservableObject {
                 
                 // Set the computer symbol based on the Model Name
                 if self.modelNameString.localizedCaseInsensitiveContains("MacBook") {
+                    self.modelShortName = "MacBook"
                     self.computerNameIcon = "laptopcomputer"
                 } else if self.modelNameString.localizedCaseInsensitiveContains("Mac mini") {
+                    self.modelShortName = "Mac mini"
                     self.computerNameIcon = "macmini.fill"
                 } else if self.modelNameString.localizedCaseInsensitiveContains("Mac Pro") {
+                    self.modelShortName = "Mac Pro"
                     // Filled SF Symbols are preferred but version for Mac Pro is only available in macOS 12 and higher
                     if #available(macOS 12, *) {
                         self.computerNameIcon = "macpro.gen3.fill"
@@ -326,6 +359,7 @@ class ComputerInfo: ObservableObject {
                         self.computerNameIcon = "macpro.gen3"
                     }
                 } else if self.modelNameString.localizedCaseInsensitiveContains("Mac Studio") {
+                    self.modelShortName = "Mac Studio"
                     // SF Symbol for Mac Studio is only available in macOS 13 and higher
                     if #available(macOS 13, *) {
                         self.computerNameIcon = "macstudio.fill"
@@ -333,6 +367,7 @@ class ComputerInfo: ObservableObject {
                         self.computerNameIcon = "desktopcomputer"
                     }
                 } else if self.modelNameString.localizedCaseInsensitiveContains("Apple Virtual Machine") {
+                    self.modelShortName = "Apple Virtual Machine"
                     self.computerNameIcon = "server.rack"
                 } else {
                     self.computerNameIcon = "desktopcomputer"
@@ -436,7 +471,8 @@ class ComputerInfo: ObservableObject {
                                 
                                 self.modelNameString = "\(self.modelName) \(self.modelYear)"
                             } else {
-                                self.logger.debug("Error matching serial number with model and introduction year...")
+                                self.logger.debug("Error matching serial number with model and introduction year, falling back to model shortname")
+                                self.modelNameString = self.modelShortName
                             }
                             
                             self.logger.debug("Full Model Name: \(self.modelName, privacy: .public)")
@@ -522,13 +558,15 @@ class ComputerInfo: ObservableObject {
                                 selfSignedIP = false
                                 
                                 // Get the wireless interface name
-                                let wirelessInterface = CWWiFiClient.shared().interface()?.interfaceName
+                                let client = CWWiFiClient.shared()
+                                let wirelessInterface = client.interface()?.interfaceName
                                 logger.debug("Wireless interface name: \(wirelessInterface ?? "Not present", privacy: .public)")
 
                                 // Set the appropriate symbol for the network interface
                                 if name == wirelessInterface {
                                     networkInterfaceSymbol = "wifi"
-                                    networkName = CWWiFiClient.shared().interface(withName: nil)?.ssid() ?? "Unknown SSID"
+                                    // MARK: - macOS 14 no longer returns the SSID as a design change now requires the app having access to Location Services. For the Support App this does not make sense and we should fallback to just "Wi-Fi" on macOS 14+: https://developer.apple.com/forums/thread/732431
+                                    networkName = client.interface()?.ssid() ?? "Wi-Fi"
                                 } else {
                                     networkInterfaceSymbol = "rectangle.connected.to.line.below"
                                     networkName = "Ethernet"
@@ -554,6 +592,30 @@ class ComputerInfo: ObservableObject {
 //        }
     }
     
+    // MARK: - Get the serial number
+    func getSerialNumber() {
+        
+        DispatchQueue.global().async {
+            let platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPlatformExpertDevice") )
+            
+            guard platformExpert > 0 else {
+                return
+            }
+            
+            guard let serialNumber = (IORegistryEntryCreateCFProperty(platformExpert, kIOPlatformSerialNumberKey as CFString, kCFAllocatorDefault, 0).takeUnretainedValue() as? String)?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) else {
+                return
+            }
+            
+            IOObjectRelease(platformExpert)
+            
+            // Back to the main thread to publish values
+            DispatchQueue.main.async {
+                self.deviceSerialNumber = serialNumber
+            }
+            
+        }
+    }
+    
     // MARK: - Get Array of RecommendedUpdates from com.apple.SoftwareUpdate
     func getRecommendedUpdates() {
         
@@ -566,7 +628,7 @@ class ComputerInfo: ObservableObject {
         let userDefaultsSoftwareUpdates = UserDefaults(suiteName: "com.apple.SoftwareUpdate")
         
         // Create empty array for RecommendedUpdates UserDefaults data
-        let recommendedUpdates = userDefaultsSoftwareUpdates?.array(forKey: "RecommendedUpdates") ?? []
+        let recommendedUpdatesArray = userDefaultsSoftwareUpdates?.array(forKey: "RecommendedUpdates") ?? []
         
         // Create empty array for decoded RecommendedUpdates UserDefaults data
         var decodedItems: [SoftwareUpdateModel] = []
@@ -576,7 +638,7 @@ class ComputerInfo: ObservableObject {
             
             do {
                 // Convert UserDefaults to JSON data
-                let data = try JSONSerialization.data(withJSONObject: recommendedUpdates, options: [])
+                let data = try JSONSerialization.data(withJSONObject: recommendedUpdatesArray, options: [])
                 
                 // Decode JSON data
                 let decoder = JSONDecoder()
@@ -595,7 +657,7 @@ class ComputerInfo: ObservableObject {
             
             // Reset major version updates to 0
             var majorVersionUpdatesTemp = 0
-            
+                        
             self.logger.debug("Updates found: \(decodedItems.count)")
             
             // Loop through all available updates and decrease number of updates when available macOS version is higher than current major version
@@ -624,6 +686,7 @@ class ComputerInfo: ObservableObject {
             // Back to the main thread to publish values
             DispatchQueue.main.async {
                 self.majorVersionUpdates = majorVersionUpdatesTemp
+                self.recommendedUpdates = decodedItems
                 
                 // Post changes to notification center
                 if oldMajorVersionUpdates != majorVersionUpdatesTemp {
@@ -631,6 +694,36 @@ class ComputerInfo: ObservableObject {
                 } else {
                     self.logger.debug("Number of Major macOS Updates did not change, no need to reload StatusBarItem")
                 }
+            }
+        }
+    }
+    
+    @available(macOS 13, *)
+    // MARK: - Get optional Rapid Security Response version
+    func getRSRVersion() {
+        
+        let task = Process()
+        let pipe = Pipe()
+        
+        // Command to get Rapid Security Response version
+        let RSRCommand = """
+        /usr/bin/sw_vers -productVersionExtra
+        """
+        
+        // Move command to background thread
+        DispatchQueue.global().async {
+            task.standardOutput = pipe
+            task.standardError = pipe
+            task.launchPath = "/bin/zsh"
+            task.arguments = ["-c", RSRCommand]
+            task.launch()
+            
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            
+            // Back to the main thread to publish values
+            DispatchQueue.main.async {
+                self.rapidSecurityResponseVersion = String(data: data, encoding: .utf8)!.trimmingCharacters(in: .whitespacesAndNewlines)
+                self.logger.debug("Rapid Security Reponse version: \(self.rapidSecurityResponseVersion)")
             }
         }
     }

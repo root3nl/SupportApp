@@ -36,13 +36,16 @@ class Preferences: ObservableObject {
     @AppStorage("HideQuit") var hideQuit: Bool = true
     
     // Text shown at the bottom as footnote
-    @AppStorage("FooterText") var footerText = ""
+    @AppStorage("FooterText") var footerText: String = ""
     
     // Automatically register modern LaunchAgent on macOS 13 and higher
     @AppStorage("OpenAtLogin") var openAtLogin: Bool = false
     
     // Hide major updates for macOS
     @AppStorage("HideMajorUpdates") var hideMajorUpdates: Bool = false
+    
+    // Optional text to show in the Managed Updates view
+    @AppStorage("UpdateText") var updateText: String = ""
     
     // MARK: - Info items
     
@@ -72,6 +75,15 @@ class Preferences: ObservableObject {
     // Percentage of storage used after which a notification badge is shown, disabled by default
     @AppStorage("StorageLimit") var storageLimit: Int = 0
     
+    // Hide first and/or second row of Info Items, disabled by default
+    @AppStorage("HideFirstRowInfoItems") var hideFirstRowInfoItems: Bool = false
+    @AppStorage("HideSecondRowInfoItems") var hideSecondRowInfoItems: Bool = false
+    @AppStorage("HideThirdRowInfoItems") var hideThirdRowInfoItems: Bool = false
+    
+    //Hide first and/or second row of configurable buttons, disabled by default
+    @AppStorage("HideFirstRowButtons") var hideFirstRowButtons: Bool = false
+    @AppStorage("HideSecondRowButtons") var hideSecondRowButtons: Bool = false
+
     // MARK: - Support App Extensions
     @AppStorage("ExtensionTitleA") var extensionTitleA: String = ""
     @AppStorage("ExtensionSymbolA") var extensionSymbolA: String = ""
@@ -128,9 +140,8 @@ class Preferences: ObservableObject {
     @AppStorage("SecondRowTypeRight") var secondRowTypeRight: String = "URL"
     @AppStorage(secondRowLinkRightKey) var secondRowLinkRight: String = "tel:+31000000000"
     @AppStorage("SecondRowSymbolRight") var secondRowSymbolRight: String = "phone"
-     
     
-    // MARK: - Preference Key Names
+    // MARK: - Static preference Key Names
     static let firstRowLinkLeftKey = "FirstRowLinkLeft"
     static let firstRowLinkMiddleKey = "FirstRowLinkMiddle"
     static let firstRowLinkRightKey = "FirstRowLinkRight"
@@ -157,10 +168,12 @@ class Preferences: ObservableObject {
     // Custom Item A value and loading effect booleans. Set to "KeyPlaceholder" to default to enable placeholder view
     @AppStorage("ExtensionValueA") var extensionValueA: String = "KeyPlaceholder"
     @AppStorage("ExtensionLoadingA") var extensionLoadingA = Bool()
+    @AppStorage("ExtensionAlertA") var extensionAlertA = Bool()
     
     // Custom Item B value and loading effect booleans. Set to "KeyPlaceholder" to default to enable placeholder view
     @AppStorage("ExtensionValueB") var extensionValueB: String = "KeyPlaceholder"
     @AppStorage("ExtensionLoadingB") var extensionLoadingB = Bool()
+    @AppStorage("ExtensionAlertB") var extensionAlertB = Bool()
     
     // Enable beta release watermark
     let betaRelease: Bool = false

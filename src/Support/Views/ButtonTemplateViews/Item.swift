@@ -19,6 +19,13 @@ struct Item: View {
     var notificationBadgeBool: Bool?
     var loading: Bool?
     var linkPrefKey: String?
+//    var updateView: Bool?
+    
+    // Get computer info from functions in class
+    @EnvironmentObject var computerinfo: ComputerInfo
+    
+    // Get user info from functions in class
+    @EnvironmentObject var userinfo: UserInfo
     
     // Declare unified logging
     let logger = Logger(subsystem: "nl.root3.support", category: "Action")
@@ -65,19 +72,19 @@ struct Item: View {
                 
                 VStack(alignment: .leading) {
                     
-                    Text(title)
+                    Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
                         .font(.system(.body, design: .rounded)).fontWeight(.medium)
                         .lineLimit(2)
                     
                     if subtitle != "" && hoverView && showSubtitle {
                         // Show the subtitle when hover animation is enabled
-                        Text(subtitle ?? "")
+                        Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
                             .font(.system(.subheadline, design: .rounded))
                             .lineLimit(2)
                         
                     } else if !animate {
                         // Always show the subtitle when hover animation is disabled
-                        Text(subtitle ?? "")
+                        Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
                             .font(.system(.subheadline, design: .rounded))
                             .lineLimit(2)
                             // Show placeholder when no initial value is set for Custom Info Items
@@ -89,13 +96,19 @@ struct Item: View {
                 Spacer()
             }
             
+            // Optionally show notification badge with counter
             if notificationBadge != nil && notificationBadge! > 0 {
                 NotificationBadgeView(badgeCounter: notificationBadge!)
             }
             
+            // Optionally show notification badge with warning
             if notificationBadgeBool ?? false {
                 NotificationBadgeTextView(badgeCounter: "!")
             }
+            
+//            if updateView != nil && notificationBadge! > 0 {
+//                UpdateView(color: symbolColor)
+//            }
         }
         .frame(width: 176, height: 60)
         .background(hoverView && hoverEffectEnable && link != "" ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
@@ -170,10 +183,12 @@ struct Item: View {
         let task = Process()
         let pipe = Pipe()
         
+        let command = link?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)
+        
         task.standardOutput = pipe
         task.standardError = pipe
         task.launchPath = "/bin/zsh"
-        task.arguments = ["-c", "\(link ?? "")"]
+        task.arguments = ["-c", "\(command ?? "")"]
         task.launch()
         
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
