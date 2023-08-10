@@ -13,6 +13,7 @@
 #
 # REQUIREMENTS:
 # - An active mSCP baseline
+# - SupportHelper
 #
 # EXAMPLE:
 # Here's an example how to configure the Support App preferences for Extension A
