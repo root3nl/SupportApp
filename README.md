@@ -18,6 +18,7 @@
 - [Features](#features)
   * [Menu Bar Icon](#menu-bar-icon)
   * [Title and logo](#title-and-logo)
+    * [Logo options](#logo-options)
   * [Color](#color)
   * [Diagnostic information](#diagnostic-information)
   * [App, link or command shortcuts](#app-link-or-command-shortcuts)
@@ -108,7 +109,13 @@ The Menu Bar Icon can be customized to your own image such as a PNG with Alpha C
 > When using an file from URL, the image will be downloaded once when the Support App opens and will be used for subsequent launches of the app, to avoid unnecessary downloads and use cases where the Mac has no internet connection at startup. To use a new icon, the URL must be changed for the Support App to trigger a new download.
 
 ### Title and logo
-The row above the buttons allow a custom title and company logo. The title supports both text and Emoji. On macOS Monterey and higher, it supports Markdown as well. The logo supports a remote URL or several images types like PNG, JPEG and ICNS and will be resized to a maximum height of 48 points. The original aspect ratio will be retained. A PNG with alpha channel is advised to get variable transparency around your logo.
+The row above the buttons allow a custom title and company logo. The title supports both text and Emoji. On macOS Monterey and higher, it supports Markdown as well. The logo supports a remote URL, an SF Symbol and several local images types like PNG, JPEG and ICNS and will be resized to a maximum height of 48 points. The original aspect ratio will be retained. A PNG with alpha channel is advised to get variable transparency around your logo.
+
+#### Logo options
+Here are the available for the Logo:
+* **Remote URL** (macOS 12 and later): `https://URL_TO_IMAGE`
+* **SF Symbol** (macOS 12 and later): `SF=SF_SYMBOL_NAME_HERE` or `SF=SF_SYMBOL_NAME_HERE,color=COLOR_OPTION_HERE`. Available color options: `auto`, `multicolor`, `hierarchical` or a custom HEX color code such as `#9ACEA4`
+* **Local file**: `/PATH_TO_LOCAL_FILE`
 
 > **Note**
 > When using a local file, make sure to put the image in a folder accessible from the App Sandbox. We recommend a subfolder in `/Library/Application Support/` such as `/Library/Application Support/MyOrganization`
@@ -206,8 +213,8 @@ All general settings
 | Preference key | Type | Default value | Description | Example |
 | --- | --- | --- | --- | --- |
 | Title | String | Support | Text shown in the top left corner when the app opens. | “Your Company Name“, “IT Helpdesk“ etc. |
-| Logo | String | App Icon | Remote URL or path to the logo shown in the top right corner when the app opens. Scales to 48 points maximum height. A subfolder in `/Library/Application Support/` is the recommended location due to sandboxing | `/Library/Application Support/Your Company/logo.png` or `https://domain.tld/url_to_image.png`|
-| LogoDarkMode | String | App Icon | Remote URL or path to the logo shown in the top right corner when the app opens for Dark Mode. Scales to 48 points maximum height. A subfolder in `/Library/Application Support/` is the recommended location due to sandboxing | `/Library/Application Support/Your Company/logo_darkmode.png` or `https://domain.tld/url_to_image.png` |
+| Logo | String | App Icon | Remote URL, SF Symbol or path to the logo shown in the top right corner when the app opens. Scales to 48 points maximum height. A subfolder in `/Library/Application Support/` is the recommended location due to sandboxing | `/Library/Application Support/Your Company/logo.png` or `https://domain.tld/url_to_image.png`|
+| LogoDarkMode | String | App Icon | Remote URL, SF Symbol or path to the logo shown in the top right corner when the app opens for Dark Mode. Scales to 48 points maximum height. A subfolder in `/Library/Application Support/` is the recommended location due to sandboxing | `/Library/Application Support/Your Company/logo_darkmode.png` or `https://domain.tld/url_to_image.png` |
 | NotificationIcon | String | App Icon | Remote URL or path to a custom square image to be shown in alerts and the about window. | `/Library/Application Support/Your Company/logo.png` or `https://domain.tld/url_to_image.png` |
 | StatusBarIcon | String | Root3 Logo | Remote URL or path to the status bar icon shown in the menu bar. Recommended: PNG, 16x16 points. Icons larger than 22 points will automatically be resized to 16 points. A subfolder in `/Library/Application Support/` is the recommended location due to sandboxing | `/Library/Application Support/Your Company/statusbaricon.png` or `https://domain.tld/url_to_image.png` |
 | StatusBarIconSFSymbol | String | Root3 Logo | Custom status bar icon using an SF Symbol. Ignored when StatusBarIcon is also set | “lifepreserver” |
