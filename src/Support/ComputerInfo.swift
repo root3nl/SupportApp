@@ -325,7 +325,7 @@ class ComputerInfo: ObservableObject {
         
         // Command to get c
         let computerNameCommand = """
-        ioreg -l -c IOPlatformDevice | grep -e "product-name" | cut -d'"' -f 4
+        ioreg -c IOPlatformDevice | grep -e "product-name" | cut -d'"' -f 4
         """
         
         // Move command to background thread
