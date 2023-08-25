@@ -26,13 +26,23 @@ install_location="/Applications/Support.app"
 username=$(scutil <<< "show State:/Users/ConsoleUser" | awk '/Name :/ && ! /loginwindow/ { print $3 }')
 
 # Remove "Downloaded from Internet" warning
-xattr -d -r com.apple.quarantine "${install_location}"
+# xattr -d -r com.apple.quarantine "${install_location}"
 
 # Load Requirements
 autoload is-at-least
 
 # macOS Version
 os_version=$(sw_vers -productVersion)
+
+# ------------------    Gatekeeper scan    ------------------
+
+# Perform a Gatekeeper scan. This is useful for pre-warming the cache so users 
+# do not see the 'Verifying...' dialog on first launch of an application.
+if is-at-least 14.0 ${os_version}; then
+	gktool scan "${install_location}"
+fi
+
+# ------------------    LaunchAgent    ------------------
 
 # Open the app so the legacy LaunchAgent properly displays the app name and icon
 # in System Settings > General > Login Items
