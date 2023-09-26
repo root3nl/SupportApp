@@ -71,6 +71,15 @@ class ComputerInfo: ObservableObject {
     // Number of major macOS Software Updates
     @Published var majorVersionUpdates: Int = 0
     
+    // Calculate number of updates to show, excluding any major upgrades if hidden using 'HideMajorUpdates'
+    var updatesAvailableToShow: Int {
+        if preferences.hideMajorUpdates {
+            return updatesAvailable - majorVersionUpdates
+        } else {
+            return updatesAvailable
+        }
+    }
+    
     // Computer name
     @Published var hostname = String()
     
@@ -661,7 +670,7 @@ class ComputerInfo: ObservableObject {
             self.logger.debug("Updates found: \(decodedItems.count)")
             
             // Loop through all available updates and decrease number of updates when available macOS version is higher than current major version
-            for item in decodedItems {
+            for (index, item) in decodedItems.enumerated() {
                 // Filter updates with "macOS" in Display Name
                 if item.displayName.contains("macOS") {
                     // Get digits from Display Version separated by a dot to get the major version
@@ -669,8 +678,12 @@ class ComputerInfo: ObservableObject {
                         self.logger.debug("macOS update found: \(item.displayName, privacy: .public)")
                         // Convert to integer and compare with current major OS version. If higher, increase number of major OS updates
                         if Int(version) ?? 0 > self.systemVersionMajor {
-                            self.logger.debug("macOS version \(version, privacy: .public) is higher than the current macOS version (\(self.systemVersionMajor)), update will be hidden when DeferMajorVersions is enabled")
+                            self.logger.debug("macOS version \(version, privacy: .public) is higher than the current macOS version (\(self.systemVersionMajor)), update will be hidden when HideMajorUpdates is enabled")
                             majorVersionUpdatesTemp += 1
+                            // Remove update item from array if HideMajorUpdates is enabled
+                            if self.preferences.hideMajorUpdates && decodedItems.indices.contains(index) {
+                                decodedItems.remove(at: index)
+                            }
                         }
                     } else {
                         self.logger.error("Error getting macOS version from \(item.displayName, privacy: .public)")

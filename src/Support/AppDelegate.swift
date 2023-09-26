@@ -108,6 +108,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         defaults.addObserver(self, forKeyPath: "StorageLimit", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "PasswordExpiryLimit", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "OpenAtLogin", options: .new, context: nil)
+        defaults.addObserver(self, forKeyPath: "HideMajorUpdates", options: .new, context: nil)
         ASUdefaults?.addObserver(self, forKeyPath: "LastUpdatesAvailable", options: .new, context: nil)
         ASUdefaults?.addObserver(self, forKeyPath: "RecommendedUpdates", options: .new, context: nil)
         
@@ -289,22 +290,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 preferences.infoItemSix
             ]
             
-            // Number of available software updates
-            var updatesAvailable = computerinfo.updatesAvailable
-            
             // If configured, ignore major macOS version updates
             if preferences.hideMajorUpdates {
                 logger.debug("HideMajorUpdates is enabled, hiding \(self.computerinfo.majorVersionUpdates) major macOS updates")
-                updatesAvailable -= computerinfo.majorVersionUpdates
             }
             
             // Show notification badge in menu bar icon when info item when needed
-            if (updatesAvailable == 0 || !infoItemsEnabled.contains("MacOSVersion")) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage")) || (preferences.extensionAlertA && infoItemsEnabled.contains("ExtensionA")) || (preferences.extensionAlertB && infoItemsEnabled.contains("ExtensionB"))) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
+            if (computerinfo.updatesAvailableToShow == 0 || !infoItemsEnabled.contains("MacOSVersion")) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage")) || (preferences.extensionAlertA && infoItemsEnabled.contains("ExtensionA")) || (preferences.extensionAlertB && infoItemsEnabled.contains("ExtensionB"))) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
                                 
                 // Create orange notification badge
                 orangeBadge.isHidden = false
                
-            } else if (updatesAvailable > 0 && infoItemsEnabled.contains("MacOSVersion")) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
+            } else if (computerinfo.updatesAvailableToShow > 0 && infoItemsEnabled.contains("MacOSVersion")) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
                 
                 // Create red notification badge
                 redBadge.isHidden = false
@@ -408,6 +405,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         case "OpenAtLogin":
             logger.debug("\(keyPath! as NSObject) changed to \(self.defaults.bool(forKey: "OpenAtLogin"), privacy: .public)")
             self.configureLaunchAgent()
+        case "HideMajorUpdates":
+            logger.debug("\(keyPath! as NSObject) changed to \(self.defaults.bool(forKey: "HideMajorUpdates"), privacy: .public)")
+            self.computerinfo.getRecommendedUpdates()
         case "ExtensionAlertA":
             logger.debug("\(keyPath! as NSObject) changed to \(self.preferences.extensionAlertA, privacy: .public)")
         case "ExtensionAlertB":

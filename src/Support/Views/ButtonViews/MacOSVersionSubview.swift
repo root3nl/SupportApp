@@ -35,23 +35,14 @@ struct MacOSVersionSubview: View {
         }
     }
     
-    // Calculate number of updates to show
-    var updatesAvailable: Int {
-        if preferences.hideMajorUpdates {
-            return computerinfo.updatesAvailable - computerinfo.majorVersionUpdates
-        } else {
-            return computerinfo.updatesAvailable
-        }
-    }
-    
     var body: some View {
         
-        InfoItem(title: "macOS \(computerinfo.macOSVersionName)", subtitle: computerinfo.macOSVersion, image: "applelogo", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: updatesAvailable, hoverEffectEnable: true)
+        InfoItem(title: "macOS \(computerinfo.macOSVersionName)", subtitle: computerinfo.macOSVersion, image: "applelogo", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: computerinfo.updatesAvailableToShow, hoverEffectEnable: true)
             .onTapGesture {
                 self.showUpdatePopover.toggle()
             }
             .popover(isPresented: $showUpdatePopover, arrowEdge: .leading) {
-                UpdateView(updateCounter: updatesAvailable, color: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+                UpdateView(updateCounter: computerinfo.updatesAvailableToShow, color: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
             }
     }
 }
