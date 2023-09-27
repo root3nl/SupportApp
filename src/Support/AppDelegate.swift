@@ -34,6 +34,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // Make UserDefaults easy to use with suite "com.apple.SoftwareUpdate"
     let ASUdefaults = UserDefaults(suiteName: "com.apple.SoftwareUpdate")
     
+    // Make UserDefaults easy to use with suite "com.apple.applicationaccess"
+    let restrictionsDefaults = UserDefaults(suiteName: "com.apple.applicationaccess")
+    
     // Make properties and preferences available
     var computerinfo = ComputerInfo()
     var userinfo = UserInfo()
@@ -108,7 +111,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         defaults.addObserver(self, forKeyPath: "StorageLimit", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "PasswordExpiryLimit", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "OpenAtLogin", options: .new, context: nil)
-        defaults.addObserver(self, forKeyPath: "HideMajorUpdates", options: .new, context: nil)
+        restrictionsDefaults?.addObserver(self, forKeyPath: "forceDelayedMajorSoftwareUpdates", options: .new, context: nil)
         ASUdefaults?.addObserver(self, forKeyPath: "LastUpdatesAvailable", options: .new, context: nil)
         ASUdefaults?.addObserver(self, forKeyPath: "RecommendedUpdates", options: .new, context: nil)
         
@@ -291,8 +294,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             ]
             
             // If configured, ignore major macOS version updates
-            if preferences.hideMajorUpdates {
-                logger.debug("HideMajorUpdates is enabled, hiding \(self.computerinfo.majorVersionUpdates) major macOS updates")
+            if computerinfo.forceDelayedMajorSoftwareUpdates {
+                logger.debug("forceDelayedMajorSoftwareUpdates is enabled, hiding \(self.computerinfo.majorVersionUpdates) major macOS updates")
             }
             
             // Show notification badge in menu bar icon when info item when needed
@@ -405,8 +408,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         case "OpenAtLogin":
             logger.debug("\(keyPath! as NSObject) changed to \(self.defaults.bool(forKey: "OpenAtLogin"), privacy: .public)")
             self.configureLaunchAgent()
-        case "HideMajorUpdates":
-            logger.debug("\(keyPath! as NSObject) changed to \(self.defaults.bool(forKey: "HideMajorUpdates"), privacy: .public)")
+        case "forceDelayedMajorSoftwareUpdates":
+            logger.debug("\(keyPath! as NSObject) changed to \(self.restrictionsDefaults!.bool(forKey: "forceDelayedMajorSoftwareUpdates"), privacy: .public)")
             self.computerinfo.getRecommendedUpdates()
         case "ExtensionAlertA":
             logger.debug("\(keyPath! as NSObject) changed to \(self.preferences.extensionAlertA, privacy: .public)")

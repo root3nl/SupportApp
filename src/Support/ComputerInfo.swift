@@ -71,14 +71,17 @@ class ComputerInfo: ObservableObject {
     // Number of major macOS Software Updates
     @Published var majorVersionUpdates: Int = 0
     
-    // Calculate number of updates to show, excluding any major upgrades if hidden using 'HideMajorUpdates'
+    // Calculate number of updates to show, excluding any major upgrades if hidden using 'forceDelayedMajorSoftwareUpdates' in a restrictions profile
     var updatesAvailableToShow: Int {
-        if preferences.hideMajorUpdates {
+        if forceDelayedMajorSoftwareUpdates {
             return updatesAvailable - majorVersionUpdates
         } else {
             return updatesAvailable
         }
     }
+    
+    // Get if major OS updates are deferred using a restrictions profile
+    @AppStorage("forceDelayedMajorSoftwareUpdates", store: UserDefaults(suiteName: "com.apple.applicationaccess")) var forceDelayedMajorSoftwareUpdates: Bool = false
     
     // Computer name
     @Published var hostname = String()
@@ -678,10 +681,10 @@ class ComputerInfo: ObservableObject {
                         self.logger.debug("macOS update found: \(item.displayName, privacy: .public)")
                         // Convert to integer and compare with current major OS version. If higher, increase number of major OS updates
                         if Int(version) ?? 0 > self.systemVersionMajor {
-                            self.logger.debug("macOS version \(version, privacy: .public) is higher than the current macOS version (\(self.systemVersionMajor)), update will be hidden when HideMajorUpdates is enabled")
+                            self.logger.debug("macOS version \(version, privacy: .public) is higher than the current macOS version (\(self.systemVersionMajor)), update will be hidden when forceDelayedMajorSoftwareUpdates is enabled")
                             majorVersionUpdatesTemp += 1
-                            // Remove update item from array if HideMajorUpdates is enabled
-                            if self.preferences.hideMajorUpdates && decodedItems.indices.contains(index) {
+                            // Remove update item from array if forceDelayedMajorSoftwareUpdates is enabled
+                            if self.forceDelayedMajorSoftwareUpdates && decodedItems.indices.contains(index) {
                                 decodedItems.remove(at: index)
                             }
                         }

@@ -8,6 +8,7 @@
 	<true/>
 	<key>com.apple.security.temporary-exception.shared-preference.read-only</key>
 	<array>
+		<string>com.apple.applicationaccess</string>
 		<string>com.trusourcelabs.NoMAD</string>
 		<string>com.apple.SoftwareUpdate</string>
 		<string>com.jamf.connect.state</string>

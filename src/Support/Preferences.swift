@@ -41,9 +41,6 @@ class Preferences: ObservableObject {
     // Automatically register modern LaunchAgent on macOS 13 and higher
     @AppStorage("OpenAtLogin") var openAtLogin: Bool = false
     
-    // Hide major updates for macOS
-    @AppStorage("HideMajorUpdates") var hideMajorUpdates: Bool = false
-    
     // Optional text to show in the Managed Updates view
     @AppStorage("UpdateText") var updateText: String = ""
     
