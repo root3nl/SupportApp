@@ -664,6 +664,12 @@ class ComputerInfo: ObservableObject {
             // Return when decoded RecommendedUpdates array is empty
             guard !decodedItems.isEmpty else {
                 self.logger.debug("RecommendedUpdates is empty...")
+                
+                // Remove all updates from UI
+                DispatchQueue.main.async {
+                    self.recommendedUpdates = []
+                }
+                
                 return
             }
             
