@@ -32,7 +32,7 @@ struct UpdateView: View {
         
         VStack(alignment: .leading, spacing: 8) {
             
-            if updateCounter > 0 {
+            if computerinfo.recommendedUpdates.count > 0 {
                 
                 HStack {
                     

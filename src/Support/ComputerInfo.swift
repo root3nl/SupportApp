@@ -71,6 +71,18 @@ class ComputerInfo: ObservableObject {
     // Number of major macOS Software Updates
     @Published var majorVersionUpdates: Int = 0
     
+    // Calculate number of updates to show, excluding any major upgrades if hidden using 'forceDelayedMajorSoftwareUpdates' in a restrictions profile
+    var updatesAvailableToShow: Int {
+        if forceDelayedMajorSoftwareUpdates {
+            return updatesAvailable - majorVersionUpdates
+        } else {
+            return updatesAvailable
+        }
+    }
+    
+    // Get if major OS updates are deferred using a restrictions profile
+    @AppStorage("forceDelayedMajorSoftwareUpdates", store: UserDefaults(suiteName: "com.apple.applicationaccess")) var forceDelayedMajorSoftwareUpdates: Bool = false
+    
     // Computer name
     @Published var hostname = String()
     
@@ -325,7 +337,7 @@ class ComputerInfo: ObservableObject {
         
         // Command to get c
         let computerNameCommand = """
-        ioreg -l -c IOPlatformDevice | grep -e "product-name" | cut -d'"' -f 4
+        ioreg -c IOPlatformDevice | grep -e "product-name" | cut -d'"' -f 4
         """
         
         // Move command to background thread
@@ -652,6 +664,12 @@ class ComputerInfo: ObservableObject {
             // Return when decoded RecommendedUpdates array is empty
             guard !decodedItems.isEmpty else {
                 self.logger.debug("RecommendedUpdates is empty...")
+                
+                // Remove all updates from UI
+                DispatchQueue.main.async {
+                    self.recommendedUpdates = []
+                }
+                
                 return
             }
             
@@ -661,7 +679,7 @@ class ComputerInfo: ObservableObject {
             self.logger.debug("Updates found: \(decodedItems.count)")
             
             // Loop through all available updates and decrease number of updates when available macOS version is higher than current major version
-            for item in decodedItems {
+            for (index, item) in decodedItems.enumerated() {
                 // Filter updates with "macOS" in Display Name
                 if item.displayName.contains("macOS") {
                     // Get digits from Display Version separated by a dot to get the major version
@@ -669,8 +687,12 @@ class ComputerInfo: ObservableObject {
                         self.logger.debug("macOS update found: \(item.displayName, privacy: .public)")
                         // Convert to integer and compare with current major OS version. If higher, increase number of major OS updates
                         if Int(version) ?? 0 > self.systemVersionMajor {
-                            self.logger.debug("macOS version \(version, privacy: .public) is higher than the current macOS version (\(self.systemVersionMajor)), update will be hidden when DeferMajorVersions is enabled")
+                            self.logger.debug("macOS version \(version, privacy: .public) is higher than the current macOS version (\(self.systemVersionMajor)), update will be hidden when forceDelayedMajorSoftwareUpdates is enabled")
                             majorVersionUpdatesTemp += 1
+                            // Remove update item from array if forceDelayedMajorSoftwareUpdates is enabled
+                            if self.forceDelayedMajorSoftwareUpdates && decodedItems.indices.contains(index) {
+                                decodedItems.remove(at: index)
+                            }
                         }
                     } else {
                         self.logger.error("Error getting macOS version from \(item.displayName, privacy: .public)")

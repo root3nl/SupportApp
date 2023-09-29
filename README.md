@@ -199,6 +199,9 @@ The popover allows the user to open System Settings and install the update or up
 
 <img src="/Screenshots/software_update_integration.png" width="500">
 
+> **Note**
+> When a deferral is set using the preference key `forceDelayedMajorSoftwareUpdates` in the domain `com.apple.applicationaccess`, major macOS updates will automatically be hidden indefinitely until the key is removed or set to `false`. The amount of days configured for the deferral are ignored. Due to limitations and complexity, it is not supported to automatically show the macOS major update once the deferral days are passed. This behaviour replaces the `HideMajorUpdates` key, previously available in version 2.5 and earlier. More info here: https://developer.apple.com/documentation/devicemanagement/restrictions
+
 ## Configuration
 The configuration of the Support app is optimized for use with your MDM solution. The easiest way to configure the app is using a Configuration Profile so you can use whatever MDM solution you like, as long as it supports custom Configuration Profiles.
 
@@ -219,7 +222,6 @@ All general settings
 | StatusBarIcon | String | Root3 Logo | Remote URL or path to the status bar icon shown in the menu bar. Recommended: PNG, 16x16 points. Icons larger than 22 points will automatically be resized to 16 points. A subfolder in `/Library/Application Support/` is the recommended location due to sandboxing | `/Library/Application Support/Your Company/statusbaricon.png` or `https://domain.tld/url_to_image.png` |
 | StatusBarIconSFSymbol | String | Root3 Logo | Custom status bar icon using an SF Symbol. Ignored when StatusBarIcon is also set | “lifepreserver” |
 | StatusBarIconNotifierEnabled | Boolean | false | Shows a small notification badge in the Status Bar Icon when an info items triggers a warning or notification | true |
-| HideMajorUpdates | Boolean | false | Ignore macOS major updates. This will prevent the menu bar icon and the macOS version info item from showing an available major update. Only applicable to macOS 12.3 and higher | true |
 | UpdateText | String | - | The text shown below the software update details popover | "Your organization requires you to update as soon as possible. [More info...](https://URL_TO_YOUR_UPDATE_POLICY)" |
 | CustomColor | String | macOS Accent Color | Custom color for all symbols. Leave empty to use macOS Accent Color. We recommend not to use a very light color as text may become hard to read | HEX color in RGB format like "#8cc63f" |
 | CustomColorDarkMode | String | macOS Accent Color | Custom color for all symbols in Dark Mode. Leave empty to use macOS Accent Color or CustomColor if specified. We recommend not to use a very dark color as text may become hard to read | HEX color in RGB format like "#8cc63f" |
