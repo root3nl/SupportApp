@@ -47,6 +47,7 @@
 		49871A6F287CC98500715C7C /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49871A6E287CC98500715C7C /* HeaderView.swift */; };
 		498B7001272F460100BFA45E /* KerberosSSOExtensionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498B7000272F460100BFA45E /* KerberosSSOExtensionModel.swift */; };
 		498D47D62A38ABC10059465C /* UpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498D47D52A38ABC10059465C /* UpdateView.swift */; };
+		499F56732AE0832100CBDE73 /* AppCatalogSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499F56722AE0832100CBDE73 /* AppCatalogSubview.swift */; };
 		49B4952D2642E96A00A6AE64 /* DarkModeBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B4952C2642E96A00A6AE64 /* DarkModeBorder.swift */; };
 		49F6744E273F2DBC00C47403 /* ExtensionASubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F6744D273F2DBC00C47403 /* ExtensionASubview.swift */; };
 		B03F2E5C28734ABD000478BC /* nl.root3.support.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = B03F2E53287340BD000478BC /* nl.root3.support.plist */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -111,6 +112,7 @@
 		49871A6E287CC98500715C7C /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		498B7000272F460100BFA45E /* KerberosSSOExtensionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KerberosSSOExtensionModel.swift; sourceTree = "<group>"; };
 		498D47D52A38ABC10059465C /* UpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateView.swift; sourceTree = "<group>"; };
+		499F56722AE0832100CBDE73 /* AppCatalogSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCatalogSubview.swift; sourceTree = "<group>"; };
 		49B163AC26FCB154006D57C7 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		49B4952C2642E96A00A6AE64 /* DarkModeBorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeBorder.swift; sourceTree = "<group>"; };
 		49F6744D273F2DBC00C47403 /* ExtensionASubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionASubview.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 				0A4A738D26020A6500927DAB /* MacOSVersionSubview.swift */,
 				0AFB04FA263AC23000507B23 /* ModelSubView.swift */,
 				496FE4D226514C59007746ED /* PasswordSubview.swift */,
+				499F56722AE0832100CBDE73 /* AppCatalogSubview.swift */,
 			);
 			path = ButtonViews;
 			sourceTree = "<group>";
@@ -372,6 +375,7 @@
 				498B7001272F460100BFA45E /* KerberosSSOExtensionModel.swift in Sources */,
 				4976EB8B265317C6006EE097 /* AppView.swift in Sources */,
 				49F6744E273F2DBC00C47403 /* ExtensionASubview.swift in Sources */,
+				499F56732AE0832100CBDE73 /* AppCatalogSubview.swift in Sources */,
 				49871A6F287CC98500715C7C /* HeaderView.swift in Sources */,
 				4972476828DBB1AB007194F0 /* StatusItemBadgeView.swift in Sources */,
 				496FE4D12651485E007746ED /* UserInfo.swift in Sources */,

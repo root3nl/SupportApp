@@ -83,6 +83,9 @@ class ComputerInfo: ObservableObject {
     // Get if major OS updates are deferred using a restrictions profile
     @AppStorage("forceDelayedMajorSoftwareUpdates", store: UserDefaults(suiteName: "com.apple.applicationaccess")) var forceDelayedMajorSoftwareUpdates: Bool = false
     
+    // Get available app updates from App Catalog
+    @AppStorage("Updates", store: UserDefaults(suiteName: "nl.root3.catalog")) var appUpdates: Int = 0
+    
     // Computer name
     @Published var hostname = String()
     

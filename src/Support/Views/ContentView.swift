@@ -97,6 +97,8 @@ struct ContentView: View {
                             ExtensionASubview()
                         case "ExtensionB":
                             ExtensionBSubview()
+                        case "AppCatalog":
+                            AppCatalogSubview()
                         default:
                             ComputerNameSubview()
                         }
@@ -119,6 +121,8 @@ struct ContentView: View {
                             ExtensionASubview()
                         case "ExtensionB":
                             ExtensionBSubview()
+                        case "AppCatalog":
+                            AppCatalogSubview()
                         default:
                             MacOSVersionSubview()
                         }
@@ -149,6 +153,8 @@ struct ContentView: View {
                             ExtensionASubview()
                         case "ExtensionB":
                             ExtensionBSubview()
+                        case "AppCatalog":
+                            AppCatalogSubview()
                         default:
                             UptimeSubview()
                         }
@@ -171,6 +177,8 @@ struct ContentView: View {
                             ExtensionASubview()
                         case "ExtensionB":
                             ExtensionBSubview()
+                        case "AppCatalog":
+                            AppCatalogSubview()
                         default:
                             StorageSubview()
                         }
@@ -201,6 +209,8 @@ struct ContentView: View {
                                 ExtensionASubview()
                             case "ExtensionB":
                                 ExtensionBSubview()
+                            case "AppCatalog":
+                                AppCatalogSubview()
                             default:
                                 PasswordSubview()
                             }
@@ -223,6 +233,8 @@ struct ContentView: View {
                                 ExtensionASubview()
                             case "ExtensionB":
                                 ExtensionBSubview()
+                            case "AppCatalog":
+                                AppCatalogSubview()
                             default:
                                 NetworkSubview()
                             }
