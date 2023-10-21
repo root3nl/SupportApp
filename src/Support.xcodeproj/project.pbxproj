@@ -48,6 +48,8 @@
 		498B7001272F460100BFA45E /* KerberosSSOExtensionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498B7000272F460100BFA45E /* KerberosSSOExtensionModel.swift */; };
 		498D47D62A38ABC10059465C /* UpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498D47D52A38ABC10059465C /* UpdateView.swift */; };
 		499F56732AE0832100CBDE73 /* AppCatalogSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499F56722AE0832100CBDE73 /* AppCatalogSubview.swift */; };
+		499F56752AE47A3900CBDE73 /* AppUpdatesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499F56742AE47A3900CBDE73 /* AppUpdatesView.swift */; };
+		499F56782AE47BE800CBDE73 /* CatalogItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499F56772AE47BE800CBDE73 /* CatalogItem.swift */; };
 		49B4952D2642E96A00A6AE64 /* DarkModeBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B4952C2642E96A00A6AE64 /* DarkModeBorder.swift */; };
 		49F6744E273F2DBC00C47403 /* ExtensionASubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F6744D273F2DBC00C47403 /* ExtensionASubview.swift */; };
 		B03F2E5C28734ABD000478BC /* nl.root3.support.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = B03F2E53287340BD000478BC /* nl.root3.support.plist */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -113,6 +115,8 @@
 		498B7000272F460100BFA45E /* KerberosSSOExtensionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KerberosSSOExtensionModel.swift; sourceTree = "<group>"; };
 		498D47D52A38ABC10059465C /* UpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateView.swift; sourceTree = "<group>"; };
 		499F56722AE0832100CBDE73 /* AppCatalogSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCatalogSubview.swift; sourceTree = "<group>"; };
+		499F56742AE47A3900CBDE73 /* AppUpdatesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUpdatesView.swift; sourceTree = "<group>"; };
+		499F56772AE47BE800CBDE73 /* CatalogItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogItem.swift; sourceTree = "<group>"; };
 		49B163AC26FCB154006D57C7 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		49B4952C2642E96A00A6AE64 /* DarkModeBorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeBorder.swift; sourceTree = "<group>"; };
 		49F6744D273F2DBC00C47403 /* ExtensionASubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionASubview.swift; sourceTree = "<group>"; };
@@ -165,6 +169,7 @@
 				0A446D5326837D7F00667602 /* WelcomeScreen */,
 				4976EB8C26531CCC006EE097 /* Experimental */,
 				49B4952E264343FC00A6AE64 /* ViewModifiers */,
+				499F56762AE47BCE00CBDE73 /* AppCatalog */,
 				4976EB8A265317C6006EE097 /* AppView.swift */,
 				49822CE424B4C3F100E8DE54 /* ContentView.swift */,
 				4915291B259CD38800056B5F /* EffectsView.swift */,
@@ -242,6 +247,15 @@
 				490CE0A7294FC144005BC01D /* SoftwareUpdateModel.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		499F56762AE47BCE00CBDE73 /* AppCatalog */ = {
+			isa = PBXGroup;
+			children = (
+				499F56742AE47A3900CBDE73 /* AppUpdatesView.swift */,
+				499F56772AE47BE800CBDE73 /* CatalogItem.swift */,
+			);
+			path = AppCatalog;
 			sourceTree = "<group>";
 		};
 		49B4952E264343FC00A6AE64 /* ViewModifiers */ = {
@@ -368,6 +382,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				49152916259CD2C300056B5F /* Item.swift in Sources */,
+				499F56752AE47A3900CBDE73 /* AppUpdatesView.swift in Sources */,
 				0AFB04FD263B422900507B23 /* ItemDouble.swift in Sources */,
 				0A4A73812602052800927DAB /* NetworkSubview.swift in Sources */,
 				498D47D62A38ABC10059465C /* UpdateView.swift in Sources */,
@@ -376,6 +391,7 @@
 				4976EB8B265317C6006EE097 /* AppView.swift in Sources */,
 				49F6744E273F2DBC00C47403 /* ExtensionASubview.swift in Sources */,
 				499F56732AE0832100CBDE73 /* AppCatalogSubview.swift in Sources */,
+				499F56782AE47BE800CBDE73 /* CatalogItem.swift in Sources */,
 				49871A6F287CC98500715C7C /* HeaderView.swift in Sources */,
 				4972476828DBB1AB007194F0 /* StatusItemBadgeView.swift in Sources */,
 				496FE4D12651485E007746ED /* UserInfo.swift in Sources */,

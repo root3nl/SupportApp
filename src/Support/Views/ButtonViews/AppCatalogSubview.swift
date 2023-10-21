@@ -21,6 +21,9 @@ struct AppCatalogSubview: View {
     // Dark Mode detection
     @Environment(\.colorScheme) var colorScheme
     
+    // Boolean to show UpdateView as popover
+    @State var showUpdatePopover: Bool = false
+    
     // Set the custom color for all symbols depending on Light or Dark Mode.
     var customColor: String {
         if colorScheme == .light && defaults.string(forKey: "CustomColor") != nil {
@@ -43,7 +46,12 @@ struct AppCatalogSubview: View {
     var body: some View {
         
         InfoItem(title: "App Updates", subtitle: updatesString, image: "app.badge.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: computerinfo.appUpdates, hoverEffectEnable: true)
-
+            .onTapGesture {
+                self.showUpdatePopover.toggle()
+            }
+            .popover(isPresented: $showUpdatePopover, arrowEdge: .leading) {
+                AppUpdatesView(updateCounter: computerinfo.appUpdates, color: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+            }
     }
     
 }
