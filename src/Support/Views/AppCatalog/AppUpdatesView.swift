@@ -51,6 +51,7 @@ struct AppUpdatesView: View {
                     }) {
                         Text(NSLocalizedString("APP_CATALOG", comment: ""))
                     }
+                    .buttonStyle(.borderedProminent)
                 }
                 
                 Divider()
@@ -60,25 +61,23 @@ struct AppUpdatesView: View {
                     
                     HStack {
                         
-                        if #available(macOS 12, *) {
-                            if let icon = update.iconThumbnail {
+                        if let icon = update.iconThumbnail {
+                            
+                            AsyncImage(url: URL(string: icon)) { image in
+                                image.resizable()
+                                    .scaledToFit()
+                                    .frame(height: 36)
                                 
-                                AsyncImage(url: URL(string: icon)) { image in
-                                    image.resizable()
-                                        .scaledToFit()
-                                        .frame(height: 36)
-                                    
-                                } placeholder: {
-                                    Image("DefaultLogo")
-                                        .resizable()
-                                        .scaledToFit()
-                                        .cornerRadius(6)
-                                        .redacted(reason: .placeholder)
-                                        .overlay(
-                                            ProgressView()
-                                        )
-                                        .frame(width: 36, height: 36)
-                                }
+                            } placeholder: {
+                                Image("DefaultLogo")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .cornerRadius(6)
+                                    .redacted(reason: .placeholder)
+                                    .overlay(
+                                        ProgressView()
+                                    )
+                                    .frame(width: 36, height: 36)
                             }
                         }
                         
@@ -98,13 +97,20 @@ struct AppUpdatesView: View {
                         Button(action: {
                             
                         }) {
-                            Text(NSLocalizedString("UPDATE", comment: ""))
+//                            Text(NSLocalizedString("UPDATE", comment: ""))
+//                                .font(.system(.body, design: .rounded))
+////                                .fontWeight(.regular)
+//                                .foregroundColor(.secondary)
+//                                .padding(.vertical, 4)
+//                                .padding(.horizontal)
+//                                .background(Color.gray.opacity(0.2))
+//                                .clipShape(Capsule())
+                            Image(systemName: "arrow.down")
                                 .font(.system(.headline, design: .rounded))
-                                .foregroundColor(.white)
-                                .padding(.vertical, 4)
-                                .padding(.horizontal)
-                                .background(color)
-                                .clipShape(Capsule())
+                                .foregroundColor(.secondary)
+                                .padding(7)
+                                .background(Color.gray.opacity(0.2))
+                                .clipShape(Circle())
                         }
                         .buttonStyle(.plain)
                         
@@ -120,22 +126,15 @@ struct AppUpdatesView: View {
                     
                     VStack {
                         
-                        Text(NSLocalizedString("YOUR_MAC_IS_UP_TO_DATE", comment: ""))
+                        Text(NSLocalizedString("ALL_APPS_UP_TO_DATE", comment: ""))
                             .font(.system(.title2, design: .rounded))
                             .fontWeight(.medium)
                         
                         Image(systemName: "checkmark.circle.fill")
                             .resizable()
                             .frame(width: 50, height: 50)
-                            .modify {
-                                if #available(macOS 12, *) {
-                                    $0.symbolRenderingMode(.palette)
-                                        .foregroundStyle(.white, color)
-                                } else {
-                                    $0.foregroundColor(color)
-
-                                }
-                            }
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(.white, color)
                         
                     }
                     

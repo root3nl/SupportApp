@@ -291,11 +291,7 @@ struct ContentView: View {
                         Text(.init(preferences.footerText.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))
                             .font(.system(.subheadline, design: .rounded))
                             .foregroundColor(colorScheme == .dark ? .white.opacity(0.5) : .black.opacity(0.5))
-                            .modify {
-                                if #available(macOS 12, *) {
-                                    $0.textSelection(.enabled)
-                                }
-                            }
+                            .textSelection(.enabled)
                         
                         Spacer()
                         

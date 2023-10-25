@@ -51,11 +51,7 @@ struct UpdateView: View {
                             Text(NSLocalizedString("SYSTEM_PREFERENCES", comment: ""))
                         }
                     }
-                    .modify {
-                        if #available(macOS 12, *) {
-                            $0.buttonStyle(.borderedProminent)
-                        }
-                    }
+                    .buttonStyle(.borderedProminent)
                 }
                 
                 Divider()
@@ -104,15 +100,8 @@ struct UpdateView: View {
                         Image(systemName: "checkmark.circle.fill")
                             .resizable()
                             .frame(width: 50, height: 50)
-                            .modify {
-                                if #available(macOS 12, *) {
-                                    $0.symbolRenderingMode(.palette)
-                                        .foregroundStyle(.white, color)
-                                } else {
-                                    $0.foregroundColor(color)
-
-                                }
-                            }
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(.white, color)
                         
                     }
                     
