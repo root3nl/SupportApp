@@ -25,12 +25,7 @@ struct AppUpdatesView: View {
     var updateCounter: Int
     var color: Color
     
-    @State var updateDetails: [CatalogItem] = [
-        CatalogItem(id: "com.google.Chrome", name: "Google Chrome", iconThumbnail: "https://imagedelivery.net/-IT6z0z0Ec5yEiYj3DvVjg/e8a3c353f3a3b6c17a4787401a70b1b2962c7eb0/public", lastKnownVersion: "118.0.5993"),
-        CatalogItem(id: "org.mozilla.firefox", name: "Firefox", iconThumbnail: "https://imagedelivery.net/-IT6z0z0Ec5yEiYj3DvVjg/9e32756554c350bba99d7f64e239e1ba46479a2b/public", lastKnownVersion: "118.0.2"),
-        CatalogItem(id: "com.nonstrict.Bezel-direct", name: "Bezel", iconThumbnail: "https://imagedelivery.net/-IT6z0z0Ec5yEiYj3DvVjg/3b5a937520532c6fd5cefc621ed220faf7cba396/public", lastKnownVersion: "1.0.2"),
-        CatalogItem(id: "com.1password.1password", name: "1Password", iconThumbnail: "https://imagedelivery.net/-IT6z0z0Ec5yEiYj3DvVjg/8894cfb90d1ef5fabe711357b74d0dbde0da4361/public", lastKnownVersion: "8.10.18")
-    ]
+    @State var updateDetails: [InstalledAppItem] = []
             
     var body: some View {
         
@@ -61,7 +56,7 @@ struct AppUpdatesView: View {
                     
                     HStack {
                         
-                        if let icon = update.iconThumbnail {
+                        if let icon = update.icon {
                             
                             AsyncImage(url: URL(string: icon)) { image in
                                 image.resizable()
@@ -86,7 +81,7 @@ struct AppUpdatesView: View {
                             Text(update.name ?? "")
                                 .font(.system(.headline, design: .rounded))
                             
-                            Text(update.lastKnownVersion ?? "")
+                            Text(update.version ?? "")
                                 .foregroundColor(.secondary)
                                 .font(.system(.subheadline, design: .rounded))
                             
@@ -95,7 +90,7 @@ struct AppUpdatesView: View {
                         Spacer()
                         
                         Button(action: {
-                            
+                            openAppCatalog()
                         }) {
 //                            Text(NSLocalizedString("UPDATE", comment: ""))
 //                                .font(.system(.body, design: .rounded))
@@ -149,6 +144,22 @@ struct AppUpdatesView: View {
         .fixedSize()
         .padding()
         .unredacted()
+        .task {
+            getAppUpdates()
+        }
+    }
+    
+    func getAppUpdates() {
+        let defaults = UserDefaults(suiteName: "nl.root3.catalog")
+        
+        if let encodedAppUpdates = defaults?.object(forKey: "UpdateDetails") as? Data {
+            let decoder = JSONDecoder()
+            if let decodedAppUpdates = try? decoder.decode([InstalledAppItem].self, from: encodedAppUpdates) {
+                DispatchQueue.main.async {
+                    updateDetails = decodedAppUpdates
+                }
+            }
+        }
     }
     
     // Open application with given Bundle Identifier
