@@ -13,7 +13,7 @@ import SwiftUI
 // Popover is based on: https://medium.com/@acwrightdesign/creating-a-macos-menu-bar-application-using-swiftui-54572a5d5f87
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 
     var popover: NSPopover!
     var eventMonitor: EventMonitor?
@@ -75,7 +75,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         popover.contentViewController = NSHostingController(rootView: appView
                                                                 .environmentObject(computerinfo)
                                                                 .environmentObject(userinfo)
-                                                                .environmentObject(preferences))
+                                                                .environmentObject(preferences)
+                                                                .environmentObject(self))
         self.popover = popover
         
         // Create the status item
@@ -520,6 +521,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             await self.userinfo.getCurrentUserRecord()
             await self.userinfo.getUserFullName()
             await self.computerinfo.getSerialNumber()
+//            await self.computerinfo.getAppUpdates()
         }
         self.computerinfo.getStorage()
         self.computerinfo.getRecommendedUpdates()

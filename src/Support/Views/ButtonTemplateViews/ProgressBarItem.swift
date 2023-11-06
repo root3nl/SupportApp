@@ -19,6 +19,9 @@ struct ProgressBarItem: View {
     // Declare unified logging
     let logger = Logger(subsystem: "nl.root3.support", category: "Action")
     
+    // Access AppDelegate
+    @EnvironmentObject private var appDelegate: AppDelegate
+    
     // Vars to activate hover effect
     @State var hoverEffectEnable: Bool
     @State var hoverView = false
@@ -121,7 +124,10 @@ struct ProgressBarItem: View {
             NSWorkspace.shared.open(url)
             
             // Close the popover
-            NSApp.deactivate()
+//            NSApp.deactivate()
+            
+            // Close popover
+            appDelegate.togglePopover(nil)
             
         } else {
             

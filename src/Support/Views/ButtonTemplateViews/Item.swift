@@ -21,6 +21,9 @@ struct Item: View {
     var linkPrefKey: String?
 //    var updateView: Bool?
     
+    // Access AppDelegate
+    @EnvironmentObject private var appDelegate: AppDelegate
+    
     // Get computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo
     
@@ -174,7 +177,10 @@ struct Item: View {
         NSWorkspace.shared.open(url)
         
         // Close the popover
-        NSApp.deactivate()
+//        NSApp.deactivate()
+        
+        // Close popover
+        appDelegate.togglePopover(nil)
 
     }
     
@@ -205,7 +211,10 @@ struct Item: View {
         }
         
         // Close the popover
-        NSApp.deactivate()
+//        NSApp.deactivate()
+        
+        // Close popover
+        appDelegate.togglePopover(nil)
     }
     
     // Post Distributed Notification

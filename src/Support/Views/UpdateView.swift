@@ -12,6 +12,9 @@ struct UpdateView: View {
     
     let logger = Logger(subsystem: "nl.root3.support", category: "SoftwareUpdate")
     
+    // Access AppDelegate
+    @EnvironmentObject private var appDelegate: AppDelegate
+    
     // Get  computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo
     
@@ -128,7 +131,10 @@ struct UpdateView: View {
         NSWorkspace.shared.open(url)
         
         // Close the popover
-        NSApp.deactivate()
+//        NSApp.deactivate()
+        
+        // Close popover
+        appDelegate.togglePopover(nil)
 
     }
 }

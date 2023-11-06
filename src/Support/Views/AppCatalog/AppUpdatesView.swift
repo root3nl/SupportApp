@@ -8,8 +8,11 @@
 import SwiftUI
 
 struct AppUpdatesView: View {
+    
+    // Access AppDelegate
+    @EnvironmentObject private var appDelegate: AppDelegate
         
-    // Get  computer info from functions in class
+    // Get computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo
     
     // Get user info from functions in class
@@ -173,6 +176,9 @@ struct AppUpdatesView: View {
         let configuration = NSWorkspace.OpenConfiguration()
         
         NSWorkspace.shared.openApplication(at: url, configuration: configuration, completionHandler: nil)
+        
+        // Close popover
+        appDelegate.togglePopover(nil)
     }
     
 }
