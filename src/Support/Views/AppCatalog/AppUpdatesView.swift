@@ -18,6 +18,26 @@ struct AppUpdatesView: View {
     // Get user info from functions in class
     @EnvironmentObject var userinfo: UserInfo
     
+    // Get App Catalog information
+    @EnvironmentObject var appCatalogController: AppCatalogController
+    
+    // Make UserDefaults easy to use
+    let defaults = UserDefaults.standard
+        
+    // Dark Mode detection
+    @Environment(\.colorScheme) var colorScheme
+    
+    // Set the custom color for all symbols depending on Light or Dark Mode.
+    var customColor: String {
+        if colorScheme == .light && defaults.string(forKey: "CustomColor") != nil {
+            return preferences.customColor
+        } else if colorScheme == .dark && defaults.string(forKey: "CustomColorDarkMode") != nil {
+            return preferences.customColorDarkMode
+        } else {
+            return preferences.customColor
+        }
+    }
+    
     // Get preferences or default values
     @StateObject var preferences = Preferences()
       
@@ -26,126 +46,181 @@ struct AppUpdatesView: View {
     
     // Update counter
     var updateCounter: Int
-    var color: Color
+//    var color: Color
     
     @State var updateDetails: [InstalledAppItem] = []
             
     var body: some View {
         
-        VStack(alignment: .leading, spacing: 8) {
+        ZStack {
+            EffectsView(material: NSVisualEffectView.Material.fullScreenUI, blendingMode: NSVisualEffectView.BlendingMode.behindWindow)
             
-            if updateCounter > 0 {
+            // We need to provide Quit option for Apple App Review approval
+            if !preferences.hideQuit {
+                QuitButton()
+            }
+            
+            VStack(spacing: 10) {
                 
-                HStack {
-                    
-                    Text(updateCounter > 0 ? NSLocalizedString("UPDATES_AVAILABLE", comment: "") : NSLocalizedString("NO_UPDATES_AVAILABLE", comment: ""))
-                        .font(.system(.headline, design: .rounded))
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        showPopover = false
-                        openAppCatalog()
-                    }) {
-                        Text(NSLocalizedString("APP_CATALOG", comment: ""))
-                    }
-                    .buttonStyle(.borderedProminent)
-                }
+                // MARK: - Horizontal stack with Title and Logo
+                HeaderView()
                 
-                Divider()
-                    .padding(2)
+                //        VStack(alignment: .leading, spacing: 8) {
                 
-                ForEach(updateDetails, id: \.self) { update in
+                Group {
                     
                     HStack {
                         
-                        if let icon = update.icon {
-                            
-                            AsyncImage(url: URL(string: icon)) { image in
-                                image.resizable()
-                                    .scaledToFit()
-                                    .frame(height: 36)
-                                
-                            } placeholder: {
-                                Image("DefaultLogo")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .cornerRadius(6)
-                                    .redacted(reason: .placeholder)
-                                    .overlay(
-                                        ProgressView()
-                                    )
-                                    .frame(width: 36, height: 36)
-                            }
-                        }
-                        
-                        VStack(alignment: .leading) {
-                            
-                            Text(update.name ?? "")
-                                .font(.system(.headline, design: .rounded))
-                            
-                            Text(update.version ?? "")
-                                .foregroundColor(.secondary)
-                                .font(.system(.subheadline, design: .rounded))
-                            
-                        }
-                        
-                        Spacer()
-                        
                         Button(action: {
-                            openAppCatalog()
+                            withAnimation {
+                                appCatalogController.showAppUpdates.toggle()
+                            }
                         }) {
-//                            Text(NSLocalizedString("UPDATE", comment: ""))
-//                                .font(.system(.body, design: .rounded))
-////                                .fontWeight(.regular)
-//                                .foregroundColor(.secondary)
-//                                .padding(.vertical, 4)
-//                                .padding(.horizontal)
-//                                .background(Color.gray.opacity(0.2))
-//                                .clipShape(Capsule())
-                            Image(systemName: "arrow.down")
-                                .font(.system(.headline, design: .rounded))
-                                .foregroundColor(.secondary)
-                                .padding(7)
-                                .background(Color.gray.opacity(0.2))
-                                .clipShape(Circle())
+                            Ellipse()
+                                .foregroundColor(Color.gray.opacity(0.5))
+                                .overlay(
+                                    Image(systemName: "chevron.backward")
+                                )
+                                .frame(width: 26, height: 26)
                         }
                         .buttonStyle(.plain)
+                                                
+                        Text(updateCounter > 0 ? NSLocalizedString("UPDATES_AVAILABLE", comment: "") : NSLocalizedString("NO_UPDATES_AVAILABLE", comment: ""))
+                            .font(.system(.headline, design: .rounded))
+//                            .foregroundStyle(.secondary)
                         
+                        Spacer()
+
                     }
                     
-                }
-                
-            } else {
-                
-                HStack {
-                    
-                    Spacer()
-                    
-                    VStack {
+                    if updateCounter > 0 {
                         
-                        Text(NSLocalizedString("ALL_APPS_UP_TO_DATE", comment: ""))
-                            .font(.system(.title2, design: .rounded))
-                            .fontWeight(.medium)
+//                        HStack {
+//                            
+//                            Text(updateCounter > 0 ? NSLocalizedString("UPDATES_AVAILABLE", comment: "") : NSLocalizedString("NO_UPDATES_AVAILABLE", comment: ""))
+//                                .font(.system(.headline, design: .rounded))
+//                            
+//                            Spacer()
+//                            
+//                            Button(action: {
+//                                showPopover = false
+//                                openAppCatalog()
+//                            }) {
+//                                Text(NSLocalizedString("APP_CATALOG", comment: ""))
+//                            }
+//                            .buttonStyle(.borderedProminent)
+//                        }
                         
-                        Image(systemName: "checkmark.circle.fill")
-                            .resizable()
-                            .frame(width: 50, height: 50)
-                            .symbolRenderingMode(.palette)
-                            .foregroundStyle(.white, color)
+                        Divider()
+                            .padding(2)
+                        
+                        ForEach(updateDetails, id: \.self) { update in
+                            
+                            HStack {
+                                
+                                if let icon = update.icon {
+                                    
+                                    AsyncImage(url: URL(string: icon)) { image in
+                                        image.resizable()
+                                            .scaledToFit()
+                                            .frame(height: 36)
+                                        
+                                    } placeholder: {
+                                        Image("DefaultLogo")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .cornerRadius(6)
+                                            .redacted(reason: .placeholder)
+                                            .overlay(
+                                                ProgressView()
+                                            )
+                                            .frame(width: 36, height: 36)
+                                    }
+                                }
+                                
+                                VStack(alignment: .leading) {
+                                    
+                                    Text(update.name ?? "")
+                                        .font(.system(.headline, design: .rounded))
+                                    
+                                    Text(update.version ?? "")
+                                        .foregroundColor(.secondary)
+                                        .font(.system(.subheadline, design: .rounded))
+                                    
+                                }
+                                
+                                Spacer()
+                                
+                                Button(action: {
+                                    updateApp(bundleID: update.id)
+                                }) {
+                                    //                            Text(NSLocalizedString("UPDATE", comment: ""))
+                                    //                                .font(.system(.body, design: .rounded))
+                                    ////                                .fontWeight(.regular)
+                                    //                                .foregroundColor(.secondary)
+                                    //                                .padding(.vertical, 4)
+                                    //                                .padding(.horizontal)
+                                    //                                .background(Color.gray.opacity(0.2))
+                                    //                                .clipShape(Capsule())
+                                    if appCatalogController.appsUpdating.contains(update.id) {
+                                        Ellipse()
+                                            .foregroundColor(Color.gray.opacity(0.5))
+                                            .overlay(
+                                                ProgressView()
+                                                    .scaleEffect(0.5)
+                                            )
+                                            .frame(width: 26, height: 26)
+                                            .padding(.leading, 10)
+                                    } else {
+                                        Ellipse()
+                                            .foregroundColor(Color.gray.opacity(0.5))
+                                            .overlay(
+                                                Image(systemName: "arrow.down")
+                                            )
+                                            .frame(width: 26, height: 26)
+                                            .padding(.leading, 10)
+                                    }
+                                }
+                                .buttonStyle(.plain)
+                                
+                            }
+                            
+                        }
+                        
+                    } else {
+                        
+                        HStack {
+                            
+                            Spacer()
+                            
+                            VStack {
+                                
+                                Text(NSLocalizedString("ALL_APPS_UP_TO_DATE", comment: ""))
+                                    .font(.system(.title2, design: .rounded))
+                                    .fontWeight(.medium)
+                                
+                                Image(systemName: "checkmark.circle.fill")
+                                    .resizable()
+                                    .frame(width: 50, height: 50)
+                                    .symbolRenderingMode(.palette)
+                                    .foregroundStyle(.white, Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+                                
+                            }
+                            
+                            Spacer()
+                            
+                        }
                         
                     }
-                    
                     Spacer()
-                    
                 }
-                
+                .padding(.horizontal)
             }
         }
         // Set frame to 250 to allow multiline text
-        .frame(width: 300)
-        .fixedSize()
-        .padding()
+//        .frame(width: 300)
+//        .fixedSize()
+//        .padding()
         .unredacted()
         .task {
             getAppUpdates()
@@ -179,6 +254,48 @@ struct AppUpdatesView: View {
         
         // Close popover
         appDelegate.togglePopover(nil)
+    }
+    
+    // MARK: - Function to update app using App Catalog
+    func updateApp(bundleID: String) {
+        
+        let command = "/usr/local/bin/catalog -i \(bundleID)"
+        
+        // Add bundle ID to apps currently updating
+        appCatalogController.appsUpdating.append(bundleID)
+        
+        do {
+            try ExecutionService.executeScript(command: command) { exitCode in
+                
+                if exitCode == 0 {
+                    print("App \(bundleID) successfully updated")
+                } else {
+                    print("Failed to update app \(bundleID)")
+                }
+                
+                // Stop update spinner
+                if appCatalogController.appsUpdating.contains(bundleID) {
+                    if let index = appCatalogController.appsUpdating.firstIndex(of: bundleID) {
+                        DispatchQueue.main.async {
+                            appCatalogController.appsUpdating.remove(at: index)
+                        }
+                    }
+                }
+                
+            }
+        } catch {
+            print("Failed to update app \(bundleID). Error in PrivilegedHelperTool")
+            
+            // Stop update spinner
+            if appCatalogController.appsUpdating.contains(bundleID) {
+                if let index = appCatalogController.appsUpdating.firstIndex(of: bundleID) {
+                    DispatchQueue.main.async {
+                        appCatalogController.appsUpdating.remove(at: index)
+                    }
+                }
+            }
+        }
+        
     }
     
 }

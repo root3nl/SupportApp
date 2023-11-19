@@ -14,5 +14,9 @@
 		<string>com.apple.SoftwareUpdate</string>
 		<string>com.jamf.connect.state</string>
 	</array>
+	<key>com.apple.security.temporary-exception.mach-lookup.global-name</key>
+	<array>
+		<string>nl.root3.support.helper</string>
+	</array>
 </dict>
 </plist>

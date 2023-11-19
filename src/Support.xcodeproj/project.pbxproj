@@ -28,6 +28,24 @@
 		49152919259CD32200056B5F /* ItemSmall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49152918259CD32200056B5F /* ItemSmall.swift */; };
 		4915291C259CD38800056B5F /* EffectsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4915291B259CD38800056B5F /* EffectsView.swift */; };
 		4939A0C829259B7B00731363 /* LogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4939A0C729259B7B00731363 /* LogoView.swift */; };
+		493DCC922B08292900FA2480 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493DCC912B08292900FA2480 /* main.swift */; };
+		493DCC9A2B082BBE00FA2480 /* nl.root3.support.helper in CopyFiles */ = {isa = PBXBuildFile; fileRef = 493DCC8F2B08292900FA2480 /* nl.root3.support.helper */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		493DCC9D2B082DAE00FA2480 /* HelperConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493DCC9C2B082DAE00FA2480 /* HelperConstants.swift */; };
+		493DCC9F2B082DF600FA2480 /* SupportHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493DCC9E2B082DF600FA2480 /* SupportHelper.swift */; };
+		493DCCA12B082E4100FA2480 /* SupportHelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493DCCA02B082E4100FA2480 /* SupportHelperProtocol.swift */; };
+		493DCCA32B082E7C00FA2480 /* HelperExecutionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493DCCA22B082E7C00FA2480 /* HelperExecutionService.swift */; };
+		493DCCA52B082E9A00FA2480 /* PrivilegedHelperError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493DCCA42B082E9A00FA2480 /* PrivilegedHelperError.swift */; };
+		493DCCA72B082EAD00FA2480 /* RemoteApplicationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493DCCA62B082EAD00FA2480 /* RemoteApplicationProtocol.swift */; };
+		493DCCA92B082EF200FA2480 /* ConnectionIdentityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493DCCA82B082EF200FA2480 /* ConnectionIdentityService.swift */; };
+		493DCCAB2B082F0F00FA2480 /* OSStatus+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493DCCAA2B082F0F00FA2480 /* OSStatus+Extensions.swift */; };
+		493DCCAE2B082F4D00FA2480 /* AuditTokenHack.m in Sources */ = {isa = PBXBuildFile; fileRef = 493DCCAD2B082F4D00FA2480 /* AuditTokenHack.m */; };
+		493DCCB22B082FCE00FA2480 /* ExecutionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493DCCB12B082FCE00FA2480 /* ExecutionService.swift */; };
+		493DCCB42B082FE600FA2480 /* HelperRemote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493DCCB32B082FE600FA2480 /* HelperRemote.swift */; };
+		493DCCB52B08300300FA2480 /* HelperConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493DCC9C2B082DAE00FA2480 /* HelperConstants.swift */; };
+		493DCCB62B08300F00FA2480 /* PrivilegedHelperError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493DCCA42B082E9A00FA2480 /* PrivilegedHelperError.swift */; };
+		493DCCB72B08303B00FA2480 /* SupportHelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493DCCA02B082E4100FA2480 /* SupportHelperProtocol.swift */; };
+		493DCCB82B08304A00FA2480 /* RemoteApplicationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493DCCA62B082EAD00FA2480 /* RemoteApplicationProtocol.swift */; };
+		493DCCD22B08E5E500FA2480 /* AppCatalogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493DCCD12B08E5E500FA2480 /* AppCatalogController.swift */; };
 		493FBB8D27406B5D002A79F9 /* ExtensionBSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493FBB8C27406B5D002A79F9 /* ExtensionBSubview.swift */; };
 		495924F9265C535B00E083AC /* QuitButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495924F8265C535B00E083AC /* QuitButton.swift */; };
 		495F74EC28B39A9A00C20304 /* PopoverAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495F74EB28B39A9A00C20304 /* PopoverAlertView.swift */; };
@@ -55,7 +73,46 @@
 		B03F2E5C28734ABD000478BC /* nl.root3.support.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = B03F2E53287340BD000478BC /* nl.root3.support.plist */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		493DCC972B082B9200FA2480 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 49822CD724B4C3F100E8DE54 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 493DCC8E2B08292900FA2480;
+			remoteInfo = nl.root3.support.helper;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
+		493DCC8D2B08292900FA2480 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		493DCC992B082BAB00FA2480 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/LaunchServices;
+			dstSubfolderSpec = 1;
+			files = (
+				493DCC9A2B082BBE00FA2480 /* nl.root3.support.helper in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		493DCCCD2B08DDDB00FA2480 /* Embed XPC Services */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/XPCServices";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			name = "Embed XPC Services";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B03F2E59287345A7000478BC /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 12;
@@ -91,6 +148,24 @@
 		49152918259CD32200056B5F /* ItemSmall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSmall.swift; sourceTree = "<group>"; };
 		4915291B259CD38800056B5F /* EffectsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectsView.swift; sourceTree = "<group>"; };
 		4939A0C729259B7B00731363 /* LogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogoView.swift; sourceTree = "<group>"; };
+		493DCC8F2B08292900FA2480 /* nl.root3.support.helper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = nl.root3.support.helper; sourceTree = BUILT_PRODUCTS_DIR; };
+		493DCC912B08292900FA2480 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		493DCC962B0829C700FA2480 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		493DCC9B2B082D3500FA2480 /* launchd.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = launchd.plist; sourceTree = "<group>"; };
+		493DCC9C2B082DAE00FA2480 /* HelperConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperConstants.swift; sourceTree = "<group>"; };
+		493DCC9E2B082DF600FA2480 /* SupportHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportHelper.swift; sourceTree = "<group>"; };
+		493DCCA02B082E4100FA2480 /* SupportHelperProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportHelperProtocol.swift; sourceTree = "<group>"; };
+		493DCCA22B082E7C00FA2480 /* HelperExecutionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperExecutionService.swift; sourceTree = "<group>"; };
+		493DCCA42B082E9A00FA2480 /* PrivilegedHelperError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedHelperError.swift; sourceTree = "<group>"; };
+		493DCCA62B082EAD00FA2480 /* RemoteApplicationProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteApplicationProtocol.swift; sourceTree = "<group>"; };
+		493DCCA82B082EF200FA2480 /* ConnectionIdentityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionIdentityService.swift; sourceTree = "<group>"; };
+		493DCCAA2B082F0F00FA2480 /* OSStatus+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OSStatus+Extensions.swift"; sourceTree = "<group>"; };
+		493DCCAC2B082F4D00FA2480 /* nl.root3.support.helper-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "nl.root3.support.helper-Bridging-Header.h"; sourceTree = "<group>"; };
+		493DCCAD2B082F4D00FA2480 /* AuditTokenHack.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuditTokenHack.m; sourceTree = "<group>"; };
+		493DCCAF2B082F6200FA2480 /* AuditTokenHack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AuditTokenHack.h; sourceTree = "<group>"; };
+		493DCCB12B082FCE00FA2480 /* ExecutionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecutionService.swift; sourceTree = "<group>"; };
+		493DCCB32B082FE600FA2480 /* HelperRemote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperRemote.swift; sourceTree = "<group>"; };
+		493DCCD12B08E5E500FA2480 /* AppCatalogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCatalogController.swift; sourceTree = "<group>"; };
 		493FBB8C27406B5D002A79F9 /* ExtensionBSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBSubview.swift; sourceTree = "<group>"; };
 		495924F8265C535B00E083AC /* QuitButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuitButton.swift; sourceTree = "<group>"; };
 		495B6E6E2A2E3E4E006B575D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -125,6 +200,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		493DCC8C2B08292900FA2480 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		49822CDC24B4C3F100E8DE54 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -185,6 +267,44 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		493DCC902B08292900FA2480 /* SupportHelper */ = {
+			isa = PBXGroup;
+			children = (
+				493DCC912B08292900FA2480 /* main.swift */,
+				493DCC9E2B082DF600FA2480 /* SupportHelper.swift */,
+				493DCCA82B082EF200FA2480 /* ConnectionIdentityService.swift */,
+				493DCCAA2B082F0F00FA2480 /* OSStatus+Extensions.swift */,
+				493DCCAD2B082F4D00FA2480 /* AuditTokenHack.m */,
+				493DCCAF2B082F6200FA2480 /* AuditTokenHack.h */,
+				493DCCA02B082E4100FA2480 /* SupportHelperProtocol.swift */,
+				493DCCA22B082E7C00FA2480 /* HelperExecutionService.swift */,
+				493DCCA42B082E9A00FA2480 /* PrivilegedHelperError.swift */,
+				493DCCA62B082EAD00FA2480 /* RemoteApplicationProtocol.swift */,
+				493DCC9C2B082DAE00FA2480 /* HelperConstants.swift */,
+				493DCC962B0829C700FA2480 /* Info.plist */,
+				493DCC9B2B082D3500FA2480 /* launchd.plist */,
+				493DCCAC2B082F4D00FA2480 /* nl.root3.support.helper-Bridging-Header.h */,
+			);
+			path = SupportHelper;
+			sourceTree = "<group>";
+		};
+		493DCCB02B082FBE00FA2480 /* PrivilegedHelper */ = {
+			isa = PBXGroup;
+			children = (
+				493DCCB12B082FCE00FA2480 /* ExecutionService.swift */,
+				493DCCB32B082FE600FA2480 /* HelperRemote.swift */,
+			);
+			path = PrivilegedHelper;
+			sourceTree = "<group>";
+		};
+		493DCCD02B08E5DA00FA2480 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				493DCCD12B08E5E500FA2480 /* AppCatalogController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
 		4976EB8C26531CCC006EE097 /* Experimental */ = {
 			isa = PBXGroup;
 			children = (
@@ -197,6 +317,7 @@
 			isa = PBXGroup;
 			children = (
 				49822CE124B4C3F100E8DE54 /* Support */,
+				493DCC902B08292900FA2480 /* SupportHelper */,
 				49822CE024B4C3F100E8DE54 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -205,6 +326,7 @@
 			isa = PBXGroup;
 			children = (
 				49822CDF24B4C3F100E8DE54 /* Support.app */,
+				493DCC8F2B08292900FA2480 /* nl.root3.support.helper */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -213,8 +335,10 @@
 			isa = PBXGroup;
 			children = (
 				B03F2E53287340BD000478BC /* nl.root3.support.plist */,
+				493DCCD02B08E5DA00FA2480 /* Controllers */,
 				498B6FFF272F45EF00BFA45E /* Models */,
 				4915290A259CCF2500056B5F /* Views */,
+				493DCCB02B082FBE00FA2480 /* PrivilegedHelper */,
 				0AFE0A8525014C6100957B52 /* Localizable.strings */,
 				49822CE224B4C3F100E8DE54 /* AppDelegate.swift */,
 				49857E9924D4B58B009B6FBA /* ComputerInfo.swift */,
@@ -281,6 +405,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		493DCC8E2B08292900FA2480 /* nl.root3.support.helper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 493DCC952B08292900FA2480 /* Build configuration list for PBXNativeTarget "nl.root3.support.helper" */;
+			buildPhases = (
+				493DCC8B2B08292900FA2480 /* Sources */,
+				493DCC8C2B08292900FA2480 /* Frameworks */,
+				493DCC8D2B08292900FA2480 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = nl.root3.support.helper;
+			productName = nl.root3.support.helper;
+			productReference = 493DCC8F2B08292900FA2480 /* nl.root3.support.helper */;
+			productType = "com.apple.product-type.tool";
+		};
 		49822CDE24B4C3F100E8DE54 /* Support */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 49822CF224B4C3F200E8DE54 /* Build configuration list for PBXNativeTarget "Support" */;
@@ -290,10 +431,13 @@
 				49822CDD24B4C3F100E8DE54 /* Resources */,
 				49FB1303273B244600650BD3 /* Run Script */,
 				B03F2E59287345A7000478BC /* CopyFiles */,
+				493DCC992B082BAB00FA2480 /* CopyFiles */,
+				493DCCCD2B08DDDB00FA2480 /* Embed XPC Services */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				493DCC982B082B9200FA2480 /* PBXTargetDependency */,
 			);
 			name = Support;
 			packageProductDependencies = (
@@ -308,9 +452,13 @@
 		49822CD724B4C3F100E8DE54 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1200;
+				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1200;
 				TargetAttributes = {
+					493DCC8E2B08292900FA2480 = {
+						CreatedOnToolsVersion = 15.0;
+						LastSwiftMigration = 1500;
+					};
 					49822CDE24B4C3F100E8DE54 = {
 						CreatedOnToolsVersion = 12.0;
 					};
@@ -336,6 +484,7 @@
 			projectRoot = "";
 			targets = (
 				49822CDE24B4C3F100E8DE54 /* Support */,
+				493DCC8E2B08292900FA2480 /* nl.root3.support.helper */,
 			);
 		};
 /* End PBXProject section */
@@ -377,12 +526,32 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		493DCC8B2B08292900FA2480 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				493DCC922B08292900FA2480 /* main.swift in Sources */,
+				493DCCA52B082E9A00FA2480 /* PrivilegedHelperError.swift in Sources */,
+				493DCCAE2B082F4D00FA2480 /* AuditTokenHack.m in Sources */,
+				493DCCAB2B082F0F00FA2480 /* OSStatus+Extensions.swift in Sources */,
+				493DCCA72B082EAD00FA2480 /* RemoteApplicationProtocol.swift in Sources */,
+				493DCCA32B082E7C00FA2480 /* HelperExecutionService.swift in Sources */,
+				493DCCA12B082E4100FA2480 /* SupportHelperProtocol.swift in Sources */,
+				493DCCA92B082EF200FA2480 /* ConnectionIdentityService.swift in Sources */,
+				493DCC9D2B082DAE00FA2480 /* HelperConstants.swift in Sources */,
+				493DCC9F2B082DF600FA2480 /* SupportHelper.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		49822CDB24B4C3F100E8DE54 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				49152916259CD2C300056B5F /* Item.swift in Sources */,
+				493DCCB72B08303B00FA2480 /* SupportHelperProtocol.swift in Sources */,
+				493DCCB42B082FE600FA2480 /* HelperRemote.swift in Sources */,
 				499F56752AE47A3900CBDE73 /* AppUpdatesView.swift in Sources */,
+				493DCCB22B082FCE00FA2480 /* ExecutionService.swift in Sources */,
 				0AFB04FD263B422900507B23 /* ItemDouble.swift in Sources */,
 				0A4A73812602052800927DAB /* NetworkSubview.swift in Sources */,
 				498D47D62A38ABC10059465C /* UpdateView.swift in Sources */,
@@ -399,11 +568,13 @@
 				49857E9A24D4B58B009B6FBA /* ComputerInfo.swift in Sources */,
 				496C2FE1271477B800D51EE1 /* NotificationNames.swift in Sources */,
 				0A4A738E26020A6500927DAB /* MacOSVersionSubview.swift in Sources */,
+				493DCCD22B08E5E500FA2480 /* AppCatalogController.swift in Sources */,
 				490B145E258A55B90048D8AF /* Extensions.swift in Sources */,
 				0AFB04FB263AC23000507B23 /* ModelSubView.swift in Sources */,
 				4939A0C829259B7B00731363 /* LogoView.swift in Sources */,
 				0AC50A7524FFE6E100AE62D0 /* EventMonitor.swift in Sources */,
 				49B4952D2642E96A00A6AE64 /* DarkModeBorder.swift in Sources */,
+				493DCCB52B08300300FA2480 /* HelperConstants.swift in Sources */,
 				49152919259CD32200056B5F /* ItemSmall.swift in Sources */,
 				493FBB8D27406B5D002A79F9 /* ExtensionBSubview.swift in Sources */,
 				496FE4D326514C59007746ED /* PasswordSubview.swift in Sources */,
@@ -413,11 +584,13 @@
 				4976EB892653151A006EE097 /* ChangePassword.swift in Sources */,
 				495924F9265C535B00E083AC /* QuitButton.swift in Sources */,
 				49152913259CD19900056B5F /* ProgressBarItem.swift in Sources */,
+				493DCCB82B08304A00FA2480 /* RemoteApplicationProtocol.swift in Sources */,
 				490CE0A8294FC144005BC01D /* SoftwareUpdateModel.swift in Sources */,
 				0A4A7388260208B500927DAB /* UptimeSubview.swift in Sources */,
 				49822CE324B4C3F100E8DE54 /* AppDelegate.swift in Sources */,
 				0A4A73852602075F00927DAB /* StorageSubview.swift in Sources */,
 				49857E9824D4B543009B6FBA /* Preferences.swift in Sources */,
+				493DCCB62B08300F00FA2480 /* PrivilegedHelperError.swift in Sources */,
 				0A24AB442624CABB004208C4 /* NotificationBadgeTextView.swift in Sources */,
 				4915291C259CD38800056B5F /* EffectsView.swift in Sources */,
 				0A446D572683A40600667602 /* WelcomeScreenView.swift in Sources */,
@@ -426,6 +599,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		493DCC982B082B9200FA2480 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 493DCC8E2B08292900FA2480 /* nl.root3.support.helper */;
+			targetProxy = 493DCC972B082B9200FA2480 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		0AFE0A8525014C6100957B52 /* Localizable.strings */ = {
@@ -451,6 +632,76 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		493DCC932B08292900FA2480 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = 98LJ4XBGYK;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				INFOPLIST_FILE = "$(SRCROOT)/SupportHelper/Info.plist";
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 2.0;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__launchd_plist,
+					SupportHelper/launchd.plist,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = nl.root3.support.helper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OBJC_BRIDGING_HEADER = "SupportHelper/nl.root3.support.helper-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		493DCC942B08292900FA2480 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = 98LJ4XBGYK;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				INFOPLIST_FILE = "$(SRCROOT)/SupportHelper/Info.plist";
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 2.0;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__launchd_plist,
+					SupportHelper/launchd.plist,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = nl.root3.support.helper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "SupportHelper/nl.root3.support.helper-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		49822CF024B4C3F200E8DE54 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -571,6 +822,7 @@
 		49822CF324B4C3F200E8DE54 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "";
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
@@ -600,6 +852,7 @@
 		49822CF424B4C3F200E8DE54 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "";
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
@@ -629,6 +882,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		493DCC952B08292900FA2480 /* Build configuration list for PBXNativeTarget "nl.root3.support.helper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				493DCC932B08292900FA2480 /* Debug */,
+				493DCC942B08292900FA2480 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		49822CDA24B4C3F100E8DE54 /* Build configuration list for PBXProject "Support" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

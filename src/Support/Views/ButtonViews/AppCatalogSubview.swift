@@ -12,6 +12,9 @@ struct AppCatalogSubview: View {
     // Get  computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo
     
+    // Get App Catalog information
+    @EnvironmentObject var appCatalogController: AppCatalogController
+    
     // Get preferences or default values
     @StateObject var preferences = Preferences()
     
@@ -47,11 +50,14 @@ struct AppCatalogSubview: View {
         
         InfoItem(title: "App Updates", subtitle: updatesString, image: "app.badge.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: computerinfo.appUpdates, hoverEffectEnable: true)
             .onTapGesture {
-                self.showUpdatePopover.toggle()
+//                self.showUpdatePopover.toggle()
+                withAnimation {
+                    self.appCatalogController.showAppUpdates.toggle()
+                }
             }
-            .popover(isPresented: $showUpdatePopover, arrowEdge: .leading) {
-                AppUpdatesView(updateCounter: computerinfo.appUpdates, color: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
-            }
+//            .popover(isPresented: $showUpdatePopover, arrowEdge: .leading) {
+//                AppUpdatesView(updateCounter: computerinfo.appUpdates, color: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+//            }
     }
     
 }

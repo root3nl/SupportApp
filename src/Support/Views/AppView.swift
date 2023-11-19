@@ -11,13 +11,18 @@ struct AppView: View {
     
     @EnvironmentObject var computerinfo: ComputerInfo
     @EnvironmentObject var preferences: Preferences
+    @EnvironmentObject var appCatalogController: AppCatalogController
 
     var body: some View {
         
         if preferences.showWelcomeScreen && !preferences.hasSeenWelcomeScreen {
             WelcomeView()
         } else {
-            ContentView()
+            if appCatalogController.showAppUpdates {
+                AppUpdatesView(updateCounter: computerinfo.appUpdates)
+            } else {
+                ContentView()
+            }
         }
     }
 }

@@ -41,6 +41,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     var computerinfo = ComputerInfo()
     var userinfo = UserInfo()
     var preferences = Preferences()
+    var appCatalogController = AppCatalogController()
     
     // Create red notification badge view
     // https://github.com/DeveloperMaris/ToolReleases/blob/master/ToolReleases/PopoverController.swift
@@ -76,6 +77,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                                                                 .environmentObject(computerinfo)
                                                                 .environmentObject(userinfo)
                                                                 .environmentObject(preferences)
+                                                                .environmentObject(appCatalogController)
                                                                 .environmentObject(self))
         self.popover = popover
         
