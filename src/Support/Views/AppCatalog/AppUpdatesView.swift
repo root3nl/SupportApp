@@ -5,9 +5,13 @@
 //  Created by Jordy Witteman on 21/10/2023.
 //
 
+import os
 import SwiftUI
 
 struct AppUpdatesView: View {
+    
+    // Unified Logging
+    var logger = Logger(subsystem: "nl.root3.support", category: "AppCatalog")
     
     // Access AppDelegate
     @EnvironmentObject private var appDelegate: AppDelegate
@@ -256,9 +260,32 @@ struct AppUpdatesView: View {
         appDelegate.togglePopover(nil)
     }
     
+    // MARK: - Function to check updates as the current user
+    func checkAppUpdates() {
+        
+        // Command to check app updates
+        let command = "/usr/local/bin/catalog --check-updates"
+        
+        do {
+            try ExecutionService.executeScript(command: command) { exitCode in
+                
+                if exitCode == 0 {
+                    logger.log("Successfully checked app updates")
+                } else {
+                    logger.error("Failed to check app updates...")
+                }
+                
+            }
+        } catch {
+            logger.error("Failed to check app updates...")
+        }
+        
+    }
+    
     // MARK: - Function to update app using App Catalog
     func updateApp(bundleID: String) {
         
+        // Command to update app
         let command = "/usr/local/bin/catalog -i \(bundleID)"
         
         // Add bundle ID to apps currently updating
@@ -268,9 +295,9 @@ struct AppUpdatesView: View {
             try ExecutionService.executeScript(command: command) { exitCode in
                 
                 if exitCode == 0 {
-                    print("App \(bundleID) successfully updated")
+                    logger.log("App \(bundleID) successfully updated")
                 } else {
-                    print("Failed to update app \(bundleID)")
+                    logger.error("Failed to update app \(bundleID)")
                 }
                 
                 // Stop update spinner
@@ -282,9 +309,11 @@ struct AppUpdatesView: View {
                     }
                 }
                 
+                checkAppUpdates()
+                
             }
         } catch {
-            print("Failed to update app \(bundleID). Error in PrivilegedHelperTool")
+            logger.log("Failed to update app \(bundleID). Error in PrivilegedHelperTool")
             
             // Stop update spinner
             if appCatalogController.appsUpdating.contains(bundleID) {
