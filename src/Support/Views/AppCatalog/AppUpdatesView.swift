@@ -44,204 +44,185 @@ struct AppUpdatesView: View {
     
     // Get preferences or default values
     @StateObject var preferences = Preferences()
-      
-    // State of UpdateView popover
-    @State private var showPopover: Bool = false
     
     // Update counter
     var updateCounter: Int
-//    var color: Color
-    
-    @State var updateDetails: [InstalledAppItem] = []
             
     var body: some View {
         
-        ZStack {
-            EffectsView(material: NSVisualEffectView.Material.fullScreenUI, blendingMode: NSVisualEffectView.BlendingMode.behindWindow)
+        Group {
             
-            // We need to provide Quit option for Apple App Review approval
-            if !preferences.hideQuit {
-                QuitButton()
+            HStack {
+                
+                Button(action: {
+                    withAnimation {
+                        appCatalogController.showAppUpdates.toggle()
+                    }
+                }) {
+                    Ellipse()
+                        .foregroundColor(Color.gray.opacity(0.2))
+                        .overlay(
+                            Image(systemName: "chevron.backward")
+                        )
+                        .frame(width: 26, height: 26)
+                }
+                .buttonStyle(.plain)
+                
+                Text(updateCounter > 0 ? NSLocalizedString("UPDATES_AVAILABLE", comment: "") : NSLocalizedString("NO_UPDATES_AVAILABLE", comment: ""))
+                    .font(.system(.headline, design: .rounded))
+                
+                Spacer()
+                
+                Button(action: {
+                    print("Updating all apps...")
+                }) {
+                    Text(NSLocalizedString("UPDATE_ALL", comment: ""))
+                        .font(.system(.body, design: .rounded))
+                        .fontWeight(.regular)
+                        .padding(.vertical, 4)
+                        .padding(.horizontal)
+                        .background(Color.gray.opacity(0.2))
+                        .clipShape(Capsule())
+                }
+                .buttonStyle(.plain)
+                
             }
+            .transition(.move(edge: .leading))
             
-            VStack(spacing: 10) {
+            if updateCounter > 0 {
                 
-                // MARK: - Horizontal stack with Title and Logo
-                HeaderView()
+                Divider()
+                    .padding(2)
                 
-                //        VStack(alignment: .leading, spacing: 8) {
-                
-                Group {
+                ForEach(appCatalogController.updateDetails, id: \.self) { update in
                     
                     HStack {
                         
-                        Button(action: {
-                            withAnimation {
-                                appCatalogController.showAppUpdates.toggle()
+                        if let icon = update.icon {
+                            
+                            AsyncImage(url: URL(string: icon), transaction: Transaction(animation: .spring(response: 0.5, dampingFraction: 0.6))) { phase in
+                                switch phase {
+                                case .empty:
+                                    ProgressView()
+                                case .success(let image):
+                                    image
+                                        .resizable()
+                                        .scaledToFit()
+                                        .transition(.move(edge: .leading))
+                                case .failure(_):
+                                    Image(systemName: "exclamationmark.circle")
+                                @unknown default:
+                                    EmptyView()
+                                }
                             }
-                        }) {
-                            Ellipse()
-                                .foregroundColor(Color.gray.opacity(0.5))
-                                .overlay(
-                                    Image(systemName: "chevron.backward")
-                                )
-                                .frame(width: 26, height: 26)
+                            .frame(height: 40)
+
+                                
+//                                if let image = phase.image {
+//                                    image
+//                                        .resizable()
+//                                        .scaledToFit()
+//                                        .frame(height: 40)
+//                                        .transition(.scale(scale: 0.1, anchor: .center))
+//
+//                                } else if phase.error != nil {
+//                                    
+//                                } else {
+//                                    Image("DefaultLogo")
+//                                        .resizable()
+//                                        .scaledToFit()
+//                                        .cornerRadius(6)
+//                                        .redacted(reason: .placeholder)
+//                                        .overlay(
+//                                            ProgressView()
+//                                        )
+//                                        .frame(width: 40, height: 40)
+//                                }
+//                            }
+                                
+//                            } placeholder: {
+//                                Image("DefaultLogo")
+//                                    .resizable()
+//                                    .scaledToFit()
+//                                    .cornerRadius(6)
+//                                    .redacted(reason: .placeholder)
+//                                    .overlay(
+//                                        ProgressView()
+//                                    )
+//                                    .frame(width: 40, height: 40)
+//                            }
                         }
-                        .buttonStyle(.plain)
-                                                
-                        Text(updateCounter > 0 ? NSLocalizedString("UPDATES_AVAILABLE", comment: "") : NSLocalizedString("NO_UPDATES_AVAILABLE", comment: ""))
-                            .font(.system(.headline, design: .rounded))
-//                            .foregroundStyle(.secondary)
+                        
+                        VStack(alignment: .leading) {
+                            
+                            Text(update.name ?? "")
+                                .font(.system(.headline, design: .rounded))
+                            
+                            Text(update.version ?? "")
+                                .foregroundColor(.secondary)
+                                .font(.system(.subheadline, design: .rounded))
+                            
+                        }
                         
                         Spacer()
-
+                        
+                        Button(action: {
+                            updateApp(bundleID: update.id)
+                        }) {
+                            if appCatalogController.appsUpdating.contains(update.id) {
+                                Ellipse()
+                                    .foregroundColor(Color.gray.opacity(0.2))
+                                    .overlay(
+                                        ProgressView()
+                                            .scaleEffect(0.5)
+                                    )
+                                    .frame(width: 26, height: 26)
+                                    .padding(.leading, 10)
+                            } else {
+                                Ellipse()
+                                    .foregroundColor(Color.gray.opacity(0.2))
+                                    .overlay(
+                                        Image(systemName: "arrow.triangle.2.circlepath")
+                                    )
+                                    .frame(width: 26, height: 26)
+                                    .padding(.leading, 10)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        
                     }
                     
-                    if updateCounter > 0 {
+                }
+                
+            } else {
+                
+                HStack {
+                    
+                    Spacer()
+                    
+                    VStack {
                         
-//                        HStack {
-//                            
-//                            Text(updateCounter > 0 ? NSLocalizedString("UPDATES_AVAILABLE", comment: "") : NSLocalizedString("NO_UPDATES_AVAILABLE", comment: ""))
-//                                .font(.system(.headline, design: .rounded))
-//                            
-//                            Spacer()
-//                            
-//                            Button(action: {
-//                                showPopover = false
-//                                openAppCatalog()
-//                            }) {
-//                                Text(NSLocalizedString("APP_CATALOG", comment: ""))
-//                            }
-//                            .buttonStyle(.borderedProminent)
-//                        }
+                        Text(NSLocalizedString("ALL_APPS_UP_TO_DATE", comment: ""))
+                            .font(.system(.title2, design: .rounded))
+                            .fontWeight(.medium)
                         
-                        Divider()
-                            .padding(2)
-                        
-                        ForEach(updateDetails, id: \.self) { update in
-                            
-                            HStack {
-                                
-                                if let icon = update.icon {
-                                    
-                                    AsyncImage(url: URL(string: icon)) { image in
-                                        image.resizable()
-                                            .scaledToFit()
-                                            .frame(height: 36)
-                                        
-                                    } placeholder: {
-                                        Image("DefaultLogo")
-                                            .resizable()
-                                            .scaledToFit()
-                                            .cornerRadius(6)
-                                            .redacted(reason: .placeholder)
-                                            .overlay(
-                                                ProgressView()
-                                            )
-                                            .frame(width: 36, height: 36)
-                                    }
-                                }
-                                
-                                VStack(alignment: .leading) {
-                                    
-                                    Text(update.name ?? "")
-                                        .font(.system(.headline, design: .rounded))
-                                    
-                                    Text(update.version ?? "")
-                                        .foregroundColor(.secondary)
-                                        .font(.system(.subheadline, design: .rounded))
-                                    
-                                }
-                                
-                                Spacer()
-                                
-                                Button(action: {
-                                    updateApp(bundleID: update.id)
-                                }) {
-                                    //                            Text(NSLocalizedString("UPDATE", comment: ""))
-                                    //                                .font(.system(.body, design: .rounded))
-                                    ////                                .fontWeight(.regular)
-                                    //                                .foregroundColor(.secondary)
-                                    //                                .padding(.vertical, 4)
-                                    //                                .padding(.horizontal)
-                                    //                                .background(Color.gray.opacity(0.2))
-                                    //                                .clipShape(Capsule())
-                                    if appCatalogController.appsUpdating.contains(update.id) {
-                                        Ellipse()
-                                            .foregroundColor(Color.gray.opacity(0.5))
-                                            .overlay(
-                                                ProgressView()
-                                                    .scaleEffect(0.5)
-                                            )
-                                            .frame(width: 26, height: 26)
-                                            .padding(.leading, 10)
-                                    } else {
-                                        Ellipse()
-                                            .foregroundColor(Color.gray.opacity(0.5))
-                                            .overlay(
-                                                Image(systemName: "arrow.down")
-                                            )
-                                            .frame(width: 26, height: 26)
-                                            .padding(.leading, 10)
-                                    }
-                                }
-                                .buttonStyle(.plain)
-                                
-                            }
-                            
-                        }
-                        
-                    } else {
-                        
-                        HStack {
-                            
-                            Spacer()
-                            
-                            VStack {
-                                
-                                Text(NSLocalizedString("ALL_APPS_UP_TO_DATE", comment: ""))
-                                    .font(.system(.title2, design: .rounded))
-                                    .fontWeight(.medium)
-                                
-                                Image(systemName: "checkmark.circle.fill")
-                                    .resizable()
-                                    .frame(width: 50, height: 50)
-                                    .symbolRenderingMode(.palette)
-                                    .foregroundStyle(.white, Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
-                                
-                            }
-                            
-                            Spacer()
-                            
-                        }
+                        Image(systemName: "checkmark.circle.fill")
+                            .resizable()
+                            .frame(width: 50, height: 50)
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(.white, Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
                         
                     }
+                    
                     Spacer()
+                    
                 }
-                .padding(.horizontal)
+                
             }
+            Spacer()
         }
-        // Set frame to 250 to allow multiline text
-//        .frame(width: 300)
-//        .fixedSize()
-//        .padding()
+        .padding(.horizontal)
         .unredacted()
-        .task {
-            getAppUpdates()
-        }
-    }
-    
-    func getAppUpdates() {
-        let defaults = UserDefaults(suiteName: "nl.root3.catalog")
-        
-        if let encodedAppUpdates = defaults?.object(forKey: "UpdateDetails") as? Data {
-            let decoder = JSONDecoder()
-            if let decodedAppUpdates = try? decoder.decode([InstalledAppItem].self, from: encodedAppUpdates) {
-                DispatchQueue.main.async {
-                    updateDetails = decodedAppUpdates
-                }
-            }
-        }
     }
     
     // Open application with given Bundle Identifier
