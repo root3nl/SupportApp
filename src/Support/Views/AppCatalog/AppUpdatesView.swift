@@ -55,9 +55,9 @@ struct AppUpdatesView: View {
             HStack {
                 
                 Button(action: {
-                    withAnimation {
+//                    withAnimation {
                         appCatalogController.showAppUpdates.toggle()
-                    }
+//                    }
                 }) {
                     Ellipse()
                         .foregroundColor(Color.gray.opacity(0.2))
