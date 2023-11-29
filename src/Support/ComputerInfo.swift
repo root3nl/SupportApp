@@ -747,41 +747,4 @@ class ComputerInfo: ObservableObject {
             }
         }
     }
-    
-//    // MARK: - Function to get latest app updates from Root3 App Catalog
-//    func getAppUpdates() {
-//        
-//        logger.log("Checking app updates...")
-//        
-//        let task = Process()
-//        let pipe = Pipe()
-//        
-//        // Command to get app updates
-//        let command = """
-//        /usr/local/bin/catalog --check-updates
-//        """
-//        
-//        // Move command to background thread
-//        DispatchQueue.global().async {
-//            task.standardOutput = pipe
-//            task.standardError = pipe
-//            task.launchPath = "/bin/zsh"
-//            task.arguments = ["-c", command]
-//            task.launch()
-//            
-//            task.waitUntilExit()
-//            
-//            let data = pipe.fileHandleForReading.readDataToEndOfFile()
-//            let output = String(data: data, encoding: .utf8)!
-//                    
-//            if !task.isRunning {
-//                let status = task.terminationStatus
-//                if status == 0 {
-//                    self.logger.log("\(output)")
-//                } else {
-//                    self.logger.error("\(output)")
-//                }
-//            }
-//        }
-//    }
 }

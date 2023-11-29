@@ -500,6 +500,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             self.computerinfo.kernelBootTime()
             self.computerinfo.getStorage()
             self.computerinfo.getIPAddress()
+            self.appCatalogController.getAppUpdates()
             Task {
                 await self.userinfo.getCurrentUserRecord()
                 await self.userinfo.getUserFullName()
@@ -523,11 +524,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             await self.userinfo.getCurrentUserRecord()
             await self.userinfo.getUserFullName()
             await self.computerinfo.getSerialNumber()
-//            await self.computerinfo.getAppUpdates()
         }
         self.computerinfo.getStorage()
         self.computerinfo.getRecommendedUpdates()
         self.computerinfo.getModelName()
+        self.appCatalogController.getAppUpdates()
         
         if #available(macOS 13, *) {
             self.computerinfo.getRSRVersion()

@@ -47,12 +47,18 @@
 		493DCCB82B08304A00FA2480 /* RemoteApplicationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493DCCA62B082EAD00FA2480 /* RemoteApplicationProtocol.swift */; };
 		493DCCD22B08E5E500FA2480 /* AppCatalogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493DCCD12B08E5E500FA2480 /* AppCatalogController.swift */; };
 		493FBB8D27406B5D002A79F9 /* ExtensionBSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493FBB8C27406B5D002A79F9 /* ExtensionBSubview.swift */; };
+		4947C1512B154A2F00276EFD /* SupportXPC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4947C1502B154A2F00276EFD /* SupportXPC.swift */; };
+		4947C1532B154A2F00276EFD /* SupportXPCProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4947C1522B154A2F00276EFD /* SupportXPCProtocol.swift */; };
+		4947C1552B154A2F00276EFD /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4947C1542B154A2F00276EFD /* main.swift */; };
+		4947C15A2B154A2F00276EFD /* SupportXPC.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = 4947C14E2B154A2F00276EFD /* SupportXPC.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		495924F9265C535B00E083AC /* QuitButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495924F8265C535B00E083AC /* QuitButton.swift */; };
 		495F74EC28B39A9A00C20304 /* PopoverAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495F74EB28B39A9A00C20304 /* PopoverAlertView.swift */; };
 		496C2FE1271477B800D51EE1 /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496C2FE0271477B800D51EE1 /* NotificationNames.swift */; };
 		496FE4D12651485E007746ED /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496FE4D02651485E007746ED /* UserInfo.swift */; };
 		496FE4D326514C59007746ED /* PasswordSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496FE4D226514C59007746ED /* PasswordSubview.swift */; };
 		4972476828DBB1AB007194F0 /* StatusItemBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4972476728DBB1AB007194F0 /* StatusItemBadgeView.swift */; };
+		4974BC102B174A5700A3F38A /* ExecutionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4974BC0F2B174A5700A3F38A /* ExecutionService.swift */; };
+		4974BC112B17645A00A3F38A /* SupportXPCProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4947C1522B154A2F00276EFD /* SupportXPCProtocol.swift */; };
 		4976EB892653151A006EE097 /* ChangePassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4976EB882653151A006EE097 /* ChangePassword.swift */; };
 		4976EB8B265317C6006EE097 /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4976EB8A265317C6006EE097 /* AppView.swift */; };
 		49822CE324B4C3F100E8DE54 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49822CE224B4C3F100E8DE54 /* AppDelegate.swift */; };
@@ -80,6 +86,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 493DCC8E2B08292900FA2480;
 			remoteInfo = nl.root3.support.helper;
+		};
+		4947C1582B154A2F00276EFD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 49822CD724B4C3F100E8DE54 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4947C14D2B154A2F00276EFD;
+			remoteInfo = SupportXPC;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -109,6 +122,7 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/XPCServices";
 			dstSubfolderSpec = 16;
 			files = (
+				4947C15A2B154A2F00276EFD /* SupportXPC.xpc in Embed XPC Services */,
 			);
 			name = "Embed XPC Services";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -167,6 +181,12 @@
 		493DCCB32B082FE600FA2480 /* HelperRemote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperRemote.swift; sourceTree = "<group>"; };
 		493DCCD12B08E5E500FA2480 /* AppCatalogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCatalogController.swift; sourceTree = "<group>"; };
 		493FBB8C27406B5D002A79F9 /* ExtensionBSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBSubview.swift; sourceTree = "<group>"; };
+		4947C14E2B154A2F00276EFD /* SupportXPC.xpc */ = {isa = PBXFileReference; explicitFileType = "wrapper.xpc-service"; includeInIndex = 0; path = SupportXPC.xpc; sourceTree = BUILT_PRODUCTS_DIR; };
+		4947C1502B154A2F00276EFD /* SupportXPC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportXPC.swift; sourceTree = "<group>"; };
+		4947C1522B154A2F00276EFD /* SupportXPCProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportXPCProtocol.swift; sourceTree = "<group>"; };
+		4947C1542B154A2F00276EFD /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		4947C1562B154A2F00276EFD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4947C1572B154A2F00276EFD /* SupportXPC.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SupportXPC.entitlements; sourceTree = "<group>"; };
 		495924F8265C535B00E083AC /* QuitButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuitButton.swift; sourceTree = "<group>"; };
 		495B6E6E2A2E3E4E006B575D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		495F74EB28B39A9A00C20304 /* PopoverAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PopoverAlertView.swift; path = Support/Views/PopoverAlertView.swift; sourceTree = SOURCE_ROOT; };
@@ -174,6 +194,7 @@
 		496FE4D02651485E007746ED /* UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
 		496FE4D226514C59007746ED /* PasswordSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordSubview.swift; sourceTree = "<group>"; };
 		4972476728DBB1AB007194F0 /* StatusItemBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemBadgeView.swift; sourceTree = "<group>"; };
+		4974BC0F2B174A5700A3F38A /* ExecutionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecutionService.swift; sourceTree = "<group>"; };
 		4976EB882653151A006EE097 /* ChangePassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePassword.swift; sourceTree = "<group>"; };
 		4976EB8A265317C6006EE097 /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 		49822CDF24B4C3F100E8DE54 /* Support.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Support.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -201,6 +222,13 @@
 
 /* Begin PBXFrameworksBuildPhase section */
 		493DCC8C2B08292900FA2480 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4947C14B2B154A2F00276EFD /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -305,6 +333,19 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
+		4947C14F2B154A2F00276EFD /* SupportXPC */ = {
+			isa = PBXGroup;
+			children = (
+				4974BC0F2B174A5700A3F38A /* ExecutionService.swift */,
+				4947C1502B154A2F00276EFD /* SupportXPC.swift */,
+				4947C1522B154A2F00276EFD /* SupportXPCProtocol.swift */,
+				4947C1542B154A2F00276EFD /* main.swift */,
+				4947C1562B154A2F00276EFD /* Info.plist */,
+				4947C1572B154A2F00276EFD /* SupportXPC.entitlements */,
+			);
+			path = SupportXPC;
+			sourceTree = "<group>";
+		};
 		4976EB8C26531CCC006EE097 /* Experimental */ = {
 			isa = PBXGroup;
 			children = (
@@ -318,6 +359,7 @@
 			children = (
 				49822CE124B4C3F100E8DE54 /* Support */,
 				493DCC902B08292900FA2480 /* SupportHelper */,
+				4947C14F2B154A2F00276EFD /* SupportXPC */,
 				49822CE024B4C3F100E8DE54 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -327,6 +369,7 @@
 			children = (
 				49822CDF24B4C3F100E8DE54 /* Support.app */,
 				493DCC8F2B08292900FA2480 /* nl.root3.support.helper */,
+				4947C14E2B154A2F00276EFD /* SupportXPC.xpc */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -422,6 +465,23 @@
 			productReference = 493DCC8F2B08292900FA2480 /* nl.root3.support.helper */;
 			productType = "com.apple.product-type.tool";
 		};
+		4947C14D2B154A2F00276EFD /* SupportXPC */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4947C15D2B154A2F00276EFD /* Build configuration list for PBXNativeTarget "SupportXPC" */;
+			buildPhases = (
+				4947C14A2B154A2F00276EFD /* Sources */,
+				4947C14B2B154A2F00276EFD /* Frameworks */,
+				4947C14C2B154A2F00276EFD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SupportXPC;
+			productName = SupportXPC;
+			productReference = 4947C14E2B154A2F00276EFD /* SupportXPC.xpc */;
+			productType = "com.apple.product-type.xpc-service";
+		};
 		49822CDE24B4C3F100E8DE54 /* Support */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 49822CF224B4C3F200E8DE54 /* Build configuration list for PBXNativeTarget "Support" */;
@@ -438,6 +498,7 @@
 			);
 			dependencies = (
 				493DCC982B082B9200FA2480 /* PBXTargetDependency */,
+				4947C1592B154A2F00276EFD /* PBXTargetDependency */,
 			);
 			name = Support;
 			packageProductDependencies = (
@@ -458,6 +519,9 @@
 					493DCC8E2B08292900FA2480 = {
 						CreatedOnToolsVersion = 15.0;
 						LastSwiftMigration = 1500;
+					};
+					4947C14D2B154A2F00276EFD = {
+						CreatedOnToolsVersion = 15.0;
 					};
 					49822CDE24B4C3F100E8DE54 = {
 						CreatedOnToolsVersion = 12.0;
@@ -485,11 +549,19 @@
 			targets = (
 				49822CDE24B4C3F100E8DE54 /* Support */,
 				493DCC8E2B08292900FA2480 /* nl.root3.support.helper */,
+				4947C14D2B154A2F00276EFD /* SupportXPC */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		4947C14C2B154A2F00276EFD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		49822CDD24B4C3F100E8DE54 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -543,6 +615,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4947C14A2B154A2F00276EFD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4947C1512B154A2F00276EFD /* SupportXPC.swift in Sources */,
+				4947C1532B154A2F00276EFD /* SupportXPCProtocol.swift in Sources */,
+				4974BC102B174A5700A3F38A /* ExecutionService.swift in Sources */,
+				4947C1552B154A2F00276EFD /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		49822CDB24B4C3F100E8DE54 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -553,6 +636,7 @@
 				499F56752AE47A3900CBDE73 /* AppUpdatesView.swift in Sources */,
 				493DCCB22B082FCE00FA2480 /* ExecutionService.swift in Sources */,
 				0AFB04FD263B422900507B23 /* ItemDouble.swift in Sources */,
+				4974BC112B17645A00A3F38A /* SupportXPCProtocol.swift in Sources */,
 				0A4A73812602052800927DAB /* NetworkSubview.swift in Sources */,
 				498D47D62A38ABC10059465C /* UpdateView.swift in Sources */,
 				0A315E5B2683C88800E9A1F9 /* FeatureView.swift in Sources */,
@@ -605,6 +689,11 @@
 			isa = PBXTargetDependency;
 			target = 493DCC8E2B08292900FA2480 /* nl.root3.support.helper */;
 			targetProxy = 493DCC972B082B9200FA2480 /* PBXContainerItemProxy */;
+		};
+		4947C1592B154A2F00276EFD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4947C14D2B154A2F00276EFD /* SupportXPC */;
+			targetProxy = 4947C1582B154A2F00276EFD /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -698,6 +787,65 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "SupportHelper/nl.root3.support.helper-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		4947C15B2B154A2F00276EFD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = SupportXPC/SupportXPC.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 98LJ4XBGYK;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SupportXPC/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SupportXPC;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2023 Root3 B.V. All rights reserved.";
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = nl.root3.support.xpc;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		4947C15C2B154A2F00276EFD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = SupportXPC/SupportXPC.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 98LJ4XBGYK;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SupportXPC/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SupportXPC;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2023 Root3 B.V. All rights reserved.";
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = nl.root3.support.xpc;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -887,6 +1035,15 @@
 			buildConfigurations = (
 				493DCC932B08292900FA2480 /* Debug */,
 				493DCC942B08292900FA2480 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4947C15D2B154A2F00276EFD /* Build configuration list for PBXNativeTarget "SupportXPC" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4947C15B2B154A2F00276EFD /* Debug */,
+				4947C15C2B154A2F00276EFD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

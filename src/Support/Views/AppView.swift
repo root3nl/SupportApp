@@ -95,10 +95,6 @@ struct AppView: View {
         }
         // MARK: - Show placeholders while loading
         .redacted(reason: placeholdersEnabled ? .placeholder : .init())
-        // MARK: - Get app updates from App Catalog if enabled
-        .task {
-            appCatalogController.getAppUpdates()
-        }
     }
     
     // MARK: - Start app with placeholders and show data after 0.4 seconds to visualize data loading.
