@@ -61,7 +61,7 @@ struct AppView: View {
                     WelcomeView()
                 } else {
                     if appCatalogController.showAppUpdates {
-                        AppUpdatesView(updateCounter: computerinfo.appUpdates)
+                        AppUpdatesView()
                     } else {
                         ContentView()
                     }

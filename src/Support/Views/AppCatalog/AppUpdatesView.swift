@@ -41,9 +41,6 @@ struct AppUpdatesView: View {
     
     // Get preferences or default values
     @StateObject var preferences = Preferences()
-    
-    // Update counter
-    var updateCounter: Int
             
     var body: some View {
         
@@ -65,31 +62,37 @@ struct AppUpdatesView: View {
                 }
                 .buttonStyle(.plain)
                 
-                Text(updateCounter > 0 ? NSLocalizedString("UPDATES_AVAILABLE", comment: "") : NSLocalizedString("NO_UPDATES_AVAILABLE", comment: ""))
+                Text(NSLocalizedString("APP_UPDATES", comment: ""))
                     .font(.system(.headline, design: .rounded))
                 
                 Spacer()
                 
-                Button(action: {
-                    print("Updating all apps...")
-                }) {
-                    Text(NSLocalizedString("UPDATE_ALL", comment: ""))
-                        .font(.system(.body, design: .rounded))
-                        .fontWeight(.regular)
-                        .padding(.vertical, 4)
-                        .padding(.horizontal)
-                        .background(Color.gray.opacity(0.2))
-                        .clipShape(Capsule())
+                if computerinfo.appUpdates > 0 {
+                    Button(action: {
+                        for app in appCatalogController.updateDetails {
+                            Task {
+                                await updateApp(bundleID: app.id)
+                            }
+                        }
+                    }) {
+                        Text(NSLocalizedString("UPDATE_ALL", comment: ""))
+                            .font(.system(.body, design: .rounded))
+                            .fontWeight(.regular)
+                            .padding(.vertical, 4)
+                            .padding(.horizontal)
+                            .background(Color.gray.opacity(0.2))
+                            .clipShape(Capsule())
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
                 
             }
             .transition(.move(edge: .leading))
+
+            Divider()
+                .padding(2)
             
-            if updateCounter > 0 {
-                
-                Divider()
-                    .padding(2)
+            if computerinfo.appUpdates > 0 {
                 
                 ForEach(appCatalogController.updateDetails, id: \.self) { update in
                     
@@ -113,41 +116,7 @@ struct AppUpdatesView: View {
                                 }
                             }
                             .frame(height: 40)
-
-                                
-//                                if let image = phase.image {
-//                                    image
-//                                        .resizable()
-//                                        .scaledToFit()
-//                                        .frame(height: 40)
-//                                        .transition(.scale(scale: 0.1, anchor: .center))
-//
-//                                } else if phase.error != nil {
-//                                    
-//                                } else {
-//                                    Image("DefaultLogo")
-//                                        .resizable()
-//                                        .scaledToFit()
-//                                        .cornerRadius(6)
-//                                        .redacted(reason: .placeholder)
-//                                        .overlay(
-//                                            ProgressView()
-//                                        )
-//                                        .frame(width: 40, height: 40)
-//                                }
-//                            }
-                                
-//                            } placeholder: {
-//                                Image("DefaultLogo")
-//                                    .resizable()
-//                                    .scaledToFit()
-//                                    .cornerRadius(6)
-//                                    .redacted(reason: .placeholder)
-//                                    .overlay(
-//                                        ProgressView()
-//                                    )
-//                                    .frame(width: 40, height: 40)
-//                            }
+                            
                         }
                         
                         VStack(alignment: .leading) {
@@ -164,7 +133,9 @@ struct AppUpdatesView: View {
                         Spacer()
                         
                         Button(action: {
-                            updateApp(bundleID: update.id)
+                            Task {
+                                await updateApp(bundleID: update.id)
+                            }
                         }) {
                             if appCatalogController.appsUpdating.contains(update.id) {
                                 Ellipse()
@@ -193,28 +164,21 @@ struct AppUpdatesView: View {
                 
             } else {
                 
-                HStack {
+                VStack(alignment: .center, spacing: 20) {
                     
                     Spacer()
                     
-                    VStack {
-                        
-                        Text(NSLocalizedString("ALL_APPS_UP_TO_DATE", comment: ""))
-                            .font(.system(.title2, design: .rounded))
-                            .fontWeight(.medium)
-                        
-                        Image(systemName: "checkmark.circle.fill")
-                            .resizable()
-                            .frame(width: 50, height: 50)
-                            .symbolRenderingMode(.palette)
-                            .foregroundStyle(.white, Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
-                        
-                    }
+                    Text(NSLocalizedString("ALL_APPS_UP_TO_DATE", comment: ""))
+                        .font(.system(.title, design: .rounded))
+                        .fontWeight(.medium)
                     
-                    Spacer()
+                    Image(systemName: "checkmark.circle.fill")
+                        .resizable()
+                        .frame(width: 50, height: 50)
+                        .symbolRenderingMode(.palette)
+                        .foregroundStyle(.white, Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
                     
                 }
-                
             }
             Spacer()
         }
@@ -222,24 +186,8 @@ struct AppUpdatesView: View {
         .unredacted()
     }
     
-    // Open application with given Bundle Identifier
-    func openAppCatalog() {
-        
-        guard let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: "nl.root3.catalog")
-                // Show alert when there is an error
-        else {
-            return
-        }
-        let configuration = NSWorkspace.OpenConfiguration()
-        
-        NSWorkspace.shared.openApplication(at: url, configuration: configuration, completionHandler: nil)
-        
-        // Close popover
-        appDelegate.togglePopover(nil)
-    }
-    
     // MARK: - Function to update app using App Catalog
-    func updateApp(bundleID: String) {
+    func updateApp(bundleID: String) async {
         
         // Command to update app
         let command = "/usr/local/bin/catalog -i \(bundleID)"
@@ -270,7 +218,7 @@ struct AppUpdatesView: View {
                 
             }
         } catch {
-            appCatalogController.logger.log("Failed to update app \(bundleID). Error in PrivilegedHelperTool")
+            appCatalogController.logger.log("Failed to update app \(bundleID)")
             
             // Stop update spinner
             if appCatalogController.appsUpdating.contains(bundleID) {

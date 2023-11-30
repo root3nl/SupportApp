@@ -23,38 +23,30 @@ class AppCatalogController: ObservableObject {
     @Published var updateDetails: [InstalledAppItem] = []
     
     func getAppUpdates() {
+        
+        // Setup UserDefaults
         let defaults = UserDefaults(suiteName: "nl.root3.catalog")
         
         // Check available app updates
-        checkAppUpdates()
-        
-        if let encodedAppUpdates = defaults?.object(forKey: "UpdateDetails") as? Data {
-            let decoder = JSONDecoder()
-            if let decodedAppUpdates = try? decoder.decode([InstalledAppItem].self, from: encodedAppUpdates) {
-                DispatchQueue.main.async {
-                    self.updateDetails = decodedAppUpdates
-                }
-            }
-        }
-    }
-    
-    //    // MARK: - Function to get latest app updates from Root3 App Catalog
-    private func checkAppUpdates() {
-        
         logger.log("Checking app updates...")
         
         let command = """
             /usr/local/bin/catalog --check-updates
             """
         
-        let connectionToService = NSXPCConnection(serviceName: "nl.root3.support.xpc")
-        
-        connectionToService.remoteObjectInterface = NSXPCInterface(with: SupportXPCProtocol.self)
-        connectionToService.resume()
-        
-        if let proxy = connectionToService.remoteObjectProxy as? SupportXPCProtocol {
-            do {
-                try proxy.executeScript(command: command) { exitCode in
+        // Move to background thread
+        DispatchQueue.global().async {
+            
+            // Setup XPC connection
+            let connectionToService = NSXPCConnection(serviceName: "nl.root3.support.xpc")
+            connectionToService.remoteObjectInterface = NSXPCInterface(with: SupportXPCProtocol.self)
+            connectionToService.resume()
+            
+            // Run command when connection is successful. Run XPC synchronously and decode app updates once completed
+            if let proxy = connectionToService.synchronousRemoteObjectProxyWithErrorHandler( { error in
+                self.logger.error("\(error.localizedDescription)")
+            }) as? SupportXPCProtocol {
+                proxy.executeScript(command: command) { exitCode in
                     
                     if exitCode == 0 {
                         self.logger.log("Successfully checked app updates")
@@ -63,13 +55,28 @@ class AppCatalogController: ObservableObject {
                     }
                     
                 }
-            } catch {
-                logger.error("Error: \(error.localizedDescription, privacy: .public)")
+            } else {
+                self.logger.error("Failed to connect to SupportXPC service")
+            }
+            
+            // Invalidate connection
+            connectionToService.invalidate()
+            
+            // Decode app updates
+            if let encodedAppUpdates = defaults?.object(forKey: "UpdateDetails") as? Data {
+                let decoder = JSONDecoder()
+                if let decodedAppUpdates = try? decoder.decode([InstalledAppItem].self, from: encodedAppUpdates) {
+                    DispatchQueue.main.async {
+                        self.logger.debug("Successfully decoded app updates")
+                        self.updateDetails = decodedAppUpdates
+                    }
+                } else {
+                    self.logger.error("Failed to decode app updates: Invalid format")
+                }
+            } else {
+                self.logger.error("Failed to decode app updates: Key 'UpdateDetails' does not exist")
             }
         }
-        
-        connectionToService.invalidate()
-        
+
     }
-    
 }
