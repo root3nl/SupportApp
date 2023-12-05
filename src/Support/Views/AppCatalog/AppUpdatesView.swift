@@ -49,12 +49,10 @@ struct AppUpdatesView: View {
             HStack {
                 
                 Button(action: {
-//                    withAnimation {
-                        appCatalogController.showAppUpdates.toggle()
-//                    }
+                    appCatalogController.showAppUpdates.toggle()
                 }) {
                     Ellipse()
-                        .foregroundColor(Color.gray.opacity(0.2))
+                        .foregroundColor(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
                         .overlay(
                             Image(systemName: "chevron.backward")
                         )
@@ -80,7 +78,7 @@ struct AppUpdatesView: View {
                             .fontWeight(.regular)
                             .padding(.vertical, 4)
                             .padding(.horizontal)
-                            .background(Color.gray.opacity(0.2))
+                            .background(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
                             .clipShape(Capsule())
                     }
                     .buttonStyle(.plain)
@@ -139,7 +137,7 @@ struct AppUpdatesView: View {
                         }) {
                             if appCatalogController.appsUpdating.contains(update.id) {
                                 Ellipse()
-                                    .foregroundColor(Color.gray.opacity(0.2))
+                                    .foregroundColor(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
                                     .overlay(
                                         ProgressView()
                                             .scaleEffect(0.5)
@@ -148,7 +146,7 @@ struct AppUpdatesView: View {
                                     .padding(.leading, 10)
                             } else {
                                 Ellipse()
-                                    .foregroundColor(Color.gray.opacity(0.2))
+                                    .foregroundColor(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
                                     .overlay(
                                         Image(systemName: "arrow.triangle.2.circlepath")
                                     )

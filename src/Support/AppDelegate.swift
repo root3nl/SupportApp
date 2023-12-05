@@ -66,19 +66,25 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         // Configure LaunchAgent using SMAppService if available
         configureLaunchAgent()
         
-        // Create the SwiftUI view that provides the window contents.
+        // Create the SwiftUI view and hosting controller that provides the window contents.
         let appView = AppView()
+        let content = NSHostingController(rootView: appView
+            .environmentObject(computerinfo)
+            .environmentObject(userinfo)
+            .environmentObject(preferences)
+            .environmentObject(appCatalogController)
+            .environmentObject(self))
 
-        // Create the popover. Setting a width is necessary to show the status bar icon in the middle of the app. Height is not necessary because the app resizes automatically. So we make it 100 because we have to set something.
         let popover = NSPopover()
-        popover.contentSize = NSSize(width: 382, height: 100)
+        
+        // Remove popover arrow
+        // https://stackoverflow.com/questions/68744895/swift-ui-macos-menubar-nspopover-no-arrow
+        popover.setValue(true, forKeyPath: "shouldHideAnchor")
+        
+        // Set popover size
+        popover.contentSize = content.view.intrinsicContentSize
         popover.behavior = .transient
-        popover.contentViewController = NSHostingController(rootView: appView
-                                                                .environmentObject(computerinfo)
-                                                                .environmentObject(userinfo)
-                                                                .environmentObject(preferences)
-                                                                .environmentObject(appCatalogController)
-                                                                .environmentObject(self))
+        popover.contentViewController = content
         self.popover = popover
         
         // Create the status item
@@ -487,10 +493,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             
             // Enable animation again to avoid issues
             self.popover.animates = true
-            
-            // Remove popover arrow
-            // https://stackoverflow.com/questions/68744895/swift-ui-macos-menubar-nspopover-no-arrow
-            popover.setValue(true, forKeyPath: "shouldHideAnchor")
             
             // Start monitoring mouse clicks outside the popover
             eventMonitor?.start()
