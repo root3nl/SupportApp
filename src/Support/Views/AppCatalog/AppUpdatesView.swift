@@ -85,7 +85,6 @@ struct AppUpdatesView: View {
                 }
                 
             }
-            .transition(.move(edge: .leading))
 
             Divider()
                 .padding(2)
@@ -98,7 +97,7 @@ struct AppUpdatesView: View {
                         
                         if let icon = update.icon {
                             
-                            AsyncImage(url: URL(string: icon), transaction: Transaction(animation: .spring(response: 0.5, dampingFraction: 0.6))) { phase in
+                            AsyncImage(url: URL(string: icon)) { phase in
                                 switch phase {
                                 case .empty:
                                     ProgressView()
@@ -106,7 +105,6 @@ struct AppUpdatesView: View {
                                     image
                                         .resizable()
                                         .scaledToFit()
-                                        .transition(.move(edge: .leading))
                                 case .failure(_):
                                     Image(systemName: "exclamationmark.circle")
                                 @unknown default:

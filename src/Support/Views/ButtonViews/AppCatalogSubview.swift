@@ -50,14 +50,8 @@ struct AppCatalogSubview: View {
         
         InfoItem(title: "App Updates", subtitle: updatesString, image: "app.badge.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: computerinfo.appUpdates, hoverEffectEnable: true)
             .onTapGesture {
-//                self.showUpdatePopover.toggle()
-                withAnimation {
-                    self.appCatalogController.showAppUpdates.toggle()
-                }
+                self.appCatalogController.showAppUpdates.toggle()
             }
-//            .popover(isPresented: $showUpdatePopover, arrowEdge: .leading) {
-//                AppUpdatesView(updateCounter: computerinfo.appUpdates, color: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
-//            }
     }
     
 }
