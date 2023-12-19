@@ -37,6 +37,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     // Make UserDefaults easy to use with suite "com.apple.applicationaccess"
     let restrictionsDefaults = UserDefaults(suiteName: "com.apple.applicationaccess")
     
+    // Make UserDefaults easy to use with suite "nl.root3.catalog"
+    let catalogDefaults = UserDefaults(suiteName: "nl.root3.catalog")
+    
     // Make properties and preferences available
     var computerinfo = ComputerInfo()
     var userinfo = UserInfo()
@@ -81,8 +84,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         // https://stackoverflow.com/questions/68744895/swift-ui-macos-menubar-nspopover-no-arrow
         popover.setValue(true, forKeyPath: "shouldHideAnchor")
         
+        // Make the popover auto resizing for macOS 13 and later. macOS 12 may leave empty space some views are too large
+        if #available(macOS 13.0, *) {
+            content.sizingOptions = .preferredContentSize
+        } else {
+            // Fallback on earlier versions
+            popover.contentSize = content.view.intrinsicContentSize
+        }
+        
         // Set popover size
-        popover.contentSize = content.view.intrinsicContentSize
         popover.behavior = .transient
         popover.contentViewController = content
         self.popover = popover
@@ -128,6 +138,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         defaults.addObserver(self, forKeyPath: "ExtensionAlertA", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "ExtensionAlertB", options: .new, context: nil)
         
+        // Observe changes for App Catalog
+        catalogDefaults?.addObserver(self, forKeyPath: "Updates", options: .new, context: nil)
+        
         // Receive notifications after uptime check
         NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.uptimeDaysLimit, object: nil)
         
@@ -161,6 +174,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                 self.computerinfo.getIPAddress()
                 Task {
                     await self.userinfo.getCurrentUserRecord()
+                }
+                
+                // Only run when App Catalog is installed
+                if self.appCatalogController.catalogInstalled() {
+                    self.appCatalogController.getAppUpdates()
                 }
             }
         }
@@ -307,17 +325,20 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                 logger.debug("forceDelayedMajorSoftwareUpdates is enabled, hiding \(self.computerinfo.majorVersionUpdates) major macOS updates")
             }
             
-            // Show notification badge in menu bar icon when info item when needed
-            if (computerinfo.updatesAvailableToShow == 0 || !infoItemsEnabled.contains("MacOSVersion")) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage")) || (preferences.extensionAlertA && infoItemsEnabled.contains("ExtensionA")) || (preferences.extensionAlertB && infoItemsEnabled.contains("ExtensionB"))) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
-                                
-                // Create orange notification badge
-                orangeBadge.isHidden = false
-               
-            } else if (computerinfo.updatesAvailableToShow > 0 && infoItemsEnabled.contains("MacOSVersion")) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
-                
-                // Create red notification badge
-                redBadge.isHidden = false
-    
+            // Check if StatusBarItem notifier is enabled
+            if defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
+                // Show notification badge in menu bar icon when info item when needed
+                if ((computerinfo.updatesAvailableToShow == 0 || !infoItemsEnabled.contains("MacOSVersion")) && (computerinfo.appUpdates == 0 && !infoItemsEnabled.contains("AppCatalog"))) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage")) || (preferences.extensionAlertA && infoItemsEnabled.contains("ExtensionA")) || (preferences.extensionAlertB && infoItemsEnabled.contains("ExtensionB"))) {
+                    
+                    // Create orange notification badge
+                    orangeBadge.isHidden = false
+                    
+                } else if (computerinfo.updatesAvailableToShow > 0 && infoItemsEnabled.contains("MacOSVersion")) || (computerinfo.appUpdates > 0 && infoItemsEnabled.contains("AppCatalog")) {
+                    
+                    // Create red notification badge
+                    redBadge.isHidden = false
+                    
+                }
             }
             
             // Force redrawing the button
@@ -424,6 +445,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             logger.debug("\(keyPath! as NSObject) changed to \(self.preferences.extensionAlertA, privacy: .public)")
         case "ExtensionAlertB":
             logger.debug("\(keyPath! as NSObject) changed to \(self.preferences.extensionAlertB, privacy: .public)")
+        case "Updates":
+            logger.debug("\(keyPath! as NSObject) changed to \(self.computerinfo.appUpdates, privacy: .public)")
         default:
             logger.debug("Some other change detected...")
         }
@@ -497,12 +520,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             // Start monitoring mouse clicks outside the popover
             eventMonitor?.start()
             
-            // Run functions immediately when popover opens
+            // MARK: - Run functions immediately when popover opens
             self.computerinfo.getHostname()
             self.computerinfo.kernelBootTime()
             self.computerinfo.getStorage()
             self.computerinfo.getIPAddress()
-            self.appCatalogController.getAppUpdates()
+            
+            // Only run when App Catalog is installed
+            if appCatalogController.catalogInstalled() {
+                self.appCatalogController.getAppUpdates()
+            }
             Task {
                 await self.userinfo.getCurrentUserRecord()
                 await self.userinfo.getUserFullName()
@@ -530,10 +557,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         self.computerinfo.getStorage()
         self.computerinfo.getRecommendedUpdates()
         self.computerinfo.getModelName()
-        self.appCatalogController.getAppUpdates()
-        
         if #available(macOS 13, *) {
             self.computerinfo.getRSRVersion()
+        }
+        
+        // Only run when App Catalog is installed
+        if appCatalogController.catalogInstalled() {
+            self.appCatalogController.getAppUpdates()
         }
     }
     

@@ -79,4 +79,22 @@ class AppCatalogController: ObservableObject {
         }
 
     }
+    
+    // MARK: - Function to check if App Catalog is installed
+    func catalogInstalled() -> Bool {
+        
+        let fileManager = FileManager.default
+        
+        // Path to app bundle
+        let appURL = URL(fileURLWithPath: "/Applications/Catalog.app")
+        
+        // Path to binary symlink
+        let cliURL = URL(fileURLWithPath: "/usr/local/bin/catalog")
+        
+        if fileManager.fileExists(atPath: appURL.path) && fileManager.fileExists(atPath: cliURL.path) {
+            return true
+        } else {
+            return false
+        }
+    }
 }
