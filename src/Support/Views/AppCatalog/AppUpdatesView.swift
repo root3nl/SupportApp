@@ -82,6 +82,7 @@ struct AppUpdatesView: View {
                             .clipShape(Capsule())
                     }
                     .buttonStyle(.plain)
+                    .disabled(appCatalogController.appsUpdating.isEmpty ? false : true)
                 }
                 
             }
@@ -186,7 +187,7 @@ struct AppUpdatesView: View {
     func updateApp(bundleID: String) async {
         
         // Command to update app
-        let command = "/usr/local/bin/catalog -i \(bundleID)"
+        let command = "/usr/local/bin/catalog --install \(bundleID) --update-action"
         
         // Add bundle ID to apps currently updating
         appCatalogController.appsUpdating.append(bundleID)
