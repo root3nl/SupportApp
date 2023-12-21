@@ -65,13 +65,16 @@ struct AppUpdatesView: View {
                 
                 Spacer()
                 
-                if computerinfo.appUpdates > 0 {
+                if appCatalogController.updateDetails.count > 0 {
                     Button(action: {
                         for app in appCatalogController.updateDetails {
                             Task {
                                 await updateApp(bundleID: app.id)
                             }
                         }
+                        
+                        // Check app updates again
+                        appCatalogController.getAppUpdates()
                     }) {
                         Text(NSLocalizedString("UPDATE_ALL", comment: ""))
                             .font(.system(.body, design: .rounded))
@@ -90,7 +93,7 @@ struct AppUpdatesView: View {
             Divider()
                 .padding(2)
             
-            if computerinfo.appUpdates > 0 {
+            if appCatalogController.updateDetails.count > 0 {
                 
                 ForEach(appCatalogController.updateDetails, id: \.self) { update in
                     
@@ -137,6 +140,9 @@ struct AppUpdatesView: View {
                             Task {
                                 await updateApp(bundleID: update.id)
                             }
+                            
+                            // Check app updates again
+                            appCatalogController.getAppUpdates()
                         }) {
                             if appCatalogController.appsUpdating.contains(update.id) {
                                 Ellipse()
@@ -214,8 +220,17 @@ struct AppUpdatesView: View {
                     }
                 }
                 
-                // Check app updates again
-                appCatalogController.getAppUpdates()
+                // Temporarily drop app from updates array so it will not show once completed. Then we check updates again to verify the update was really successful
+                if appCatalogController.updateDetails.contains(where: { $0.id == bundleID } ) {
+                    if let index = appCatalogController.updateDetails.firstIndex(where: { $0.id == bundleID } ) {
+                        DispatchQueue.main.async {
+                            appCatalogController.updateDetails.remove(at: index)
+                        }
+                    }
+                }
+//                
+//                // Check app updates again
+//                appCatalogController.getAppUpdates()
                 
             }
         } catch {
