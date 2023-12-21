@@ -128,9 +128,11 @@ struct AppUpdatesView: View {
                             Text(update.name ?? "")
                                 .font(.system(.headline, design: .rounded))
                             
-                            Text(update.version ?? "")
-                                .foregroundColor(.secondary)
-                                .font(.system(.subheadline, design: .rounded))
+                            if update.version != nil && update.newVersion != nil {
+                                Text("\(update.version ?? "") → \(update.newVersion ?? "")")
+                                    .foregroundColor(.secondary)
+                                    .font(.system(.subheadline, design: .rounded))
+                            }
                             
                         }
                         

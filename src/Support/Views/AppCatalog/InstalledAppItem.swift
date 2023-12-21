@@ -13,5 +13,5 @@ struct InstalledAppItem: Codable, Identifiable, Hashable {
     let name: String?
     let icon: String?
     let version: String?
-    
+    let newVersion: String?
 }
