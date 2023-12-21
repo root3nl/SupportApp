@@ -100,18 +100,22 @@ struct AppUpdatesView: View {
                             AsyncImage(url: URL(string: icon)) { phase in
                                 switch phase {
                                 case .empty:
-                                    ProgressView()
+                                    Image(systemName: "app.dashed")
+                                        .font(.system(size: 30))
+                                        .foregroundStyle(.secondary)
                                 case .success(let image):
                                     image
                                         .resizable()
                                         .scaledToFit()
                                 case .failure(_):
                                     Image(systemName: "exclamationmark.circle")
+                                        .font(.system(size: 30))
+                                        .foregroundStyle(.secondary)
                                 @unknown default:
                                     EmptyView()
                                 }
                             }
-                            .frame(height: 40)
+                            .frame(width: 40, height: 40)
                             
                         }
                         
@@ -162,7 +166,7 @@ struct AppUpdatesView: View {
                 
                 VStack(alignment: .center, spacing: 20) {
                     
-                    Spacer()
+//                    Spacer()
                     
                     Text(NSLocalizedString("ALL_APPS_UP_TO_DATE", comment: ""))
                         .font(.system(.title, design: .rounded))

@@ -19,6 +19,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     var eventMonitor: EventMonitor?
     var timer: Timer?
     var timerFiveMinutes: Timer?
+    var timerHour: Timer?
     let menu = NSMenu()
     var statusBarItem: NSStatusItem?
     
@@ -165,8 +166,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         // Create the menu bar icon
         setStatusBarIcon()
         
-        // Start 5 minute timer to query value updates
+        // Run background functions to update Status Bar Item when badges are enabled
         if defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
+            // Start 5 minute timer to query value updates
             timerFiveMinutes = Timer.scheduledTimer(withTimeInterval: 300, repeats: true) { time in
                 self.logger.debug("Running five minute timer...")
                 self.computerinfo.kernelBootTime()
@@ -175,12 +177,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                 Task {
                     await self.userinfo.getCurrentUserRecord()
                 }
-                
+            }
+            
+            // Start 1 hour timer to query value updates
+            timerHour = Timer.scheduledTimer(withTimeInterval: 3600, repeats: true) { time in
                 // Only run when App Catalog is installed
                 if self.appCatalogController.catalogInstalled() {
                     self.appCatalogController.getAppUpdates()
                 }
             }
+            
         }
         
         // Create menu items for right click
