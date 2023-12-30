@@ -543,7 +543,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             
             // Post Distributed Notification to trigger script for custom info items
             if defaults.string(forKey: "OnAppearAction") != nil {
-                postDistributedNotification()
+                Task {
+                    await runOnAppearAction()
+                }
             }
             
         }
@@ -591,19 +593,37 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         NSApp.orderFrontStandardAboutPanel(self)
     }
     
-    // Post Distributed Notification
-    func postDistributedNotification() {
-        logger.debug("Posting Distributed Notification: nl.root3.support.SupportAppeared")
+    // MARK: - Function to run OnAppearAction
+    func runOnAppearAction() async {
         
-        // Initialize distributed notifications
-        let nc = DistributedNotificationCenter.default()
+        logger.log("Running OnAppearAction...")
         
-        // Define the NSNotification name
-        let name = NSNotification.Name("nl.root3.support.SupportAppeared")
+        let defaults = UserDefaults.standard
         
-        // Post the notification including all sessions to support LaunchDaemons
-        nc.postNotificationName(name, object: nil, userInfo: nil, options: [.postToAllSessions, .deliverImmediately])
+        // Exit when no command or script was found
+        guard let privilegedCommand = defaults.string(forKey: "OnAppearAction") else {
+            logger.error("OnAppearAction was not found")
+            return
+        }
+        
+        // Check value comes from a Configuration Profile. If not, the command or script may be maliciously set and needs to be ignored
+        guard defaults.objectIsForced(forKey: "OnAppearAction") == true else {
+            logger.error("OnAppearAction is not set by an administrator and potentially dangerous. Action will not be executed")
+            return
+        }
+        
+        do {
+            try ExecutionService.executeScript(command: privilegedCommand) { exitCode in
+                
+                guard exitCode == 0 else {
+                    self.logger.error("Failed to run privileged command or command. Exit code: \(exitCode, privacy: .public)")
+                    return
+                }
 
+            }
+        } catch {
+            logger.log("Failed to run privileged command or command")
+        }
     }
     
     // Use SMAppService to handle LaunchAgent on macOS 13 and higher

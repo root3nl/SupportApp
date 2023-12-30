@@ -199,7 +199,7 @@ struct AppUpdatesView: View {
     func updateApp(bundleID: String) async {
         
         // Command to update app
-        let command = "/usr/local/bin/catalog --install \(bundleID) --update-action"
+        let command = "/usr/local/bin/catalog --install \(bundleID) --update-action --support-app"
         
         // Add bundle ID to apps currently updating
         appCatalogController.appsUpdating.append(bundleID)

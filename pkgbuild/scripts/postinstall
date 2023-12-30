@@ -110,6 +110,26 @@ cp "${install_location}/Contents/Library/LaunchServices/${launch_daemon}" "/Libr
 chown root:wheel "/Library/PrivilegedHelperTools/${launch_daemon}"
 chmod 544 "/Library/PrivilegedHelperTools/${launch_daemon}"
 
+# ------------------    Uninstall SupportHelper    ------------------
+
+# Remove SupportHelper and LaunchDaemon if found
+if [[ -f "/usr/local/bin/SupportHelper" ]]; then
+
+	# Remove SupportHelper binary
+	rm -f "/usr/local/bin/SupportHelper"
+
+	# Unload the LaunchDaemon
+	if launchctl print "system/${launch_daemon}" &> /dev/null ; then
+		launchctl bootout "system/${launch_daemon}" &> /dev/null
+	fi
+
+	# Remove SupportHelper LaunchDaemon
+	if [[ -f "/Library/LaunchDaemons/${launch_daemon}.plist" ]]; then
+		rm -f "/Library/LaunchDaemons/${launch_daemon}.plist"
+	fi
+	
+fi
+
 # ------------------    LaunchDaemon PrivilegedHelperTool    ------------------
 
 # Add AssociatedBundleIdentifiers to show app name in Login Items on 

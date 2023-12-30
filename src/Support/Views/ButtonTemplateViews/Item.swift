@@ -146,7 +146,9 @@ struct Item: View {
             } else if linkType == "Command" {
                 runCommand()
             } else if linkType == "DistributedNotification" {
-                postDistributedNotification()
+                Task {
+                    await runPrivilegedCommand()
+                }
             } else {
                 self.showingAlert.toggle()
                 logger.error("Invalid Link Type: \(linkType!)")
@@ -217,18 +219,36 @@ struct Item: View {
         appDelegate.togglePopover(nil)
     }
     
-    // Post Distributed Notification
-    func postDistributedNotification() {
-        logger.debug("Posting Distributed Notification: nl.root3.support.Action")
+    // MARK: - Function to run privileged command or script
+    func runPrivilegedCommand() async {
         
-        // Initialize distributed notifications
-        let nc = DistributedNotificationCenter.default()
+        logger.log("Trying to run privileged command or script...")
         
-        // Define the NSNotification name
-        let name = NSNotification.Name("nl.root3.support.Action")
+        let defaults = UserDefaults.standard
         
-        // Post the notification including all sessions to support LaunchDaemons
-        nc.postNotificationName(name, object: linkPrefKey, userInfo: nil, options: [.postToAllSessions, .deliverImmediately])
+        // Exit when no command or script was found
+        guard let privilegedCommand = link else {
+            logger.error("Privileged command of script was not found")
+            return
+        }
+        
+        // Check value comes from a Configuration Profile. If not, the command or script may be maliciously set and needs to be ignored
+        guard defaults.objectIsForced(forKey: linkPrefKey!) == true else {
+            logger.error("Command or script \(privilegedCommand, privacy: .public) is not set by an administrator and potentially dangerous. Action will not be executed")
+            return
+        }
+        
+        do {
+            try ExecutionService.executeScript(command: privilegedCommand) { exitCode in
+                
+                guard exitCode == 0 else {
+                    logger.error("Failed to run privileged command or command. Exit code: \(exitCode, privacy: .public)")
+                    return
+                }
 
+            }
+        } catch {
+            logger.log("Failed to run privileged command or command")
+        }
     }
 }
