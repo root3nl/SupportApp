@@ -532,10 +532,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             self.computerinfo.getStorage()
             self.computerinfo.getIPAddress()
             
-            // Only run when App Catalog is installed
-            if appCatalogController.catalogInstalled() {
-                self.appCatalogController.getAppUpdates()
-            }
+//            // Only run when App Catalog is installed
+//            if appCatalogController.catalogInstalled() {
+//                self.appCatalogController.getAppUpdates()
+//            }
             Task {
                 await self.userinfo.getCurrentUserRecord()
                 await self.userinfo.getUserFullName()
