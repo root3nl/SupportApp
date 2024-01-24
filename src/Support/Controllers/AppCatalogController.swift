@@ -7,11 +7,18 @@
 
 import Foundation
 import os
+import SwiftUI
 
 class AppCatalogController: ObservableObject {
     
     // Unified Logging
     var logger = Logger(subsystem: "nl.root3.support", category: "AppCatalog")
+    
+    // Setup UserDefaults
+    let defaults = UserDefaults(suiteName: "nl.root3.catalog")
+    
+    // App Catalog authorization code
+    @AppStorage("authorization") var catalogAuthorization: String = ""
     
     // Current apps updating
     @Published var appsUpdating: [String] = []
@@ -23,9 +30,6 @@ class AppCatalogController: ObservableObject {
     @Published var updateDetails: [InstalledAppItem] = []
     
     func getAppUpdates() {
-        
-        // Setup UserDefaults
-        let defaults = UserDefaults(suiteName: "nl.root3.catalog")
         
         // Check available app updates
         logger.log("Checking app updates...")
@@ -63,7 +67,7 @@ class AppCatalogController: ObservableObject {
             connectionToService.invalidate()
             
             // Decode app updates
-            if let encodedAppUpdates = defaults?.object(forKey: "UpdateDetails") as? Data {
+            if let encodedAppUpdates = self.defaults?.object(forKey: "UpdateDetails") as? Data {
                 let decoder = JSONDecoder()
                 if let decodedAppUpdates = try? decoder.decode([InstalledAppItem].self, from: encodedAppUpdates) {
                     DispatchQueue.main.async {

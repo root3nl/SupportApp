@@ -62,3 +62,5 @@
 "ALL_APPS_UP_TO_DATE" = "Alle apps zijn bijgewerkt";
 "UPDATE_ALL" = "Alles bijwerken";
 "APP_UPDATES" = "App updates";
+"APP_CATALOG_NOT_CONFIGURED" = "App Catalog is not setup correctly";
+"DOCUMENTATION" = "Documentation";
