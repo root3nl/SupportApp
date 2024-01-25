@@ -39,16 +39,20 @@ struct AppCatalogSubview: View {
     }
     
     var updatesString: String {
-        if computerinfo.appUpdates > 0 {
-            return "Updates available"
+        if !appCatalogController.catalogInstalled() {
+            return NSLocalizedString("APP_CATALOG_NOT_CONFIGURED", comment: "")
         } else {
-            return "No updates available"
+            if appCatalogController.appUpdates > 0 {
+                return NSLocalizedString("UPDATES_AVAILABLE", comment: "")
+            } else {
+                return NSLocalizedString("NO_UPDATES_AVAILABLE", comment: "")
+            }
         }
     }
     
     var body: some View {
         
-        InfoItem(title: "App Updates", subtitle: updatesString, image: "app.badge.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: computerinfo.appUpdates, hoverEffectEnable: true)
+        InfoItem(title: "App Updates", subtitle: updatesString, image: "app.badge.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: appCatalogController.appUpdates, notificationBadgeBool: appCatalogController.catalogInstalled() ? false : true, hoverEffectEnable: true)
             .onTapGesture {
                 self.appCatalogController.showAppUpdates.toggle()
             }

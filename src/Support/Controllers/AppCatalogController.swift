@@ -18,7 +18,10 @@ class AppCatalogController: ObservableObject {
     let defaults = UserDefaults(suiteName: "nl.root3.catalog")
     
     // App Catalog authorization code
-    @AppStorage("authorization") var catalogAuthorization: String = ""
+    @AppStorage("authorization", store: UserDefaults(suiteName: "nl.root3.catalog")) var catalogAuthorization: String = ""
+    
+    // Get available app updates from App Catalog
+    @AppStorage("Updates", store: UserDefaults(suiteName: "nl.root3.catalog")) var appUpdates: Int = 0
     
     // Current apps updating
     @Published var appsUpdating: [String] = []
@@ -95,7 +98,7 @@ class AppCatalogController: ObservableObject {
         // Path to binary symlink
         let cliURL = URL(fileURLWithPath: "/usr/local/bin/catalog")
         
-        if fileManager.fileExists(atPath: appURL.path) && fileManager.fileExists(atPath: cliURL.path) {
+        if fileManager.fileExists(atPath: appURL.path) && fileManager.fileExists(atPath: cliURL.path) && catalogAuthorization != "" {
             return true
         } else {
             return false

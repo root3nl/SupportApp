@@ -72,9 +72,6 @@ struct AppUpdatesView: View {
                                 await updateApp(bundleID: app.id)
                             }
                         }
-                        
-                        // Check app updates again
-                        appCatalogController.getAppUpdates()
                     }) {
                         Text(NSLocalizedString("UPDATE_ALL", comment: ""))
                             .font(.system(.body, design: .rounded))
@@ -93,7 +90,7 @@ struct AppUpdatesView: View {
             Divider()
                 .padding(2)
             
-            if appCatalogController.catalogAuthorization == "" {
+            if !appCatalogController.catalogInstalled() {
                 
                 VStack(alignment: .center, spacing: 20) {
                     
@@ -163,9 +160,6 @@ struct AppUpdatesView: View {
                                 Task {
                                     await updateApp(bundleID: update.id)
                                 }
-                                
-                                // Check app updates again
-                                appCatalogController.getAppUpdates()
                             }) {
                                 if appCatalogController.appsUpdating.contains(update.id) {
                                     Ellipse()
@@ -228,9 +222,9 @@ struct AppUpdatesView: View {
             try ExecutionService.executeScript(command: command) { exitCode in
                 
                 if exitCode == 0 {
-                    appCatalogController.logger.log("App \(bundleID) successfully updated")
+                    appCatalogController.logger.log("App \(bundleID, privacy: .public) successfully updated")
                 } else {
-                    appCatalogController.logger.error("Failed to update app \(bundleID)")
+                    appCatalogController.logger.error("Failed to update app \(bundleID, privacy: .public)")
                 }
                 
                 // Stop update spinner
@@ -250,13 +244,17 @@ struct AppUpdatesView: View {
                         }
                     }
                 }
-//                
-//                // Check app updates again
-//                appCatalogController.getAppUpdates()
+                
+                // Check for updates again when apps currently updating is almost empty
+                if appCatalogController.appsUpdating.count <= 1 {
+                    appCatalogController.logger.debug("Apps updating count: \(appCatalogController.appsUpdating.count)")
+                    // Check app updates again
+                    appCatalogController.getAppUpdates()
+                }
                 
             }
         } catch {
-            appCatalogController.logger.log("Failed to update app \(bundleID)")
+            appCatalogController.logger.log("Failed to update app \(bundleID, privacy: .public)")
             
             // Stop update spinner
             if appCatalogController.appsUpdating.contains(bundleID) {

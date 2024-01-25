@@ -334,12 +334,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             // Check if StatusBarItem notifier is enabled
             if defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
                 // Show notification badge in menu bar icon when info item when needed
-                if ((computerinfo.updatesAvailableToShow == 0 || !infoItemsEnabled.contains("MacOSVersion")) && (computerinfo.appUpdates == 0 && !infoItemsEnabled.contains("AppCatalog"))) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage")) || (preferences.extensionAlertA && infoItemsEnabled.contains("ExtensionA")) || (preferences.extensionAlertB && infoItemsEnabled.contains("ExtensionB"))) {
+                if ((computerinfo.updatesAvailableToShow == 0 || !infoItemsEnabled.contains("MacOSVersion")) && (appCatalogController.appUpdates == 0 && !infoItemsEnabled.contains("AppCatalog"))) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage")) || (preferences.extensionAlertA && infoItemsEnabled.contains("ExtensionA")) || (preferences.extensionAlertB && infoItemsEnabled.contains("ExtensionB"))) {
                     
                     // Create orange notification badge
                     orangeBadge.isHidden = false
                     
-                } else if (computerinfo.updatesAvailableToShow > 0 && infoItemsEnabled.contains("MacOSVersion")) || (computerinfo.appUpdates > 0 && infoItemsEnabled.contains("AppCatalog")) {
+                } else if (computerinfo.updatesAvailableToShow > 0 && infoItemsEnabled.contains("MacOSVersion")) || (appCatalogController.appUpdates > 0 && infoItemsEnabled.contains("AppCatalog")) {
                     
                     // Create red notification badge
                     redBadge.isHidden = false
@@ -452,7 +452,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         case "ExtensionAlertB":
             logger.debug("\(keyPath! as NSObject) changed to \(self.preferences.extensionAlertB, privacy: .public)")
         case "Updates":
-            logger.debug("\(keyPath! as NSObject) changed to \(self.computerinfo.appUpdates, privacy: .public)")
+            logger.debug("\(keyPath! as NSObject) changed to \(self.appCatalogController.appUpdates, privacy: .public)")
         default:
             logger.debug("Some other change detected...")
         }
