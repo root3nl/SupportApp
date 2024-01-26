@@ -8,8 +8,8 @@
 import Foundation
 import os
 
-var logger = Logger(subsystem: "nl.root3.support.helper", category: "SupportHelper")
+var logger = Logger(subsystem: "nl.root3.support.helper", category: "SupportAppPriviligedHelper")
 
-logger.debug("SupportHelper started")
+logger.debug("Support App Privileged Helper started")
 let supportHelper = SupportHelper()
 supportHelper.run()
