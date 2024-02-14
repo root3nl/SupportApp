@@ -453,6 +453,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             logger.debug("\(keyPath! as NSObject) changed to \(self.preferences.extensionAlertB, privacy: .public)")
         case "Updates":
             logger.debug("\(keyPath! as NSObject) changed to \(self.appCatalogController.appUpdates, privacy: .public)")
+            appCatalogController.getAppUpdates()
         default:
             logger.debug("Some other change detected...")
         }
