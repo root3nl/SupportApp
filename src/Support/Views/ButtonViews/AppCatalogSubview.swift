@@ -52,7 +52,7 @@ struct AppCatalogSubview: View {
     
     var body: some View {
         
-        InfoItem(title: "App Updates", subtitle: updatesString, image: "app.badge.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: appCatalogController.appUpdates, notificationBadgeBool: appCatalogController.catalogInstalled() ? false : true, hoverEffectEnable: true)
+        InfoItem(title: NSLocalizedString("APP_UPDATES", comment: ""), subtitle: updatesString, image: "gear.badge", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: appCatalogController.appUpdates, notificationBadgeBool: appCatalogController.catalogInstalled() ? false : true, loading: appCatalogController.appsUpdating.isEmpty ? false : true, hoverEffectEnable: true)
             .onTapGesture {
                 self.appCatalogController.showAppUpdates.toggle()
             }

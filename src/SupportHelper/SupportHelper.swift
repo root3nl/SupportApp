@@ -15,6 +15,14 @@ class SupportHelper: NSObject, NSXPCListenerDelegate, SupportHelperProtocol {
     private var connections = [NSXPCConnection]()
     private var shouldQuit = false
     private var shouldQuitCheckInterval = 1.0
+    
+    // Support main app Code Requirement
+    let codeRequirement = "anchor apple generic and identifier \"" + HelperConstants.mainAppBundleID + "\"" +
+        " and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */" +
+        " or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */" +
+        " and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */" +
+        " and certificate leaf[subject.OU] = \"" + HelperConstants.teamID + "\"" +
+        ")"
 
     // MARK: - Initialisation
 
@@ -65,6 +73,12 @@ class SupportHelper: NSObject, NSXPCListenerDelegate, SupportHelperProtocol {
         
         newConnection.exportedInterface = NSXPCInterface(with: SupportHelperProtocol.self)
         newConnection.remoteObjectInterface = NSXPCInterface(with: RemoteApplicationProtocol.self)
+        
+        // Check Code Requirement
+        if #available(macOS 13.0, *) {
+            newConnection.setCodeSigningRequirement(codeRequirement)
+        }
+        
         newConnection.exportedObject = self
         newConnection.invalidationHandler = (() -> Void)? {
             if let indexValue = self.connections.firstIndex(of: newConnection) {

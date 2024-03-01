@@ -177,6 +177,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                 Task {
                     await self.userinfo.getCurrentUserRecord()
                 }
+                // Show default popover view with more relevant info
+                if !popover.isShown {
+                    self.appCatalogController.showAppUpdates = false
+                }
             }
             
             // Start 1 hour timer to query value updates
