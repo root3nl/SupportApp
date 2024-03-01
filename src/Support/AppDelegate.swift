@@ -13,12 +13,13 @@ import SwiftUI
 // Popover is based on: https://medium.com/@acwrightdesign/creating-a-macos-menu-bar-application-using-swiftui-54572a5d5f87
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 
     var popover: NSPopover!
     var eventMonitor: EventMonitor?
     var timer: Timer?
     var timerFiveMinutes: Timer?
+    var timerHour: Timer?
     let menu = NSMenu()
     var statusBarItem: NSStatusItem?
     
@@ -37,10 +38,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // Make UserDefaults easy to use with suite "com.apple.applicationaccess"
     let restrictionsDefaults = UserDefaults(suiteName: "com.apple.applicationaccess")
     
+    // Make UserDefaults easy to use with suite "nl.root3.catalog"
+    let catalogDefaults = UserDefaults(suiteName: "nl.root3.catalog")
+    
     // Make properties and preferences available
     var computerinfo = ComputerInfo()
     var userinfo = UserInfo()
     var preferences = Preferences()
+    var appCatalogController = AppCatalogController()
     
     // Create red notification badge view
     // https://github.com/DeveloperMaris/ToolReleases/blob/master/ToolReleases/PopoverController.swift
@@ -65,17 +70,32 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Configure LaunchAgent using SMAppService if available
         configureLaunchAgent()
         
-        // Create the SwiftUI view that provides the window contents.
+        // Create the SwiftUI view and hosting controller that provides the window contents.
         let appView = AppView()
+        let content = NSHostingController(rootView: appView
+            .environmentObject(computerinfo)
+            .environmentObject(userinfo)
+            .environmentObject(preferences)
+            .environmentObject(appCatalogController)
+            .environmentObject(self))
 
-        // Create the popover. Setting a width is necessary to show the status bar icon in the middle of the app. Height is not necessary because the app resizes automatically. So we make it 100 because we have to set something.
         let popover = NSPopover()
-        popover.contentSize = NSSize(width: 382, height: 100)
+        
+        // Remove popover arrow
+        // https://stackoverflow.com/questions/68744895/swift-ui-macos-menubar-nspopover-no-arrow
+        popover.setValue(true, forKeyPath: "shouldHideAnchor")
+        
+        // Make the popover auto resizing for macOS 13 and later. macOS 12 may leave empty space some views are too large
+        if #available(macOS 13.0, *) {
+            content.sizingOptions = .preferredContentSize
+        } else {
+            // Fallback on earlier versions
+            popover.contentSize = content.view.intrinsicContentSize
+        }
+        
+        // Set popover size
         popover.behavior = .transient
-        popover.contentViewController = NSHostingController(rootView: appView
-                                                                .environmentObject(computerinfo)
-                                                                .environmentObject(userinfo)
-                                                                .environmentObject(preferences))
+        popover.contentViewController = content
         self.popover = popover
         
         // Create the status item
@@ -119,6 +139,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         defaults.addObserver(self, forKeyPath: "ExtensionAlertA", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "ExtensionAlertB", options: .new, context: nil)
         
+        // Observe changes for App Catalog
+        catalogDefaults?.addObserver(self, forKeyPath: "Updates", options: .new, context: nil)
+        
         // Receive notifications after uptime check
         NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.uptimeDaysLimit, object: nil)
         
@@ -143,8 +166,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Create the menu bar icon
         setStatusBarIcon()
         
-        // Start 5 minute timer to query value updates
+        // Run background functions to update Status Bar Item when badges are enabled
         if defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
+            // Start 5 minute timer to query value updates
             timerFiveMinutes = Timer.scheduledTimer(withTimeInterval: 300, repeats: true) { time in
                 self.logger.debug("Running five minute timer...")
                 self.computerinfo.kernelBootTime()
@@ -153,7 +177,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 Task {
                     await self.userinfo.getCurrentUserRecord()
                 }
+                // Show default popover view with more relevant info
+                if !popover.isShown {
+                    self.appCatalogController.showAppUpdates = false
+                }
             }
+            
+            // Start 1 hour timer to query value updates
+            timerHour = Timer.scheduledTimer(withTimeInterval: 3600, repeats: true) { time in
+                // Only run when App Catalog is installed
+                if self.appCatalogController.catalogInstalled() {
+                    self.appCatalogController.getAppUpdates()
+                }
+            }
+            
         }
         
         // Create menu items for right click
@@ -298,17 +335,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 logger.debug("forceDelayedMajorSoftwareUpdates is enabled, hiding \(self.computerinfo.majorVersionUpdates) major macOS updates")
             }
             
-            // Show notification badge in menu bar icon when info item when needed
-            if (computerinfo.updatesAvailableToShow == 0 || !infoItemsEnabled.contains("MacOSVersion")) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage")) || (preferences.extensionAlertA && infoItemsEnabled.contains("ExtensionA")) || (preferences.extensionAlertB && infoItemsEnabled.contains("ExtensionB"))) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
-                                
-                // Create orange notification badge
-                orangeBadge.isHidden = false
-               
-            } else if (computerinfo.updatesAvailableToShow > 0 && infoItemsEnabled.contains("MacOSVersion")) && defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
-                
-                // Create red notification badge
-                redBadge.isHidden = false
-    
+            // Check if StatusBarItem notifier is enabled
+            if defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
+                // Show notification badge in menu bar icon when info item when needed
+                if ((computerinfo.updatesAvailableToShow == 0 || !infoItemsEnabled.contains("MacOSVersion")) && (appCatalogController.appUpdates == 0 && !infoItemsEnabled.contains("AppCatalog"))) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage")) || (preferences.extensionAlertA && infoItemsEnabled.contains("ExtensionA")) || (preferences.extensionAlertB && infoItemsEnabled.contains("ExtensionB"))) {
+                    
+                    // Create orange notification badge
+                    orangeBadge.isHidden = false
+                    
+                } else if (computerinfo.updatesAvailableToShow > 0 && infoItemsEnabled.contains("MacOSVersion")) || (appCatalogController.appUpdates > 0 && infoItemsEnabled.contains("AppCatalog")) {
+                    
+                    // Create red notification badge
+                    redBadge.isHidden = false
+                    
+                }
             }
             
             // Force redrawing the button
@@ -415,6 +455,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             logger.debug("\(keyPath! as NSObject) changed to \(self.preferences.extensionAlertA, privacy: .public)")
         case "ExtensionAlertB":
             logger.debug("\(keyPath! as NSObject) changed to \(self.preferences.extensionAlertB, privacy: .public)")
+        case "Updates":
+            logger.debug("\(keyPath! as NSObject) changed to \(self.appCatalogController.appUpdates, privacy: .public)")
+            appCatalogController.getAppUpdates()
         default:
             logger.debug("Some other change detected...")
         }
@@ -485,18 +528,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             // Enable animation again to avoid issues
             self.popover.animates = true
             
-            // Remove popover arrow
-            // https://stackoverflow.com/questions/68744895/swift-ui-macos-menubar-nspopover-no-arrow
-            popover.setValue(true, forKeyPath: "shouldHideAnchor")
-            
             // Start monitoring mouse clicks outside the popover
             eventMonitor?.start()
             
-            // Run functions immediately when popover opens
+            // MARK: - Run functions immediately when popover opens
             self.computerinfo.getHostname()
             self.computerinfo.kernelBootTime()
             self.computerinfo.getStorage()
             self.computerinfo.getIPAddress()
+            
+//            // Only run when App Catalog is installed
+//            if appCatalogController.catalogInstalled() {
+//                self.appCatalogController.getAppUpdates()
+//            }
             Task {
                 await self.userinfo.getCurrentUserRecord()
                 await self.userinfo.getUserFullName()
@@ -504,7 +548,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             
             // Post Distributed Notification to trigger script for custom info items
             if defaults.string(forKey: "OnAppearAction") != nil {
-                postDistributedNotification()
+                Task {
+                    await runOnAppearAction()
+                }
             }
             
         }
@@ -524,9 +570,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.computerinfo.getStorage()
         self.computerinfo.getRecommendedUpdates()
         self.computerinfo.getModelName()
-        
         if #available(macOS 13, *) {
             self.computerinfo.getRSRVersion()
+        }
+        
+        // Only run when App Catalog is installed
+        if appCatalogController.catalogInstalled() {
+            self.appCatalogController.getAppUpdates()
         }
     }
     
@@ -548,19 +598,37 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         NSApp.orderFrontStandardAboutPanel(self)
     }
     
-    // Post Distributed Notification
-    func postDistributedNotification() {
-        logger.debug("Posting Distributed Notification: nl.root3.support.SupportAppeared")
+    // MARK: - Function to run OnAppearAction
+    func runOnAppearAction() async {
         
-        // Initialize distributed notifications
-        let nc = DistributedNotificationCenter.default()
+        logger.log("Running OnAppearAction...")
         
-        // Define the NSNotification name
-        let name = NSNotification.Name("nl.root3.support.SupportAppeared")
+        let defaults = UserDefaults.standard
         
-        // Post the notification including all sessions to support LaunchDaemons
-        nc.postNotificationName(name, object: nil, userInfo: nil, options: [.postToAllSessions, .deliverImmediately])
+        // Exit when no command or script was found
+        guard let privilegedCommand = defaults.string(forKey: "OnAppearAction") else {
+            logger.error("OnAppearAction was not found")
+            return
+        }
+        
+        // Check value comes from a Configuration Profile. If not, the command or script may be maliciously set and needs to be ignored
+        guard defaults.objectIsForced(forKey: "OnAppearAction") == true else {
+            logger.error("OnAppearAction is not set by an administrator and potentially dangerous. Action will not be executed")
+            return
+        }
+        
+        do {
+            try ExecutionService.executeScript(command: privilegedCommand) { exitCode in
+                
+                guard exitCode == 0 else {
+                    self.logger.error("Failed to run privileged command or command. Exit code: \(exitCode, privacy: .public)")
+                    return
+                }
 
+            }
+        } catch {
+            logger.log("Failed to run privileged command or command")
+        }
     }
     
     // Use SMAppService to handle LaunchAgent on macOS 13 and higher

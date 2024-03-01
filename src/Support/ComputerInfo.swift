@@ -364,12 +364,7 @@ class ComputerInfo: ObservableObject {
                     self.computerNameIcon = "macmini.fill"
                 } else if self.modelNameString.localizedCaseInsensitiveContains("Mac Pro") {
                     self.modelShortName = "Mac Pro"
-                    // Filled SF Symbols are preferred but version for Mac Pro is only available in macOS 12 and higher
-                    if #available(macOS 12, *) {
-                        self.computerNameIcon = "macpro.gen3.fill"
-                    } else {
-                        self.computerNameIcon = "macpro.gen3"
-                    }
+                    self.computerNameIcon = "macpro.gen3.fill"
                 } else if self.modelNameString.localizedCaseInsensitiveContains("Mac Studio") {
                     self.modelShortName = "Mac Studio"
                     // SF Symbol for Mac Studio is only available in macOS 13 and higher

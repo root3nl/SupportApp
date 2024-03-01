@@ -19,6 +19,9 @@
 # LaunchAgent label
 launch_agent="nl.root3.support"
 
+# LaunchDaemon label
+launch_daemon="nl.root3.support.helper"
+
 # Install location
 install_location="/Applications/Support.app"
 
@@ -92,4 +95,61 @@ if [[ -n "${username}" ]]; then
 
 	# Load the LaunchAgent
 	launchctl bootstrap gui/${uid} "/Library/LaunchAgents/${launch_agent}.plist"
+fi
+
+# ------------------    PrivilegedHelperTool    ------------------
+
+# Create "/Library/PrivilegedHelperTools/" if not present
+if [[ ! -d "/Library/PrivilegedHelperTools/" ]]; then
+	mkdir "/Library/PrivilegedHelperTools/"
+fi
+
+# Copy the PrivilegedHelperTool
+cp "${install_location}/Contents/Library/LaunchServices/${launch_daemon}" "/Library/PrivilegedHelperTools/"
+# Set permissions
+chown root:wheel "/Library/PrivilegedHelperTools/${launch_daemon}"
+chmod 544 "/Library/PrivilegedHelperTools/${launch_daemon}"
+
+# ------------------    Uninstall SupportHelper    ------------------
+
+# Remove SupportHelper and LaunchDaemon if found
+if [[ -f "/usr/local/bin/SupportHelper" ]]; then
+
+	# Remove SupportHelper binary
+	rm -f "/usr/local/bin/SupportHelper"
+
+	# Unload the LaunchDaemon
+	if launchctl print "system/${launch_daemon}" &> /dev/null ; then
+		launchctl bootout "system/${launch_daemon}" &> /dev/null
+	fi
+
+	# Remove SupportHelper LaunchDaemon
+	if [[ -f "/Library/LaunchDaemons/${launch_daemon}.plist" ]]; then
+		rm -f "/Library/LaunchDaemons/${launch_daemon}.plist"
+	fi
+	
+fi
+
+# ------------------    LaunchDaemon PrivilegedHelperTool    ------------------
+
+# Add AssociatedBundleIdentifiers to show app name in Login Items on 
+# macOS 13 and higher instead of developer name
+defaults write "/Library/LaunchDaemons/${launch_daemon}.plist" AssociatedBundleIdentifiers -array -string "nl.root3.support"
+# Set the Label and ProgramArguments
+defaults write "/Library/LaunchDaemons/${launch_daemon}.plist" Label -string "${launch_daemon}"
+defaults write "/Library/LaunchDaemons/${launch_daemon}.plist" ProgramArguments -array -string "/Library/PrivilegedHelperTools/nl.root3.support.helper"
+# Set MachServices
+defaults write "/Library/LaunchDaemons/${launch_daemon}.plist" MachServices -dict -string "nl.root3.support.helper" -bool true
+# Set permissions
+chown root:wheel "/Library/LaunchDaemons/${launch_daemon}.plist"
+chmod 644 "/Library/LaunchDaemons/${launch_daemon}.plist"
+
+# Unload the LaunchDaemon
+if launchctl print "system/${launch_daemon}" &> /dev/null ; then
+	launchctl bootout "system/${launch_daemon}" &> /dev/null
+fi
+
+# Load the LaunchDaemon
+if ! launchctl print "system/${launch_daemon}" &> /dev/null ; then
+	launchctl bootstrap system "/Library/LaunchDaemons/${launch_daemon}.plist"
 fi

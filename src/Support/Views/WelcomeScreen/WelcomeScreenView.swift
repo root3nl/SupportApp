@@ -35,57 +35,38 @@ struct WelcomeView: View {
     @State var hoverButton = false
     
     var body: some View {
-
-        ZStack {
-            EffectsView(material: NSVisualEffectView.Material.fullScreenUI, blendingMode: NSVisualEffectView.BlendingMode.behindWindow)
+        
+        VStack(alignment: .leading) {
             
-            // We need to provide Quit option for Apple App Review approval
-            if !preferences.hideQuit {
-                QuitButton()
-            }
+            FeatureView(image: "stethoscope", title: NSLocalizedString("Mac diagnosis", comment: ""), subtitle: NSLocalizedString("MAC_DIAGNOSIS_TEXT", comment: ""), color: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
             
-            VStack(spacing: 10) {
-                
-                // MARK: - Horizontal stack with Title and Logo
-                HeaderView()
-                
-                VStack(alignment: .leading, spacing: 10) {
-                                        
-                    FeatureView(image: "stethoscope", title: NSLocalizedString("Mac diagnosis", comment: ""), subtitle: NSLocalizedString("MAC_DIAGNOSIS_TEXT", comment: ""), color: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
-                    
-                    FeatureView(image: "briefcase", title: NSLocalizedString("Easy access", comment: ""), subtitle: NSLocalizedString("EASY_ACCESS_TEXT", comment: ""), color: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
-                    
-                    FeatureView(image: "lifepreserver", title: NSLocalizedString("Get in touch", comment: ""), subtitle: NSLocalizedString("GET_IN_TOUCH_TEXT", comment: ""), color: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
-                                        
-                }
-                
-                HStack {
-                    Spacer()
-                    Text(NSLocalizedString("Continue", comment: ""))
-                        .font(.system(.body, design: .rounded))
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                    Spacer()
-                }
-                .frame(width: 200, height: 35)
-                .background(Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
-                .opacity(hoverButton ? 0.5 : 1.0)
-                .cornerRadius(10)
-                .onTapGesture {
-//                    preferences.showWelcomeScreen.toggle()
-                    preferences.hasSeenWelcomeScreen.toggle()
-                    
-                }
-                .onHover {_ in
-                    withAnimation(.easeInOut) {
-                        hoverButton.toggle()
-                    }
-                }
-                .padding(.top)
-                
-            }
-            .padding(.bottom)
+            FeatureView(image: "briefcase", title: NSLocalizedString("Easy access", comment: ""), subtitle: NSLocalizedString("EASY_ACCESS_TEXT", comment: ""), color: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+            
+            FeatureView(image: "lifepreserver", title: NSLocalizedString("Get in touch", comment: ""), subtitle: NSLocalizedString("GET_IN_TOUCH_TEXT", comment: ""), color: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+            
         }
+        
+        HStack {
+            Spacer()
+            Text(NSLocalizedString("Continue", comment: ""))
+                .font(.system(.body, design: .rounded))
+                .fontWeight(.bold)
+                .foregroundColor(.white)
+            Spacer()
+        }
+        .frame(width: 200, height: 35)
+        .background(Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+        .opacity(hoverButton ? 0.5 : 1.0)
+        .cornerRadius(10)
+        .onTapGesture {
+            preferences.hasSeenWelcomeScreen.toggle()
+        }
+        .onHover {_ in
+            withAnimation(.easeInOut) {
+                hoverButton.toggle()
+            }
+        }
+        .padding(.top)
     }
 }
 

@@ -57,3 +57,7 @@
 "SYSTEM_SETTINGS" = "Réglages Système";
 "SYSTEM_PREFERENCES" = "Préférences Système";
 "YOUR_MAC_IS_UP_TO_DATE" = "Votre Mac est à jour";
+"UPDATE" = "Mettre à jour";
+"APP_CATALOG" = "App Catalog";
+"APP_CATALOG_NOT_CONFIGURED" = "App Catalog is not setup correctly";
+"DOCUMENTATION" = "Documentation";

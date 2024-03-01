@@ -12,6 +12,9 @@ struct UpdateView: View {
     
     let logger = Logger(subsystem: "nl.root3.support", category: "SoftwareUpdate")
     
+    // Access AppDelegate
+    @EnvironmentObject private var appDelegate: AppDelegate
+    
     // Get  computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo
     
@@ -51,11 +54,7 @@ struct UpdateView: View {
                             Text(NSLocalizedString("SYSTEM_PREFERENCES", comment: ""))
                         }
                     }
-                    .modify {
-                        if #available(macOS 12, *) {
-                            $0.buttonStyle(.borderedProminent)
-                        }
-                    }
+                    .buttonStyle(.borderedProminent)
                 }
                 
                 Divider()
@@ -104,15 +103,8 @@ struct UpdateView: View {
                         Image(systemName: "checkmark.circle.fill")
                             .resizable()
                             .frame(width: 50, height: 50)
-                            .modify {
-                                if #available(macOS 12, *) {
-                                    $0.symbolRenderingMode(.palette)
-                                        .foregroundStyle(.white, color)
-                                } else {
-                                    $0.foregroundColor(color)
-
-                                }
-                            }
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(.white, color)
                         
                     }
                     
@@ -139,7 +131,10 @@ struct UpdateView: View {
         NSWorkspace.shared.open(url)
         
         // Close the popover
-        NSApp.deactivate()
+//        NSApp.deactivate()
+        
+        // Close popover
+        appDelegate.togglePopover(nil)
 
     }
 }
