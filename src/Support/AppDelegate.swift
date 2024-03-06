@@ -579,6 +579,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         if appCatalogController.catalogInstalled() {
             self.appCatalogController.getAppUpdates()
         }
+        
+        self.computerinfo.getUpdateDeclaration()
     }
     
     // MARK: - Close the popover

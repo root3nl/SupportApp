@@ -747,4 +747,33 @@ class ComputerInfo: ObservableObject {
             }
         }
     }
+    
+    func getUpdateDeclaration() {
+        
+        // Move to background thread
+        DispatchQueue.global().async {
+            
+            // Setup XPC connection
+            let connectionToService = NSXPCConnection(serviceName: "nl.root3.support.xpc")
+            connectionToService.remoteObjectInterface = NSXPCInterface(with: SupportXPCProtocol.self)
+            connectionToService.resume()
+            
+            // Run command when connection is successful. Run XPC synchronously and decode app updates once completed
+            if let proxy = connectionToService.synchronousRemoteObjectProxyWithErrorHandler( { error in
+                self.logger.error("\(error.localizedDescription)")
+            }) as? SupportXPCProtocol {
+                proxy.getUpdateDeclaration() { result in
+                    
+                    self.logger.debug("Target: \(result.policyFields.declarations.first?.value.targetLocalDateTime ?? "")")
+                    
+                }
+            } else {
+                self.logger.error("Failed to connect to SupportXPC service")
+            }
+            
+            // Invalidate connection
+            connectionToService.invalidate()
+        }
+
+    }
 }
