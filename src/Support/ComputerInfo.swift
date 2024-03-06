@@ -146,6 +146,9 @@ class ComputerInfo: ObservableObject {
     // Serial number
     @Published var deviceSerialNumber: String = ""
     
+    // Show macOS updates
+    @Published var showMacosUpdates: Bool = false
+    
     // MARK: - Function to get uptime
     func kernelBootTime() {
         

@@ -39,10 +39,7 @@ struct MacOSVersionSubview: View {
         
         InfoItem(title: "macOS \(computerinfo.macOSVersionName)", subtitle: computerinfo.macOSVersion, image: "applelogo", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: computerinfo.updatesAvailableToShow, hoverEffectEnable: true)
             .onTapGesture {
-                self.showUpdatePopover.toggle()
-            }
-            .popover(isPresented: $showUpdatePopover, arrowEdge: .leading) {
-                UpdateView(updateCounter: computerinfo.updatesAvailableToShow, color: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+                computerinfo.showMacosUpdates.toggle()
             }
     }
 }

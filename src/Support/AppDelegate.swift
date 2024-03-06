@@ -180,6 +180,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                 // Show default popover view with more relevant info
                 if !popover.isShown {
                     self.appCatalogController.showAppUpdates = false
+                    self.computerinfo.showMacosUpdates = false
                 }
             }
             

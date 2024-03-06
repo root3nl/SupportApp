@@ -23,47 +23,84 @@ struct UpdateView: View {
     
     // Get preferences or default values
     @StateObject var preferences = Preferences()
-      
+    
     // State of UpdateView popover
     @State private var showPopover: Bool = false
+    
+    // Dark Mode detection
+    @Environment(\.colorScheme) var colorScheme
     
     // Update counter
     var updateCounter: Int
     var color: Color
-            
+    
     var body: some View {
         
-        VStack(alignment: .leading, spacing: 8) {
+        Group {
+            
+            HStack {
+                
+                Button(action: {
+                    computerinfo.showMacosUpdates.toggle()
+                }) {
+                    Ellipse()
+                        .foregroundColor(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
+                        .overlay(
+                            Image(systemName: "chevron.backward")
+                        )
+                        .frame(width: 26, height: 26)
+                }
+                .buttonStyle(.plain)
+                
+                Text(NSLocalizedString("MACOS_UPDATES", comment: ""))
+                    .font(.system(.headline, design: .rounded))
+                
+                Spacer()
+                
+                Button(action: {
+                    openSoftwareUpdate()
+                }) {
+                    Text(NSLocalizedString("UPDATE_NOW", comment: ""))
+                        .font(.system(.body, design: .rounded))
+                        .fontWeight(.regular)
+                        .padding(.vertical, 4)
+                        .padding(.horizontal)
+                        .background(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
+                        .clipShape(Capsule())
+                }
+                .buttonStyle(.plain)
+                
+            }
+            
+            Divider()
+                .padding(2)
             
             if computerinfo.recommendedUpdates.count > 0 {
                 
-                HStack {
-                    
-                    Text(updateCounter > 0 ? NSLocalizedString("UPDATES_AVAILABLE", comment: "") : NSLocalizedString("NO_UPDATES_AVAILABLE", comment: ""))
-                        .font(.system(.headline, design: .rounded))
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        showPopover = false
-                        openSoftwareUpdate()
-                    }) {
-                        if #available(macOS 13, *) {
-                            Text(NSLocalizedString("SYSTEM_SETTINGS", comment: ""))
-                        } else {
-                            Text(NSLocalizedString("SYSTEM_PREFERENCES", comment: ""))
-                        }
-                    }
-                    .buttonStyle(.borderedProminent)
-                }
-                
-                Divider()
-                    .padding(2)
-                
                 ForEach(computerinfo.recommendedUpdates, id: \.self) { update in
                     
-                    Text("•\t\(update.displayName)")
-                        .font(.system(.body, design: .rounded))
+                    HStack {
+                        
+                        Image(systemName: "gear.badge")
+                            .resizable()
+                            .symbolRenderingMode(.multicolor)
+                            .foregroundStyle(.secondary)
+                            .frame(width: 30, height: 30)
+                        
+                        VStack(alignment: .leading) {
+                            
+                            Text(update.displayName)
+                                .font(.system(.headline, design: .rounded))
+                            
+                            Text(update.displayVersion ?? "")
+                                .foregroundColor(.secondary)
+                                .font(.system(.subheadline, design: .rounded))
+                            
+                        }
+                        
+                        Spacer()
+                        
+                    }
                     
                 }
                 
@@ -90,34 +127,24 @@ struct UpdateView: View {
                 
             } else {
                 
-                HStack {
+                VStack(alignment: .center, spacing: 20) {
                     
-                    Spacer()
+                    Image(systemName: "checkmark.circle.fill")
+                        .resizable()
+                        .frame(width: 50, height: 50)
+                        .symbolRenderingMode(.palette)
+                        .foregroundStyle(.white, color)
                     
-                    VStack {
-                        
-                        Text(NSLocalizedString("YOUR_MAC_IS_UP_TO_DATE", comment: ""))
-                            .font(.system(.title2, design: .rounded))
-                            .fontWeight(.medium)
-                        
-                        Image(systemName: "checkmark.circle.fill")
-                            .resizable()
-                            .frame(width: 50, height: 50)
-                            .symbolRenderingMode(.palette)
-                            .foregroundStyle(.white, color)
-                        
-                    }
-                    
-                    Spacer()
+                    Text(NSLocalizedString("YOUR_MAC_IS_UP_TO_DATE", comment: ""))
+                        .font(.system(.title, design: .rounded))
+                        .fontWeight(.medium)
                     
                 }
+                .padding(.vertical, 40)
                 
             }
         }
-        // Set frame to 250 to allow multiline text
-        .frame(width: 300)
-        .fixedSize()
-        .padding()
+        .padding(.horizontal)
         .unredacted()
     }
     

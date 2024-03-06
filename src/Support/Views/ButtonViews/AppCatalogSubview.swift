@@ -24,9 +24,6 @@ struct AppCatalogSubview: View {
     // Dark Mode detection
     @Environment(\.colorScheme) var colorScheme
     
-    // Boolean to show UpdateView as popover
-    @State var showUpdatePopover: Bool = false
-    
     // Set the custom color for all symbols depending on Light or Dark Mode.
     var customColor: String {
         if colorScheme == .light && defaults.string(forKey: "CustomColor") != nil {
