@@ -162,20 +162,13 @@ struct AppUpdatesView: View {
                                 }
                             }) {
                                 if appCatalogController.appsUpdating.contains(update.id) {
-                                    Ellipse()
-                                        .foregroundColor(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
-                                        .overlay(
-                                            ProgressView()
-                                                .scaleEffect(0.5)
-                                        )
+                                    ProgressView()
+                                        .scaleEffect(0.6)
                                         .frame(width: 26, height: 26)
                                         .padding(.leading, 10)
                                 } else {
-                                    Ellipse()
-                                        .foregroundColor(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
-                                        .overlay(
-                                            Image(systemName: "arrow.triangle.2.circlepath")
-                                        )
+                                    Image(systemName: "icloud.and.arrow.down")
+                                        .font(.system(size: 16, weight: .medium))
                                         .frame(width: 26, height: 26)
                                         .padding(.leading, 10)
                                 }

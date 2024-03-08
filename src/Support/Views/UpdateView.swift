@@ -111,11 +111,6 @@ struct UpdateView: View {
                     
                     HStack(alignment: .top) {
                         
-                        Image(systemName: "info.circle.fill")
-                            .font(.headline)
-                            .imageScale(.large)
-                            .foregroundColor(color)
-                        
                         // Supports for markdown through a variable:
                         // https://blog.eidinger.info/3-surprises-when-using-markdown-in-swiftui
                         Text(.init(preferences.updateText.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))

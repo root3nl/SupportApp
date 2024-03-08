@@ -19,7 +19,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     var eventMonitor: EventMonitor?
     var timer: Timer?
     var timerFiveMinutes: Timer?
-    var timerHour: Timer?
+    var timerDaily: Timer?
     let menu = NSMenu()
     var statusBarItem: NSStatusItem?
     
@@ -185,7 +185,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             }
             
             // Start 1 hour timer to query value updates
-            timerHour = Timer.scheduledTimer(withTimeInterval: 3600, repeats: true) { time in
+            timerDaily = Timer.scheduledTimer(withTimeInterval: 86400, repeats: true) { time in
                 // Only run when App Catalog is installed
                 if self.appCatalogController.catalogInstalled() {
                     self.appCatalogController.getAppUpdates()
