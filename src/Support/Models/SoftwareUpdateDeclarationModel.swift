@@ -8,9 +8,9 @@
 import Foundation
 
 struct Declaration: Codable {
-    let detailsURL: String
-    let rmStoreDeclarationKey: String
-    let targetBuildVersion: String
+    let detailsURL: String?
+    let rmStoreDeclarationKey: String?
+    let targetBuildVersion: String?
     let targetLocalDateTime: String
     let targetOSVersion: String
     
@@ -24,7 +24,12 @@ struct Declaration: Codable {
 }
 
 struct PolicyFields: Codable {
-    let declarations: [String: Declaration]
+    let declarations: [String: Declaration]?
+    
+    enum CodingKeys: String, CodingKey {
+        case declarations = "Declarations"
+    }
+    
 }
 
 struct SoftwareUpdateDeclarationModel: Codable {

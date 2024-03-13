@@ -13,7 +13,7 @@ import Foundation
     /// Replace the API of this protocol with an API appropriate to the service you are vending.
     @objc func executeScript(command: String, completion: @escaping ((NSNumber) -> Void)) -> Void
     
-    @objc func getUpdateDeclaration(completion: @escaping (SoftwareUpdateDeclarationModel) -> Void) -> Void
+    @objc func getUpdateDeclaration(completion: @escaping (Data) -> Void) -> Void
 }
 
 /*

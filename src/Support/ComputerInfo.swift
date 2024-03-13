@@ -149,6 +149,15 @@ class ComputerInfo: ObservableObject {
     // Show macOS updates
     @Published var showMacosUpdates: Bool = false
     
+    // macOS software update declaration deadline
+    @Published var softwareUpdateDeclarationDeadline: Date?
+    
+    // macOS software update declaration deadline
+    @Published var softwareUpdateDeclarationVersion: String?
+    
+    // macOS software update declaration info url
+    @Published var softwareUpdateDeclarationURL: String?
+    
     // MARK: - Function to get uptime
     func kernelBootTime() {
         
@@ -763,9 +772,27 @@ class ComputerInfo: ObservableObject {
                 self.logger.error("\(error.localizedDescription)")
             }) as? SupportXPCProtocol {
                 proxy.getUpdateDeclaration() { result in
-                    
-                    self.logger.debug("Target: \(result.policyFields.declarations.first?.value.targetLocalDateTime ?? "")")
-                    
+                                        
+                    do {
+                        // Decode plist data into SoftwareUpdateDeclarationModel model
+                        let decoder = PropertyListDecoder()
+                        let softwareUpdateInfo = try decoder.decode(SoftwareUpdateDeclarationModel.self, from: result)
+                        
+                        // Format target deadline from String to Date
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+                        
+                        // Back to the main thread to publish values
+                        DispatchQueue.main.async {
+                            self.softwareUpdateDeclarationDeadline = dateFormatter.date(from: softwareUpdateInfo.policyFields.declarations?.values.first?.targetLocalDateTime ?? "Unknown")
+                            self.softwareUpdateDeclarationVersion = softwareUpdateInfo.policyFields.declarations?.values.first?.targetOSVersion ?? "Unknown"
+                            self.softwareUpdateDeclarationURL = softwareUpdateInfo.policyFields.declarations?.values.first?.detailsURL ?? "Unknown"
+                        }
+                        
+                    } catch {
+                        self.logger.error("Error decoding macOS Software Update declaration")
+                    }
+                                        
                 }
             } else {
                 self.logger.error("Failed to connect to SupportXPC service")

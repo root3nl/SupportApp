@@ -22,7 +22,7 @@ class SupportXPC: NSObject, SupportXPCProtocol {
         }
     }
     
-    func getUpdateDeclaration(completion: @escaping (SoftwareUpdateDeclarationModel) -> Void) {
+    func getUpdateDeclaration(completion: @escaping (Data) -> Void) {
         
         do {
             try ExecutionService.getUpdateDeclaration() { (result) in
