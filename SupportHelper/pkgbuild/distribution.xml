@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-gui-script minSpecVersion="2">
+    <title>SupportHelper</title>
+    <pkg-ref id="nl.root3.support.helper"/>
+    <options customize="never" require-scripts="false" hostArchitectures="x86_64,arm64"/>
+    <volume-check>
+        <allowed-os-versions>
+            <os-version min="11"/>
+        </allowed-os-versions>
+    </volume-check>
+    <choices-outline>
+        <line choice="default">
+            <line choice="nl.root3.support.helper"/>
+        </line>
+    </choices-outline>
+    <choice id="default"/>
+    <choice id="nl.root3.support.helper" visible="false">
+        <pkg-ref id="nl.root3.support.helper"/>
+    </choice>
+    <pkg-ref id="nl.root3.support.helper" version="%SUPPORTHELPER_VERSION%" onConclusion="none">SupportHelper_component.pkg</pkg-ref>
+</installer-gui-script>
