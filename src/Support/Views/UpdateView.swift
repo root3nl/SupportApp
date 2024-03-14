@@ -100,8 +100,8 @@ struct UpdateView: View {
                             
                             if computerinfo.softwareUpdateDeclarationDeadline != nil && update.displayVersion == computerinfo.softwareUpdateDeclarationVersion {
                                 
-                                Text(NSLocalizedString("AUTOMATIC_INSTALL_TIME", comment: "") + ": " + "\(computerinfo.softwareUpdateDeclarationDeadline?.formatted(date: .abbreviated, time: .shortened) ?? "")")
-                                    .foregroundStyle(.primary)
+                                Text(NSLocalizedString("AUTOMATIC_INSTALLATION", comment: "") + ": " + "\(computerinfo.softwareUpdateDeclarationDeadline?.formatted(date: .abbreviated, time: .shortened) ?? "")")
+                                    .foregroundStyle(.secondary)
                                     .font(.system(.subheadline, design: .rounded))
                                 
                                 if computerinfo.softwareUpdateDeclarationURL != nil {
