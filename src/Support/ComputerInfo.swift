@@ -149,6 +149,9 @@ class ComputerInfo: ObservableObject {
     // Show macOS updates
     @Published var showMacosUpdates: Bool = false
     
+    // Show uptime alert
+    @Published var showUptimeAlert: Bool = false
+    
     // MARK: - Function to get uptime
     func kernelBootTime() {
         

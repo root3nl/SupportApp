@@ -10,8 +10,6 @@ import SwiftUI
 
 struct UpdateView: View {
     
-    let logger = Logger(subsystem: "nl.root3.support", category: "SoftwareUpdate")
-    
     // Access AppDelegate
     @EnvironmentObject private var appDelegate: AppDelegate
     
@@ -24,15 +22,22 @@ struct UpdateView: View {
     // Get preferences or default values
     @StateObject var preferences = Preferences()
     
-    // State of UpdateView popover
-    @State private var showPopover: Bool = false
+    // Make UserDefaults easy to use
+    let defaults = UserDefaults.standard
     
     // Dark Mode detection
     @Environment(\.colorScheme) var colorScheme
     
-    // Update counter
-    var updateCounter: Int
-    var color: Color
+    // Set the custom color for all symbols depending on Light or Dark Mode.
+    var customColor: String {
+        if colorScheme == .light && defaults.string(forKey: "CustomColor") != nil {
+            return preferences.customColor
+        } else if colorScheme == .dark && defaults.string(forKey: "CustomColorDarkMode") != nil {
+            return preferences.customColorDarkMode
+        } else {
+            return preferences.customColor
+        }
+    }
     
     var body: some View {
         
@@ -128,7 +133,7 @@ struct UpdateView: View {
                         .resizable()
                         .frame(width: 50, height: 50)
                         .symbolRenderingMode(.palette)
-                        .foregroundStyle(.white, color)
+                        .foregroundStyle(.white, Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
                     
                     Text(NSLocalizedString("YOUR_MAC_IS_UP_TO_DATE", comment: ""))
                         .font(.system(.title, design: .rounded))
