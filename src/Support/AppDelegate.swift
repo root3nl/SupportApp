@@ -19,7 +19,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     var eventMonitor: EventMonitor?
     var timer: Timer?
     var timerFiveMinutes: Timer?
-    var timerHour: Timer?
+    var timerDaily: Timer?
     let menu = NSMenu()
     var statusBarItem: NSStatusItem?
     
@@ -177,15 +177,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                 Task {
                     await self.userinfo.getCurrentUserRecord()
                 }
-                // Show default popover view with more relevant info
-                if !popover.isShown {
-                    self.appCatalogController.showAppUpdates = false
-                    self.computerinfo.showMacosUpdates = false
-                }
             }
             
-            // Start 1 hour timer to query value updates
-            timerHour = Timer.scheduledTimer(withTimeInterval: 3600, repeats: true) { time in
+            // Start daily timer to query app updates
+            timerDaily = Timer.scheduledTimer(withTimeInterval: 86400, repeats: true) { time in
                 // Only run when App Catalog is installed
                 if self.appCatalogController.catalogInstalled() {
                     self.appCatalogController.getAppUpdates()
@@ -538,10 +533,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             self.computerinfo.getStorage()
             self.computerinfo.getIPAddress()
             
-//            // Only run when App Catalog is installed
-//            if appCatalogController.catalogInstalled() {
-//                self.appCatalogController.getAppUpdates()
-//            }
             Task {
                 await self.userinfo.getCurrentUserRecord()
                 await self.userinfo.getUserFullName()
@@ -593,6 +584,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         
         // Stop timer when popover closes
         timer?.invalidate()
+        
+        // Show default popover view with more relevant info
+        self.appCatalogController.showAppUpdates = false
+        self.computerinfo.showMacosUpdates = false
+        self.computerinfo.showUptimeAlert = false
     }
 
     // MARK: - Show the standard about window

@@ -77,6 +77,7 @@
 		499F56752AE47A3900CBDE73 /* AppUpdatesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499F56742AE47A3900CBDE73 /* AppUpdatesView.swift */; };
 		499F56782AE47BE800CBDE73 /* InstalledAppItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499F56772AE47BE800CBDE73 /* InstalledAppItem.swift */; };
 		49B4952D2642E96A00A6AE64 /* DarkModeBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B4952C2642E96A00A6AE64 /* DarkModeBorder.swift */; };
+		49CB64452BA3BC58009E6026 /* UptimeAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CB64442BA3BC58009E6026 /* UptimeAlertView.swift */; };
 		49F6744E273F2DBC00C47403 /* ExtensionASubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F6744D273F2DBC00C47403 /* ExtensionASubview.swift */; };
 		B03F2E5C28734ABD000478BC /* nl.root3.support.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = B03F2E53287340BD000478BC /* nl.root3.support.plist */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -218,6 +219,7 @@
 		499F56772AE47BE800CBDE73 /* InstalledAppItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstalledAppItem.swift; sourceTree = "<group>"; };
 		49B163AC26FCB154006D57C7 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		49B4952C2642E96A00A6AE64 /* DarkModeBorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeBorder.swift; sourceTree = "<group>"; };
+		49CB64442BA3BC58009E6026 /* UptimeAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UptimeAlertView.swift; sourceTree = "<group>"; };
 		49F6744D273F2DBC00C47403 /* ExtensionASubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionASubview.swift; sourceTree = "<group>"; };
 		A0532BCB2733F35A005CACF2 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B03F2E53287340BD000478BC /* nl.root3.support.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = nl.root3.support.plist; sourceTree = "<group>"; };
@@ -283,6 +285,7 @@
 				4976EB8C26531CCC006EE097 /* Experimental */,
 				49B4952E264343FC00A6AE64 /* ViewModifiers */,
 				499F56762AE47BCE00CBDE73 /* AppCatalog */,
+				49CB64442BA3BC58009E6026 /* UptimeAlertView.swift */,
 				498D47D52A38ABC10059465C /* UpdateView.swift */,
 				4976EB8A265317C6006EE097 /* AppView.swift */,
 				49822CE424B4C3F100E8DE54 /* ContentView.swift */,
@@ -648,6 +651,7 @@
 				498B7001272F460100BFA45E /* KerberosSSOExtensionModel.swift in Sources */,
 				4976EB8B265317C6006EE097 /* AppView.swift in Sources */,
 				49F6744E273F2DBC00C47403 /* ExtensionASubview.swift in Sources */,
+				49CB64452BA3BC58009E6026 /* UptimeAlertView.swift in Sources */,
 				499F56732AE0832100CBDE73 /* AppCatalogSubview.swift in Sources */,
 				499F56782AE47BE800CBDE73 /* InstalledAppItem.swift in Sources */,
 				49871A6F287CC98500715C7C /* HeaderView.swift in Sources */,

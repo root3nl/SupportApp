@@ -157,6 +157,9 @@ class ComputerInfo: ObservableObject {
     
     // macOS software update declaration info url
     @Published var softwareUpdateDeclarationURL: String?
+
+  // Show uptime alert
+    @Published var showUptimeAlert: Bool = false
     
     // MARK: - Function to get uptime
     func kernelBootTime() {

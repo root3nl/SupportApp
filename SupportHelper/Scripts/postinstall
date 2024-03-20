@@ -1,9 +1,9 @@
-#!/bin/zsh
+#!/bin/zsh --no-rcs
 
 # Install SupportHelper LaunchDaemon
 #
 #
-# Copyright 2022 Root3 B.V. All rights reserved.
+# Copyright 2024 Root3 B.V. All rights reserved.
 #
 # This script will create the SupportHelper LaunchDaemon and reload it when
 # needed.
