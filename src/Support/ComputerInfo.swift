@@ -149,7 +149,16 @@ class ComputerInfo: ObservableObject {
     // Show macOS updates
     @Published var showMacosUpdates: Bool = false
     
-    // Show uptime alert
+    // macOS software update declaration deadline
+    @Published var softwareUpdateDeclarationDeadline: Date?
+    
+    // macOS software update declaration deadline
+    @Published var softwareUpdateDeclarationVersion: String?
+    
+    // macOS software update declaration info url
+    @Published var softwareUpdateDeclarationURL: String?
+
+  // Show uptime alert
     @Published var showUptimeAlert: Bool = false
     
     // MARK: - Function to get uptime
@@ -749,5 +758,67 @@ class ComputerInfo: ObservableObject {
                 self.logger.debug("Rapid Security Reponse version: \(self.rapidSecurityResponseVersion)")
             }
         }
+    }
+    
+    func getUpdateDeclaration() {
+        
+        logger.debug("Getting macOS software update declarations...")
+        
+        let declarationLogger = Logger(subsystem: "nl.root3.support", category: "SoftwareUpdateDeclaration")
+        
+        // Move to background thread
+        DispatchQueue.global().async {
+            
+            // Setup XPC connection
+            let connectionToService = NSXPCConnection(serviceName: "nl.root3.support.xpc")
+            connectionToService.remoteObjectInterface = NSXPCInterface(with: SupportXPCProtocol.self)
+            connectionToService.resume()
+            
+            // Run command when connection is successful. Run XPC synchronously and decode updates once completed
+            if let proxy = connectionToService.synchronousRemoteObjectProxyWithErrorHandler( { error in
+                self.logger.error("\(error.localizedDescription)")
+            }) as? SupportXPCProtocol {
+                proxy.getUpdateDeclaration() { result in
+                                        
+                    do {
+                        // Decode plist data into SoftwareUpdateDeclarationModel model
+                        let decoder = PropertyListDecoder()
+                        let softwareUpdateInfo = try decoder.decode(SoftwareUpdateDeclarationModel.self, from: result)
+                        
+                        // Format target deadline from String to Date
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+                        
+                        // Back to the main thread to publish values
+                        DispatchQueue.main.async {
+                            // Get declaration with highest macOS target version
+                            if let declaration = softwareUpdateInfo.policyFields.declarations?.values.max(by: { $0.targetOSVersion > $1.targetOSVersion }) {
+                                self.softwareUpdateDeclarationDeadline = dateFormatter.date(from: declaration.targetLocalDateTime)
+                                declarationLogger.debug("Deadline: \(declaration.targetLocalDateTime)")
+                                self.softwareUpdateDeclarationVersion = declaration.targetOSVersion
+                                declarationLogger.debug("Target OS version: \(declaration.targetOSVersion)")
+                                self.softwareUpdateDeclarationURL = declaration.detailsURL
+                                declarationLogger.debug("Details URL: \(declaration.detailsURL ?? "Not set")")
+                            } else {
+                                // Empty values when declaration is no longer found
+                                self.softwareUpdateDeclarationDeadline = nil
+                                self.softwareUpdateDeclarationVersion = nil
+                                self.softwareUpdateDeclarationURL = nil
+                            }
+                        }
+                        
+                    } catch {
+                        declarationLogger.error("Error decoding macOS Software Update declaration")
+                    }
+                                        
+                }
+            } else {
+                self.logger.error("Failed to connect to SupportXPC service")
+            }
+            
+            // Invalidate connection
+            connectionToService.invalidate()
+        }
+
     }
 }

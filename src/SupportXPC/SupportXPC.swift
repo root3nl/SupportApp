@@ -21,4 +21,17 @@ class SupportXPC: NSObject, SupportXPCProtocol {
             logger.error("Error: \(error.localizedDescription, privacy: .public)")
         }
     }
+    
+    func getUpdateDeclaration(completion: @escaping (Data) -> Void) {
+        
+        do {
+            try ExecutionService.getUpdateDeclaration() { (result) in
+                completion(result)
+            }
+        } catch {
+            logger.error("Error: \(error.localizedDescription, privacy: .public)")
+        }
+        
+    }
+    
 }

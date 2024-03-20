@@ -28,6 +28,8 @@ struct UpdateView: View {
     // Dark Mode detection
     @Environment(\.colorScheme) var colorScheme
     
+    @Environment(\.openURL) var openURL
+
     // Set the custom color for all symbols depending on Light or Dark Mode.
     var customColor: String {
         if colorScheme == .light && defaults.string(forKey: "CustomColor") != nil {
@@ -101,6 +103,28 @@ struct UpdateView: View {
                                 .foregroundColor(.secondary)
                                 .font(.system(.subheadline, design: .rounded))
                             
+                            if computerinfo.softwareUpdateDeclarationDeadline != nil && update.displayVersion == computerinfo.softwareUpdateDeclarationVersion {
+                                
+                                Text(NSLocalizedString("AUTOMATIC_INSTALLATION", comment: "") + ": " + "\(computerinfo.softwareUpdateDeclarationDeadline?.formatted(date: .abbreviated, time: .shortened) ?? "")")
+                                    .foregroundStyle(.secondary)
+                                    .font(.system(.subheadline, design: .rounded))
+                                
+                                if computerinfo.softwareUpdateDeclarationURL != nil {
+                                    Button(action: {
+                                        openURL(URL(string: computerinfo.softwareUpdateDeclarationURL ?? "")!)
+                                        
+                                        // Close popover
+                                        appDelegate.togglePopover(nil)
+                                    }) {
+                                        Text(NSLocalizedString("MORE_INFO", comment: ""))
+                                            .foregroundStyle(.blue)
+                                            .font(.system(.subheadline, design: .rounded))
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                                
+                            }
+                            
                         }
                         
                         Spacer()
@@ -146,6 +170,9 @@ struct UpdateView: View {
         }
         .padding(.horizontal)
         .unredacted()
+        .task {
+            self.computerinfo.getUpdateDeclaration()
+        }
     }
     
     // Open URL
@@ -156,9 +183,6 @@ struct UpdateView: View {
         }
 
         NSWorkspace.shared.open(url)
-        
-        // Close the popover
-//        NSApp.deactivate()
         
         // Close popover
         appDelegate.togglePopover(nil)

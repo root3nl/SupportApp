@@ -27,6 +27,8 @@
 		49152916259CD2C300056B5F /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49152915259CD2C300056B5F /* Item.swift */; };
 		49152919259CD32200056B5F /* ItemSmall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49152918259CD32200056B5F /* ItemSmall.swift */; };
 		4915291C259CD38800056B5F /* EffectsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4915291B259CD38800056B5F /* EffectsView.swift */; };
+		4934C79A2B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4934C7992B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift */; };
+		4934C79B2B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4934C7992B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift */; };
 		4939A0C829259B7B00731363 /* LogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4939A0C729259B7B00731363 /* LogoView.swift */; };
 		493DCC922B08292900FA2480 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493DCC912B08292900FA2480 /* main.swift */; };
 		493DCC9A2B082BBE00FA2480 /* nl.root3.support.helper in CopyFiles */ = {isa = PBXBuildFile; fileRef = 493DCC8F2B08292900FA2480 /* nl.root3.support.helper */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -162,6 +164,7 @@
 		49152915259CD2C300056B5F /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		49152918259CD32200056B5F /* ItemSmall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSmall.swift; sourceTree = "<group>"; };
 		4915291B259CD38800056B5F /* EffectsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectsView.swift; sourceTree = "<group>"; };
+		4934C7992B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoftwareUpdateDeclarationModel.swift; sourceTree = "<group>"; };
 		4939A0C729259B7B00731363 /* LogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogoView.swift; sourceTree = "<group>"; };
 		493DCC8F2B08292900FA2480 /* nl.root3.support.helper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = nl.root3.support.helper; sourceTree = BUILT_PRODUCTS_DIR; };
 		493DCC912B08292900FA2480 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -415,6 +418,7 @@
 			children = (
 				498B7000272F460100BFA45E /* KerberosSSOExtensionModel.swift */,
 				490CE0A7294FC144005BC01D /* SoftwareUpdateModel.swift */,
+				4934C7992B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -624,6 +628,7 @@
 			files = (
 				4947C1512B154A2F00276EFD /* SupportXPC.swift in Sources */,
 				4947C1532B154A2F00276EFD /* SupportXPCProtocol.swift in Sources */,
+				4934C79B2B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift in Sources */,
 				4974BC102B174A5700A3F38A /* ExecutionService.swift in Sources */,
 				4947C1552B154A2F00276EFD /* main.swift in Sources */,
 			);
@@ -676,6 +681,7 @@
 				490CE0A8294FC144005BC01D /* SoftwareUpdateModel.swift in Sources */,
 				0A4A7388260208B500927DAB /* UptimeSubview.swift in Sources */,
 				49822CE324B4C3F100E8DE54 /* AppDelegate.swift in Sources */,
+				4934C79A2B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift in Sources */,
 				0A4A73852602075F00927DAB /* StorageSubview.swift in Sources */,
 				49857E9824D4B543009B6FBA /* Preferences.swift in Sources */,
 				493DCCB62B08300F00FA2480 /* PrivilegedHelperError.swift in Sources */,

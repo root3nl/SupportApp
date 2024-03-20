@@ -538,6 +538,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                 await self.userinfo.getUserFullName()
             }
             
+//            self.computerinfo.getUpdateDeclaration()
+            
             // Post Distributed Notification to trigger script for custom info items
             if defaults.string(forKey: "OnAppearAction") != nil {
                 Task {
