@@ -9,14 +9,12 @@ import Foundation
 
 struct Declaration: Codable {
     let detailsURL: String?
-    let rmStoreDeclarationKey: String?
     let targetBuildVersion: String?
     let targetLocalDateTime: String
     let targetOSVersion: String
     
     enum CodingKeys: String, CodingKey {
         case detailsURL = "DetailsURL"
-        case rmStoreDeclarationKey = "RMStoreDeclarationKey"
         case targetBuildVersion = "TargetBuildVersion"
         case targetLocalDateTime = "TargetLocalDateTime"
         case targetOSVersion = "TargetOSVersion"

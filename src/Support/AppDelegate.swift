@@ -547,7 +547,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                 await self.userinfo.getUserFullName()
             }
             
-            self.computerinfo.getUpdateDeclaration()
+//            self.computerinfo.getUpdateDeclaration()
             
             // Post Distributed Notification to trigger script for custom info items
             if defaults.string(forKey: "OnAppearAction") != nil {
@@ -581,8 +581,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         if appCatalogController.catalogInstalled() {
             self.appCatalogController.getAppUpdates()
         }
-        
-        self.computerinfo.getUpdateDeclaration()
     }
     
     // MARK: - Close the popover

@@ -759,6 +759,10 @@ class ComputerInfo: ObservableObject {
     
     func getUpdateDeclaration() {
         
+        logger.debug("Getting macOS software update declarations...")
+        
+        let declarationLogger = Logger(subsystem: "nl.root3.support", category: "SoftwareUpdateDeclaration")
+        
         // Move to background thread
         DispatchQueue.global().async {
             
@@ -767,7 +771,7 @@ class ComputerInfo: ObservableObject {
             connectionToService.remoteObjectInterface = NSXPCInterface(with: SupportXPCProtocol.self)
             connectionToService.resume()
             
-            // Run command when connection is successful. Run XPC synchronously and decode app updates once completed
+            // Run command when connection is successful. Run XPC synchronously and decode updates once completed
             if let proxy = connectionToService.synchronousRemoteObjectProxyWithErrorHandler( { error in
                 self.logger.error("\(error.localizedDescription)")
             }) as? SupportXPCProtocol {
@@ -784,13 +788,24 @@ class ComputerInfo: ObservableObject {
                         
                         // Back to the main thread to publish values
                         DispatchQueue.main.async {
-                            self.softwareUpdateDeclarationDeadline = dateFormatter.date(from: softwareUpdateInfo.policyFields.declarations?.values.first?.targetLocalDateTime ?? "Unknown")
-                            self.softwareUpdateDeclarationVersion = softwareUpdateInfo.policyFields.declarations?.values.first?.targetOSVersion ?? "Unknown"
-                            self.softwareUpdateDeclarationURL = softwareUpdateInfo.policyFields.declarations?.values.first?.detailsURL ?? "Unknown"
+                            // Get declaration with highest macOS target version
+                            if let declaration = softwareUpdateInfo.policyFields.declarations?.values.max(by: { $0.targetOSVersion > $1.targetOSVersion }) {
+                                self.softwareUpdateDeclarationDeadline = dateFormatter.date(from: declaration.targetLocalDateTime)
+                                declarationLogger.debug("Deadline: \(declaration.targetLocalDateTime)")
+                                self.softwareUpdateDeclarationVersion = declaration.targetOSVersion
+                                declarationLogger.debug("Target OS version: \(declaration.targetOSVersion)")
+                                self.softwareUpdateDeclarationURL = declaration.detailsURL
+                                declarationLogger.debug("Details URL: \(declaration.detailsURL ?? "Not set")")
+                            } else {
+                                // Empty values when declaration is no longer found
+                                self.softwareUpdateDeclarationDeadline = nil
+                                self.softwareUpdateDeclarationVersion = nil
+                                self.softwareUpdateDeclarationURL = nil
+                            }
                         }
                         
                     } catch {
-                        self.logger.error("Error decoding macOS Software Update declaration")
+                        declarationLogger.error("Error decoding macOS Software Update declaration")
                     }
                                         
                 }

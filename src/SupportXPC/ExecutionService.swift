@@ -16,6 +16,8 @@ struct ExecutionService {
         
         // Check if the file exists
         if FileManager.default.fileExists(atPath: plistPath) {
+            logger.debug("macOS software update declaration plist was found")
+            
             // Read the plist file
             do {
                 // Read plist data from the file
@@ -23,10 +25,10 @@ struct ExecutionService {
                 completion(plistData)
                 
             } catch {
-                print("Error reading plist: \(error)")
+                logger.error("Error reading plist: \(error)")
             }
         } else {
-            print("Plist file does not exist at path: \(plistPath)")
+            logger.debug("No macOS software update declaration plist found")
         }
     }
 

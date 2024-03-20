@@ -170,6 +170,9 @@ struct UpdateView: View {
         }
         .padding(.horizontal)
         .unredacted()
+        .task {
+            self.computerinfo.getUpdateDeclaration()
+        }
     }
     
     // Open URL
