@@ -1,5 +1,8 @@
 name: Build and Notarize Support App Beta
-on: [workflow_dispatch]
+on:
+  push:
+    branches:
+      - github-actions
 
 jobs:
   build_with_signing:
@@ -72,7 +75,7 @@ jobs:
 
       - name: Notarize and package macOS app
         run: 
-          ./build_pkg_automated.zsh "$(/usr/libexec/PlistBuddy -c Print:CFBundleShortVersionString ./src/Support/Info.plist)" "${{ vars.APPLE_ID }}" "${{ secrets.APPLE_ID_APP_SPECIFIC_PASSWORD }}"
+          ./build_pkg_automated.zsh "$(/usr/libexec/PlistBuddy -c Print:CFBundleShortVersionString ./src/Support/Info.plist)" "${{ secrets.APPLE_ID }}" "${{ secrets.APPLE_ID_APP_SPECIFIC_PASSWORD }}"
 
       - name: Upload package
         uses: actions/upload-artifact@v4
