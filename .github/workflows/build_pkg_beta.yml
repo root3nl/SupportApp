@@ -22,7 +22,7 @@ jobs:
           echo "Build number: ${APP_BUILD_NUMBER}"
           echo "APP_BUILD_NUMBER=${APP_BUILD_NUMBER}" >> $GITHUB_ENV
           
-          APP_VERSION=$(/usr/libexec/PlistBuddy -c Print:CFBundleShortVersionString ./src/Support/Info.plist)
+          APP_VERSION=$(/usr/libexec/PlistBuddy -c Print:CFBundleShortVersionString Support/Info.plist)
           echo "Version number: ${APP_VERSION}"
           echo "APP_VERSION=${APP_VERSION}" >> $GITHUB_ENV
 
