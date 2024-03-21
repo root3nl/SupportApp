@@ -1,0 +1,93 @@
+name: Build and Notarize Support App Beta
+on:
+  push:
+    branches:
+      - development
+
+jobs:
+  build_with_signing:
+    runs-on: macos-14
+    environment: production
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Bump Build Number and set version number to env
+        run: |
+          cd ./src
+          xcrun agvtool next-version -all
+          
+          APP_BUILD_NUMBER=$(xcrun agvtool vers -terse)
+          echo "Build number: ${APP_BUILD_NUMBER}"
+          echo "APP_BUILD_NUMBER=${APP_BUILD_NUMBER}" >> $GITHUB_ENV
+          
+          APP_VERSION=$(/usr/libexec/PlistBuddy -c Print:CFBundleShortVersionString Support/Info.plist)
+          echo "Version number: ${APP_VERSION}"
+          echo "APP_VERSION=${APP_VERSION}" >> $GITHUB_ENV
+
+      - name: Commit Changes
+        env:
+          APP_BUILD_NUMBER: ${{ env.APP_BUILD_NUMBER }}
+        run: |
+          git add .
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -m "Bump build number to ${APP_BUILD_NUMBER}"
+
+      - name: Push Changes
+        uses: ad-m/github-push-action@v0.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+
+      - name: Install Developer ID Application certificate
+        uses: apple-actions/import-codesign-certs@v2
+        with: 
+          keychain-password: ${{ github.run_id }}
+          p12-file-base64: ${{ secrets.DEVELOPER_ID_APPLICATION_BASE64 }}
+          p12-password: ${{ secrets.DEVELOPER_ID_APPLICATION_PASSWORD }}
+
+      - name: Install Developer ID Installer certificate
+        uses: apple-actions/import-codesign-certs@v2
+        with: 
+          create-keychain: false
+          keychain-password: ${{ github.run_id }}
+          p12-file-base64: ${{ secrets.DEVELOPER_ID_INSTALLER_BASE64 }}
+          p12-password: ${{ secrets.DEVELOPER_ID_INSTALLER_PASSWORD }}
+
+      - name: Enable beta watermark
+        run: |
+          sed -i '' "s/let betaRelease: Bool = false/let betaRelease: Bool = true/g" ./src/Support/Preferences.swift
+
+      - name: Build macOS app
+        run: |
+          ARCHIVE_PATH="./build/Support.xcarchive"
+          APP_PATH="./build"
+
+          ls -la /Applications
+
+          # Set Xcode version to latest version available
+          XCODE_VERSION=$(ls -d /Applications/Xcode*.app 2>/dev/null | sort -V | tail -n 1)
+          echo "Path to latest Xcode version: ${XCODE_VERSION}"
+
+          # Select Xcode version
+          sudo xcode-select -s "${XCODE_VERSION}"
+
+          # Build and archive app
+          "${XCODE_VERSION}/Contents/Developer/usr/bin/xcodebuild" clean build -project ./src/Support.xcodeproj -scheme "Support" -configuration Release CODE_SIGN_IDENTITY="Developer ID Application: Root3 B.V. (98LJ4XBGYK)" -archivePath $ARCHIVE_PATH archive
+          "${XCODE_VERSION}/Contents/Developer/usr/bin/xcodebuild" -archivePath $ARCHIVE_PATH -exportArchive -exportPath $APP_PATH -exportOptionsPlist ./pkgbuild/exportOptions.plist
+          chmod +x "${APP_PATH}/Support.app"
+
+      - name: Notarize and package macOS app
+        run: 
+          ./build_pkg_automated.zsh "${{env.APP_VERSION}}" "${{ secrets.APPLE_ID }}" "${{ secrets.APPLE_ID_APP_SPECIFIC_PASSWORD }}"
+
+      - name: Upload package
+        uses: actions/upload-artifact@v4
+        with:
+          name: Support ${{env.APP_VERSION}} Beta (${{ env.APP_BUILD_NUMBER }})
+          path: build/
+      
+      
+
