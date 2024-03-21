@@ -51,9 +51,9 @@ jobs:
           p12-file-base64: ${{ secrets.DEVELOPER_ID_INSTALLER_BASE64 }}
           p12-password: ${{ secrets.DEVELOPER_ID_INSTALLER_PASSWORD }}
 
-      - name: Enable beta watermarkt
+      - name: Enable beta watermark
         run: |
-          sed -i '' "s/let betaRelease: Bool = false/let betaRelease: Bool = true/g" Preferences.swift
+          sed -i '' "s/let betaRelease: Bool = false/let betaRelease: Bool = true/g" ./src/Support/Preferences.swift
 
       - name: Build macOS app
         run: |
@@ -70,7 +70,7 @@ jobs:
           sudo xcode-select -s "${XCODE_VERSION}"
 
           # Build and archive app
-          "${XCODE_VERSION}/Contents/Developer/usr/bin/xcodebuild" clean build -project Support.xcodeproj -scheme "Support" -configuration Release CODE_SIGN_IDENTITY="Developer ID Application: Root3 B.V. (98LJ4XBGYK)" -archivePath $ARCHIVE_PATH archive
+          "${XCODE_VERSION}/Contents/Developer/usr/bin/xcodebuild" clean build -project ./src/Support.xcodeproj -scheme "Support" -configuration Release CODE_SIGN_IDENTITY="Developer ID Application: Root3 B.V. (98LJ4XBGYK)" -archivePath $ARCHIVE_PATH archive
           "${XCODE_VERSION}/Contents/Developer/usr/bin/xcodebuild" -archivePath $ARCHIVE_PATH -exportArchive -exportPath $APP_PATH -exportOptionsPlist ./pkgbuild/exportOptions.plist
           chmod +x "${APP_PATH}/Support.app"
 
