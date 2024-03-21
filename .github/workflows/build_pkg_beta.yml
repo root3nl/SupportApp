@@ -2,7 +2,7 @@ name: Build and Notarize Support App Beta
 on:
   push:
     branches:
-      - github-actions
+      - development
 
 jobs:
   build_with_signing:
