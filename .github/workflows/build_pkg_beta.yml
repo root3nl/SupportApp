@@ -15,6 +15,7 @@ jobs:
 
       - name: Bump Build Number
         run: |
+          cd ./src
           xcrun agvtool next-version -all
           APP_BUILD_NUMBER=$(xcrun agvtool vers -terse)
           echo "Build number: ${APP_BUILD_NUMBER}"
