@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSHumanReadableCopyright</key>
+	<string>© 2024 Root3 B.V. All rights reserved.</string>
 	<key>CFBundleIdentifier</key>
 	<string>nl.root3.support.helper</string>
 	<key>CFBundleInfoDictionaryVersion</key>

@@ -51,7 +51,7 @@ class AppCatalogController: ObservableObject {
             
             // Run command when connection is successful. Run XPC synchronously and decode app updates once completed
             if let proxy = connectionToService.synchronousRemoteObjectProxyWithErrorHandler( { error in
-                self.logger.error("\(error.localizedDescription)")
+                self.logger.error("\(error.localizedDescription, privacy: .public)")
             }) as? SupportXPCProtocol {
                 proxy.executeScript(command: command) { exitCode in
                     
