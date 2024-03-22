@@ -9,7 +9,7 @@
 "Computer Name" = "Computer Name";
 "Model" = "Model";
 "Last Reboot" = "Last Reboot";
-"RESTART_REGULARLY" = "Please restart your Mac regularly";
+"RESTART_REGULARLY" = "Restart your Mac regularly";
 "ADMIN_RECOMMENDS_RESTARTING_EVERY" = "Your administrator recommends restarting your Mac every";
 "ago" = "ago";
 "minute" = "minute";
@@ -67,3 +67,5 @@
 "MACOS_UPDATES" = "macOS Updates";
 "AUTOMATIC_INSTALLATION" = "Automatic installation";
 "MORE_INFO" = "More info";
+"RESTART_NOW" = "Please restart now";
+"RESTART" = "Restart";

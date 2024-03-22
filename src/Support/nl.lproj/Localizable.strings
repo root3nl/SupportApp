@@ -67,3 +67,5 @@
 "MACOS_UPDATES" = "macOS Updates";
 "AUTOMATIC_INSTALL_TIME" = "Automatische installatie";
 "MORE_INFO" = "Meer info";
+"RESTART_NOW" = "Herstart je Mac nu";
+"RESTART" = "Herstart";

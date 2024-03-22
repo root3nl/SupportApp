@@ -70,6 +70,19 @@ struct UptimeAlertView: View {
                 
                 Spacer()
                 
+                Button(action: {
+                    
+                }) {
+                    Text(NSLocalizedString("RESTART", comment: ""))
+                        .font(.system(.body, design: .rounded))
+                        .fontWeight(.regular)
+                        .padding(.vertical, 4)
+                        .padding(.horizontal)
+                        .background(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
+                        .clipShape(Capsule())
+                }
+                .buttonStyle(.plain)
+                
             }
             
             Divider()
@@ -77,14 +90,14 @@ struct UptimeAlertView: View {
             
             VStack(alignment: .center, spacing: 20) {
                 
-                Image(systemName: "clock.badge.exclamationmark.fill")
+                Image(systemName: computerinfo.uptimeLimitReached ? "clock.badge.exclamationmark.fill" : "clock.badge.checkmark.fill")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 50, height: 50)
                     .symbolRenderingMode(.palette)
-                    .foregroundStyle(.primary, .orange)
+                    .foregroundStyle(.primary, computerinfo.uptimeLimitReached ? .orange : Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
                 
-                Text(NSLocalizedString("RESTART_REGULARLY", comment: ""))
+                Text(computerinfo.uptimeLimitReached ? NSLocalizedString("RESTART_NOW", comment: "") : NSLocalizedString("RESTART_REGULARLY", comment: ""))
                 // Set frame to 250 to allow multiline text
 //                    .frame(width: 250)
 //                    .fixedSize()
