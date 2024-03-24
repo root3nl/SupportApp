@@ -179,6 +179,22 @@ struct AppUpdatesView: View {
                         
                     }
                     
+                    // Show update schedule information when configured
+                    if appCatalogController.updateInterval > 0 {
+                        
+                        Divider()
+                            .padding(2)
+                        
+                        HStack(alignment: .top) {
+                            
+                            Text("\(NSLocalizedString("APPS_WILL_BE_UPDATED_AUTOMATICALLY_DESCRIPTION", comment: "")) \(appCatalogController.nextUpdateDate)")
+                                .font(.system(.body, design: .rounded))
+                                .foregroundStyle(.secondary)
+                            
+                            Spacer()
+                        }
+                    }
+                    
                 } else {
                     
                     VStack(alignment: .center, spacing: 20) {

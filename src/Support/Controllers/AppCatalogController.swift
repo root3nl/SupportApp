@@ -23,6 +23,12 @@ class AppCatalogController: ObservableObject {
     // Get available app updates from App Catalog
     @AppStorage("Updates", store: UserDefaults(suiteName: "nl.root3.catalog")) var appUpdates: Int = 0
     
+    // Get update interval
+    @AppStorage("UpdateInterval", store: UserDefaults(suiteName: "nl.root3.catalog")) var updateInterval: Int = 0
+    
+    // Get last update date epoch
+    @AppStorage("LastUpdated", store: UserDefaults(suiteName: "nl.root3.catalog.agent")) var lastUpdated: Int = 0
+    
     // Current apps updating
     @Published var appsUpdating: [String] = []
     
@@ -31,6 +37,24 @@ class AppCatalogController: ObservableObject {
     
     // Array containing app details
     @Published var updateDetails: [InstalledAppItem] = []
+    
+    // Calculate when next update schedule will run
+    var nextUpdateDate: String {
+        let fromDate = Date(timeIntervalSince1970: Double(lastUpdated))
+        var toDate = fromDate.addingTimeInterval(Double(updateInterval) * 86400)
+        
+        // If next update is not in the future, show within the next hour
+        if toDate < .now {
+            toDate = .now.addingTimeInterval(3600)
+        }
+        
+        // Format the next update schedule in relative style
+        var formatter = Date.RelativeFormatStyle()
+        formatter.presentation = .numeric
+        let relativeDate = toDate.formatted(formatter)
+        
+        return relativeDate
+    }
     
     func getAppUpdates() {
         
