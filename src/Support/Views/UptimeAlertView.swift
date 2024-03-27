@@ -106,8 +106,9 @@ struct UptimeAlertView: View {
 
                 Text(alertText)
                 // Set frame to 250 to allow multiline text
-                    .frame(width: 300)
+                    .frame(width: 250)
                     .fixedSize()
+                    .multilineTextAlignment(.center)
                     .font(.system(.title2, design: .rounded))
                     .foregroundStyle(.secondary)
                 

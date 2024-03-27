@@ -792,7 +792,7 @@ class ComputerInfo: ObservableObject {
                         // Back to the main thread to publish values
                         DispatchQueue.main.async {
                             // Get declaration with highest macOS target version
-                            if let declaration = softwareUpdateInfo.policyFields.declarations?.values.max(by: { $0.targetOSVersion > $1.targetOSVersion }) {
+                            if let declaration = softwareUpdateInfo.policyFields.declarations?.values.max(by: { $0.targetOSVersion < $1.targetOSVersion }) {
                                 self.softwareUpdateDeclarationDeadline = dateFormatter.date(from: declaration.targetLocalDateTime)
                                 declarationLogger.debug("Deadline: \(declaration.targetLocalDateTime)")
                                 self.softwareUpdateDeclarationVersion = declaration.targetOSVersion
