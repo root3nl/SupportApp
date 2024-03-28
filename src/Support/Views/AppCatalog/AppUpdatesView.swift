@@ -189,7 +189,7 @@ struct AppUpdatesView: View {
                             
                             Text("\(NSLocalizedString("APPS_WILL_BE_UPDATED_AUTOMATICALLY_DESCRIPTION", comment: "")) \(appCatalogController.nextUpdateDate)")
                                 .font(.system(.body, design: .rounded))
-                                .foregroundStyle(.secondary)
+//                                .foregroundStyle(.secondary)
                             
                             Spacer()
                         }
@@ -208,14 +208,18 @@ struct AppUpdatesView: View {
                         Text(NSLocalizedString("NO_UPDATES_AVAILABLE", comment: ""))
                             .font(.system(.title, design: .rounded))
                             .fontWeight(.medium)
-                        
-                        Text("\(NSLocalizedString("APPS_WILL_BE_UPDATED_AUTOMATICALLY_DESCRIPTION", comment: "")) \(appCatalogController.nextUpdateDate)")
-                            // Set frame to 250 to allow multiline text
-                            .frame(width: 250)
-                            .fixedSize()
                             .multilineTextAlignment(.center)
-                            .font(.system(.title2, design: .rounded))
-                            .foregroundStyle(.secondary)
+                        
+                        if appCatalogController.updateInterval > 0 {
+                            
+                            Text("\(NSLocalizedString("APPS_WILL_BE_UPDATED_AUTOMATICALLY_DESCRIPTION", comment: "")) \(appCatalogController.nextUpdateDate)")
+                                // Set frame to 250 to allow multiline text
+                                .frame(width: 250)
+                                .font(.system(.title2, design: .rounded))
+                                .multilineTextAlignment(.center)
+                                .foregroundStyle(.secondary)
+                            
+                        }
                         
                     }
                     .padding(.vertical, 40)

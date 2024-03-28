@@ -27,6 +27,8 @@ struct UptimeAlertView: View {
     // Dark Mode detection
     @Environment(\.colorScheme) var colorScheme
     
+    @State private var restarting: Bool = false
+    
     // Set the custom color for all symbols depending on Light or Dark Mode.
     var customColor: String {
         if colorScheme == .light && defaults.string(forKey: "CustomColor") != nil {
@@ -70,19 +72,6 @@ struct UptimeAlertView: View {
                 
                 Spacer()
                 
-                Button(action: {
-                    
-                }) {
-                    Text(NSLocalizedString("RESTART", comment: ""))
-                        .font(.system(.body, design: .rounded))
-                        .fontWeight(.regular)
-                        .padding(.vertical, 4)
-                        .padding(.horizontal)
-                        .background(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
-                        .clipShape(Capsule())
-                }
-                .buttonStyle(.plain)
-                
             }
             
             Divider()
@@ -98,19 +87,45 @@ struct UptimeAlertView: View {
                     .foregroundStyle(.primary, computerinfo.uptimeLimitReached ? .orange : Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
                 
                 Text(computerinfo.uptimeLimitReached ? NSLocalizedString("RESTART_NOW", comment: "") : NSLocalizedString("RESTART_REGULARLY", comment: ""))
-                // Set frame to 250 to allow multiline text
-//                    .frame(width: 250)
-//                    .fixedSize()
                     .font(.system(.title, design: .rounded))
                     .fontWeight(.medium)
+                    .multilineTextAlignment(.center)
 
                 Text(alertText)
                 // Set frame to 250 to allow multiline text
                     .frame(width: 250)
-                    .fixedSize()
-                    .multilineTextAlignment(.center)
                     .font(.system(.title2, design: .rounded))
+                    .multilineTextAlignment(.center)
                     .foregroundStyle(.secondary)
+                
+                if computerinfo.uptimeLimitReached {
+                    
+                    if restarting  {
+                        
+                        ProgressView()
+                            .frame(height: 20)
+                        
+                    } else {
+                        
+                        Button(action: {
+                            restarting = true
+                            restartMac()
+                        }) {
+                            Text(NSLocalizedString("RESTART", comment: ""))
+                                .font(.system(.title3, design: .rounded))
+                                .fontWeight(.medium)
+                                .foregroundStyle(.white)
+                                .padding(.vertical, 4)
+                                .padding(.horizontal)
+                                .background(Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+                                .clipShape(Capsule())
+                        }
+                        .buttonStyle(.plain)
+                        .frame(height: 20)
+                        
+                    }
+                    
+                }
                 
             }
             .padding(.vertical, 40)
@@ -118,6 +133,26 @@ struct UptimeAlertView: View {
         }
         .padding(.horizontal)
         .unredacted()
+    }
+    
+    // MARK: - Function to restart Mac gracefully using AppleScript
+    func restartMac() {
+        let restartScript = """
+        tell application "System Events"
+            restart
+        end tell
+        """
+        
+        var error: NSDictionary?
+        
+        DispatchQueue.global().async {
+            if let scriptObject = NSAppleScript(source: restartScript) {
+                scriptObject.executeAndReturnError(&error)
+                if let error = error {
+                    computerinfo.logger.error("Error while restarting Mac: \(error)")
+                }
+            }
+        }
     }
 }
 

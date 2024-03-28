@@ -19,5 +19,9 @@
 	<array>
 		<string>nl.root3.support.helper</string>
 	</array>
+	<key>com.apple.security.temporary-exception.apple-events</key>
+	<array>
+		<string>com.apple.systemevents</string>
+	</array>
 </dict>
 </plist>
