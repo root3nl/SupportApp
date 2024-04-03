@@ -64,18 +64,22 @@ struct UpdateView: View {
                 
                 Spacer()
                 
-                Button(action: {
-                    openSoftwareUpdate()
-                }) {
-                    Text(NSLocalizedString("UPDATE_NOW", comment: ""))
-                        .font(.system(.body, design: .rounded))
-                        .fontWeight(.regular)
-                        .padding(.vertical, 4)
-                        .padding(.horizontal)
-                        .background(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
-                        .clipShape(Capsule())
+                if computerinfo.recommendedUpdates.count > 0 {
+                    
+                    Button(action: {
+                        openSoftwareUpdate()
+                    }) {
+                        Text(NSLocalizedString("UPDATE_NOW", comment: ""))
+                            .font(.system(.body, design: .rounded))
+                            .fontWeight(.regular)
+                            .padding(.vertical, 4)
+                            .padding(.horizontal)
+                            .background(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
+                            .clipShape(Capsule())
+                    }
+                    .buttonStyle(.plain)
+                    
                 }
-                .buttonStyle(.plain)
                 
             }
             

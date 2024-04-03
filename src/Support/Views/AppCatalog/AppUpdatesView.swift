@@ -215,7 +215,7 @@ struct AppUpdatesView: View {
                             Text("\(NSLocalizedString("APPS_WILL_BE_UPDATED_AUTOMATICALLY_DESCRIPTION", comment: "")) \(appCatalogController.nextUpdateDate)")
                                 // Set frame to 250 to allow multiline text
                                 .frame(width: 250)
-                                .font(.system(.title2, design: .rounded))
+                                .font(.system(.title3, design: .rounded))
                                 .multilineTextAlignment(.center)
                                 .foregroundStyle(.secondary)
                             

@@ -94,39 +94,35 @@ struct UptimeAlertView: View {
                 Text(alertText)
                 // Set frame to 250 to allow multiline text
                     .frame(width: 250)
-                    .font(.system(.title2, design: .rounded))
+                    .font(.system(.title3, design: .rounded))
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.secondary)
-                
-                if computerinfo.uptimeLimitReached {
+                                    
+                if restarting  {
                     
-                    if restarting  {
-                        
-                        ProgressView()
-                            .frame(height: 20)
-                        
-                    } else {
-                        
-                        Button(action: {
-                            restarting = true
-                            restartMac()
-                        }) {
-                            Text(NSLocalizedString("RESTART", comment: ""))
-                                .font(.system(.title3, design: .rounded))
-                                .fontWeight(.medium)
-                                .foregroundStyle(.white)
-                                .padding(.vertical, 4)
-                                .padding(.horizontal)
-                                .background(Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
-                                .clipShape(Capsule())
-                        }
-                        .buttonStyle(.plain)
+                    ProgressView()
                         .frame(height: 20)
-                        
+                    
+                } else {
+                    
+                    Button(action: {
+                        restarting = true
+                        restartMac()
+                    }) {
+                        Text(NSLocalizedString("RESTART", comment: ""))
+                            .font(.system(.title3, design: .rounded))
+                            .fontWeight(.medium)
+                            .foregroundStyle(.white)
+                            .padding(.vertical, 4)
+                            .padding(.horizontal)
+                            .background(Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+                            .clipShape(Capsule())
                     }
+                    .buttonStyle(.plain)
+                    .frame(height: 20)
                     
                 }
-                
+                                    
             }
             .padding(.vertical, 40)
             
