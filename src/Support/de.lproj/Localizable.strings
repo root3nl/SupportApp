@@ -67,3 +67,5 @@
 "MACOS_UPDATES" = "macOS-Updates";
 "AUTOMATIC_INSTALLATION" = "Automatische Installation";
 "MORE_INFO" = "Mehr Infos";
+"RESTART_NOW" = "Bitte jetzt neu starten";
+"RESTART" = "Neustart";
