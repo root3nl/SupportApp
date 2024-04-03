@@ -98,7 +98,7 @@ struct UpdateView: View {
                             .foregroundStyle(.secondary)
                             .frame(width: 30, height: 30)
                         
-                        VStack(alignment: .leading) {
+                        VStack(alignment: .leading, spacing: 2) {
                             
                             Text(update.displayName)
                                 .font(.system(.headline, design: .rounded))
