@@ -9,7 +9,7 @@
 "Computer Name" = "Nombre de equipo";
 "Model" = "Modelo";
 "Last Reboot" = "Dias sin reiniciar";
-"RESTART_REGULARLY" = "Por favor, reinicia tu Mac regularmente";
+"RESTART_REGULARLY" = "Reinicia tu Mac con regularidad";
 "ADMIN_RECOMMENDS_RESTARTING_EVERY" = "Se recomienda reiniciar el Mac cada";
 "ago" = "hace";
 "minute" = "minuto";
