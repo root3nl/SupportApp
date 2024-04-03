@@ -65,3 +65,4 @@
 "UPDATE_ALL" = "Tout mettre à jour";
 "APP_UPDATES" = "Mises à jour de l'application";
 "MACOS_UPDATES" = "Mises à jour de macOS";
+"AUTOMATIC_INSTALLATION" = "Installation automatique";
