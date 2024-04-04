@@ -14,6 +14,8 @@ import Foundation
     @objc func executeScript(command: String, completion: @escaping ((NSNumber) -> Void)) -> Void
     
     @objc func getUpdateDeclaration(completion: @escaping (Data) -> Void) -> Void
+    
+    @objc func verifyAppCatalogCodeRequirement(completion: @escaping (Bool) -> Void) -> Void
 }
 
 /*

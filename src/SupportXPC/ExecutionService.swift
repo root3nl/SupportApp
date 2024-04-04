@@ -9,6 +9,55 @@ import Foundation
 
 struct ExecutionService {
     
+    static func verifyAppCatalogCodeRequirement(completion: @escaping (Bool) -> Void) throws -> Void {
+        
+        let bundleIdentifier = "nl.root3.catalog.agent"
+        let teamID = "98LJ4XBGYK"
+        
+        // Define the code requirement string
+        let codeRequirementString = "anchor apple generic and identifier \"" + bundleIdentifier + "\"" +
+            " and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */" +
+            " or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */" +
+            " and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */" +
+            " and certificate leaf[subject.OU] = \"" + teamID + "\"" +
+            ")"
+        
+        // Create a SecRequirementRef from the code requirement string
+        var requirement: SecRequirement?
+        let status = SecRequirementCreateWithString(codeRequirementString as CFString, [], &requirement)
+        
+        guard status == errSecSuccess, let codeRequirement = requirement else {
+            logger.error("Error creating code requirement: \(status)")
+            completion(false)
+            return
+        }
+        
+        // Get the URL of the binary to verify
+        let binaryURL = URL(fileURLWithPath: "/usr/local/bin/catalog")
+        
+        // Create a SecStaticCodeRef from the binary URL
+        var staticCode: SecStaticCode?
+        let staticCodeStatus = SecStaticCodeCreateWithPath(binaryURL as CFURL, [], &staticCode)
+        
+        guard staticCodeStatus == errSecSuccess, let code = staticCode else {
+            logger.error("Error creating static code: \(staticCodeStatus)")
+            completion(false)
+            return
+        }
+        
+        // Check if the binary meets the code requirements
+        let satisfiesRequirements = SecStaticCodeCheckValidityWithErrors(code, [], codeRequirement, nil)
+        
+        if satisfiesRequirements == errSecSuccess {
+            logger.debug("Catalog binary meets code requirements")
+            completion(true)
+        } else {
+            logger.error("Catalog binary does not meet code requirements")
+            completion(false)
+        }
+        
+    }
+    
     static func getUpdateDeclaration(completion: @escaping (Data) -> Void) throws -> Void {
         
         // Specify the path to the plist file

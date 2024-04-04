@@ -34,4 +34,16 @@ class SupportXPC: NSObject, SupportXPCProtocol {
         
     }
     
+    func verifyAppCatalogCodeRequirement(completion: @escaping (Bool) -> Void) {
+        
+        do {
+            try ExecutionService.verifyAppCatalogCodeRequirement() { (result) in
+                completion(result)
+            }
+        } catch {
+            logger.error("Error: \(error.localizedDescription, privacy: .public)")
+        }
+        
+    }
+    
 }

@@ -235,6 +235,40 @@ struct AppUpdatesView: View {
         
         // Command to update app
         let command = "/usr/local/bin/catalog --install \(bundleID) --update-action --support-app"
+        var catalogAgentValidated = false
+        
+        // Move to background thread
+//        DispatchQueue.global().async {
+            // Setup XPC connection
+            let connectionToService = NSXPCConnection(serviceName: "nl.root3.support.xpc")
+            connectionToService.remoteObjectInterface = NSXPCInterface(with: SupportXPCProtocol.self)
+            connectionToService.resume()
+            
+            // Run command when connection is successful. Run XPC synchronously and decode app updates once completed
+            if let proxy = connectionToService.synchronousRemoteObjectProxyWithErrorHandler( { error in
+                appCatalogController.logger.error("\(error.localizedDescription, privacy: .public)")
+            }) as? SupportXPCProtocol {
+                proxy.verifyAppCatalogCodeRequirement { result in
+                    
+                    if result {
+                        appCatalogController.logger.debug("Successfully verified the Catalog Agent")
+                        catalogAgentValidated = true
+                    } else {
+                        appCatalogController.logger.error("Failed to verify Catalog Agent")
+                    }
+                    
+                }
+            } else {
+                appCatalogController.logger.error("Failed to connect to SupportXPC service")
+            }
+            
+            // Invalidate connection
+            connectionToService.invalidate()
+//        }
+        
+        guard catalogAgentValidated else {
+            return
+        }
         
         // Add bundle ID to apps currently updating
         appCatalogController.appsUpdating.append(bundleID)
