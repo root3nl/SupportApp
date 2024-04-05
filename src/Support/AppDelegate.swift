@@ -442,17 +442,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed, checking update contents...")
             self.computerinfo.getRecommendedUpdates()
         case "OpenAtLogin":
-            logger.debug("\(keyPath! as NSObject) changed to \(self.defaults.bool(forKey: "OpenAtLogin"), privacy: .public)")
+            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.defaults.bool(forKey: "OpenAtLogin"), privacy: .public)")
             self.configureLaunchAgent()
         case "forceDelayedMajorSoftwareUpdates":
-            logger.debug("\(keyPath! as NSObject) changed to \(self.restrictionsDefaults!.bool(forKey: "forceDelayedMajorSoftwareUpdates"), privacy: .public)")
+            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.restrictionsDefaults!.bool(forKey: "forceDelayedMajorSoftwareUpdates"), privacy: .public)")
             self.computerinfo.getRecommendedUpdates()
         case "ExtensionAlertA":
-            logger.debug("\(keyPath! as NSObject) changed to \(self.preferences.extensionAlertA, privacy: .public)")
+            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.preferences.extensionAlertA, privacy: .public)")
         case "ExtensionAlertB":
-            logger.debug("\(keyPath! as NSObject) changed to \(self.preferences.extensionAlertB, privacy: .public)")
+            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.preferences.extensionAlertB, privacy: .public)")
         case "Updates":
-            logger.debug("\(keyPath! as NSObject) changed to \(self.appCatalogController.appUpdates, privacy: .public)")
+            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.appCatalogController.appUpdates, privacy: .public)")
             appCatalogController.getAppUpdates()
         default:
             logger.debug("Some other change detected...")
@@ -610,7 +610,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         
         // Check value comes from a Configuration Profile. If not, the command or script may be maliciously set and needs to be ignored
         guard defaults.objectIsForced(forKey: "OnAppearAction") == true else {
-            logger.error("OnAppearAction is not set by an administrator and potentially dangerous. Action will not be executed")
+            logger.error("OnAppearAction is not set by an administrator and is not trusted. Action will not be executed")
+            return
+        }
+        
+        // Verify permissions
+        guard FileUtilities().verifyPermissions(pathname: privilegedCommand) else {
             return
         }
         
@@ -618,13 +623,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             try ExecutionService.executeScript(command: privilegedCommand) { exitCode in
                 
                 guard exitCode == 0 else {
-                    self.logger.error("Failed to run privileged command or command. Exit code: \(exitCode, privacy: .public)")
+                    self.logger.error("Error while running privileged script or command. Exit code: \(exitCode, privacy: .public)")
                     return
                 }
 
             }
         } catch {
-            logger.log("Failed to run privileged command or command")
+            logger.log("Failed to run privileged script or command. Error: \(error.localizedDescription)")
         }
     }
     

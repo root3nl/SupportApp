@@ -288,6 +288,16 @@ struct AppUpdatesView: View {
                 
                 if exitCode == 0 {
                     appCatalogController.logger.log("App \(bundleID, privacy: .public) successfully updated")
+                    
+                    // Temporarily drop app from updates array so it will not show once completed. Then we check updates again to verify the update was really successful
+                    if appCatalogController.updateDetails.contains(where: { $0.id == bundleID } ) {
+                        if let index = appCatalogController.updateDetails.firstIndex(where: { $0.id == bundleID } ) {
+                            DispatchQueue.main.async {
+                                appCatalogController.updateDetails.remove(at: index)
+                            }
+                        }
+                    }
+                    
                 } else {
                     appCatalogController.logger.error("Failed to update app \(bundleID, privacy: .public)")
                 }
@@ -297,24 +307,14 @@ struct AppUpdatesView: View {
                     if let index = appCatalogController.appsUpdating.firstIndex(of: bundleID) {
                         DispatchQueue.main.async {
                             appCatalogController.appsUpdating.remove(at: index)
+                            
+                            // Check for updates again when apps currently updating is empty
+                            if appCatalogController.appsUpdating.isEmpty {
+                                // Trigger check for app updates
+                                appCatalogController.appUpdates = 0
+                            }
                         }
                     }
-                }
-                
-                // Temporarily drop app from updates array so it will not show once completed. Then we check updates again to verify the update was really successful
-                if appCatalogController.updateDetails.contains(where: { $0.id == bundleID } ) {
-                    if let index = appCatalogController.updateDetails.firstIndex(where: { $0.id == bundleID } ) {
-                        DispatchQueue.main.async {
-                            appCatalogController.updateDetails.remove(at: index)
-                        }
-                    }
-                }
-                
-                // Check for updates again when apps currently updating is almost empty
-                if appCatalogController.appsUpdating.count <= 1 {
-                    appCatalogController.logger.debug("Apps updating count: \(appCatalogController.appsUpdating.count)")
-                    // Check app updates again
-                    appCatalogController.getAppUpdates()
                 }
                 
             }
@@ -330,8 +330,8 @@ struct AppUpdatesView: View {
                 }
             }
             
-            // Check app updates again
-            appCatalogController.getAppUpdates()
+            // Trigger check for app updates
+            appCatalogController.appUpdates = 0
         }
         
     }
