@@ -33,11 +33,17 @@ struct ExecutionService {
         }
         
         // Get the URL of the binary to verify
-        let binaryURL = URL(fileURLWithPath: "/usr/local/bin/catalog")
+        let symlinkURL = URL(fileURLWithPath: "/usr/local/bin/catalog")
+        
+        // Resolve the symlink to its target
+        guard let binaryURL = try? FileManager.default.destinationOfSymbolicLink(atPath: symlinkURL.path) else {
+            print("Error resolving symlink.")
+            return
+        }
         
         // Create a SecStaticCodeRef from the binary URL
         var staticCode: SecStaticCode?
-        let staticCodeStatus = SecStaticCodeCreateWithPath(binaryURL as CFURL, [], &staticCode)
+        let staticCodeStatus = SecStaticCodeCreateWithPath(URL(fileURLWithPath: binaryURL) as CFURL, [], &staticCode)
         
         guard staticCodeStatus == errSecSuccess, let code = staticCode else {
             logger.error("Error creating static code: \(staticCodeStatus)")

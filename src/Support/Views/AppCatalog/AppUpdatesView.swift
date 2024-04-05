@@ -69,6 +69,10 @@ struct AppUpdatesView: View {
                     Button(action: {
                         for app in appCatalogController.updateDetails {
                             Task {
+                                // Validate Catalog Agent code requirement
+                                guard verifyAppCatalogCodeRequirement() else {
+                                    return
+                                }
                                 await updateApp(bundleID: app.id)
                             }
                         }
@@ -158,6 +162,10 @@ struct AppUpdatesView: View {
                             
                             Button(action: {
                                 Task {
+                                    // Validate Catalog Agent code requirement
+                                    guard verifyAppCatalogCodeRequirement() else {
+                                        return
+                                    }
                                     await updateApp(bundleID: update.id)
                                 }
                             }) {
@@ -230,45 +238,47 @@ struct AppUpdatesView: View {
         .unredacted()
     }
     
+    func verifyAppCatalogCodeRequirement() -> Bool {
+        
+        // Set default Catalog Agent validation to false
+        var catalogAgentValidated = false
+        
+        // Setup XPC connection
+        let connectionToService = NSXPCConnection(serviceName: "nl.root3.support.xpc")
+        connectionToService.remoteObjectInterface = NSXPCInterface(with: SupportXPCProtocol.self)
+        connectionToService.resume()
+        
+        // Run XPC synchronously
+        if let proxy = connectionToService.synchronousRemoteObjectProxyWithErrorHandler( { error in
+            appCatalogController.logger.error("\(error.localizedDescription, privacy: .public)")
+        }) as? SupportXPCProtocol {
+            proxy.verifyAppCatalogCodeRequirement { verified in
+                
+                if verified {
+                    appCatalogController.logger.debug("Successfully verified Catalog Agent code requirement")
+                    // Only now the Catalog Agent is valid
+                    catalogAgentValidated = true
+                } else {
+                    appCatalogController.logger.error("Failed to verify Catalog Agent code requirement")
+                }
+                
+            }
+        } else {
+            appCatalogController.logger.error("Failed to connect to SupportXPC service")
+        }
+        
+        // Invalidate connection
+        connectionToService.invalidate()
+        
+        return catalogAgentValidated
+        
+    }
+    
     // MARK: - Function to update app using App Catalog
     func updateApp(bundleID: String) async {
         
         // Command to update app
         let command = "/usr/local/bin/catalog --install \(bundleID) --update-action --support-app"
-        var catalogAgentValidated = false
-        
-        // Move to background thread
-//        DispatchQueue.global().async {
-            // Setup XPC connection
-            let connectionToService = NSXPCConnection(serviceName: "nl.root3.support.xpc")
-            connectionToService.remoteObjectInterface = NSXPCInterface(with: SupportXPCProtocol.self)
-            connectionToService.resume()
-            
-            // Run command when connection is successful. Run XPC synchronously and decode app updates once completed
-            if let proxy = connectionToService.synchronousRemoteObjectProxyWithErrorHandler( { error in
-                appCatalogController.logger.error("\(error.localizedDescription, privacy: .public)")
-            }) as? SupportXPCProtocol {
-                proxy.verifyAppCatalogCodeRequirement { result in
-                    
-                    if result {
-                        appCatalogController.logger.debug("Successfully verified the Catalog Agent")
-                        catalogAgentValidated = true
-                    } else {
-                        appCatalogController.logger.error("Failed to verify Catalog Agent")
-                    }
-                    
-                }
-            } else {
-                appCatalogController.logger.error("Failed to connect to SupportXPC service")
-            }
-            
-            // Invalidate connection
-            connectionToService.invalidate()
-//        }
-        
-        guard catalogAgentValidated else {
-            return
-        }
         
         // Add bundle ID to apps currently updating
         appCatalogController.appsUpdating.append(bundleID)
