@@ -65,8 +65,8 @@
 "APP_CATALOG_NOT_CONFIGURED" = "App Catalog is not setup correctly";
 "DOCUMENTATION" = "Documentation";
 "MACOS_UPDATES" = "macOS Updates";
-"AUTOMATIC_INSTALL_TIME" = "Automatische installatie";
-"MORE_INFO" = "Meer info";
+"ENFORCED_ON" = "Afgedwongen op";
+"DETAILS" = "Details";
 "RESTART_NOW" = "Herstart je Mac nu";
 "RESTART" = "Herstart";
 "APPS_WILL_BE_UPDATED_AUTOMATICALLY_DESCRIPTION" = "Apps worden automatisch bijgewerkt";

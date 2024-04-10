@@ -22,6 +22,10 @@ struct AppView: View {
     
     // Simple property wrapper boolean to visualize data loading when app opens
     @State var placeholdersEnabled = true
+    
+    // Version and build number
+    var version = Bundle.main.infoDictionary!["CFBundleShortVersionString"]! as! String
+    var build = Bundle.main.infoDictionary!["CFBundleVersion"]! as! String
 
     var body: some View {
         
@@ -39,7 +43,7 @@ struct AppView: View {
                 HStack {
                     
                     VStack {
-                        Text("Beta release")
+                        Text("Beta release \(version) (\(build))")
                             .font(.system(.subheadline, design: .rounded))
                             .opacity(0.5)
                         

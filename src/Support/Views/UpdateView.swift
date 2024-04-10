@@ -92,11 +92,12 @@ struct UpdateView: View {
                     
                     HStack {
                         
-                        Image(systemName: "gear.badge")
-                            .resizable()
-                            .symbolRenderingMode(.multicolor)
-                            .foregroundStyle(.secondary)
-                            .frame(width: 30, height: 30)
+                        Ellipse()
+                            .foregroundColor(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
+                            .overlay(
+                                Image(systemName: "gear")
+                            )
+                            .frame(width: 26, height: 26)
                         
                         VStack(alignment: .leading, spacing: 2) {
                             
@@ -109,23 +110,9 @@ struct UpdateView: View {
                             
                             if computerinfo.softwareUpdateDeclarationDeadline != nil && update.displayVersion == computerinfo.softwareUpdateDeclarationVersion {
                                 
-                                Text(NSLocalizedString("AUTOMATIC_INSTALLATION", comment: "") + ": " + "\(computerinfo.softwareUpdateDeclarationDeadline?.formatted(date: .abbreviated, time: .shortened) ?? "")")
+                                Text(NSLocalizedString("ENFORCED_ON", comment: "") + " " + "\(computerinfo.softwareUpdateDeclarationDeadline?.formatted(date: .abbreviated, time: .shortened) ?? "")")
                                     .foregroundStyle(.secondary)
                                     .font(.system(.subheadline, design: .rounded))
-                                
-                                if computerinfo.softwareUpdateDeclarationURL != nil {
-                                    Button(action: {
-                                        openURL(URL(string: computerinfo.softwareUpdateDeclarationURL ?? "")!)
-                                        
-                                        // Close popover
-                                        appDelegate.togglePopover(nil)
-                                    }) {
-                                        Text(NSLocalizedString("MORE_INFO", comment: ""))
-                                            .foregroundStyle(.blue)
-                                            .font(.system(.subheadline, design: .rounded))
-                                    }
-                                    .buttonStyle(.plain)
-                                }
                                 
                             }
                             
@@ -133,6 +120,24 @@ struct UpdateView: View {
                         
                         Spacer()
                         
+                        if computerinfo.softwareUpdateDeclarationURL != nil && update.displayVersion == computerinfo.softwareUpdateDeclarationVersion {
+                            Button(action: {
+                                openURL(URL(string: computerinfo.softwareUpdateDeclarationURL ?? "")!)
+                                
+                                // Close popover
+                                appDelegate.togglePopover(nil)
+                            }) {
+                                Text(NSLocalizedString("DETAILS", comment: ""))
+                                    .font(.system(.body, design: .rounded))
+                                    .fontWeight(.regular)
+                                    .padding(.vertical, 4)
+                                    .padding(.horizontal)
+                                    .background(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
+                                    .clipShape(Capsule())
+                            }
+                            .buttonStyle(.plain)
+                            .help(computerinfo.softwareUpdateDeclarationURL ?? "")
+                        }
                     }
                     
                 }
