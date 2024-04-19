@@ -44,7 +44,8 @@ class AppCatalogController: ObservableObject {
         var toDate = fromDate.addingTimeInterval(Double(updateInterval) * 86400)
         
         // If next update is not in the future, show within the next hour
-        if toDate < .now {
+        // If next update if within on hour, show within the next hour as we don't know exactly when the LaunchDaemon will run
+        if toDate < .now.addingTimeInterval(3600) {
             toDate = .now.addingTimeInterval(3600)
         }
         
