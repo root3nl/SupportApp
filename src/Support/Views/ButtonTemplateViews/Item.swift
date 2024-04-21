@@ -145,7 +145,8 @@ struct Item: View {
                 openLink()
             } else if linkType == "Command" {
                 runCommand()
-            } else if linkType == "DistributedNotification" {
+            // MARK: - DistributedNotification is deprecated, use PrivilegedScript instead
+            } else if linkType == "DistributedNotification" || linkType == "PrivilegedScript" {
                 Task {
                     await runPrivilegedCommand()
                 }
