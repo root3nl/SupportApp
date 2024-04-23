@@ -59,7 +59,7 @@
 "YOUR_MAC_IS_UP_TO_DATE" = "Ihr Mac ist auf dem neuesten Stand";
 "UPDATE" = "Aktualisieren";
 "APP_CATALOG" = "App Catalog";
-"APP_CATALOG_NOT_CONFIGURED" = "App Catalog is not setup correctly";
+"APP_CATALOG_NOT_CONFIGURED" = "App Catalog ist nicht korrekt eingerichtet";
 "DOCUMENTATION" = "Documentation";
 "ALL_APPS_UP_TO_DATE" = "Alle Anwendungen sind auf dem neuesten Stand";
 "UPDATE_ALL" = "Alle aktualisieren";
@@ -70,3 +70,5 @@
 "RESTART_NOW" = "Bitte jetzt neu starten";
 "RESTART" = "Neustart";
 "APPS_WILL_BE_UPDATED_AUTOMATICALLY_DESCRIPTION" = "Die Anwendungen werden automatisch aktualisiert";
+"ENFORCED_ON" = "Durchgesetzt am";
+"DETAILS" = "Einzelheiten";
