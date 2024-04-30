@@ -25,7 +25,9 @@
   * [Footer Text](#footer-text)
   * [Notification Icon](#notification-icon)
   * [Welcome Screen](#welcome-screen)
-  * [Software Update Integration](#software-update-integration)
+  * [Software Update integration](#software-update-integration)
+  * [App Catalog integration](#app-catalog-integration)
+    * [PPPC requirement](#pppc-requirement)
 - [Configuration](#configuration)
 - [Advanced configuration](#advanced-configuration)
   * [Support App Extensions](#support-app-extensions)
@@ -208,6 +210,14 @@ If an update declaration is sent using [Declarative Device Management](https://d
 
 ### App Catalog integration
 The Support App integrates with [Root3's App Catalog](https://appcatalog.cloud). The App Catalog is an automated patch management solution for third party macOS applications. It provides unique features such as a daily update schedule, updating both managed and unmanaged apps and a user facing app to quickly install new applications. As some app updates require user interaction, users may defer an update and want to update at a more convenient time. The Support App periodically checks for available app updates and allows the user to update apps whenever they prefer in an accessible way. The menu bar icon also shows a red notification badge when an update is available to inform the user, similar to macOS updates when `StatusBarIconNotifierEnabled` is set to `true`.
+
+#### PPPC requirement
+The Support App requires additional permissions to be able to perform app updates. Therefore you need to explicitely grant the `SystemPolicyAppBundles` or `SystemPolicyAllFiles` permission in a Privacy Preference Policy Control profile (PPPC):
+
+- **Allowed**: `true`
+- **Identifier**: `nl.root3.support`
+- **IdentifierType**: Bundle ID
+- **CodeRequirement**: `anchor apple generic and identifier "nl.root3.support" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "98LJ4XBGYK")`
 
 ## Configuration
 The configuration of the Support app is optimized for use with your MDM solution. The easiest way to configure the app is using a Configuration Profile so you can use whatever MDM solution you like, as long as it supports custom Configuration Profiles.
