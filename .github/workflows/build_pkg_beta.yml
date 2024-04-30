@@ -68,8 +68,9 @@ jobs:
           ls -la /Applications
 
           # Set Xcode version to latest version available
-          XCODE_VERSION=$(ls -d /Applications/Xcode*.app 2>/dev/null | sort -V | tail -n 1)
-          echo "Path to latest Xcode version: ${XCODE_VERSION}"
+          # XCODE_VERSION=$(ls -d /Applications/Xcode*.app 2>/dev/null | sort -V | tail -n 1)
+          # echo "Path to latest Xcode version: ${XCODE_VERSION}"
+          XCODE_VERSION="/Applications/Xcode_15.3.app"
 
           # Select Xcode version
           sudo xcode-select -s "${XCODE_VERSION}"
