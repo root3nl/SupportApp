@@ -12,7 +12,7 @@ import ServiceManagement
 
 struct HelperRemote {
     
-    var logger = Logger(subsystem: "nl.root3.support", category: "SupportHelper")
+    var logger = Logger(subsystem: "nl.root3.support", category: "SupportAppPriviligedHelper")
 
     // MARK: - Properties
     var isHelperInstalled: Bool { FileManager.default.fileExists(atPath: HelperConstants.helperPath) }

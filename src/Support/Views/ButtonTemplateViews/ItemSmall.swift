@@ -165,22 +165,22 @@ struct ItemSmall: View {
         appDelegate.togglePopover(nil)
     }
     
-    // MARK: - Function to run privileged command or script
+    // MARK: - Function to run privileged script
     func runPrivilegedCommand() async {
         
-        logger.log("Trying to run privileged command or script...")
+        logger.log("Trying to run privileged script...")
         
         let defaults = UserDefaults.standard
         
-        // Exit when no command or script was found
+        // Exit when no script was found
         guard let privilegedCommand = link else {
-            logger.error("Privileged command or script was not found")
+            logger.error("Privileged script was not found")
             return
         }
         
-        // Check value comes from a Configuration Profile. If not, the command or script may be maliciously set and needs to be ignored
+        // Check value comes from a Configuration Profile. If not, the script may be maliciously set and needs to be ignored
         guard defaults.objectIsForced(forKey: linkPrefKey!) == true else {
-            logger.error("Command or script \(privilegedCommand, privacy: .public) is not set by an administrator and is not trusted. Action will not be executed")
+            logger.error("Script \(privilegedCommand, privacy: .public) is not set by an administrator and is not trusted. Action will not be executed")
             return
         }
         
@@ -192,14 +192,15 @@ struct ItemSmall: View {
         do {
             try ExecutionService.executeScript(command: privilegedCommand) { exitCode in
                 
-                guard exitCode == 0 else {
-                    self.logger.error("Error while running privileged script or command. Exit code: \(exitCode, privacy: .public)")
-                    return
+                if exitCode == 0 {
+                    self.logger.debug("Privileged script ran successfully")
+                } else {
+                    self.logger.error("Error while running privileged script. Exit code: \(exitCode, privacy: .public)")
                 }
 
             }
         } catch {
-            logger.log("Failed to run privileged script or command. Error: \(error.localizedDescription)")
+            logger.log("Failed to run privileged script. Error: \(error.localizedDescription)")
         }
     }
 }

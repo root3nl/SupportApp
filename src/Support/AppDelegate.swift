@@ -622,9 +622,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         do {
             try ExecutionService.executeScript(command: privilegedCommand) { exitCode in
                 
-                guard exitCode == 0 else {
-                    self.logger.error("Error while running privileged script or command. Exit code: \(exitCode, privacy: .public)")
-                    return
+                if exitCode == 0 {
+                    self.logger.debug("Privileged script ran successfully")
+                } else {
+                    self.logger.error("Error while running privileged script. Exit code: \(exitCode, privacy: .public)")
                 }
 
             }

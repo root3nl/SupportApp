@@ -9,7 +9,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>SupportHelper</string>
+	<string>SupportAppPriviligedHelper</string>
 	<key>CFBundleVersion</key>
 	<string>28</string>
 	<key>SMAuthorizedClients</key>
