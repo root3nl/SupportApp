@@ -82,7 +82,7 @@ struct ItemSmall: View {
         .onTapGesture() {
             // Don't do anything when no link is specified
             guard link != "" else {
-                logger.debug("No link specified for \(title), button disabled...")
+                logger.debug("No link specified for \(title, privacy: .public), button disabled...")
                 return
             }
             
@@ -193,7 +193,7 @@ struct ItemSmall: View {
             try ExecutionService.executeScript(command: privilegedCommand) { exitCode in
                 
                 if exitCode == 0 {
-                    self.logger.debug("Privileged script ran successfully")
+                    self.logger.debug("Privileged script ran successfully with exit code 0")
                 } else {
                     self.logger.error("Error while running privileged script. Exit code: \(exitCode, privacy: .public)")
                 }

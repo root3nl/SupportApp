@@ -38,12 +38,12 @@ class FileUtilities {
         let requiredPermissions: NSNumber = 0o755
         
         let (ownerID, mode) = getScriptPermissions(pathname: pathname)
-        let errorString = "Permissions for \(pathname) are incorrect. Should be owned by root and with mode 755"
         
         if ownerID == 0 && mode == requiredPermissions {
+            logger.debug("Permissions for \(pathname, privacy: .public) are correct")
             return true
         } else {
-            logger.error("\(errorString, privacy: .public)")
+            logger.error("Permissions for \(pathname, privacy: .public) are incorrect. Should be owned by root and with mode 755")
         }
         return false
     }

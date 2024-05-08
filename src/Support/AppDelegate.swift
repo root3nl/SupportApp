@@ -603,7 +603,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         let defaults = UserDefaults.standard
         
         // Exit when no command or script was found
-        guard let privilegedCommand = defaults.string(forKey: "OnAppearAction") else {
+        guard let privilegedScript = defaults.string(forKey: "OnAppearAction") else {
             logger.error("OnAppearAction was not found")
             return
         }
@@ -615,15 +615,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         }
         
         // Verify permissions
-        guard FileUtilities().verifyPermissions(pathname: privilegedCommand) else {
+        guard FileUtilities().verifyPermissions(pathname: privilegedScript) else {
             return
         }
         
         do {
-            try ExecutionService.executeScript(command: privilegedCommand) { exitCode in
+            try ExecutionService.executeScript(command: privilegedScript) { exitCode in
                 
                 if exitCode == 0 {
-                    self.logger.debug("Privileged script ran successfully")
+                    self.logger.debug("Privileged script ran successfully with exit code 0")
                 } else {
                     self.logger.error("Error while running privileged script. Exit code: \(exitCode, privacy: .public)")
                 }

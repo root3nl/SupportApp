@@ -91,7 +91,7 @@ struct ExecutionService {
         
         let process = Process()
         process.launchPath = "/bin/zsh"
-        process.arguments = ["-c", command]
+        process.arguments = ["-c", "'\(command)'"]
 
         let outputPipe = Pipe()
         process.standardOutput = outputPipe
