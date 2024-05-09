@@ -452,8 +452,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         case "ExtensionAlertB":
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.preferences.extensionAlertB, privacy: .public)")
         case "Updates":
-            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.appCatalogController.appUpdates, privacy: .public)")
-            appCatalogController.getAppUpdates()
+            if appCatalogController.ignoreUpdateChange {
+                appCatalogController.ignoreUpdateChange.toggle()
+            } else {
+                logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.appCatalogController.appUpdates, privacy: .public)")
+                appCatalogController.getAppUpdates()
+            }
         default:
             logger.debug("Some other change detected...")
         }

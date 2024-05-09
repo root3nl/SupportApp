@@ -38,6 +38,9 @@ class AppCatalogController: ObservableObject {
     // Array containing app details
     @Published var updateDetails: [InstalledAppItem] = []
     
+    // Boolean to ignore a value change for "Updates" just once to avoid KVO in AppDelegate to trigger twice
+    var ignoreUpdateChange: Bool = false
+    
     // Calculate when next update schedule will run
     var nextUpdateDate: String {
         let fromDate = Date(timeIntervalSince1970: Double(lastUpdated))
@@ -62,9 +65,7 @@ class AppCatalogController: ObservableObject {
         // Check available app updates
         logger.log("Checking app updates...")
         
-        let command = """
-            /usr/local/bin/catalog --check-updates
-            """
+        let command = "'/usr/local/bin/catalog --check-updates'"
         
         // Move to background thread
         DispatchQueue.global().async {

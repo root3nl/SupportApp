@@ -278,7 +278,7 @@ struct AppUpdatesView: View {
     func updateApp(bundleID: String) async {
         
         // Command to update app
-        let command = "/usr/local/bin/catalog --install \(bundleID) --update-action --support-app"
+        let command = "'/usr/local/bin/catalog --install \(bundleID) --update-action --support-app'"
         
         // Add bundle ID to apps currently updating
         appCatalogController.appsUpdating.append(bundleID)
@@ -311,7 +311,8 @@ struct AppUpdatesView: View {
                             // Check for updates again when apps currently updating is empty
                             if appCatalogController.appsUpdating.isEmpty {
                                 // Trigger check for app updates
-                                appCatalogController.appUpdates = 0
+                                appCatalogController.ignoreUpdateChange = true
+                                appCatalogController.getAppUpdates()
                             }
                         }
                     }
@@ -331,7 +332,8 @@ struct AppUpdatesView: View {
             }
             
             // Trigger check for app updates
-            appCatalogController.appUpdates = 0
+            appCatalogController.ignoreUpdateChange = true
+            appCatalogController.getAppUpdates()
         }
         
     }
