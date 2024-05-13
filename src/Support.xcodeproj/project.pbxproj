@@ -79,6 +79,9 @@
 		49B4952D2642E96A00A6AE64 /* DarkModeBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B4952C2642E96A00A6AE64 /* DarkModeBorder.swift */; };
 		49BF03FC2BC0BE3A00AB7152 /* FileUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BF03FB2BC0BE3A00AB7152 /* FileUtilities.swift */; };
 		49CB64452BA3BC58009E6026 /* UptimeAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CB64442BA3BC58009E6026 /* UptimeAlertView.swift */; };
+		49D81F5C2BF2BE8B00232100 /* RemoveEscapingCharacters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D81F5B2BF2BE8B00232100 /* RemoveEscapingCharacters.swift */; };
+		49D81F5D2BF2BE8B00232100 /* RemoveEscapingCharacters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D81F5B2BF2BE8B00232100 /* RemoveEscapingCharacters.swift */; };
+		49D81F5E2BF2BE8B00232100 /* RemoveEscapingCharacters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D81F5B2BF2BE8B00232100 /* RemoveEscapingCharacters.swift */; };
 		49F6744E273F2DBC00C47403 /* ExtensionASubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F6744D273F2DBC00C47403 /* ExtensionASubview.swift */; };
 		B03F2E5C28734ABD000478BC /* nl.root3.support.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = B03F2E53287340BD000478BC /* nl.root3.support.plist */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -222,6 +225,7 @@
 		49B4952C2642E96A00A6AE64 /* DarkModeBorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeBorder.swift; sourceTree = "<group>"; };
 		49BF03FB2BC0BE3A00AB7152 /* FileUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileUtilities.swift; sourceTree = "<group>"; };
 		49CB64442BA3BC58009E6026 /* UptimeAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UptimeAlertView.swift; sourceTree = "<group>"; };
+		49D81F5B2BF2BE8B00232100 /* RemoveEscapingCharacters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveEscapingCharacters.swift; sourceTree = "<group>"; };
 		49F6744D273F2DBC00C47403 /* ExtensionASubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionASubview.swift; sourceTree = "<group>"; };
 		A0532BCB2733F35A005CACF2 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B03F2E53287340BD000478BC /* nl.root3.support.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = nl.root3.support.plist; sourceTree = "<group>"; };
@@ -395,7 +399,7 @@
 				49BF03FB2BC0BE3A00AB7152 /* FileUtilities.swift */,
 				49857E9924D4B58B009B6FBA /* ComputerInfo.swift */,
 				0AC50A7424FFE6E000AE62D0 /* EventMonitor.swift */,
-				490B145D258A55B90048D8AF /* Extensions.swift */,
+				49D81F5A2BF2BE7300232100 /* Extensions */,
 				496C2FE0271477B800D51EE1 /* NotificationNames.swift */,
 				49857E9724D4B543009B6FBA /* Preferences.swift */,
 				496FE4D02651485E007746ED /* UserInfo.swift */,
@@ -441,6 +445,15 @@
 				49B4952C2642E96A00A6AE64 /* DarkModeBorder.swift */,
 			);
 			path = ViewModifiers;
+			sourceTree = "<group>";
+		};
+		49D81F5A2BF2BE7300232100 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				490B145D258A55B90048D8AF /* Extensions.swift */,
+				49D81F5B2BF2BE8B00232100 /* RemoveEscapingCharacters.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		49F779CD27173067009BF0B9 /* ButtonTemplateViews */ = {
@@ -596,6 +609,7 @@
 				493DCCA72B082EAD00FA2480 /* RemoteApplicationProtocol.swift in Sources */,
 				493DCCA32B082E7C00FA2480 /* HelperExecutionService.swift in Sources */,
 				493DCCA12B082E4100FA2480 /* SupportHelperProtocol.swift in Sources */,
+				49D81F5D2BF2BE8B00232100 /* RemoveEscapingCharacters.swift in Sources */,
 				493DCCA92B082EF200FA2480 /* ConnectionIdentityService.swift in Sources */,
 				493DCC9D2B082DAE00FA2480 /* HelperConstants.swift in Sources */,
 				493DCC9F2B082DF600FA2480 /* SupportHelper.swift in Sources */,
@@ -611,6 +625,7 @@
 				4934C79B2B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift in Sources */,
 				4974BC102B174A5700A3F38A /* ExecutionService.swift in Sources */,
 				4947C1552B154A2F00276EFD /* main.swift in Sources */,
+				49D81F5E2BF2BE8B00232100 /* RemoveEscapingCharacters.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -649,6 +664,7 @@
 				49B4952D2642E96A00A6AE64 /* DarkModeBorder.swift in Sources */,
 				493DCCB52B08300300FA2480 /* HelperConstants.swift in Sources */,
 				49152919259CD32200056B5F /* ItemSmall.swift in Sources */,
+				49D81F5C2BF2BE8B00232100 /* RemoveEscapingCharacters.swift in Sources */,
 				493FBB8D27406B5D002A79F9 /* ExtensionBSubview.swift in Sources */,
 				496FE4D326514C59007746ED /* PasswordSubview.swift in Sources */,
 				49152910259CD09400056B5F /* InfoItem.swift in Sources */,

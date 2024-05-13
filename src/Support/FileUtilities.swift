@@ -19,7 +19,7 @@ class FileUtilities {
         var ownerID: Int = 0
         var mode: NSNumber = 0
         do {
-            fileAttributes = try FileManager.default.attributesOfItem(atPath: pathname)
+            fileAttributes = try FileManager.default.attributesOfItem(atPath: pathname.removeEscapingCharacters())
             if let ownerProperty = fileAttributes[.ownerAccountID] as? Int {
                 ownerID = ownerProperty
             }
