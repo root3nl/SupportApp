@@ -1,7 +1,6 @@
 name: Build and Notarize Support App
-on:
-  pull_request:
-    types: [opened, reopened]
+
+on: [workflow_dispatch]
 
 jobs:
   build_with_signing:

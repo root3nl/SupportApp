@@ -1,4 +1,5 @@
 name: Build and Notarize Support App Beta
+
 on:
   push:
     branches:
