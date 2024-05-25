@@ -1,8 +1,7 @@
-name: Build and Notarize Support App Beta
+name: Build and Notarize Support App
 on:
-  push:
-    branches:
-      - development
+  pull_request:
+    types: [opened, reopened]
 
 jobs:
   build_with_signing:
@@ -56,10 +55,6 @@ jobs:
           p12-file-base64: ${{ secrets.DEVELOPER_ID_INSTALLER_BASE64 }}
           p12-password: ${{ secrets.DEVELOPER_ID_INSTALLER_PASSWORD }}
 
-      - name: Enable beta watermark
-        run: |
-          sed -i '' "s/let betaRelease: Bool = false/let betaRelease: Bool = true/g" ./src/Support/Preferences.swift
-
       - name: Build macOS app
         run: |
           ARCHIVE_PATH="./build/Support.xcarchive"
@@ -87,7 +82,7 @@ jobs:
       - name: Upload package
         uses: actions/upload-artifact@v4
         with:
-          name: Support ${{env.APP_VERSION}} Beta (${{ env.APP_BUILD_NUMBER }})
+          name: Support ${{env.APP_VERSION}})
           path: build/
       
       
