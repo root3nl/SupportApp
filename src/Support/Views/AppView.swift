@@ -79,6 +79,7 @@ struct AppView: View {
                 if preferences.footerText != "" {
                     HStack {
                         
+                        
                         // Supports for markdown through a variable:
                         // https://blog.eidinger.info/3-surprises-when-using-markdown-in-swiftui
                         Text(.init(preferences.footerText.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))
