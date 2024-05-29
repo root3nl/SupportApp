@@ -4,7 +4,7 @@
 ![Github](https://img.shields.io/badge/macOS-12%2B-green)
 [![Github](https://img.shields.io/badge/Join-TestFlight-blue)](https://testflight.apple.com/join/asmgJsAM)
 
-<img src="/Screenshots/generic_version_2.5.png" width="800">
+<img src="/Screenshots/generic_version_2.6.png" width="800">
 
 <img src="/Screenshots/generic_version_2.4.png" width="800">
 
@@ -28,6 +28,7 @@
   * [Software Update integration](#software-update-integration)
   * [App Catalog integration](#app-catalog-integration)
     * [PPPC requirement](#pppc-requirement)
+  * [Last Reboot](#last-reboot)
 - [Configuration](#configuration)
 - [Advanced configuration](#advanced-configuration)
   * [Support App Extensions](#support-app-extensions)
@@ -171,10 +172,10 @@ The rows with all configurable items enabled are shown in the screenshot below:
 <img src="/Screenshots/configurable_buttons_2.4.png" width="450">
 
 ### Footer Text
-A footer text can optionally be used to put some additional text at the bottom of the Support App. This supports both text and Emoji. On macOS Monterey and higher, it supports Markdown. Use the preference key `FooterText` to configure the footer.
+A footer text can optionally be used to put some additional text at the bottom of the Support App. This supports both text and Emoji. On macOS Monterey and higher, it supports Markdown. Also a great way to put additional information using [Built-in local variables](https://github.com/root3nl/SupportApp?tab=readme-ov-file#built-in-local-variables) Use the preference key `FooterText` to configure the footer.
 
 ### Notification Icon
-The icon shown in alerts and the about window can be modified by using the preference key `NotificationIcon`.
+The icon shown the about window can be modified by using the preference key `NotificationIcon`.
 
 See an example below:
 
@@ -192,8 +193,6 @@ See an example below:
 ### Welcome Screen
 An informational window can optionally be shown when the Support App is opened for the first time. It explains the key features to the user before all data is shown. This can be set using the preference key `ShowWelcomeScreen`.
 
-See an example below:
-
 <img src="/Screenshots/welcome_screen.png" width="500">
 
 ### Software Update integration
@@ -203,13 +202,15 @@ It allows the user to open System Settings and install the update or upgrade. If
 
 If an update declaration is sent using [Declarative Device Management](https://developer.apple.com/documentation/devicemanagement/softwareupdateenforcementspecific) (macOS 14 and higher), the available update will show the enforcement date and time for the update. If present in the declaration, the `DetailsURL` will also show a button "Details" and opens the `DetailsURL` link. 
 
-<img src="/Screenshots/software_update_integration.png" width="500">
+<img src="/Screenshots/software_update_integration.png" width="600">
 
 > **Note**
 > When a deferral is set using the preference key `forceDelayedMajorSoftwareUpdates` in the domain `com.apple.applicationaccess`, major macOS updates will automatically be hidden indefinitely until the key is removed or set to `false`. The amount of days configured for the deferral are ignored. Due to limitations and complexity, it is not supported to automatically show the macOS major update once the deferral days are passed. This behaviour replaces the `HideMajorUpdates` key, previously available in version 2.5 and earlier. More info here: https://developer.apple.com/documentation/devicemanagement/restrictions
 
 ### App Catalog integration
 The Support App integrates with [Root3's App Catalog](https://appcatalog.cloud). The App Catalog is an automated patch management solution for third party macOS applications. It provides unique features such as a daily update schedule, updating both managed and unmanaged apps and a user facing app to quickly install new applications. As some app updates require user interaction, users may defer an update and want to update at a more convenient time. The Support App periodically checks for available app updates and allows the user to update apps whenever they prefer in an accessible way. The menu bar icon also shows a red notification badge when an update is available to inform the user, similar to macOS updates when `StatusBarIconNotifierEnabled` is set to `true`.
+
+<img src="/Screenshots/app_catalog_integration.png" width="600">
 
 #### PPPC requirement
 The Support App requires additional permissions to be able to perform app updates. Therefore you need to explicitely grant the `SystemPolicyAppBundles` or `SystemPolicyAllFiles` permission in a Privacy Preference Policy Control profile (PPPC):
@@ -218,6 +219,11 @@ The Support App requires additional permissions to be able to perform app update
 - **Identifier**: `nl.root3.support`
 - **IdentifierType**: Bundle ID
 - **CodeRequirement**: `anchor apple generic and identifier "nl.root3.support" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "98LJ4XBGYK")`
+
+### Last Reboot
+If `UptimeDaysLimit` is set and the user click on the Last Reboot Info Item, a view is shown where the administrators reboot recommendation is shown. It also provides a button to quickly perform a graceful restart without leaving the Support App.
+
+<img src="/Screenshots/last_reboot.png" width="600">
 
 ## Configuration
 The configuration of the Support app is optimized for use with your MDM solution. The easiest way to configure the app is using a Configuration Profile so you can use whatever MDM solution you like, as long as it supports custom Configuration Profiles.
@@ -391,6 +397,9 @@ defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bo
 ### Privileged scripts
 To allow scripts to be executed with elevated privileges, the Support App has a built-in Privileged Helper Tool. This upgrade over the deprecated SupportHelper makes sure communication is transmitted more securely between the main app the the built-in Privileged Helper Tools with additional checks such as code requirement and scripts must have proper permissions and owner. The script must me owned by `root` and have 755 permissions. Additionally, only paths to a script set in a Configuration Profile will be executed. Values set with `defaults write` are not supported.
 
+> **Warning**
+> Because the script permissions are checked before execution, commands are not supported anymore as of version 2.6.
+
 Below an example to force a MDM check-in using a custom script:
 
 <img src="/Screenshots/generic_version_2.4_beta.gif" width="800">
@@ -509,6 +518,17 @@ log show --last 24h --debug --info --predicate 'subsystem contains "nl.root3.sup
 * When Jamf Connect is used as password type, clicking "Change Now" does not allow the user to open the Jamf Connect change password window, but instead triggers an alert. Jamf Connect does not support a URL Scheme for opening the Change Password window. Please upvote this feature request: https://ideas.jamf.com/ideas/JN-I-16087
 
 ## Changelog
+
+**Version 2.6**
+* **Scripts with elevated privileged**: There is now built-in support for executing scripts with elevated privileges. A new Privileged Helper Tool is now part of the Support App and no longer requires the separate SupportHelper package. A Privileged Helper Tool is integrated, more secure and easier to configure.
+  * The Privileged Helper Tool is automatically installed and enabled when the PKG installer is used
+  * The key value DistributedNotification for keys like FirstRowTypeLeft is now deprecated and replaced with PrivilegedScript
+* **Root3 App Catalog integration**: A new Info Item App Catalog is added to integrate with Root3's App Catalog solution for automated patch management for third party macOS applications. It provides unique features such as a daily update schedule, updating both managed and unmanaged apps and a user facing app to quickly install new applications. As some app updates require user interaction, users may defer an update and want to update at a more convenient time. The Support App periodically checks for available app updates and allows the user to update apps whenever they prefer in an accessible way. To enable this integration, set the key AppCatalog for one of the Info Items and it requires a valid subscription or trial.
+* **DDM update information**: If an update declaration is sent using Declarative Device Management (macOS 14 and higher), the available update will show the enforcement date and time for the update in the macOS version Info Item. If present in the declaration, the DetailsURL will also show a button "Details" and opens the DetailsURL link.
+* **Restart from app**: The Last Reboot Info Item now allows to immediately perform a graceful restart as requested in the text. The user no longer needs to leave the app and restart via the Apple-logo in the menu bar.
+* **New standardized UI**: Certain Info Items now have a standard UI such as for macOS updates, uptime and the new App Catalog integration. The previously used popover is replaced with a window filling UI and back button
+* macOS 12 is now the minimum supported macOS version
+* Several bug fixes and improvements
 
 **Version 2.4**
 * Support App Extensions: introducing a new way to make your own custom info items and provide relevant information to your end users and create actions. Extensions can show anything you want and can be populated using scripts or commands, for example using your MDM solution. There is support for two Extensions to use in the info item rows.
