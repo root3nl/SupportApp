@@ -11,6 +11,7 @@ on:
       - 'LaunchAgent Sample/**'
       - 'Screenshots/**'
       - 'SupportHelper/**'
+      - 'README.md'
 
 jobs:
   build_with_signing:
