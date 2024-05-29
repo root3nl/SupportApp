@@ -4,6 +4,13 @@ on:
   push:
     branches:
       - development
+    paths-ignore:
+      - 'Configuration Profile Samples/**'
+      - 'Extension Sample Scripts/**'
+      - 'Jamf Pro Custom Schema/**'
+      - 'LaunchAgent Sample/**'
+      - 'Screenshots/**'
+      - 'SupportHelper/**'
 
 jobs:
   build_with_signing:
