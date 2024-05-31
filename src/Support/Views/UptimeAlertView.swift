@@ -152,6 +152,6 @@ struct UptimeAlertView: View {
     }
 }
 
-#Preview {
-    UptimeAlertView()
-}
+//#Preview {
+//    UptimeAlertView()
+//}

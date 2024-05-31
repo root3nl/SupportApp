@@ -72,6 +72,6 @@ struct AppCatalogSubview: View {
     
 }
 
-#Preview {
-    AppCatalogSubview()
-}
+//#Preview {
+//    AppCatalogSubview()
+//}

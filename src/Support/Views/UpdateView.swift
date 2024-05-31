@@ -180,8 +180,10 @@ struct UpdateView: View {
         .padding(.horizontal)
         .unredacted()
         .task {
-            if !computerinfo.recommendedUpdates.isEmpty {
-                self.computerinfo.getUpdateDeclaration()
+            if #available(macOS 14, *) {
+                if !computerinfo.recommendedUpdates.isEmpty {
+                    self.computerinfo.getUpdateDeclaration()
+                }
             }
         }
     }
@@ -213,9 +215,9 @@ struct UpdateViewLegacy: View {
     
     // Get preferences or default values
     @StateObject var preferences = Preferences()
-      
-    // State of UpdateView popover
-    @State private var showPopover: Bool = false
+    
+    // Dark Mode detection
+    @Environment(\.colorScheme) var colorScheme
     
     // Update counter
     var updateCounter: Int
@@ -235,20 +237,17 @@ struct UpdateViewLegacy: View {
                     Spacer()
                     
                     Button(action: {
-                        showPopover = false
                         openSoftwareUpdate()
                     }) {
-                        if #available(macOS 13, *) {
-                            Text(NSLocalizedString("SYSTEM_SETTINGS", comment: ""))
-                        } else {
-                            Text(NSLocalizedString("SYSTEM_PREFERENCES", comment: ""))
-                        }
+                        Text(NSLocalizedString("SYSTEM_PREFERENCES", comment: ""))
+                            .font(.system(.body, design: .rounded))
+                            .fontWeight(.regular)
+                            .padding(.vertical, 4)
+                            .padding(.horizontal)
+                            .background(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
+                            .clipShape(Capsule())
                     }
-                    .modify {
-                        if #available(macOS 12, *) {
-                            $0.buttonStyle(.borderedProminent)
-                        }
-                    }
+                    .buttonStyle(.plain)
                 }
                 
                 Divider()
@@ -297,15 +296,8 @@ struct UpdateViewLegacy: View {
                         Image(systemName: "checkmark.circle.fill")
                             .resizable()
                             .frame(width: 50, height: 50)
-                            .modify {
-                                if #available(macOS 12, *) {
-                                    $0.symbolRenderingMode(.palette)
-                                        .foregroundStyle(.white, color)
-                                } else {
-                                    $0.foregroundColor(color)
-
-                                }
-                            }
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(.white, color)
                         
                     }
                     

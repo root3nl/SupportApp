@@ -72,9 +72,9 @@ struct UptimeSubview: View {
                         }
                     }
                 }
-                // Legacy alert for macOS 12
-                .alert(isPresented: $uptimeAlert) {
-                    Alert(title: Text(NSLocalizedString("RESTART_REGULARLY", comment: "")), message: Text(alertText), dismissButton: .default(Text("OK")))
+                // Legacy popover for macOS 12
+                .popover(isPresented: $uptimeAlert, arrowEdge: .leading) {
+                    PopoverAlertView(uptimeAlert: $uptimeAlert, title: NSLocalizedString("RESTART_REGULARLY", comment: ""), message: alertText)
                 }
         } else {
             InfoItem(title: NSLocalizedString("Last Reboot", comment: ""), subtitle: "\(computerinfo.uptimeRounded) \(computerinfo.uptimeText) " + NSLocalizedString("ago", comment: ""), image: "clock.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: false, hoverEffectEnable: false)
