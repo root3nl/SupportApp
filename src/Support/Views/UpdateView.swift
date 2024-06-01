@@ -180,8 +180,10 @@ struct UpdateView: View {
         .padding(.horizontal)
         .unredacted()
         .task {
-            if !computerinfo.recommendedUpdates.isEmpty {
-                self.computerinfo.getUpdateDeclaration()
+            if #available(macOS 14, *) {
+                if !computerinfo.recommendedUpdates.isEmpty {
+                    self.computerinfo.getUpdateDeclaration()
+                }
             }
         }
     }
@@ -197,6 +199,132 @@ struct UpdateView: View {
         
         // Close popover
         appDelegate.togglePopover(nil)
+
+    }
+}
+
+struct UpdateViewLegacy: View {
+    
+    let logger = Logger(subsystem: "nl.root3.support", category: "SoftwareUpdate")
+    
+    // Get  computer info from functions in class
+    @EnvironmentObject var computerinfo: ComputerInfo
+    
+    // Get user info from functions in class
+    @EnvironmentObject var userinfo: UserInfo
+    
+    // Get preferences or default values
+    @StateObject var preferences = Preferences()
+    
+    // Dark Mode detection
+    @Environment(\.colorScheme) var colorScheme
+    
+    // Update counter
+    var updateCounter: Int
+    var color: Color
+            
+    var body: some View {
+        
+        VStack(alignment: .leading, spacing: 8) {
+            
+            if computerinfo.recommendedUpdates.count > 0 {
+                
+                HStack {
+                    
+                    Text(updateCounter > 0 ? NSLocalizedString("UPDATES_AVAILABLE", comment: "") : NSLocalizedString("NO_UPDATES_AVAILABLE", comment: ""))
+                        .font(.system(.headline, design: .rounded))
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        openSoftwareUpdate()
+                    }) {
+                        Text(NSLocalizedString("SYSTEM_PREFERENCES", comment: ""))
+                            .font(.system(.body, design: .rounded))
+                            .fontWeight(.regular)
+                            .padding(.vertical, 4)
+                            .padding(.horizontal)
+                            .background(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
+                            .clipShape(Capsule())
+                    }
+                    .buttonStyle(.plain)
+                }
+                
+                Divider()
+                    .padding(2)
+                
+                ForEach(computerinfo.recommendedUpdates, id: \.self) { update in
+                    
+                    Text("•\t\(update.displayName)")
+                        .font(.system(.body, design: .rounded))
+                    
+                }
+                
+                if preferences.updateText != "" {
+                    
+                    Divider()
+                        .padding(2)
+                    
+                    HStack(alignment: .top) {
+                        
+                        Image(systemName: "info.circle.fill")
+                            .font(.headline)
+                            .imageScale(.large)
+                            .foregroundColor(color)
+                        
+                        // Supports for markdown through a variable:
+                        // https://blog.eidinger.info/3-surprises-when-using-markdown-in-swiftui
+                        Text(.init(preferences.updateText.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))
+                            .font(.system(.body, design: .rounded))
+                        
+                        Spacer()
+                    }
+                }
+                
+            } else {
+                
+                HStack {
+                    
+                    Spacer()
+                    
+                    VStack {
+                        
+                        Text(NSLocalizedString("YOUR_MAC_IS_UP_TO_DATE", comment: ""))
+                            .font(.system(.title2, design: .rounded))
+                            .fontWeight(.medium)
+                        
+                        Image(systemName: "checkmark.circle.fill")
+                            .resizable()
+                            .frame(width: 50, height: 50)
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(.white, color)
+                        
+                    }
+                    
+                    Spacer()
+                    
+                }
+                
+            }
+        }
+        // Set frame to 250 to allow multiline text
+        .frame(width: 300)
+        .fixedSize()
+        .padding()
+        .unredacted()
+    }
+    
+    // Open URL
+    func openSoftwareUpdate() {
+        
+        guard let url = URL(string: "x-apple.systempreferences:com.apple.preferences.softwareupdate") else {
+            return
+        }
+
+        NSWorkspace.shared.open(url)
+        
+        // Close the popover
+        NSApp.deactivate()
 
     }
 }

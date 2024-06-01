@@ -24,6 +24,9 @@ struct AppCatalogSubview: View {
     // Dark Mode detection
     @Environment(\.colorScheme) var colorScheme
     
+    // Boolean to show AppUpdatesView as popover
+    @State var showAppCatalogPopover: Bool = false
+    
     // Set the custom color for all symbols depending on Light or Dark Mode.
     var customColor: String {
         if colorScheme == .light && defaults.string(forKey: "CustomColor") != nil {
@@ -50,13 +53,25 @@ struct AppCatalogSubview: View {
     var body: some View {
         
         InfoItem(title: NSLocalizedString("APPS", comment: ""), subtitle: updatesString, image: "arrow.down.app.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: appCatalogController.appUpdates, notificationBadgeBool: appCatalogController.catalogInstalled() ? false : true, loading: appCatalogController.appsUpdating.isEmpty ? false : true, hoverEffectEnable: true)
-            .onTapGesture {
-                self.appCatalogController.showAppUpdates.toggle()
+            .modify {
+                if #available(macOS 13, *) {
+                    $0.onTapGesture {
+                        self.appCatalogController.showAppUpdates.toggle()
+                    }
+                } else {
+                    $0.onTapGesture {
+                        showAppCatalogPopover.toggle()
+                    }
+                }
+            }
+            // Legacy popover for macOS 12
+            .popover(isPresented: $showAppCatalogPopover, arrowEdge: .leading) {
+                AppUpdatesView()
             }
     }
     
 }
 
-#Preview {
-    AppCatalogSubview()
-}
+//#Preview {
+//    AppCatalogSubview()
+//}

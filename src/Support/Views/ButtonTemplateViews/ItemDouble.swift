@@ -106,20 +106,10 @@ struct ItemDouble: View {
         // Apply gray and black border in Dark Mode to better view the buttons like Control Center
         .modifier(DarkModeBorder())
         .shadow(color: Color.black.opacity(0.2), radius: 4, y: 2)
-        .modify {
-            if #available(macOS 13, *) {
-                // Show Popover within NSPopover on macOS 13 or later because behaviour with standard alerts is changed when main popover is marked as transient, causing the NSPopover to lose focus and closes both the NSPopover and Alert
-                $0.popover(isPresented: $showingAlert, arrowEdge: .leading) {
-                    PopoverAlertView(uptimeAlert: $showingAlert, title: alertTitle, message: alertMessage)
-                }
-                .interactiveDismissDisabled(true)
-            } else {
-                $0.alert(isPresented: $showingAlert) {
-                    // FIXME: - Adjust when Jamf Connect Password Change can be triggered
-                    // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
-                    Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")))
-                }
-            }
+        // FIXME: - Adjust when Jamf Connect Password Change can be triggered
+        // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
+        .popover(isPresented: $showingAlert, arrowEdge: .leading) {
+            PopoverAlertView(uptimeAlert: $showingAlert, title: alertTitle, message: alertMessage)
         }
         .onHover() {
             hover in self.hoverView = hover
