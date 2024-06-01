@@ -332,7 +332,8 @@ Configuration of the top four items with diagnostic information.
 
 ### Support App Extensions
 
-Support App Extensions enable administrators to create custom info items and populate those with output from scripts or commands. You can use your MDM solution to run scripts or commands to populate the Support App Extensions. The Support App can also run scripts with elevated privileges everytime the Support App popover appears to make sure data is up to date. Please read [Privileged scripts (SupportHelper)](#privileged-commands-or-scripts-supporthelper) down below for more info.
+Support App Extensions enable administrators to create custom info items and populate those with output from scripts or commands. You can use your MDM solution to run scripts or commands to populate the Support App Extensions. The Support App can also run scripts with elevated privileges everytime the Support App popover appears to make sure data is up to date. Extensions show a placeholder by default is no value is set. Once 
+Please read [Privileged scripts](#privileged-scripts) down below for more info.
 
 Below are the preference keys to enable Support App Extensions:
 | Preference key | Type | Default value | Description | Example |
@@ -341,10 +342,12 @@ Below are the preference keys to enable Support App Extensions:
 | ExtensionSymbolA | String | - | The SF Symbol shown in the extension. | "clock.badge.checkmark.fill",  |
 | ExtensionTypeA | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **PrivilegedScript** (Privileged script)|
 | ExtensionLinkA | String | - | The Bundle Identifier of the App, URL or command to open. | `defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bool true; /usr/local/bin/jamf policy; `[`/usr/local/bin/jamf_last_check-in_time.zsh`](https://github.com/root3nl/SupportApp/blob/master/Extension%20Sample%20Scripts/jamf_last_check-in_time.zsh) or any other action you prefer by clicking on the Extension |
+| ExtensionValueA | String | `KeyPlaceholder` | The output of the Extension set by script or MDM. If nothing is set, it is shown as placeholder UI element | Anything you want to show here |
 | ExtensionTitleB | String | - | The title shown in the extension. | "Account Privileges" |
 | ExtensionSymbolB | String | - | The SF Symbol shown in the extension. | "wallet.pass.fill" |
 | ExtensionTypeB | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **PrivilegedScript** (Privileged script)|
 | ExtensionLinkB | String | - | The Bundle Identifier of the App, URL or command to open. | [`/usr/local/bin/sap_privileges_change_permissions.zsh`](https://github.com/root3nl/SupportApp/blob/master/Extension%20Sample%20Scripts/sap_privileges_change_permissions.zsh) or any other action you prefer by clicking on the Extension |
+| ExtensionValueB | String | `KeyPlaceholder` | The output of the Extension set by script or MDM. If nothing is set, it is shown as placeholder UI element | Anything you want to show here |
 | OnAppearAction | String | - | Path to script script or command to be executed when the Support App is opened by clicking on the menu bar item. The SupportHelper is required for this feature. | `/usr/local/bin/runs_when_support_appears.zsh` such as [`/usr/local/bin/user_permissions.zsh`](https://github.com/root3nl/SupportApp/blob/master/Extension%20Sample%20Scripts/user_permissions.zsh) or [`/usr/local/bin/jamf_last_check-in_time.zsh`](https://github.com/root3nl/SupportApp/blob/master/Extension%20Sample%20Scripts/jamf_last_check-in_time.zsh) or [`/usr/local/bin/mscp_compliance_status.sh`](https://github.com/root3nl/SupportApp/blob/master/Extension%20Sample%20Scripts/mscp_compliance_status.sh) |
 
 > **Warning**
@@ -501,16 +504,16 @@ A sample Configuration Profile you can edit to your preferences is provided [**h
 A sample Configuration Profile is provided (both signed and unsigned) for macOS 13 and higher to avoid users from disabling the LaunchAgent in System Settings > General > Login Items. The profile uses the Root3 Team ID to only allow signed software from Root3. [**Samples**](https://github.com/root3nl/SupportApp/blob/master/Configuration%20Profile%20Samples/Background%20Item%20Management)
 
 ## Logging
-Logs can be viewed from Console or Terminal by filtering the subsystems `nl.root3.support` (Support App) and `nl.root3.support.helper` (SupportHelper).
+Logs can be viewed from Console or Terminal by filtering the subsystems `nl.root3.support` (Support App), `nl.root3.support.helper` (Privileged Helper Tool) and `nl.root3.catalog` (App Catalog).
 
 An example to stream current logs in Terminal for troubleshooting:
 ```
-log stream --debug --info --predicate 'subsystem contains "nl.root3.support"'
+log stream --debug --info --predicate 'subsystem CONTAINS "nl.root3.support"'
 ```
 
 Or get logs from the last hour:
 ```
-log show --last 24h --debug --info --predicate 'subsystem contains "nl.root3.support"'
+log show --last 24h --debug --info --predicate 'subsystem CONTAINS "nl.root3.support"'
 ```
 
 ## Known issues
@@ -520,13 +523,14 @@ log show --last 24h --debug --info --predicate 'subsystem contains "nl.root3.sup
 ## Changelog
 
 **Version 2.6**
-* **Scripts with elevated privileged**: There is now built-in support for executing scripts with elevated privileges. A new Privileged Helper Tool is now part of the Support App and no longer requires the separate SupportHelper package. A Privileged Helper Tool is integrated, more secure and easier to configure.
+* **Scripts with elevated privileged**: There is now built-in support for executing scripts with elevated privileges. A new Privileged Helper Tool is now part of the Support App and no longer requires the separate SupportHelper package. A Privileged Helper Tool is integrated, more secure and easier to configure. Additionally, script permission checks are performed to only allow scripts owned by root with the proper permissions.
   * The Privileged Helper Tool is automatically installed and enabled when the PKG installer is used
   * The key value DistributedNotification for keys like FirstRowTypeLeft is now deprecated and replaced with PrivilegedScript
+  * **BREAKING CHANGE**: Using commands instead of a script path is no longer supported due to the increased security mechanisms. Please migrate commands to a script instead.
 * **Root3 App Catalog integration**: A new Info Item App Catalog is added to integrate with Root3's App Catalog solution for automated patch management for third party macOS applications. It provides unique features such as a daily update schedule, updating both managed and unmanaged apps and a user facing app to quickly install new applications. As some app updates require user interaction, users may defer an update and want to update at a more convenient time. The Support App periodically checks for available app updates and allows the user to update apps whenever they prefer in an accessible way. To enable this integration, set the key AppCatalog for one of the Info Items and it requires a valid subscription or trial.
-* **DDM update information**: If an update declaration is sent using Declarative Device Management (macOS 14 and higher), the available update will show the enforcement date and time for the update in the macOS version Info Item. If present in the declaration, the DetailsURL will also show a button "Details" and opens the DetailsURL link.
-* **Restart from app**: The Last Reboot Info Item now allows to immediately perform a graceful restart as requested in the text. The user no longer needs to leave the app and restart via the Apple-logo in the menu bar.
-* **New standardized UI**: Certain Info Items now have a standard UI such as for macOS updates, uptime and the new App Catalog integration. The previously used popover is replaced with a window filling UI and back button
+* **Declarative Device Management update information**: If an update declaration is sent using Declarative Device Management (macOS 14 and higher), the available update will show the enforcement date and time for the update in the macOS version Info Item. If present in the declaration, the DetailsURL will also show a button "Details" and opens the DetailsURL link.
+* **Restart from Support App**: The Last Reboot Info Item now allows to immediately perform a graceful restart as requested in the text. The user no longer needs to leave the app and restart via the Apple-logo in the menu bar.
+* **New standardized UI**: Certain Info Items now have a standard UI such as for macOS updates, uptime and the new App Catalog integration. The previously used popover is replaced with a window filling UI and back button (macOS 13 and higher).
 * macOS 12 is now the minimum supported macOS version
 * Several bug fixes and improvements
 
