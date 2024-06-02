@@ -72,3 +72,4 @@
 "APPS_WILL_BE_UPDATED_AUTOMATICALLY_DESCRIPTION" = "Apps worden automatisch bijgewerkt";
 "AUTOMATIC_INSTALLATION" = "Automatische installatie";
 "APPS" = "Apps";
+"PRIVILEGED_HELPER_TOOL_NOT_INSTALLED" = "Privileged Helper Tool is niet geïnstalleerd";
