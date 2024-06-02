@@ -73,3 +73,4 @@
 "ENFORCED_ON" = "Aplicada en";
 "DETAILS" = "Detalles";
 "APPS" = "Apps";
+"PRIVILEGED_HELPER_TOOL_NOT_INSTALLED" = "Privileged Helper Tool no está instalado";
