@@ -38,6 +38,8 @@
     * [MDM variables](#mdm-variables)
       * [Jamf Pro variables](#jamf-pro-variables)
   * [Privileged scripts](#privileged-scripts)
+    * [Use Cases](#use-cases)
+    * [Disabling or re-enabling](#disabling-or-re-enabling)
     * [File locations](#file-locations)
     * [Security Considerations](#security-considerations)
 - [How to use SF Symbols](#how-to-use-sf-symbols)
@@ -401,8 +403,6 @@ defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bo
 ### Privileged scripts
 To allow scripts to be executed with elevated privileges, the Support App has a built-in Privileged Helper Tool. This upgrade over the deprecated SupportHelper makes sure communication is transmitted more securely between the main app the the built-in Privileged Helper Tools with additional checks such as code requirement and scripts must have proper permissions and owner. The script must me owned by `root` and have 755 permissions. Additionally, only paths to a script set in a Configuration Profile will be executed. Values set with `defaults write` are not supported.
 
-By default, the Privileged Helper Tool is automatically enabled when using the PKG installer. To opt-out, set the key `DisablePrivilegedHelperTool` to `true` during the time of installation. Also at launch of the Support App, the Privileged Helper Tool will be removed when the key is set. Please also note that for the App Catalog integration, the Privileged Helper Tool is a requirement.
-
 > **Warning**
 > Because the script permissions are checked before execution, commands are not supported anymore as of version 2.6.
 
@@ -421,6 +421,15 @@ There are a couple of use cases where privileged scripts can help. For example r
   * Collecting logs such as `sudo sysdiagnose` and sending the output somewhere else
   * Run device compliance remediation, such as the macOS Security Compliance Project Remediation Script
   * Any other action requiring root privileges, especially when users have standard permissions
+
+#### Disabling or re-enabling
+By default, the Privileged Helper Tool is automatically enabled when using the PKG installer. To opt-out, set the key `DisablePrivilegedHelperTool` to `true` during the time of installation. Also at launch of the Support App, the Privileged Helper Tool will be removed when the key is set. Please also note that for the App Catalog integration, the Privileged Helper Tool is a requirement.
+
+Additionally the Support App app bundle comes with scripts to manually disable or re-enable the Privileged Helper Tool. For example when you accidentaly used or misconfigured the `DisablePrivilegedHelperTool` key, or chose to (not) use it at a later time:
+* Disable: `/Applications/Support.app/Contents/Resources/uninstall_privileged_helper_tool.zsh`
+* Re-enable: `/Applications/Support.app/Contents/Resources/install_privileged_helper_tool.zsh`
+
+For example, you can run those scripts locally of by your MDM solution. You can verify the Privileged Helper Tool is enabled by checking the file locations mentioned in [File locations](#file-locations).
 
 #### File locations
 The Support App installs some files related to the Privileged Helper Tool:

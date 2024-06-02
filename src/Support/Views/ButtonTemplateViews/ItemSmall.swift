@@ -200,7 +200,7 @@ struct ItemSmall: View {
 
             }
         } catch {
-            logger.log("Failed to run privileged script. Error: \(error.localizedDescription)")
+            logger.log("Failed to run privileged script. Error: \(error.localizedDescription, privacy: .public)")
         }
     }
 }
