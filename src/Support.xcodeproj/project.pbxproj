@@ -55,6 +55,7 @@
 		4947C15A2B154A2F00276EFD /* SupportXPC.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = 4947C14E2B154A2F00276EFD /* SupportXPC.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		495924F9265C535B00E083AC /* QuitButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495924F8265C535B00E083AC /* QuitButton.swift */; };
 		495F74EC28B39A9A00C20304 /* PopoverAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495F74EB28B39A9A00C20304 /* PopoverAlertView.swift */; };
+		4962F3B22C0C8C5F004571DC /* uninstall_privileged_helper_tool.zsh in Resources */ = {isa = PBXBuildFile; fileRef = 4962F3B12C0C8C5F004571DC /* uninstall_privileged_helper_tool.zsh */; };
 		496C2FE1271477B800D51EE1 /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496C2FE0271477B800D51EE1 /* NotificationNames.swift */; };
 		496FE4D12651485E007746ED /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496FE4D02651485E007746ED /* UserInfo.swift */; };
 		496FE4D326514C59007746ED /* PasswordSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496FE4D226514C59007746ED /* PasswordSubview.swift */; };
@@ -198,6 +199,7 @@
 		495924F8265C535B00E083AC /* QuitButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuitButton.swift; sourceTree = "<group>"; };
 		495B6E6E2A2E3E4E006B575D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		495F74EB28B39A9A00C20304 /* PopoverAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PopoverAlertView.swift; path = Support/Views/PopoverAlertView.swift; sourceTree = SOURCE_ROOT; };
+		4962F3B12C0C8C5F004571DC /* uninstall_privileged_helper_tool.zsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = uninstall_privileged_helper_tool.zsh; sourceTree = "<group>"; };
 		496C2FE0271477B800D51EE1 /* NotificationNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNames.swift; sourceTree = "<group>"; };
 		496FE4D02651485E007746ED /* UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
 		496FE4D226514C59007746ED /* PasswordSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordSubview.swift; sourceTree = "<group>"; };
@@ -358,6 +360,14 @@
 			path = SupportXPC;
 			sourceTree = "<group>";
 		};
+		4962F3B02C0C8C55004571DC /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				4962F3B12C0C8C5F004571DC /* uninstall_privileged_helper_tool.zsh */,
+			);
+			path = Scripts;
+			sourceTree = "<group>";
+		};
 		4976EB8C26531CCC006EE097 /* Experimental */ = {
 			isa = PBXGroup;
 			children = (
@@ -389,6 +399,7 @@
 		49822CE124B4C3F100E8DE54 /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				4962F3B02C0C8C55004571DC /* Scripts */,
 				B03F2E53287340BD000478BC /* nl.root3.support.plist */,
 				493DCCD02B08E5DA00FA2480 /* Controllers */,
 				498B6FFF272F45EF00BFA45E /* Models */,
@@ -589,6 +600,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				49822CED24B4C3F200E8DE54 /* Main.storyboard in Resources */,
+				4962F3B22C0C8C5F004571DC /* uninstall_privileged_helper_tool.zsh in Resources */,
 				0AFE0A8325014C6100957B52 /* Localizable.strings in Resources */,
 				49822CEA24B4C3F200E8DE54 /* Preview Assets.xcassets in Resources */,
 				49822CE724B4C3F200E8DE54 /* Assets.xcassets in Resources */,

@@ -48,4 +48,19 @@ class FileUtilities {
         return false
     }
     
+    // MARK: - Function to check if file or folder exists
+    func fileOrFolderExists(path: String) -> Bool {
+        
+        let fileManager = FileManager.default
+        
+        // Path to app bundle
+        let file = URL(fileURLWithPath: path)
+        
+        if fileManager.fileExists(atPath: file.path) {
+            return true
+        } else {
+            return false
+        }
+    }
+    
 }

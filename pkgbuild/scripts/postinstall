@@ -99,16 +99,25 @@ fi
 
 # ------------------    PrivilegedHelperTool    ------------------
 
-# Create "/Library/PrivilegedHelperTools/" if not present
-if [[ ! -d "/Library/PrivilegedHelperTools/" ]]; then
-	mkdir "/Library/PrivilegedHelperTools/"
-fi
+# Detect optional preference to opt-out of Privileged Helper Tool activation
+privileged_helper_tool_opt_out=$(/usr/bin/osascript -l JavaScript << EOS 2>/dev/null
+ObjC.unwrap($.NSUserDefaults.alloc.initWithSuiteName('nl.root3.support').objectForKey('DisablePrivilegedHelperTool'))
+EOS
+)
 
-# Copy the PrivilegedHelperTool
-cp "${install_location}/Contents/Library/LaunchServices/${launch_daemon}" "/Library/PrivilegedHelperTools/"
-# Set permissions
-chown root:wheel "/Library/PrivilegedHelperTools/${launch_daemon}"
-chmod 544 "/Library/PrivilegedHelperTools/${launch_daemon}"
+# Setup Privileged Helper Tool is not opted out
+if [[ "${privileged_helper_tool_opt_out}" != "true" ]]; then
+	# Create "/Library/PrivilegedHelperTools/" if not present
+	if [[ ! -d "/Library/PrivilegedHelperTools/" ]]; then
+		mkdir "/Library/PrivilegedHelperTools/"
+	fi
+
+	# Copy the PrivilegedHelperTool
+	cp "${install_location}/Contents/Library/LaunchServices/${launch_daemon}" "/Library/PrivilegedHelperTools/"
+	# Set permissions
+	chown root:wheel "/Library/PrivilegedHelperTools/${launch_daemon}"
+	chmod 544 "/Library/PrivilegedHelperTools/${launch_daemon}"
+fi
 
 # ------------------    Uninstall SupportHelper    ------------------
 
@@ -132,24 +141,27 @@ fi
 
 # ------------------    LaunchDaemon PrivilegedHelperTool    ------------------
 
-# Add AssociatedBundleIdentifiers to show app name in Login Items on 
-# macOS 13 and higher instead of developer name
-defaults write "/Library/LaunchDaemons/${launch_daemon}.plist" AssociatedBundleIdentifiers -array -string "nl.root3.support"
-# Set the Label and ProgramArguments
-defaults write "/Library/LaunchDaemons/${launch_daemon}.plist" Label -string "${launch_daemon}"
-defaults write "/Library/LaunchDaemons/${launch_daemon}.plist" ProgramArguments -array -string "/Library/PrivilegedHelperTools/nl.root3.support.helper"
-# Set MachServices
-defaults write "/Library/LaunchDaemons/${launch_daemon}.plist" MachServices -dict -string "nl.root3.support.helper" -bool true
-# Set permissions
-chown root:wheel "/Library/LaunchDaemons/${launch_daemon}.plist"
-chmod 644 "/Library/LaunchDaemons/${launch_daemon}.plist"
+# Setup Privileged Helper Tool is not opted out
+if [[ "${privileged_helper_tool_opt_out}" != "true" ]]; then
+	# Add AssociatedBundleIdentifiers to show app name in Login Items on 
+	# macOS 13 and higher instead of developer name
+	defaults write "/Library/LaunchDaemons/${launch_daemon}.plist" AssociatedBundleIdentifiers -array -string "nl.root3.support"
+	# Set the Label and ProgramArguments
+	defaults write "/Library/LaunchDaemons/${launch_daemon}.plist" Label -string "${launch_daemon}"
+	defaults write "/Library/LaunchDaemons/${launch_daemon}.plist" ProgramArguments -array -string "/Library/PrivilegedHelperTools/nl.root3.support.helper"
+	# Set MachServices
+	defaults write "/Library/LaunchDaemons/${launch_daemon}.plist" MachServices -dict -string "nl.root3.support.helper" -bool true
+	# Set permissions
+	chown root:wheel "/Library/LaunchDaemons/${launch_daemon}.plist"
+	chmod 644 "/Library/LaunchDaemons/${launch_daemon}.plist"
 
-# Unload the LaunchDaemon
-if launchctl print "system/${launch_daemon}" &> /dev/null ; then
-	launchctl bootout "system/${launch_daemon}" &> /dev/null
-fi
+	# Unload the LaunchDaemon
+	if launchctl print "system/${launch_daemon}" &> /dev/null ; then
+		launchctl bootout "system/${launch_daemon}" &> /dev/null
+	fi
 
-# Load the LaunchDaemon
-if ! launchctl print "system/${launch_daemon}" &> /dev/null ; then
-	launchctl bootstrap system "/Library/LaunchDaemons/${launch_daemon}.plist"
+	# Load the LaunchDaemon
+	if ! launchctl print "system/${launch_daemon}" &> /dev/null ; then
+		launchctl bootstrap system "/Library/LaunchDaemons/${launch_daemon}.plist"
+	fi
 fi

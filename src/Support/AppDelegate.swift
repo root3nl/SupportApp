@@ -29,6 +29,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     // Unified logging for LaunchAgent using SMAppService
     let launchAgentLogger = Logger(subsystem: "nl.root3.support", category: "LaunchAgent")
     
+    // Unified logging for Privileged Helper Tool
+    let privilegedHelperToolLogger = Logger(subsystem: "nl.root3.support.helper", category: "SupportHelper")
+    
     // Make standard UserDefaults easy to use
     let defaults = UserDefaults.standard
     
@@ -574,6 +577,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         if appCatalogController.catalogInstalled() {
             self.appCatalogController.getAppUpdates()
         }
+        
+        // Uninstall Privileged Helper Tool if configured
+        if defaults.bool(forKey: "DisablePrivilegedHelperTool") {
+            self.uninstallPrivilegedHelperTool()
+        }
     }
     
     // MARK: - Close the popover
@@ -597,6 +605,45 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     @objc func showAbout() {
         NSApplication.shared.activate(ignoringOtherApps: true)
         NSApp.orderFrontStandardAboutPanel(self)
+    }
+    
+    // MARK: - Function to uninstall Privileged Helper Tool
+    func uninstallPrivilegedHelperTool() {
+        
+        privilegedHelperToolLogger.log("Uninstalling Privileged Helper Tool...")
+        
+        // Check if Privileged Helper Tool exists
+        let privilegedHelperToolPath = "/Library/PrivilegedHelperTools/nl.root3.support.helper"
+        guard FileUtilities().fileOrFolderExists(path: privilegedHelperToolPath) else {
+            privilegedHelperToolLogger.log("Privileged Helper Tool was already uninstalled")
+            return
+        }
+        
+        // Get path to uninstall script
+        guard let uninstallScript = Bundle.main.path(forResource: "uninstall_privileged_helper_tool", ofType: "zsh") else {
+            privilegedHelperToolLogger.error("Uninstall script not found")
+            return
+        }
+        
+        // Verify permissions
+        guard FileUtilities().verifyPermissions(pathname: uninstallScript) else {
+            return
+        }
+        
+        do {
+            try ExecutionService.executeScript(command: uninstallScript) { exitCode in
+                
+                if exitCode == 0 {
+                    self.privilegedHelperToolLogger.debug("Uninstalled Privileged Helper Tool successfully")
+                } else {
+                    self.privilegedHelperToolLogger.error("Error while uninstalling Privileged Helper Tool. Exit code: \(exitCode, privacy: .public)")
+                }
+
+            }
+        } catch {
+            privilegedHelperToolLogger.log("Error while uninstalling Privileged Helper Tool. Error: \(error.localizedDescription, privacy: .public)")
+        }
+        
     }
     
     // MARK: - Function to run OnAppearAction
@@ -634,7 +681,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 
             }
         } catch {
-            logger.log("Failed to run privileged script or command. Error: \(error.localizedDescription)")
+            logger.log("Failed to run privileged script or command. Error: \(error.localizedDescription, privacy: .public)")
         }
     }
     

@@ -257,6 +257,7 @@ All general settings
 | ShowWelcomeScreen | Boolean | false | Shows the welcome screen when the Support App is opened for the first time. | true |
 | FooterText | String | - | Text shown at the bottom as footnote | "Provided by your **IT department** with ❤️" |
 | OpenAtLogin | Boolean | false | Launch Support (non-PKG) automatically at login and keep it open (macOS 13 and higher). This setting is ignored if a legacy LaunchAgent is installed/active. Keep disabled if you don't want to open Support at login or use your own LaunchAgent | false |
+| DisablePrivilegedHelperTool | Boolean | false | Disable the Privileged Helper Tool for the PKG installer during the time of installation or at launch of the Support App | true |
 
 ### Info items
 Configuration of the top four items with diagnostic information.
@@ -399,6 +400,8 @@ defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bo
 
 ### Privileged scripts
 To allow scripts to be executed with elevated privileges, the Support App has a built-in Privileged Helper Tool. This upgrade over the deprecated SupportHelper makes sure communication is transmitted more securely between the main app the the built-in Privileged Helper Tools with additional checks such as code requirement and scripts must have proper permissions and owner. The script must me owned by `root` and have 755 permissions. Additionally, only paths to a script set in a Configuration Profile will be executed. Values set with `defaults write` are not supported.
+
+By default, the Privileged Helper Tool is automatically enabled when using the PKG installer. To opt-out, set the key `DisablePrivilegedHelperTool` to `true` during the time of installation. Also at launch of the Support App, the Privileged Helper Tool will be removed when the key is set. Please also note that for the App Catalog integration, the Privileged Helper Tool is a requirement.
 
 > **Warning**
 > Because the script permissions are checked before execution, commands are not supported anymore as of version 2.6.

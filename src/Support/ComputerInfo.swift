@@ -794,11 +794,11 @@ class ComputerInfo: ObservableObject {
                             // Get declaration with highest macOS target version
                             if let declaration = softwareUpdateInfo.policyFields.declarations?.values.max(by: { $0.targetOSVersion < $1.targetOSVersion }) {
                                 self.softwareUpdateDeclarationDeadline = dateFormatter.date(from: declaration.targetLocalDateTime)
-                                declarationLogger.debug("Deadline: \(declaration.targetLocalDateTime)")
+                                declarationLogger.debug("Deadline: \(declaration.targetLocalDateTime, privacy: .public)")
                                 self.softwareUpdateDeclarationVersion = declaration.targetOSVersion
-                                declarationLogger.debug("Target OS version: \(declaration.targetOSVersion)")
+                                declarationLogger.debug("Target OS version: \(declaration.targetOSVersion, privacy: .public)")
                                 self.softwareUpdateDeclarationURL = declaration.detailsURL
-                                declarationLogger.debug("Details URL: \(declaration.detailsURL ?? "Not set")")
+                                declarationLogger.debug("Details URL: \(declaration.detailsURL ?? "Not set", privacy: .public)")
                             } else {
                                 // Empty values when declaration is no longer found
                                 self.softwareUpdateDeclarationDeadline = nil
