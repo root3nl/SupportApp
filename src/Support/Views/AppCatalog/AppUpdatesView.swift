@@ -249,7 +249,7 @@ struct AppUpdatesView: View {
                                     .symbolRenderingMode(.palette)
                                     .foregroundStyle(.white, Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
                                 
-                                Text(NSLocalizedString("NO_UPDATES_AVAILABLE", comment: ""))
+                                Text(NSLocalizedString("ALL_APPS_UP_TO_DATE", comment: ""))
                                     .font(.system(.title, design: .rounded))
                                     .fontWeight(.medium)
                                     .multilineTextAlignment(.center)

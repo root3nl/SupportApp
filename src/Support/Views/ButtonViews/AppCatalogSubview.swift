@@ -45,7 +45,7 @@ struct AppCatalogSubview: View {
             if appCatalogController.appUpdates > 0 {
                 return NSLocalizedString("UPDATES_AVAILABLE", comment: "")
             } else {
-                return NSLocalizedString("NO_UPDATES_AVAILABLE", comment: "")
+                return NSLocalizedString("UP_TO_DATE", comment: "")
             }
         }
     }
