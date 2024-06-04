@@ -214,13 +214,18 @@ The Support App integrates with [Root3's App Catalog](https://appcatalog.cloud).
 
 <img src="/Screenshots/app_catalog_integration.png" width="600">
 
-#### PPPC requirement
+#### PPPC requirements
 The Support App requires additional permissions to be able to perform app updates. Therefore you need to explicitely grant the `SystemPolicyAppBundles` or `SystemPolicyAllFiles` permission in a Privacy Preference Policy Control profile (PPPC):
 
 - **Allowed**: `true`
 - **Identifier**: `nl.root3.support`
 - **IdentifierType**: Bundle ID
 - **CodeRequirement**: `anchor apple generic and identifier "nl.root3.support" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "98LJ4XBGYK")`
+
+- **Allowed**: `true`
+- **Identifier**: `/Library/PrivilegedHelperTools/nl.root3.support.helper`
+- **IdentifierType**: Path
+- **CodeRequirement**: `anchor apple generic and identifier "nl.root3.support.helper" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "98LJ4XBGYK")`
 
 ### Last Reboot
 If `UptimeDaysLimit` is set and the user click on the Last Reboot Info Item, a view is shown where the administrators reboot recommendation is shown. It also provides a button to quickly perform a graceful restart without leaving the Support App.
