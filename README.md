@@ -215,7 +215,7 @@ The Support App integrates with [Root3's App Catalog](https://appcatalog.cloud).
 <img src="/Screenshots/app_catalog_integration.png" width="600">
 
 #### PPPC requirements
-The Support App requires additional permissions to be able to perform app updates. Therefore you need to explicitely grant the `SystemPolicyAppBundles` or `SystemPolicyAllFiles` permission in a Privacy Preference Policy Control profile (PPPC):
+The Support App requires additional permissions to be able to perform app updates. Therefore you need to explicitely grant the `SystemPolicyAllFiles` (Full Disk Access) permission in a Privacy Preference Policy Control profile (PPPC):
 
 - **Allowed**: `true`
 - **Identifier**: `nl.root3.support`
