@@ -1,16 +1,13 @@
 name: Build and Notarize Support Pull Request
 
 on:
-  pull_request:
-    types:
-      - opened
-      - edited
-    branches:
-      - 'master'
+  pull_request_target:
+    types: [labeled]
 
 jobs:
   build_with_signing:
     runs-on: macos-14
+    if: contains(github.event.pull_request.labels.*.name, 'release candidate')
     environment: production
 
     steps:
