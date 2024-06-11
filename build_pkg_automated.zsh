@@ -86,7 +86,8 @@ cp -r "${current_directory}/build/${app_name}.app" "${payload}"
 "${xcode_version}/Contents/Developer/usr/bin/notarytool" store-credentials --apple-id "${apple_id}" --team-id "98LJ4XBGYK" --password "${apple_id_app_specific_password}" "${keychain_profile}"
 
 # Build and sign pkg
-pkgbuild --component-plist "${component_plist}" \
+pkgbuild --verbose \
+    --component-plist "${component_plist}" \
     --root "${payload}" \
     --scripts "${scripts}" \
     --install-location "${install_location}" \
@@ -102,18 +103,18 @@ productbuild --distribution "${distribution_xml}" \
 # Sign package
 productsign --sign "${signing_identity}" \
     "${current_directory}/${app_name}/${app_name} ${version}_dist.pkg" \
-    "${current_directory}/${app_name}/${app_name} ${version}_beta.pkg"
+    "${current_directory}/${app_name}/${app_name} ${version}.pkg"
 
 # Submit pkg to notarytool
-"${xcode_version}/Contents/Developer/usr/bin/notarytool" submit "${current_directory}/${app_name}/${app_name} ${version}_beta.pkg" \
+"${xcode_version}/Contents/Developer/usr/bin/notarytool" submit "${current_directory}/${app_name}/${app_name} ${version}.pkg" \
     --keychain-profile "${keychain_profile}" \
     --wait
 
 # Staple the notarization ticket to the pkg
-"${xcode_version}/Contents/Developer/usr/bin/stapler" staple "${current_directory}/${app_name}/${app_name} ${version}_beta.pkg"
+"${xcode_version}/Contents/Developer/usr/bin/stapler" staple "${current_directory}/${app_name}/${app_name} ${version}.pkg"
 
 # Check the notarization ticket validity
-spctl --assess -vv --type install "${current_directory}/${app_name}/${app_name} ${version}_beta.pkg"
+spctl --assess -vv --type install "${current_directory}/${app_name}/${app_name} ${version}.pkg"
 
 # Move package to build folder
-mv "${current_directory}/${app_name}/${app_name} ${version}_beta.pkg" "${current_directory}/build"
+mv "${current_directory}/${app_name}/${app_name} ${version}.pkg" "${current_directory}/build"
