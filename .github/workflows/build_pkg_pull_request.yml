@@ -17,34 +17,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Bump Build Number and set version number to env
-        run: |
-          cd ./src
-          xcrun agvtool next-version -all
-          
-          APP_BUILD_NUMBER=$(xcrun agvtool vers -terse)
-          echo "Build number: ${APP_BUILD_NUMBER}"
-          echo "APP_BUILD_NUMBER=${APP_BUILD_NUMBER}" >> $GITHUB_ENV
-          
-          APP_VERSION=$(/usr/libexec/PlistBuddy -c Print:CFBundleShortVersionString Support/Info.plist)
-          echo "Version number: ${APP_VERSION}"
-          echo "APP_VERSION=${APP_VERSION}" >> $GITHUB_ENV
-
-      - name: Commit Changes
-        env:
-          APP_BUILD_NUMBER: ${{ env.APP_BUILD_NUMBER }}
-        run: |
-          git add .
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git commit -m "Bump build number to ${APP_BUILD_NUMBER}"
-
-      - name: Push Changes
-        uses: ad-m/github-push-action@v0.8.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
-
       - name: Install Developer ID Application certificate
         uses: apple-actions/import-codesign-certs@v2
         with: 
