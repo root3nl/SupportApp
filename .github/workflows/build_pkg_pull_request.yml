@@ -1,4 +1,4 @@
-name: Build and Notarize Support App Beta
+name: Build and Notarize Support Pull Request
 
 on:
   pull_request:
@@ -59,7 +59,7 @@ jobs:
           keychain-password: ${{ github.run_id }}
           p12-file-base64: ${{ secrets.DEVELOPER_ID_INSTALLER_BASE64 }}
           p12-password: ${{ secrets.DEVELOPER_ID_INSTALLER_PASSWORD }}
-          
+
       - name: Build macOS app
         run: |
           ARCHIVE_PATH="./build/Support.xcarchive"
