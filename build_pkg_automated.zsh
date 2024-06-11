@@ -86,8 +86,7 @@ cp -r "${current_directory}/build/${app_name}.app" "${payload}"
 "${xcode_version}/Contents/Developer/usr/bin/notarytool" store-credentials --apple-id "${apple_id}" --team-id "98LJ4XBGYK" --password "${apple_id_app_specific_password}" "${keychain_profile}"
 
 # Build and sign pkg
-pkgbuild --verbose \
-    --component-plist "${component_plist}" \
+pkgbuild --component-plist "${component_plist}" \
     --root "${payload}" \
     --scripts "${scripts}" \
     --install-location "${install_location}" \
