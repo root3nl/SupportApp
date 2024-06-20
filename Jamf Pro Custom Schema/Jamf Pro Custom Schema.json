@@ -1011,11 +1011,11 @@
       ]
 		},
     "DisablePrivilegedHelperTool": {
-      "title": "Disable Privileged Helper Tool",
-      "description": "Option to disable the Privileged Helper Tool. Re-enabling requires the reinstallation of the Support App.",
+      "title": "Enable or Disable Privileged Helper Tool",
+      "description": "Option to enable or disable the Privileged Helper Tool. Re-enabling requires the reinstallation of the Support App.",
       "type": "boolean",
       "options": {
-        "enum_titles": ["Enable", "Disable"],
+        "enum_titles": ["Disable", "Enable"],
         "infoText": "Key name: DisablePrivilegedHelperTool"
       },
       "links": [
