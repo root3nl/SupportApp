@@ -67,8 +67,9 @@ keychain_profile="Root3"
 # ---------------------    do not edit below this line    ----------------------
 
 # Set Xcode version to latest version available
-xcode_version=$(ls -d /Applications/Xcode*.app 2>/dev/null | sort -V | tail -n 1)
-echo "Path to latest Xcode version: ${xcode_version}"
+# xcode_version=$(ls -d /Applications/Xcode*.app 2>/dev/null | sort -V | tail -n 1)
+# echo "Path to latest Xcode version: ${xcode_version}"
+ xcode_version="/Applications/Xcode_15.3.app"
 
 # Create directory
 mkdir -p "${current_directory}/${app_name}"
