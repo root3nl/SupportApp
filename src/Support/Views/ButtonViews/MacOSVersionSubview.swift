@@ -21,7 +21,7 @@ struct MacOSVersionSubview: View {
     // Dark Mode detection
     @Environment(\.colorScheme) var colorScheme
     
-    // Boolean to show UpdateView as popover
+    // Boolean to show UpdateViewLegacy as popover
     @State var showUpdatePopover: Bool = false
     
     // Set the custom color for all symbols depending on Light or Dark Mode.
@@ -38,11 +38,20 @@ struct MacOSVersionSubview: View {
     var body: some View {
         
         InfoItem(title: "macOS \(computerinfo.macOSVersionName)", subtitle: computerinfo.macOSVersion, image: "applelogo", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: computerinfo.updatesAvailableToShow, hoverEffectEnable: true)
-            .onTapGesture {
-                self.showUpdatePopover.toggle()
+            .modify {
+                if #available(macOS 13, *) {
+                    $0.onTapGesture {
+                        computerinfo.showMacosUpdates.toggle()
+                    }
+                } else {
+                    $0.onTapGesture {
+                        showUpdatePopover.toggle()
+                    }
+                }
             }
+            // Legacy popover for macOS 12
             .popover(isPresented: $showUpdatePopover, arrowEdge: .leading) {
-                UpdateView(updateCounter: computerinfo.updatesAvailableToShow, color: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+                UpdateViewLegacy(updateCounter: computerinfo.updatesAvailableToShow, color: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
             }
     }
 }

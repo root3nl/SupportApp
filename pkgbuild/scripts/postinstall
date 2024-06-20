@@ -19,6 +19,9 @@
 # LaunchAgent label
 launch_agent="nl.root3.support"
 
+# LaunchDaemon label
+launch_daemon="nl.root3.support.helper"
+
 # Install location
 install_location="/Applications/Support.app"
 
@@ -92,4 +95,37 @@ if [[ -n "${username}" ]]; then
 
 	# Load the LaunchAgent
 	launchctl bootstrap gui/${uid} "/Library/LaunchAgents/${launch_agent}.plist"
+fi
+
+# ------------------    Uninstall SupportHelper    ------------------
+
+# Remove SupportHelper and LaunchDaemon if found
+if [[ -f "/usr/local/bin/SupportHelper" ]]; then
+
+	# Remove SupportHelper binary
+	rm -f "/usr/local/bin/SupportHelper"
+
+	# Unload the LaunchDaemon
+	if launchctl print "system/${launch_daemon}" &> /dev/null ; then
+		launchctl bootout "system/${launch_daemon}" &> /dev/null
+	fi
+
+	# Remove SupportHelper LaunchDaemon
+	if [[ -f "/Library/LaunchDaemons/${launch_daemon}.plist" ]]; then
+		rm -f "/Library/LaunchDaemons/${launch_daemon}.plist"
+	fi
+	
+fi
+
+# ------------------    PrivilegedHelperTool    ------------------
+
+# Detect optional preference to opt-out of Privileged Helper Tool activation
+privileged_helper_tool_opt_out=$(/usr/bin/osascript -l JavaScript << EOS 2>/dev/null
+ObjC.unwrap($.NSUserDefaults.alloc.initWithSuiteName('nl.root3.support').objectForKey('DisablePrivilegedHelperTool'))
+EOS
+)
+
+# Setup Privileged Helper Tool if not opted out
+if [[ "${privileged_helper_tool_opt_out}" != "true" ]]; then
+	"${install_location}/Contents/Resources/install_privileged_helper_tool.zsh"
 fi

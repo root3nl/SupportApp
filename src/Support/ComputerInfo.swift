@@ -55,6 +55,8 @@ class ComputerInfo: ObservableObject {
             return "Ventura"
         case 14:
             return "Sonoma"
+        case 15:
+            return "Sequoia"
         default:
             return ""
         }
@@ -145,6 +147,21 @@ class ComputerInfo: ObservableObject {
     
     // Serial number
     @Published var deviceSerialNumber: String = ""
+    
+    // Show macOS updates
+    @Published var showMacosUpdates: Bool = false
+    
+    // macOS software update declaration deadline
+    @Published var softwareUpdateDeclarationDeadline: Date?
+    
+    // macOS software update declaration deadline
+    @Published var softwareUpdateDeclarationVersion: String?
+    
+    // macOS software update declaration info url
+    @Published var softwareUpdateDeclarationURL: String?
+
+  // Show uptime alert
+    @Published var showUptimeAlert: Bool = false
     
     // MARK: - Function to get uptime
     func kernelBootTime() {
@@ -364,12 +381,7 @@ class ComputerInfo: ObservableObject {
                     self.computerNameIcon = "macmini.fill"
                 } else if self.modelNameString.localizedCaseInsensitiveContains("Mac Pro") {
                     self.modelShortName = "Mac Pro"
-                    // Filled SF Symbols are preferred but version for Mac Pro is only available in macOS 12 and higher
-                    if #available(macOS 12, *) {
-                        self.computerNameIcon = "macpro.gen3.fill"
-                    } else {
-                        self.computerNameIcon = "macpro.gen3"
-                    }
+                    self.computerNameIcon = "macpro.gen3.fill"
                 } else if self.modelNameString.localizedCaseInsensitiveContains("Mac Studio") {
                     self.modelShortName = "Mac Studio"
                     // SF Symbol for Mac Studio is only available in macOS 13 and higher
@@ -745,8 +757,70 @@ class ComputerInfo: ObservableObject {
             // Back to the main thread to publish values
             DispatchQueue.main.async {
                 self.rapidSecurityResponseVersion = String(data: data, encoding: .utf8)!.trimmingCharacters(in: .whitespacesAndNewlines)
-                self.logger.debug("Rapid Security Reponse version: \(self.rapidSecurityResponseVersion)")
+                self.logger.debug("Rapid Security Reponse version: \(self.rapidSecurityResponseVersion, privacy: .public)")
             }
         }
+    }
+    
+    func getUpdateDeclaration() {
+        
+        logger.debug("Getting macOS software update declarations...")
+        
+        let declarationLogger = Logger(subsystem: "nl.root3.support", category: "SoftwareUpdateDeclaration")
+        
+        // Move to background thread
+        DispatchQueue.global().async {
+            
+            // Setup XPC connection
+            let connectionToService = NSXPCConnection(serviceName: "nl.root3.support.xpc")
+            connectionToService.remoteObjectInterface = NSXPCInterface(with: SupportXPCProtocol.self)
+            connectionToService.resume()
+            
+            // Run command when connection is successful. Run XPC synchronously and decode updates once completed
+            if let proxy = connectionToService.synchronousRemoteObjectProxyWithErrorHandler( { error in
+                self.logger.error("\(error.localizedDescription)")
+            }) as? SupportXPCProtocol {
+                proxy.getUpdateDeclaration() { result in
+                                        
+                    do {
+                        // Decode plist data into SoftwareUpdateDeclarationModel model
+                        let decoder = PropertyListDecoder()
+                        let softwareUpdateInfo = try decoder.decode(SoftwareUpdateDeclarationModel.self, from: result)
+                        
+                        // Format target deadline from String to Date
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+                        
+                        // Back to the main thread to publish values
+                        DispatchQueue.main.async {
+                            // Get declaration with highest macOS target version
+                            if let declaration = softwareUpdateInfo.policyFields.declarations?.values.max(by: { $0.targetOSVersion < $1.targetOSVersion }) {
+                                self.softwareUpdateDeclarationDeadline = dateFormatter.date(from: declaration.targetLocalDateTime)
+                                declarationLogger.debug("Deadline: \(declaration.targetLocalDateTime, privacy: .public)")
+                                self.softwareUpdateDeclarationVersion = declaration.targetOSVersion
+                                declarationLogger.debug("Target OS version: \(declaration.targetOSVersion, privacy: .public)")
+                                self.softwareUpdateDeclarationURL = declaration.detailsURL
+                                declarationLogger.debug("Details URL: \(declaration.detailsURL ?? "Not set", privacy: .public)")
+                            } else {
+                                // Empty values when declaration is no longer found
+                                self.softwareUpdateDeclarationDeadline = nil
+                                self.softwareUpdateDeclarationVersion = nil
+                                self.softwareUpdateDeclarationURL = nil
+                            }
+                        }
+                        
+                    } catch {
+                        declarationLogger.error("Error decoding macOS Software Update declaration")
+                    }
+                                        
+                }
+            } else {
+                self.logger.error("Failed to connect to SupportXPC service")
+            }
+            
+            // Invalidate connection
+            connectionToService.invalidate()
+        }
+
     }
 }

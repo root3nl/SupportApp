@@ -34,7 +34,7 @@ struct LogoView: View {
     var body: some View {
         
         // When "http" prefix is detected, try to fetch image from URL
-        if #available(macOS 12.0, *), logo.hasPrefix("http") {
+        if logo.hasPrefix("http") {
             
             AsyncImage(url: URL(string: logo)) { image in
                 image.resizable()
@@ -53,7 +53,7 @@ struct LogoView: View {
                     .frame(width: 48, height: 48)
             }
         // When "SF=" prefix is detected, try to show SF Symbol with optional color options
-        } else if #available(macOS 12.0, *), logo.hasPrefix("SF=") {
+        } else if logo.hasPrefix("SF=") {
             
             switch symbolColor {
             case "auto":

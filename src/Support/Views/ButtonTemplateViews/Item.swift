@@ -21,6 +21,9 @@ struct Item: View {
     var linkPrefKey: String?
 //    var updateView: Bool?
     
+    // Access AppDelegate
+    @EnvironmentObject private var appDelegate: AppDelegate
+    
     // Get computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo
     
@@ -132,7 +135,7 @@ struct Item: View {
         .onTapGesture() {
             // Don't do anything when no link is specified
             guard link != "" else {
-                logger.debug("No link specified for \(title), button disabled...")
+                logger.debug("No link specified for \(title, privacy: .public), button disabled...")
                 return
             }
             
@@ -142,8 +145,11 @@ struct Item: View {
                 openLink()
             } else if linkType == "Command" {
                 runCommand()
-            } else if linkType == "DistributedNotification" {
-                postDistributedNotification()
+            // MARK: - DistributedNotification is deprecated, use PrivilegedScript instead
+            } else if linkType == "DistributedNotification" || linkType == "PrivilegedScript" {
+                Task {
+                    await runPrivilegedCommand()
+                }
             } else {
                 self.showingAlert.toggle()
                 logger.error("Invalid Link Type: \(linkType!)")
@@ -174,7 +180,10 @@ struct Item: View {
         NSWorkspace.shared.open(url)
         
         // Close the popover
-        NSApp.deactivate()
+//        NSApp.deactivate()
+        
+        // Close popover
+        appDelegate.togglePopover(nil)
 
     }
     
@@ -205,21 +214,48 @@ struct Item: View {
         }
         
         // Close the popover
-        NSApp.deactivate()
+//        NSApp.deactivate()
+        
+        // Close popover
+        appDelegate.togglePopover(nil)
     }
     
-    // Post Distributed Notification
-    func postDistributedNotification() {
-        logger.debug("Posting Distributed Notification: nl.root3.support.Action")
+    // MARK: - Function to run privileged script
+    func runPrivilegedCommand() async {
         
-        // Initialize distributed notifications
-        let nc = DistributedNotificationCenter.default()
+        logger.log("Trying to run privileged script...")
         
-        // Define the NSNotification name
-        let name = NSNotification.Name("nl.root3.support.Action")
+        let defaults = UserDefaults.standard
         
-        // Post the notification including all sessions to support LaunchDaemons
-        nc.postNotificationName(name, object: linkPrefKey, userInfo: nil, options: [.postToAllSessions, .deliverImmediately])
+        // Exit when no script was found
+        guard let privilegedCommand = link else {
+            logger.error("Privileged script was not found")
+            return
+        }
+        
+        // Check value comes from a Configuration Profile. If not, the script may be maliciously set and needs to be ignored
+        guard defaults.objectIsForced(forKey: linkPrefKey!) == true else {
+            logger.error("Script \(privilegedCommand, privacy: .public) is not set by an administrator and is not trusted. Action will not be executed")
+            return
+        }
+        
+        // Verify permissions
+        guard FileUtilities().verifyPermissions(pathname: privilegedCommand) else {
+            return
+        }
+        
+        do {
+            try ExecutionService.executeScript(command: privilegedCommand) { exitCode in
+                
+                if exitCode == 0 {
+                    self.logger.debug("Privileged script ran successfully with exit code 0")
+                } else {
+                    self.logger.error("Error while running privileged script. Exit code: \(exitCode, privacy: .public)")
+                }
 
+            }
+        } catch {
+            logger.log("Failed to run privileged script. Error: \(error.localizedDescription, privacy: .public)")
+        }
     }
 }

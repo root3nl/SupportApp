@@ -1,10 +1,10 @@
 # macOS Support App
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/root3nl/SupportApp?color=success)
-![Github](https://img.shields.io/badge/macOS-11%2B-green)
+![Github](https://img.shields.io/badge/macOS-12%2B-green)
 [![Github](https://img.shields.io/badge/Join-TestFlight-blue)](https://testflight.apple.com/join/asmgJsAM)
 
-<img src="/Screenshots/generic_version_2.5.png" width="800">
+<img src="/Screenshots/generic_version_2.6.png" width="800">
 
 <img src="/Screenshots/generic_version_2.4.png" width="800">
 
@@ -25,7 +25,10 @@
   * [Footer Text](#footer-text)
   * [Notification Icon](#notification-icon)
   * [Welcome Screen](#welcome-screen)
-  * [Software Update Integration](#software-update-integration)
+  * [Software Update integration](#software-update-integration)
+  * [App Catalog integration](#app-catalog-integration)
+    * [PPPC requirement](#pppc-requirement)
+  * [Last Reboot](#last-reboot)
 - [Configuration](#configuration)
 - [Advanced configuration](#advanced-configuration)
   * [Support App Extensions](#support-app-extensions)
@@ -34,7 +37,9 @@
     * [Built-in local variables](#built-in-local-variables)
     * [MDM variables](#mdm-variables)
       * [Jamf Pro variables](#jamf-pro-variables)
-  * [Privileged commands or scripts with SupportHelper](#privileged-commands-or-scripts-with-supporthelper)
+  * [Privileged scripts](#privileged-scripts)
+    * [Use Cases](#use-cases)
+    * [Disabling or re-enabling](#disabling-or-re-enabling)
     * [File locations](#file-locations)
     * [Security Considerations](#security-considerations)
 - [How to use SF Symbols](#how-to-use-sf-symbols)
@@ -52,7 +57,7 @@
 ## Introduction
 The Support app is a macOS menu bar app built for organizations to:
 * Help users and helpdesks to see basic diagnostic information at a glance and proactively notify them to easily fix small issues.
-* Offer shortcuts to easily access support channels or other company resources such as a website or a file server
+* Offer shortcuts to easily access support channels, company resources such as websites, applications or file servers
 * Give users a modern and native macOS app with your corporate identity
 
 The app is developed by Root3, specialized in managing Apple devices. Root3 offers managed workplaces, consultancy and support for organizations to get the most out of their Apple devices and is based in The Netherlands (Halfweg).
@@ -62,7 +67,7 @@ Root3 already had a basic in-house support app written in Objective-C and decide
 The easiest and recommended way to configure the app is using a Configuration Profile and your MDM solution.
 
 ## Requirements
-* macOS 11.0.1 or higher
+* macOS 12 or higher
 * Any MDM solution supporting custom Configuration Profiles
 
 ## Download
@@ -73,9 +78,6 @@ Package Installer (includes LaunchAgent): [**Download**](https://github.com/root
 Application (zipped): [**Download**](https://github.com/root3nl/SupportApp/releases/latest)
 
 See the MDM deployment section below for more info.
-
-### SupportHelper
-Package Installer (includes LaunchDaemon): [**Download**](https://github.com/root3nl/SupportApp/releases/latest)
 
 ### TestFlight
 You can participate in beta versions of Support App using TestFlight. This requires macOS 12 or higher.
@@ -88,7 +90,7 @@ You can participate in beta versions of Support App using TestFlight. This requi
 ## Technologies
 * Written in Swift using SwiftUI
 * All icons are SF Symbols
-* Built for and compatible with macOS 11.0 and higher
+* Built for and compatible with macOS 12 and higher
 * Native support for Apple Silicon
 * Dark Mode support
 * Colors are matched with your macOS accent color (blue by default)
@@ -113,8 +115,8 @@ The row above the buttons allow a custom title and company logo. The title suppo
 
 #### Logo options
 Here are the available for the Logo:
-* **Remote URL** (macOS 12 and later): `https://URL_TO_IMAGE`
-* **SF Symbol** (macOS 12 and later): `SF=SF_SYMBOL_NAME_HERE` or `SF=SF_SYMBOL_NAME_HERE,color=COLOR_OPTION_HERE`. Available color options: `auto`, `multicolor`, `hierarchical` or a custom HEX color code such as `#9ACEA4`
+* **Remote URL**: `https://URL_TO_IMAGE`
+* **SF Symbol**: `SF=SF_SYMBOL_NAME_HERE` or `SF=SF_SYMBOL_NAME_HERE,color=COLOR_OPTION_HERE`. Available color options: `auto`, `multicolor`, `hierarchical` or a custom HEX color code such as `#9ACEA4`
 * **Local file**: `/PATH_TO_LOCAL_FILE`
 
 > **Note**
@@ -128,9 +130,9 @@ There are a couple of info items with diagnostics available to choose from. A to
 
 * **Computer Name** (default): The current computer name will be displayed here. Especially helpful when your organisation has a difficult naming convention and users want to do things like AirDrop.
 
-* **macOS version** (default): The current version of macOS including major, minor and patch version as well as the marketing name. The marketing name will be easier to understand for your end users. A notification badge will be shown when an Apple Software Update is available. Clicking on this item shows more details and allows the user to initiate the update in System Settings.
+* **macOS version** (default): The current version of macOS including major, minor and patch version as well as the marketing name. The marketing name will be easier to understand for your end users. A notification badge will be shown when an Apple Software Update is available. Clicking on this item shows more details and allows the user to initiate the update in System Settings. Additionally there is support for updates enforced by Declarative Device Management and the enforcement date/time is shown if a valid update declaration is detected.
 
-* **Last Reboot** (default): The current uptime. When troubleshooting some issue, the first thing you would like to do is a reboot when the uptime is high. The optional preference key `UptimeDaysLimit` can be used to configure the maximum amount of uptime days recommended by the organization. Exceeding this limit results in a badge counter with exclamation mark in the info item.
+* **Last Reboot** (default): The current uptime. When troubleshooting some issue, the first thing you would like to do is a reboot when the uptime is high. The optional preference key `UptimeDaysLimit` can be used to configure the maximum amount of uptime days recommended by the organization. Exceeding this limit results in a badge counter with exclamation mark in the info item. Users can also restart the Mac gracefully from this info item.
 
 * **Storage Used** (default): The storage percentage used on the boot drive. When hovering with the mouse, the available storage is shown. Clicking on this item opens the macOS built-in Storage Management app. The optional preference key `StorageLimit` can be used to configure the maximum percentage of used storage recommended by the organization. Exceeding this limit results in a badge counter with exclamation mark in the info item.
 
@@ -139,6 +141,8 @@ There are a couple of info items with diagnostics available to choose from. A to
 * **Mac Password**: Shows when the user's password expires and supports both local and Active Directory accounts by default. Alternative supported user sources are Jamf Connect, Kerberos SSO Extension and NoMAD. Shows a warning when the expiry reaches the value set in the optional key `PasswordExpiryLimit`. The text label in the item can be modified using the preference key `PasswordLabel`.
 
 * **Extension A and B**: Support App Extensions to show any information. The title, icon must be configured and optionally a link to open an App, URL, User Command or Privileged Command/Script. The value below the title of the Extension must be populated by setting a preference key using a script or command. Extensions can also trigger an orange notification badge alert in both the Extension and menu bar icon. See [How to populate Support App Extensions](#how-to-populate-support-app-extensions) for more information.
+
+* **App Catalog**: Show available app updates driven by [Root3's App Catalog](https://appcatalog.cloud). It allow users to quickly update applications and show when the automatic update schedule will run next. This integration requires a valid App Catalog subscription and a [free trial](http://appcatalog.cloud/#trial) is available.
 
 ### App, link or command shortcuts
 The buttons in the 3rd and 4th row behave as shortcuts to applications or links. Both rows are flexible and can show two or three buttons. The total amount of configurable buttons is possible: 0, 2, 3, 4, 5, 6. You can configure five variables for every of these buttons:
@@ -156,7 +160,10 @@ The buttons in the 3rd and 4th row behave as shortcuts to applications or links.
   * App: Bundle Identifier of the app
   * URL: Link to a webpage or other links that would normaly work like PROTOCOL://URL
   * Command: Zsh command or path to a script. Be aware that this will be executed as the user and therefore has its limitations
-  * DistributedNotification: Zsh command or path to a script to run with elevated privileges (requires SupportHelper)
+  * PrivilegedScript: Path to script to be executed with elevated privileges
+
+> **Note**
+> The key `DistributedNotification` is deprecated and replaced with `PrivilegedScript`
 
 * **Symbol**: The symbol shown in the button, see the SF Symbols section how to use these symbols
 
@@ -167,10 +174,10 @@ The rows with all configurable items enabled are shown in the screenshot below:
 <img src="/Screenshots/configurable_buttons_2.4.png" width="450">
 
 ### Footer Text
-A footer text can optionally be used to put some additional text at the bottom of the Support App. This supports both text and Emoji. On macOS Monterey and higher, it supports Markdown. Use the preference key `FooterText` to configure the footer.
+A footer text can optionally be used to put some additional text at the bottom of the Support App. This supports both text and Emoji. On macOS Monterey and higher, it supports Markdown. Also a great way to put additional information using [Built-in local variables](https://github.com/root3nl/SupportApp?tab=readme-ov-file#built-in-local-variables) Use the preference key `FooterText` to configure the footer.
 
 ### Notification Icon
-The icon shown in alerts and the about window can be modified by using the preference key `NotificationIcon`.
+The icon shown the about window can be modified by using the preference key `NotificationIcon`.
 
 See an example below:
 
@@ -188,19 +195,42 @@ See an example below:
 ### Welcome Screen
 An informational window can optionally be shown when the Support App is opened for the first time. It explains the key features to the user before all data is shown. This can be set using the preference key `ShowWelcomeScreen`.
 
-See an example below:
-
 <img src="/Screenshots/welcome_screen.png" width="500">
 
 ### Software Update integration
-The Support App shows the current version of macOS and a notification badge if there is an update or upgrade available. Clicking the info item shows a popover with more details like the name of the update(s) available and also allows organizations to add a custom text. This can be used to provide more context and explain the user about the organization's update policy or anything else. The text string supports Markdown to style it further and include links. Please check [Built-in local variables](#built-in-local-variables) for an example using Markdown and variables.
+The Support App shows the current version of macOS and a notification badge if there is an update or upgrade available. Clicking the info item shows more details like the name of the update(s) available and also allows organizations to add a custom text. This can be used to provide more context and explain the user about the organization's update policy or anything else. The text string supports Markdown to style it further and include links. Please check [Built-in local variables](#built-in-local-variables) for an example using Markdown and variables.
 
-The popover allows the user to open System Settings and install the update or upgrade. If there is no update or upgrade available, the popover simply shows "Your Mac is up to date".
+It allows the user to open System Settings and install the update or upgrade. If there is no update or upgrade available, the popover simply shows "Your Mac is up to date".
 
-<img src="/Screenshots/software_update_integration.png" width="500">
+If an update declaration is sent using [Declarative Device Management](https://developer.apple.com/documentation/devicemanagement/softwareupdateenforcementspecific) (macOS 14 and higher), the available update will show the enforcement date and time for the update. If present in the declaration, the `DetailsURL` will also show a button "Details" and opens the `DetailsURL` link. 
+
+<img src="/Screenshots/software_update_integration.png" width="600">
 
 > **Note**
 > When a deferral is set using the preference key `forceDelayedMajorSoftwareUpdates` in the domain `com.apple.applicationaccess`, major macOS updates will automatically be hidden indefinitely until the key is removed or set to `false`. The amount of days configured for the deferral are ignored. Due to limitations and complexity, it is not supported to automatically show the macOS major update once the deferral days are passed. This behaviour replaces the `HideMajorUpdates` key, previously available in version 2.5 and earlier. More info here: https://developer.apple.com/documentation/devicemanagement/restrictions
+
+### App Catalog integration
+The Support App integrates with [Root3's App Catalog](https://appcatalog.cloud). The App Catalog is an automated patch management solution for third party macOS applications. It provides unique features such as a daily update schedule, updating both managed and unmanaged apps and a user facing app to quickly install new applications. As some app updates require user interaction, users may defer an update and want to update at a more convenient time. The Support App periodically checks for available app updates and allows the user to update apps whenever they prefer in an accessible way. The menu bar icon also shows a red notification badge when an update is available to inform the user, similar to macOS updates when `StatusBarIconNotifierEnabled` is set to `true`.
+
+<img src="/Screenshots/app_catalog_integration.png" width="600">
+
+#### PPPC requirements
+The Support App requires additional permissions to be able to perform app updates. Therefore you need to explicitely grant the `SystemPolicyAllFiles` (Full Disk Access) permission in a Privacy Preference Policy Control profile (PPPC):
+
+- **Allowed**: `true`
+- **Identifier**: `nl.root3.support`
+- **IdentifierType**: Bundle ID
+- **CodeRequirement**: `anchor apple generic and identifier "nl.root3.support" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "98LJ4XBGYK")`
+
+- **Allowed**: `true`
+- **Identifier**: `/Library/PrivilegedHelperTools/nl.root3.support.helper`
+- **IdentifierType**: Path
+- **CodeRequirement**: `anchor apple generic and identifier "nl.root3.support.helper" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "98LJ4XBGYK")`
+
+### Last Reboot
+If `UptimeDaysLimit` is set and the user click on the Last Reboot Info Item, a view is shown where the administrators reboot recommendation is shown. It also provides a button to quickly perform a graceful restart without leaving the Support App.
+
+<img src="/Screenshots/last_reboot.png" width="600">
 
 ## Configuration
 The configuration of the Support app is optimized for use with your MDM solution. The easiest way to configure the app is using a Configuration Profile so you can use whatever MDM solution you like, as long as it supports custom Configuration Profiles.
@@ -234,6 +264,7 @@ All general settings
 | ShowWelcomeScreen | Boolean | false | Shows the welcome screen when the Support App is opened for the first time. | true |
 | FooterText | String | - | Text shown at the bottom as footnote | "Provided by your **IT department** with ❤️" |
 | OpenAtLogin | Boolean | false | Launch Support (non-PKG) automatically at login and keep it open (macOS 13 and higher). This setting is ignored if a legacy LaunchAgent is installed/active. Keep disabled if you don't want to open Support at login or use your own LaunchAgent | false |
+| DisablePrivilegedHelperTool | Boolean | false | Disable the Privileged Helper Tool for the PKG installer during the time of installation or at launch of the Support App | true |
 
 ### Info items
 Configuration of the top four items with diagnostic information.
@@ -256,7 +287,7 @@ Configuration of the top four items with diagnostic information.
 | --- | --- | --- | --- | --- |
 | FirstRowTitleLeft | String | Remote Support | The text shown in the button label. | “Share My Screen”, “TeamViewer“, “Software Updates“ “My core application” etc. |
 | FirstRowSubtitleLeft | String | - | Subtitle text will appear under title when the user hovers over the button. Ignored if left empty. | “Click to open“, “Share your screen“ |
-| FirstRowTypeLeft | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **DistributedNotification** (Privileged command/script)|
+| FirstRowTypeLeft | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **PrivilegedScript** (Privileged script)|
 | FirstRowLinkLeft | String | com.apple.ScreenSharing | The Bundle Identifier of the App, URL or command to open. | “com.teamviewer.TeamViewerQS“ (App), “x-apple.systempreferences:com.apple.preferences.softwareupdate“ (URL) |
 | FirstRowSymbolLeft | String | cursorarrow | The SF Symbol shown in the button. | “binoculars.fill”, “cursorarrow.click.2” or any other SF Symbol. Please check the SF Symbols section. |
 
@@ -265,7 +296,7 @@ Configuration of the top four items with diagnostic information.
 | --- | --- | --- | --- | --- |
 | FirstRowTitleMiddle | String | - | The text shown in the button label. | “Self Service“, “App Store“ |
 | FirstRowSubtitleMiddle | String | - | Subtitle text will appear under title when the user hovers over the button. Ignored if left empty. | “Click to open”, “Download apps“ |
-| FirstRowTypeMiddle | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **DistributedNotification** (Privileged command/script)|
+| FirstRowTypeMiddle | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **PrivilegedScript** (Privileged script)|
 | FirstRowLinkMiddle | String | - | The Bundle Identifier of the App, URL or command to open. | “com.jamfsoftware.selfservice.mac” |
 | FirstRowSymbolMiddle | String | - | The SF Symbol shown in the button. | “briefcase.fill”, “bag.circle”, “giftcard.fill”, “gift.circle” or any other SF Symbol. Please check the SF Symbols section. |
 
@@ -274,7 +305,7 @@ Configuration of the top four items with diagnostic information.
 | --- | --- | --- | --- | --- |
 | FirstRowTitleRight | String | Company Store | The text shown in the button label. | “Self Service“, “App Store“ |
 | FirstRowSubtitleRight | String | - | Subtitle text will appear under title when the user hovers over the button. Ignored if left empty. | “Click to open”, “Download apps“ |
-| FirstRowTypeRight | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **DistributedNotification** (Privileged command/script)|
+| FirstRowTypeRight | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **PrivilegedScript** (Privileged script)|
 | FirstRowLinkRight | String | com.apple.AppStore | The Bundle Identifier of the App, URL or command to open. | “com.jamfsoftware.selfservice.mac” |
 | FirstRowSymbolRight | String | cart.fill | The SF Symbol shown in the button. | “briefcase.fill”, “bag.circle”, “giftcard.fill”, “gift.circle” or any other SF Symbol. Please check the SF Symbols section. |
 
@@ -283,7 +314,7 @@ Configuration of the top four items with diagnostic information.
 | --- | --- | --- | --- | --- |
 | SecondRowTitleLeft | String | Support Ticket | The text shown in the button label. | “Create ticket”, “Open incident“ |
 | SecondRowSubtitleLeft | String | - | Subtitle text will replace the title when the user hovers over the button. Ignored if left empty. | “support.company.tld”, “Now”, “Create“ |
-| SecondRowTypeLeft | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **DistributedNotification** (Privileged command/script)|
+| SecondRowTypeLeft | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **PrivilegedScript** (Privileged script)|
 | SecondRowLinkLeft | String | https://yourticketsystem.tld | The Bundle Identifier of the App, URL or command to open. | “https://yourticketsystem.tld”, “mailto:support@company.tld”, “tel:+31000000000” or “smb://yourfileserver.tld” |
 | SecondRowSymbolLeft | String | ticket | The SF Symbol shown in the button. | “lifepreserver”, “person.fill.questionmark” or any other SF Symbol. Please check the SF Symbols section. |
 
@@ -292,7 +323,7 @@ Configuration of the top four items with diagnostic information.
 | --- | --- | --- | --- | --- |
 | SecondRowTitleMiddle | String | - | The text shown in the button label. | “Send email” |
 | SecondRowSubtitleMiddle | String | - | Subtitle text will replace the title when the user hovers over the button. Ignored if left empty. | “support@company.tld”, “Now” |
-| SecondRowTypeMiddle | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **DistributedNotification** (Privileged command/script)|
+| SecondRowTypeMiddle | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **PrivilegedScript** (Privileged script)|
 | SecondRowLinkMiddle | String | - | The Bundle Identifier of the App, URL or command to open. | “https://yourticketsystem.tld”, “mailto:support@company.tld”, “tel:+31000000000” or “smb://yourfileserver.tld” |
 | SecondRowSymbolMiddle | String | - | The SF Symbol shown in the button. | “paperplane”, “arrowshape.turn.up.right.fill” or any other SF Symbol. Please check the SF Symbols section. |
 
@@ -301,7 +332,7 @@ Configuration of the top four items with diagnostic information.
 | --- | --- | --- | --- | --- |
 | SecondRowTitleRight | String | Phone | The text shown in the button label. | “Call Helpdesk“, “Phone“ |
 | SecondRowSubtitleRight | String | - | Subtitle text will replace the title when the user hovers over the button. Ignored if left empty. | “+31 00 000 00 00”, “Now”, “Call“ |
-| SecondRowTypeRight | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **DistributedNotification** (Privileged command/script)|
+| SecondRowTypeRight | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **PrivilegedScript** (Privileged script)|
 | SecondRowLinkRight | String | tel:+31000000000 | The Bundle Identifier of the App, URL or command to open. | “https://yourticketsystem.tld”, “mailto:support@company.tld”, “tel:+31000000000” or “smb://yourfileserver.tld” |
 | SecondRowSymbolRight | String | phone | The SF Symbol shown in the button. | “iphone.homebutton”, “megaphone” or any other SF Symbol. Please check the SF Symbols section. |
 
@@ -309,26 +340,29 @@ Configuration of the top four items with diagnostic information.
 
 ### Support App Extensions
 
-Support App Extensions enable administrators to create custom info items and populate those with output from scripts or commands. You can use your MDM solution to run scripts or commands to populate the Support App Extensions. Optionally we provide SupportHelper to run scripts or commands everytime the Support App popover appears to make sure data is up to date. Please read [Privileged commands or scripts (SupportHelper)](#privileged-commands-or-scripts-supporthelper) down below for more info.
+Support App Extensions enable administrators to create custom info items and populate those with output from scripts or commands. You can use your MDM solution to run scripts or commands to populate the Support App Extensions. The Support App can also run scripts with elevated privileges everytime the Support App popover appears to make sure data is up to date. Extensions show a placeholder by default is no value is set. Once 
+Please read [Privileged scripts](#privileged-scripts) down below for more info.
 
 Below are the preference keys to enable Support App Extensions:
 | Preference key | Type | Default value | Description | Example |
 | --- | --- | --- | --- | --- |
 | ExtensionTitleA | String | - | The title shown in the extension. | "Last Check-In", "Compliance" |
 | ExtensionSymbolA | String | - | The SF Symbol shown in the extension. | "clock.badge.checkmark.fill",  |
-| ExtensionTypeA | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **DistributedNotification** (Privileged command/script)|
+| ExtensionTypeA | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **PrivilegedScript** (Privileged script)|
 | ExtensionLinkA | String | - | The Bundle Identifier of the App, URL or command to open. | `defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bool true; /usr/local/bin/jamf policy; `[`/usr/local/bin/jamf_last_check-in_time.zsh`](https://github.com/root3nl/SupportApp/blob/master/Extension%20Sample%20Scripts/jamf_last_check-in_time.zsh) or any other action you prefer by clicking on the Extension |
+| ExtensionValueA | String | `KeyPlaceholder` | The output of the Extension set by script or MDM. If nothing is set, it is shown as placeholder UI element | Anything you want to show here |
 | ExtensionTitleB | String | - | The title shown in the extension. | "Account Privileges" |
 | ExtensionSymbolB | String | - | The SF Symbol shown in the extension. | "wallet.pass.fill" |
-| ExtensionTypeB | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **DistributedNotification** (Privileged command/script)|
+| ExtensionTypeB | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **PrivilegedScript** (Privileged script)|
 | ExtensionLinkB | String | - | The Bundle Identifier of the App, URL or command to open. | [`/usr/local/bin/sap_privileges_change_permissions.zsh`](https://github.com/root3nl/SupportApp/blob/master/Extension%20Sample%20Scripts/sap_privileges_change_permissions.zsh) or any other action you prefer by clicking on the Extension |
+| ExtensionValueB | String | `KeyPlaceholder` | The output of the Extension set by script or MDM. If nothing is set, it is shown as placeholder UI element | Anything you want to show here |
 | OnAppearAction | String | - | Path to script script or command to be executed when the Support App is opened by clicking on the menu bar item. The SupportHelper is required for this feature. | `/usr/local/bin/runs_when_support_appears.zsh` such as [`/usr/local/bin/user_permissions.zsh`](https://github.com/root3nl/SupportApp/blob/master/Extension%20Sample%20Scripts/user_permissions.zsh) or [`/usr/local/bin/jamf_last_check-in_time.zsh`](https://github.com/root3nl/SupportApp/blob/master/Extension%20Sample%20Scripts/jamf_last_check-in_time.zsh) or [`/usr/local/bin/mscp_compliance_status.sh`](https://github.com/root3nl/SupportApp/blob/master/Extension%20Sample%20Scripts/mscp_compliance_status.sh) |
 
 > **Warning**
 > Both Support App Extensions have other preference keys `ExtensionValueA` and `ExtensionValueB` but those keys are meant to be dynamically set and changed by a script or command, not by MDM. Once set, the default placeholder will disappear and show the output from the preference keys.
 
 #### How to populate Support App Extensions
-Support App Extensions must be populated by setting the value in a preference key within the preference domain `nl.root3.support`. This can be achieved by running custom scripts from your MDM solution or using the `OnAppearAction` combined with SupportHelper. This last option will allow you to update the Support App Extension values every time the Support App popover appears by running the script.
+Support App Extensions must be populated by setting the value in a preference key within the preference domain `nl.root3.support`. This can be achieved by running custom scripts from your MDM solution or using the `OnAppearAction` key. This last option will allow you to update the Support App Extension values every time the Support App popover appears by running the script.
 
 * Create a custom script and populate the desired value by running the following command: `sudo defaults write /Library/Preferences/nl.root3.support.plist ExtensionValueA -string "OUTPUT_VALUE_HERE"`
 * Add the following command to show a placeholder while getting the value: `sudo defaults write /Library/Preferences/nl.root3.support.plist ExtensionValueA -string "KeyPlaceholder"`
@@ -371,17 +405,18 @@ defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bo
 > **Note**
 > Please do not forget to make the script executable: `sudo chmod +x /PATH/TO/SCRIPT`
 
-### Privileged commands or scripts with SupportHelper
-To allow commands or scripts to be executed with root privileges, the SupportHelper is available optionally. This utility is built on Distributed Notifications to allow inter-app communication between the Support App and the SupportHelper. The Support App notifies SupportHelper and the message contains the preference key set in the Configuration Profile with the command or path to the script. SupportHelper listens for new messages using a LaunchDaemon and executes the command or script by requesting the command or path to the script from the Configuration Profile.
+### Privileged scripts
+To allow scripts to be executed with elevated privileges, the Support App has a built-in Privileged Helper Tool. This upgrade over the deprecated SupportHelper makes sure communication is transmitted more securely between the main app the the built-in Privileged Helper Tools with additional checks such as code requirement and scripts must have proper permissions and owner. The script must me owned by `root` and have 755 permissions. Additionally, only paths to a script set in a Configuration Profile will be executed. Values set with `defaults write` are not supported.
 
-Below an example to force a MDM check-in using SupportHelper and a custom script:
+> **Warning**
+> Because the script permissions are checked before execution, commands are not supported anymore as of version 2.6.
+
+Below an example to force a MDM check-in using a custom script:
 
 <img src="/Screenshots/generic_version_2.4_beta.gif" width="800">
 
-More information about Distributed Notifications: https://developer.apple.com/documentation/foundation/distributednotificationcenter
-
 #### Use Cases
-There are a couple of use cases SupportHelper can help with. For example run a command or script with root privileges:
+There are a couple of use cases where privileged scripts can help. For example run a command or script with root privileges:
 * Every time the Support App popover appears, populate Support App Extensions using `OnAppearAction`
 * Extension Attributes (Jamf Pro) by adding the commands to populate the Support App Extension to the EA:
   * Show device compliance information, such as the macOS Security Compliance Project Failed Results Count
@@ -392,18 +427,27 @@ There are a couple of use cases SupportHelper can help with. For example run a c
   * Run device compliance remediation, such as the macOS Security Compliance Project Remediation Script
   * Any other action requiring root privileges, especially when users have standard permissions
 
+#### Disabling or re-enabling
+By default, the Privileged Helper Tool is automatically enabled when using the PKG installer. To opt-out, set the key `DisablePrivilegedHelperTool` to `true` during the time of installation. Also at launch of the Support App, the Privileged Helper Tool will be removed when the key is set. Please also note that for the App Catalog integration, the Privileged Helper Tool is a requirement.
+
+Additionally the Support App app bundle comes with scripts to manually disable or re-enable the Privileged Helper Tool. For example when you accidentaly used or misconfigured the `DisablePrivilegedHelperTool` key, or chose to (not) use it at a later time:
+* Disable: `/Applications/Support.app/Contents/Resources/uninstall_privileged_helper_tool.zsh`
+* Re-enable: `/Applications/Support.app/Contents/Resources/install_privileged_helper_tool.zsh`
+
+For example, you can run those scripts locally of by your MDM solution. You can verify the Privileged Helper Tool is enabled by checking the file locations mentioned in [File locations](#file-locations).
+
 #### File locations
-The SupportHelper installer places two files:
+The Support App installs some files related to the Privileged Helper Tool:
+
+Privileged Helper Tool: `/Library/PrivilegedHelperTools/nl.root3.support.helper`
 
 LaunchDaemon: `/Library/LaunchDaemons/nl.root3.support.helper.plist`
 
-Binary: `/usr/local/bin/SupportHelper`
-
 #### Security considerations
-As SupportHelper is able to execute scripts or commands with root privileges, it needs to be used responsibly. For most deployments, SupportHelper will not be needed and we recommend deploying the Support App without SupportHelper. If you're unsure or unfamiliar with this concept, DO NOT use SupportHelper. This utility is separated from the Support App to avoid compromising the app-sandbox as well.
+As the Support App is able to execute scripts elevated privileges, it needs to be used responsibly. Usually it is only needed for more advanced workflows such as querying additional information in real time, interact with other applications and more. Treat it carefully and only use the `PrivilegedScript` key when you really need elevated privileged.
 
 > **Note**
-> Only values from a Configuration Profile will be used. Values set by `defaults write` will be ignored as it imposes a security risk.
+> Only values from a Configuration Profile will be used. Values set by `defaults write` will be ignored as it imposes a potential security risk.
 
 ### Variables
 
@@ -477,19 +521,35 @@ A sample Configuration Profile you can edit to your preferences is provided [**h
 A sample Configuration Profile is provided (both signed and unsigned) for macOS 13 and higher to avoid users from disabling the LaunchAgent in System Settings > General > Login Items. The profile uses the Root3 Team ID to only allow signed software from Root3. [**Samples**](https://github.com/root3nl/SupportApp/blob/master/Configuration%20Profile%20Samples/Background%20Item%20Management)
 
 ## Logging
-Logs can be viewed from Console or Terminal by filtering the subsystems `nl.root3.support` (Support App) and `nl.root3.support.helper` (SupportHelper).
+Logs can be viewed from Console or Terminal by filtering the subsystems `nl.root3.support` (Support App), `nl.root3.support.helper` (Privileged Helper Tool) and `nl.root3.catalog` (App Catalog).
 
 An example to stream current logs in Terminal for troubleshooting:
 ```
-log stream --debug --info --predicate 'subsystem contains "nl.root3.support"'
+log stream --debug --info --predicate 'subsystem CONTAINS "nl.root3.support"'
+```
+
+Or get logs from the last hour:
+```
+log show --last 24h --debug --info --predicate 'subsystem CONTAINS "nl.root3.support"'
 ```
 
 ## Known issues
 * All available software updates (minor and major) are shown in the menu bar icon and the macOS version info item, even when the update is deferred using a Restrictions Configuration Profile from MDM. macOS collects all available updates in `/Library/Preferences/com.apple.SoftwareUpdate.plist` regardless of any deferral configurations. Only major OS updates can be hidden using the `HideMajorUpdates` key for macOS 12.3 and later.
-* Buttons may keep a hovered state when mouse cursor moves fast: FB8212902 (**resolved in macOS Monterey**)
 * When Jamf Connect is used as password type, clicking "Change Now" does not allow the user to open the Jamf Connect change password window, but instead triggers an alert. Jamf Connect does not support a URL Scheme for opening the Change Password window. Please upvote this feature request: https://ideas.jamf.com/ideas/JN-I-16087
 
 ## Changelog
+
+**Version 2.6**
+* **Scripts with elevated privileged**: There is now built-in support for executing scripts with elevated privileges. A new Privileged Helper Tool is now part of the Support App and no longer requires the separate SupportHelper package. A Privileged Helper Tool is integrated, more secure and easier to configure. Additionally, script permission checks are performed to only allow scripts owned by root with the proper permissions.
+  * The Privileged Helper Tool is automatically installed and enabled when the PKG installer is used
+  * The key value DistributedNotification for keys like FirstRowTypeLeft is now deprecated and replaced with PrivilegedScript
+  * **BREAKING CHANGE**: Using commands instead of a script path is no longer supported due to the increased security mechanisms. Please migrate commands to a script instead.
+* **Root3 App Catalog integration**: A new Info Item App Catalog is added to integrate with Root3's App Catalog solution for automated patch management for third party macOS applications. It provides unique features such as a daily update schedule, updating both managed and unmanaged apps and a user facing app to quickly install new applications. As some app updates require user interaction, users may defer an update and want to update at a more convenient time. The Support App periodically checks for available app updates and allows the user to update apps whenever they prefer in an accessible way. To enable this integration, set the key AppCatalog for one of the Info Items and it requires a valid subscription or trial.
+* **Declarative Device Management update information**: If an update declaration is sent using Declarative Device Management (macOS 14 and higher), the available update will show the enforcement date and time for the update in the macOS version Info Item. If present in the declaration, the DetailsURL will also show a button "Details" and opens the DetailsURL link.
+* **Restart from Support App**: The Last Reboot Info Item now allows to immediately perform a graceful restart as requested in the text. The user no longer needs to leave the app and restart via the Apple-logo in the menu bar.
+* **New standardized UI**: Certain Info Items now have a standard UI such as for macOS updates, uptime and the new App Catalog integration. The previously used popover is replaced with a window filling UI and back button (macOS 13 and higher).
+* macOS 12 is now the minimum supported macOS version
+* Several bug fixes and improvements
 
 **Version 2.4**
 * Support App Extensions: introducing a new way to make your own custom info items and provide relevant information to your end users and create actions. Extensions can show anything you want and can be populated using scripts or commands, for example using your MDM solution. There is support for two Extensions to use in the info item rows.

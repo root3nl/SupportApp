@@ -21,7 +21,7 @@ struct UptimeSubview: View {
     // Dark Mode detection
     @Environment(\.colorScheme) var colorScheme
     
-    // Boolean to show uptime alert when clicked
+    // Boolean to show legacy uptime alert when clicked
     @State var uptimeAlert: Bool = false
     
     // Set the custom color for all symbols depending on Light or Dark Mode.
@@ -44,7 +44,7 @@ struct UptimeSubview: View {
         }
     }
     
-    // Set different alert text when UptimeDaysLimit is set to 1
+    // Set different legacy alert text when UptimeDaysLimit is set to 1
     var alertText: String {
         if preferences.uptimeDaysLimit > 1 {
            return NSLocalizedString("ADMIN_RECOMMENDS_RESTARTING_EVERY", comment: "") + " \(preferences.uptimeDaysLimit)" + NSLocalizedString(" days", comment: "")
@@ -59,21 +59,22 @@ struct UptimeSubview: View {
             InfoItem(title: NSLocalizedString("Last Reboot", comment: ""), subtitle: "\(computerinfo.uptimeRounded) \(computerinfo.uptimeText) " + NSLocalizedString("ago", comment: ""), image: "clock.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: computerinfo.uptimeLimitReached, hoverEffectEnable: true)
                 .modify {
                     if #available(macOS 13, *) {
-                        // Show Popover within NSPopover on macOS 13 or later because behaviour with standard alerts is changed when main popover is marked as transient, causing the NSPopover to lose focus and closes both the NSPopover and Alert
-                        $0.popover(isPresented: $uptimeAlert, arrowEdge: .leading) {
-                            PopoverAlertView(uptimeAlert: $uptimeAlert, title: NSLocalizedString("RESTART_REGULARLY", comment: ""), message: alertText)
-                                .interactiveDismissDisabled(true)
+                        $0.onTapGesture {
+                            if hoverEffectEnabled {
+                                computerinfo.showUptimeAlert.toggle()
+                            }
                         }
                     } else {
-                        $0.alert(isPresented: $uptimeAlert) {
-                            Alert(title: Text(NSLocalizedString("RESTART_REGULARLY", comment: "")), message: Text(alertText), dismissButton: .default(Text("OK")))
+                        $0.onTapGesture {
+                            if hoverEffectEnabled {
+                                uptimeAlert.toggle()
+                            }
                         }
                     }
                 }
-                .onTapGesture {
-                    if hoverEffectEnabled {
-                        self.uptimeAlert.toggle()
-                    }
+                // Legacy popover for macOS 12
+                .popover(isPresented: $uptimeAlert, arrowEdge: .leading) {
+                    PopoverAlertView(uptimeAlert: $uptimeAlert, title: NSLocalizedString("RESTART_REGULARLY", comment: ""), message: alertText)
                 }
         } else {
             InfoItem(title: NSLocalizedString("Last Reboot", comment: ""), subtitle: "\(computerinfo.uptimeRounded) \(computerinfo.uptimeText) " + NSLocalizedString("ago", comment: ""), image: "clock.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: false, hoverEffectEnable: false)

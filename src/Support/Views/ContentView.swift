@@ -24,8 +24,8 @@ struct ContentView: View {
     // Make UserDefaults easy to use
     let defaults = UserDefaults.standard
         
-    // Simple property wrapper boolean to visualize data loading when app opens
-    @State var placeholdersEnabled = true
+//    // Simple property wrapper boolean to visualize data loading when app opens
+//    @State var placeholdersEnabled = true
     
     // Dark Mode detection
     @Environment(\.colorScheme) var colorScheme
@@ -43,37 +43,37 @@ struct ContentView: View {
         
     var body: some View {
         
-        // MARK: - ZStack with blur effect
-        ZStack {
-            EffectsView(material: NSVisualEffectView.Material.fullScreenUI, blendingMode: NSVisualEffectView.BlendingMode.behindWindow)
-
-            // We need to provide Quit option for Apple App Review approval
-            if !preferences.hideQuit {
-                QuitButton()
-            }
-            
-            // Show "Beta" in the top left corner for beta releases
-            if preferences.betaRelease {
-                HStack {
-                    
-                    VStack {
-                        Text("Beta release")
-                            .font(.system(.subheadline, design: .rounded))
-                            .opacity(0.5)
-                        
-                        Spacer()
-                    }
-                    
-                    Spacer()
-                }
-                .padding(.leading, 16.0)
-                .padding(.top, 10)
-            }
-            
-            VStack(spacing: 10) {
-                
-                // MARK: - Horizontal stack with Title and Logo
-                HeaderView()
+//        // MARK: - ZStack with blur effect
+//        ZStack {
+//            EffectsView(material: NSVisualEffectView.Material.fullScreenUI, blendingMode: NSVisualEffectView.BlendingMode.behindWindow)
+//
+//            // We need to provide Quit option for Apple App Review approval
+//            if !preferences.hideQuit {
+//                QuitButton()
+//            }
+//            
+//            // Show "Beta" in the top left corner for beta releases
+//            if preferences.betaRelease {
+//                HStack {
+//                    
+//                    VStack {
+//                        Text("Beta release")
+//                            .font(.system(.subheadline, design: .rounded))
+//                            .opacity(0.5)
+//                        
+//                        Spacer()
+//                    }
+//                    
+//                    Spacer()
+//                }
+//                .padding(.leading, 16.0)
+//                .padding(.top, 10)
+//            }
+//            
+//            VStack(spacing: 10) {
+//                
+//                // MARK: - Horizontal stack with Title and Logo
+//                HeaderView()
                 
                 // MARK: - First horizontal stack with Computer Name and macOS version as defaults
                 if !preferences.hideFirstRowInfoItems {
@@ -97,6 +97,8 @@ struct ContentView: View {
                             ExtensionASubview()
                         case "ExtensionB":
                             ExtensionBSubview()
+                        case "AppCatalog":
+                            AppCatalogSubview()
                         default:
                             ComputerNameSubview()
                         }
@@ -119,6 +121,8 @@ struct ContentView: View {
                             ExtensionASubview()
                         case "ExtensionB":
                             ExtensionBSubview()
+                        case "AppCatalog":
+                            AppCatalogSubview()
                         default:
                             MacOSVersionSubview()
                         }
@@ -149,6 +153,8 @@ struct ContentView: View {
                             ExtensionASubview()
                         case "ExtensionB":
                             ExtensionBSubview()
+                        case "AppCatalog":
+                            AppCatalogSubview()
                         default:
                             UptimeSubview()
                         }
@@ -171,6 +177,8 @@ struct ContentView: View {
                             ExtensionASubview()
                         case "ExtensionB":
                             ExtensionBSubview()
+                        case "AppCatalog":
+                            AppCatalogSubview()
                         default:
                             StorageSubview()
                         }
@@ -201,6 +209,8 @@ struct ContentView: View {
                                 ExtensionASubview()
                             case "ExtensionB":
                                 ExtensionBSubview()
+                            case "AppCatalog":
+                                AppCatalogSubview()
                             default:
                                 PasswordSubview()
                             }
@@ -223,6 +233,8 @@ struct ContentView: View {
                                 ExtensionASubview()
                             case "ExtensionB":
                                 ExtensionBSubview()
+                            case "AppCatalog":
+                                AppCatalogSubview()
                             default:
                                 NetworkSubview()
                             }
@@ -270,46 +282,42 @@ struct ContentView: View {
                     .padding(.horizontal, 10)
                 }
                 
-                // MARK: - Footnote
-                if preferences.footerText != "" {
-                    HStack {
-                        
-                        // Supports for markdown through a variable:
-                        // https://blog.eidinger.info/3-surprises-when-using-markdown-in-swiftui
-                        Text(.init(preferences.footerText.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))
-                            .font(.system(.subheadline, design: .rounded))
-                            .foregroundColor(colorScheme == .dark ? .white.opacity(0.5) : .black.opacity(0.5))
-                            .modify {
-                                if #available(macOS 12, *) {
-                                    $0.textSelection(.enabled)
-                                }
-                            }
-                        
-                        Spacer()
-                        
-                    }
-                    .padding(.horizontal, 10)
-                    // Workaround to support multiple lines
-                    .frame(minWidth: 382, idealWidth: 382, maxWidth: 382)
-                    .fixedSize()
-                }
-            }
-            .padding(.bottom, 10)
-        }
-        // MARK: - Run functions when ContentView appears for the first time
-        .onAppear {
-            dataLoadingEffect()
-        }
-        // MARK: - Show placeholders while loading
-        .redacted(reason: placeholdersEnabled ? .placeholder : .init())
+//                // MARK: - Footnote
+//                if preferences.footerText != "" {
+//                    HStack {
+//                        
+//                        // Supports for markdown through a variable:
+//                        // https://blog.eidinger.info/3-surprises-when-using-markdown-in-swiftui
+//                        Text(.init(preferences.footerText.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))
+//                            .font(.system(.subheadline, design: .rounded))
+//                            .foregroundColor(colorScheme == .dark ? .white.opacity(0.5) : .black.opacity(0.5))
+//                            .textSelection(.enabled)
+//                        
+//                        Spacer()
+//                        
+//                    }
+//                    .padding(.horizontal, 10)
+//                    // Workaround to support multiple lines
+//                    .frame(minWidth: 382, idealWidth: 382, maxWidth: 382)
+//                    .fixedSize()
+//                }
+//            }
+//            .padding(.bottom, 10)
+//        }
+//        // MARK: - Run functions when ContentView appears for the first time
+//        .onAppear {
+//            dataLoadingEffect()
+//        }
+//        // MARK: - Show placeholders while loading
+//        .redacted(reason: placeholdersEnabled ? .placeholder : .init())
     }
     
-    // MARK: - Start app with placeholders and show data after 0.4 seconds to visualize data loading.
-    func dataLoadingEffect() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-            placeholdersEnabled = false
-        }
-    }
+//    // MARK: - Start app with placeholders and show data after 0.4 seconds to visualize data loading.
+//    func dataLoadingEffect() {
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+//            placeholdersEnabled = false
+//        }
+//    }
 }
 
 struct ContentView_Previews: PreviewProvider {

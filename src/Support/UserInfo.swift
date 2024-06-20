@@ -478,7 +478,7 @@ class UserInfo: ObservableObject {
                             let fullNameArray = try record.values(forAttribute: kODAttributeTypeFullName) as? [String]
                             DispatchQueue.main.async {
                                 self.fullName = fullNameArray?.first ?? ""
-                                self.logger.debug("Full name is: \(self.fullName)")
+                                self.logger.debug("Full name is: \(self.fullName, privacy: .public)")
                             }
                         } catch {
                             logger.error("Error while getting user's full name")

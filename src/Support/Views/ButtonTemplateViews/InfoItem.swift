@@ -14,6 +14,7 @@ struct InfoItem: View {
     var symbolColor: Color
     var notificationBadge: Int?
     var notificationBadgeBool: Bool?
+    var loading: Bool?
     
     // Vars to activate hover effect
     @State var hoverEffectEnable: Bool
@@ -24,14 +25,25 @@ struct InfoItem: View {
         ZStack {
             
             HStack {
-                Ellipse()
-                    .foregroundColor((hoverView && hoverEffectEnable) ? .primary : symbolColor)
-                    .overlay(
-                        Image(systemName: image)
-                            .foregroundColor((hoverView && hoverEffectEnable) ? Color("hoverColor") : Color.white)
-                    )
-                    .frame(width: 26, height: 26)
-                    .padding(.leading, 10)
+                if loading ?? false {
+                    Ellipse()
+                        .foregroundColor(Color.gray.opacity(0.5))
+                        .overlay(
+                            ProgressView()
+                                .scaleEffect(0.5)
+                        )
+                        .frame(width: 26, height: 26)
+                        .padding(.leading, 10)
+                } else {
+                    Ellipse()
+                        .foregroundColor((hoverView && hoverEffectEnable) ? .primary : symbolColor)
+                        .overlay(
+                            Image(systemName: image)
+                                .foregroundColor((hoverView && hoverEffectEnable) ? Color("hoverColor") : Color.white)
+                        )
+                        .frame(width: 26, height: 26)
+                        .padding(.leading, 10)
+                }
                 
                 VStack(alignment: .leading) {
                     Text(title).font(.system(.body, design: .rounded)).fontWeight(.medium)

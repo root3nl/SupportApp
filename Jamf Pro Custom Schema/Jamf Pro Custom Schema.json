@@ -285,10 +285,10 @@
       "description": "Info item shown in the upper left corner",
       "type": "string",
       "options": {
-        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Extension A", "Extension B"],
+        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Extension A", "Extension B", "App Catalog"],
         "infoText": "Key name: InfoItemOne"
       },
-      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA", "ExtensionB"],
+      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA", "ExtensionB", "AppCatalog"],
       "links": [
         {
           "rel": "Documentation",
@@ -301,10 +301,10 @@
       "description": "Info item shown in the upper right corner",
       "type": "string",
       "options": {
-        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Extension A", "Extension B"],
+        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Extension A", "Extension B", "App Catalog"],
         "infoText": "Key name: InfoItemTwo"
       },
-      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA", "ExtensionB"],
+      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA", "ExtensionB", "AppCatalog"],
       "links": [
         {
           "rel": "Documentation",
@@ -317,10 +317,10 @@
       "description": "Info item shown in the second row left",
       "type": "string",
       "options": {
-        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Extension A", "Extension B"],
+        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Extension A", "Extension B", "App Catalog"],
         "infoText": "Key name: InfoItemThree"
       },
-      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA", "ExtensionB"],
+      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA", "ExtensionB", "AppCatalog"],
       "links": [
         {
           "rel": "Documentation",
@@ -333,10 +333,10 @@
       "description": "Info item shown in the second row right",
       "type": "string",
       "options": {
-        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Extension A", "Extension B"],
+        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Extension A", "Extension B", "App Catalog"],
         "infoText": "Key name: InfoItemFour"
       },
-      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA", "ExtensionB"],
+      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA", "ExtensionB", "AppCatalog"],
       "links": [
         {
           "rel": "Documentation",
@@ -349,10 +349,10 @@
       "description": "Info item shown in the third row left",
       "type": "string",
       "options": {
-        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Extension A", "Extension B"],
+        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Extension A", "Extension B", "App Catalog"],
         "infoText": "Key name: InfoItemFive"
       },
-      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA", "ExtensionB"],
+      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA", "ExtensionB", "AppCatalog"],
       "links": [
         {
           "rel": "Documentation",
@@ -365,10 +365,10 @@
       "description": "Info item shown in the third row right",
       "type": "string",
       "options": {
-        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Extension A", "Extension B"],
+        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Extension A", "Extension B", "App Catalog"],
         "infoText": "Key name: InfoItemSix"
       },
-      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA", "ExtensionB"],
+      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA", "ExtensionB", "AppCatalog"],
       "links": [
         {
           "rel": "Documentation",
@@ -478,13 +478,13 @@
     },
     "FirstRowTypeLeft": {
       "title": "First Row Left: Type",
-      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. App by default. For Privileged Command/Script, the SupportHelper is required",
+      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. App by default.",
       "type": "string",
       "options": {
-        "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script (requires SupportHelper)"],
+        "enum_titles": ["App", "URL", "User Command", "Privileged Script"],
         "infoText": "Key name: FirstRowTypeLeft"
       },
-      "enum": ["App", "URL", "Command", "DistributedNotification"],
+      "enum": ["App", "URL", "Command", "PrivilegedScript"],
       "links": [
         {
           "rel": "Documentation",
@@ -550,13 +550,13 @@
     },
     "FirstRowTypeMiddle": {
       "title": "First Row Middle: Type",
-      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. App by default. For Privileged Command/Script, the SupportHelper is required",
+      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. App by default.",
       "type": "string",
       "options": {
-        "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script (requires SupportHelper)"],
+        "enum_titles": ["App", "URL", "User Command", "Privileged Script"],
         "infoText": "Key name: FirstRowTypeMiddle"
       },
-      "enum": ["App", "URL", "Command", "DistributedNotification"],
+      "enum": ["App", "URL", "Command", "PrivilegedScript"],
       "links": [
         {
           "rel": "Documentation",
@@ -622,13 +622,13 @@
     },
     "FirstRowTypeRight": {
       "title": "First Row Right: Type",
-      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. App by default. For Privileged Command/Script, the SupportHelper is required",
+      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. App by default.",
       "type": "string",
       "options": {
-        "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script (requires SupportHelper)"],
+        "enum_titles": ["App", "URL", "User Command", "Privileged Script"],
         "infoText": "Key name: FirstRowTypeRight"
       },
-      "enum": ["App", "URL", "Command", "DistributedNotification"],
+      "enum": ["App", "URL", "Command", "PrivilegedScript"],
       "links": [
         {
           "rel": "Documentation",
@@ -694,13 +694,13 @@
     },
     "SecondRowTypeLeft": {
       "title": "Second Row Left: Type",
-      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. URL by default. For Privileged Command/Script, the SupportHelper is required",
+      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. URL by default.",
       "type": "string",
       "options": {
-        "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script (requires SupportHelper)"],
+        "enum_titles": ["App", "URL", "User Command", "Privileged Script"],
         "infoText": "Key name: SecondRowTypeLeft"
       },
-      "enum": ["App", "URL", "Command", "DistributedNotification"],
+      "enum": ["App", "URL", "Command", "PrivilegedScript"],
       "links": [
         {
           "rel": "Documentation",
@@ -766,13 +766,13 @@
     },
     "SecondRowTypeMiddle": {
       "title": "Second Row Middle: Type",
-      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. URL by default. For Privileged Command/Script, the SupportHelper is required",
+      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. URL by default.",
       "type": "string",
       "options": {
-        "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script (requires SupportHelper)"],
+        "enum_titles": ["App", "URL", "User Command", "Privileged Script"],
         "infoText": "Key name: SecondRowTypeMiddle"
       },
-      "enum": ["App", "URL", "Command", "DistributedNotification"],
+      "enum": ["App", "URL", "Command", "PrivilegedScript"],
       "links": [
         {
           "rel": "Documentation",
@@ -838,13 +838,13 @@
     },
     "SecondRowTypeRight": {
       "title": "Second Row Right: Type",
-      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. URL by default. For Privileged Command/Script, the SupportHelper is required",
+      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. URL by default.",
       "type": "string",
       "options": {
-        "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script (requires SupportHelper)"],
+        "enum_titles": ["App", "URL", "User Command", "Privileged Script"],
         "infoText": "Key name: SecondRowTypeRight"
       },
-      "enum": ["App", "URL", "Command", "DistributedNotification"],
+      "enum": ["App", "URL", "Command", "PrivilegedScript"],
       "links": [
         {
           "rel": "Documentation",
@@ -913,10 +913,10 @@
       "description": "Type of link the Extension should open.",
       "type": "string",
       "options": {
-        "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script (requires SupportHelper)"],
+        "enum_titles": ["App", "URL", "User Command", "Privileged Script"],
         "infoText": "Key name: ExtensionTypeA"
       },
-      "enum": ["App", "URL", "Command", "DistributedNotification"],
+      "enum": ["App", "URL", "Command", "PrivilegedScript"],
       "links": [
         {
           "rel": "Documentation",
@@ -971,10 +971,10 @@
       "description": "Type of link the Extension should open",
       "type": "string",
       "options": {
-        "enum_titles": ["App", "URL", "User Command", "Privileged Command/Script (requires SupportHelper)"],
+        "enum_titles": ["App", "URL", "User Command", "Privileged Script"],
         "infoText": "Key name: ExtensionTypeB"
       },
-      "enum": ["App", "URL", "Command", "DistributedNotification"],
+      "enum": ["App", "URL", "Command", "PrivilegedScript"],
       "links": [
         {
           "rel": "Documentation",
@@ -998,7 +998,7 @@
 		},
     "OnAppearAction": {
       "title": "On Appear Script/Command",
-      "description": "Path to script script or command to be executed when the Support App is opened by clicking on the menu bar item. The SupportHelper is required for this feature.",
+      "description": "Path to script script or command to be executed when the Support App is opened by clicking on the menu bar item.",
       "type": "string",
       "options": {
         "infoText": "Key name: OnAppearAction"
@@ -1009,6 +1009,21 @@
           "href": "https://github.com/root3nl/SupportApp"
         }
       ]
-		}
+		},
+    "DisablePrivilegedHelperTool": {
+      "title": "Disable Privileged Helper Tool",
+      "description": "Option to disable the Privileged Helper Tool. Re-enabling requires the reinstallation of the Support App.",
+      "type": "boolean",
+      "options": {
+        "enum_titles": ["Enable", "Disable"],
+        "infoText": "Key name: DisablePrivilegedHelperTool"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    }
 	}
 }

@@ -16,7 +16,11 @@ struct PopoverAlertView: View {
     // Make UserDefaults easy to use
     let defaults = UserDefaults.standard
     
+    // Dark Mode detection
+    @Environment(\.colorScheme) var colorScheme
+    
     @Binding var uptimeAlert: Bool
+    
     var title: String
     var message: String
     
@@ -43,10 +47,18 @@ struct PopoverAlertView: View {
                 .fixedSize()
                 .font(.system(.body, design: .rounded))
                         
-            Button(NSLocalizedString("CLOSE", comment: ""), action: {
+            Button( action: {
                 self.uptimeAlert.toggle()
-            })
-            .buttonStyle(.borderedProminent)
+            }) {
+                Text(NSLocalizedString("CLOSE", comment: ""))
+                    .font(.system(.body, design: .rounded))
+                    .fontWeight(.regular)
+                    .padding(.vertical, 4)
+                    .padding(.horizontal)
+                    .background(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
+                    .clipShape(Capsule())
+            }
+            .buttonStyle(.plain)
             .padding(.top)
         }
         .padding()
