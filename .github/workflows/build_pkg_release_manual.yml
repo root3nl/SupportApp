@@ -1,4 +1,4 @@
-name: Build and Notarize Support App
+name: Build and Notarize Support App - Manual Release
 
 on: [workflow_dispatch]
 

@@ -65,9 +65,9 @@ jobs:
           p12-file-base64: ${{ secrets.DEVELOPER_ID_INSTALLER_BASE64 }}
           p12-password: ${{ secrets.DEVELOPER_ID_INSTALLER_PASSWORD }}
 
-      # - name: Enable beta watermark
-      #   run: |
-      #     sed -i '' "s/let betaRelease: Bool = false/let betaRelease: Bool = true/g" ./src/Support/Preferences.swift
+      - name: Enable beta watermark
+        run: |
+          sed -i '' "s/let betaRelease: Bool = false/let betaRelease: Bool = true/g" ./src/Support/Preferences.swift
 
       - name: Build macOS app
         run: |
