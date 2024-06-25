@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>PayloadContent</key>
+  <array>
+    <dict>
+      <key>PayloadDescription</key>
+      <string></string>
+      <key>PayloadDisplayName</key>
+      <string>Privacy Preferences Policy Control</string>
+      <key>PayloadEnabled</key>
+      <true/>
+      <key>PayloadIdentifier</key>
+      <string>com.apple.TCC.configuration-profile-policy.C242FB4C-60DB-490B-B517-82B5E0778100</string>
+      <key>PayloadOrganization</key>
+      <string>Root3</string>
+      <key>PayloadType</key>
+      <string>com.apple.TCC.configuration-profile-policy</string>
+      <key>PayloadUUID</key>
+      <string>C242FB4C-60DB-490B-B517-82B5E0778100</string>
+      <key>PayloadVersion</key>
+      <integer>1</integer>
+      <key>Services</key>
+      <dict>
+        <key>SystemPolicyAllFiles</key>
+        <array>
+          <dict>
+            <key>Allowed</key>
+            <true/>
+            <key>CodeRequirement</key>
+            <string>anchor apple generic and identifier "nl.root3.support" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "98LJ4XBGYK")</string>
+            <key>Identifier</key>
+            <string>nl.root3.support</string>
+            <key>IdentifierType</key>
+            <string>bundleID</string>
+            <key>StaticCode</key>
+            <false/>
+          </dict>
+          <dict>
+            <key>Allowed</key>
+            <true/>
+            <key>CodeRequirement</key>
+            <string>anchor apple generic and identifier "nl.root3.support.helper" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "98LJ4XBGYK")</string>
+            <key>Identifier</key>
+            <string>/Library/PrivilegedHelperTools/nl.root3.support.helper</string>
+            <key>IdentifierType</key>
+            <string>path</string>
+            <key>StaticCode</key>
+            <false/>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </array>
+  <key>PayloadDescription</key>
+  <string></string>
+  <key>PayloadDisplayName</key>
+  <string>PPPC - Support App</string>
+  <key>PayloadEnabled</key>
+  <true/>
+  <key>PayloadIdentifier</key>
+  <string>2096DADD-D9C4-4B78-BE43-7785ECD25E9F</string>
+  <key>PayloadOrganization</key>
+  <string>Root3</string>
+  <key>PayloadRemovalDisallowed</key>
+  <true/>
+  <key>PayloadScope</key>
+  <string>System</string>
+  <key>PayloadType</key>
+  <string>Configuration</string>
+  <key>PayloadUUID</key>
+  <string>C02A15F0-9992-4DAD-9783-B32A114D9DFF</string>
+  <key>PayloadVersion</key>
+  <integer>1</integer>
+</dict>
+</plist>

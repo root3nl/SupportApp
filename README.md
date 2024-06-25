@@ -227,6 +227,8 @@ The Support App requires additional permissions to be able to perform app update
 - **IdentifierType**: Path
 - **CodeRequirement**: `anchor apple generic and identifier "nl.root3.support.helper" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "98LJ4XBGYK")`
 
+A sample Configuration Profile is provided [**here**](https://github.com/root3nl/SupportApp/blob/master/Configuration%20Profile%20Samples/PPPC/PPPC%20-%20Support%20App.mobileconfig)
+
 ### Last Reboot
 If `UptimeDaysLimit` is set and the user click on the Last Reboot Info Item, a view is shown where the administrators reboot recommendation is shown. It also provides a button to quickly perform a graceful restart without leaving the Support App.
 

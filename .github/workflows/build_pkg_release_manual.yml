@@ -65,7 +65,7 @@ jobs:
       - name: Upload package
         uses: actions/upload-artifact@v4
         with:
-          name: Support ${{env.APP_VERSION}})
+          name: Support ${{env.APP_VERSION}}
           path: build/
       
       
