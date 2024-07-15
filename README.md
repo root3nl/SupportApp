@@ -27,7 +27,7 @@
   * [Welcome Screen](#welcome-screen)
   * [Software Update integration](#software-update-integration)
   * [App Catalog integration](#app-catalog-integration)
-    * [PPPC requirement](#pppc-requirement)
+    * [PPPC requirements](#pppc-requirements)
   * [Last Reboot](#last-reboot)
 - [Configuration](#configuration)
 - [Advanced configuration](#advanced-configuration)
@@ -44,10 +44,12 @@
     * [Security Considerations](#security-considerations)
 - [How to use SF Symbols](#how-to-use-sf-symbols)
 - [MDM deployment](#mdm-deployment)
-  * [Jamf Pro custom JSON Schema](#jamf-pro-custom-json-schema)
+  * [Jamf Pro](#jamf-pro)
+  * [Microsoft Intune](#microsoft-intune)
   * [Installer or app bundle](#installer-or-app-bundle)
   * [Sample LaunchAgent](#sample-launchagent)
   * [Sample Configuration Profile](#sample-configuration-profile)
+  * [Managed Login Item](#managed-login-item)
 - [Logging](#logging)
 - [Known issues](#known-issues)
 - [Changelog](#changelog)
@@ -503,12 +505,38 @@ We choose to go all the way with SF Symbols as these good looking icons are desi
 ## MDM deployment
 It is recommended to deploy the Configuration Profile first before installing the Support app.
 
-### Jamf Pro custom JSON schema
-A JSON Schema for Jamf Pro is provided for easy configuration of all the preference keys without creating/modifying a custom Configuration Profile in XML format. Download the JSON file [**here**](https://github.com/root3nl/SupportApp/blob/master/Jamf%20Pro%20Custom%20Schema/Jamf%20Pro%20Custom%20Schema.json)
+### Jamf Pro
+A Jamf Pro Manifest for Jamf Pro is provided for easy configuration of all the preference keys without creating/modifying a custom Configuration Profile in XML format. Download the JSON file [**here**](https://github.com/root3nl/SupportApp/blob/master/Jamf%20Pro%20Custom%20Schema/Jamf%20Pro%20Custom%20Schema.json)
 
 More information about the JSON Schema feature in Jamf Pro: https://docs.jamf.com/technical-papers/jamf-pro/json-schema/10.19.0/Overview.html
 
 <img src="/Screenshots/jamf_pro_custom_schema.png" width="800">
+
+### Microsoft Intune
+Configuring the Support App for Microsoft Intune is the easiest with the following steps:
+* Prepare the plist file with your key values and save as nl.root3.support.plist. Check the example file below:
+
+```
+<key>Title</key>
+<string>Hi $LocalFullName!</string>
+<key>Logo</key>
+<string>/PATH/TO/IMAGE</string>
+<key>LogoDarkMode</key>
+<string>/PATH/TO/IMAGE</string>
+<key>NotificationIcon</key>
+<string>/PATH/TO/IMAGE</string>
+<key>StatusBarIconNotifierEnabled</key>
+<true/>
+...
+```
+
+* Log into intune.microsoft.com > Devices > macOS > Configuration > Create > New Policy
+* Choose for Templates > Preference file
+* Set the preference domain to `nl.root3.support`
+* Upload the property list
+* Complete the Assignments and Save
+
+<img width="1158" alt="microsoft_intune_configuration" src="https://github.com/user-attachments/assets/5a69e347-2019-4316-a688-635e0285e0c4">
 
 ### Installer or app bundle
 Depending on your preference or MDM solution you can use either the installer or zipped app bundle. The installer includes a LaunchAgent and is the recommended method to make sure the app stays open and relaunches automatically.
@@ -519,7 +547,7 @@ A sample LaunchAgent to always keep the app alive is provided [**here**](https:/
 ### Sample Configuration Profile
 A sample Configuration Profile you can edit to your preferences is provided [**here**](https://github.com/root3nl/SupportApp/blob/master/Configuration%20Profile%20Samples/Support%20App%20Configuration%20Sample.mobileconfig)
 
-#### Background Item Management
+### Managed Login Item
 A sample Configuration Profile is provided (both signed and unsigned) for macOS 13 and higher to avoid users from disabling the LaunchAgent in System Settings > General > Login Items. The profile uses the Root3 Team ID to only allow signed software from Root3. [**Samples**](https://github.com/root3nl/SupportApp/blob/master/Configuration%20Profile%20Samples/Background%20Item%20Management)
 
 ## Logging
