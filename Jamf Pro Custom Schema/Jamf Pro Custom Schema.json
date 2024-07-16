@@ -894,6 +894,20 @@
         }
       ]
     },
+    "ExtensionValueA": {
+      "title": "Extension Value A",
+      "description": "The value shown in the Extension as subtitle.",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: ExtensionValueA"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
     "ExtensionSymbolA": {
       "title": "Extension SF Symbol A",
       "description": "The SF Symbol shown in the Extension.",
@@ -938,12 +952,41 @@
         }
       ]
 		},
+    "ExtensionAlertA": {
+      "title": "Extension Alert A",
+      "description": "Enable an alert notification badge in Extension A",
+      "type": "boolean",
+      "options": {
+        "enum_titles": ["Enable Alert", "Disable Alert"],
+        "infoText": "Key name: ExtensionAlertA"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
     "ExtensionTitleB": {
       "title": "Extension Title B",
       "description": "The text shown in the Extension.",
       "type": "string",
       "options": {
         "infoText": "Key name: ExtensionTitleB"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
+    "ExtensionValueB": {
+      "title": "Extension Value B",
+      "description": "The value shown in the Extension as subtitle.",
+      "type": "string",
+      "options": {
+        "infoText": "Key name: ExtensionValueB"
       },
       "links": [
         {
@@ -996,6 +1039,21 @@
         }
       ]
 		},
+    "ExtensionAlertB": {
+      "title": "Extension Alert B",
+      "description": "Enable an alert notification badge in Extension B",
+      "type": "boolean",
+      "options": {
+        "enum_titles": ["Enable Alert", "Disable Alert"],
+        "infoText": "Key name: ExtensionAlertB"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp"
+        }
+      ]
+    },
     "OnAppearAction": {
       "title": "On Appear Script/Command",
       "description": "Path to script script or command to be executed when the Support App is opened by clicking on the menu bar item.",
