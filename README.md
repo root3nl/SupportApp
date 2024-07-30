@@ -104,7 +104,7 @@ You can participate in beta versions of Support App using TestFlight. This requi
 ## Features
 
 ### Menu Bar Icon
-The Menu Bar Icon can be customized to your own image such as a PNG with Alpha Channel, an image from URL or an SF Symbol. Any image will be shown as template to match the rest of the Menu Bar Extras. Icons larger than 22 points will automatically be resized to the recommended 16 points and the aspect ration will be preserved. Optionally a notification badge can overlay the icon to attract the user's attention when an Apple Software Update is available or any other warning was triggered. Please check the preference key `StatusBarIconNotifierEnabled`.
+The Menu Bar Icon can be customized to your own image such as a PNG with Alpha Channel, an image from URL or an SF Symbol. Any image will be shown as template to match the rest of the Menu Bar Extras. Icons larger than 22 points will automatically be resized to the recommended 16 points and the aspect ratio will be preserved. Optionally a notification badge can overlay the icon to attract the user's attention when an Apple Software Update is available or any other warning was triggered. Please check the preference key `StatusBarIconNotifierEnabled`.
 
 > **Note**
 > When using a local file, make sure to put the image in a folder accessible from the App Sandbox. We recommend a subfolder in `/Library/Application Support/` such as `/Library/Application Support/MyOrganization`
