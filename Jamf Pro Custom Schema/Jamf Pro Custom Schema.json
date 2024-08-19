@@ -1055,8 +1055,8 @@
       ]
     },
     "OnAppearAction": {
-      "title": "On Appear Script/Command",
-      "description": "Path to script script or command to be executed when the Support App is opened by clicking on the menu bar item.",
+      "title": "On Appear Script",
+      "description": "Path to privileged script to be executed when the Support App is shown by clicking on the menu bar item. The Privileged Helper Tool is required for this feature.",
       "type": "string",
       "options": {
         "infoText": "Key name: OnAppearAction"
