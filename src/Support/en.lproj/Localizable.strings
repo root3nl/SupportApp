@@ -20,9 +20,9 @@
 "days" = "days";
 "Used" = "Used";
 "Available" = "Available";
-"About Support" = "About Support";
+"About Support" = "About ETH Support";
 "Help and Documentation" = "Help and Documentation";
-"Quit Support" = "Quit Support";
+"Quit Support" = "Quit ETH Support";
 "Quit" = "Quit";
 "Are you sure you want to quit?" = "Are you sure you want to quit?";
 "An error occurred" = "An error occurred";

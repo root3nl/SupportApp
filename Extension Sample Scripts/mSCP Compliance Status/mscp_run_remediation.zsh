@@ -1,11 +1,11 @@
 #!/bin/zsh --no-rcs
 
-# Support App Extension - User Permissions
+# Support App Extension - macOS Security Compliance Project Remediation
 #
 #
 # Copyright 2024 Root3 B.V. All rights reserved.
 #
-# Support App Extension to get the current user permission schema.
+# Support App Extension to run macOS Security Compliance Project Remediation.
 #
 # REQUIREMENTS:
 # - Jamf Pro Binary
@@ -17,6 +17,11 @@
 # WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
 # IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+# ------------------    edit the variables below this line    ------------------
+
+# Policy custom trigger
+custom_trigger="mscp_remediation"
+
 # ---------------------    do not edit below this line    ----------------------
 
 # Support App preference plist
@@ -26,23 +31,10 @@ preference_file_location="/Library/Preferences/nl.root3.support.plist"
 defaults write "${preference_file_location}" ExtensionLoadingB -bool true
 
 # Replace value with placeholder while loading
-defaults write "${preference_file_location}" ExtensionValueB -string "KeyPlaceholder"
+defaults write "${preference_file_location}" ExtensionValueB -string "Remediating..."
 
-# Keep loading effect active for 0.5 seconds
-sleep 0.5
+# Call the Jamf Pro custom trigger with remediation policy
+/usr/local/bin/jamf policy -event ${custom_trigger}
 
-# Get the username of the currently logged in user
-username=$(scutil <<< "show State:/Users/ConsoleUser" | awk '/Name :/ && ! /loginwindow/ { print $3 }')
-
-# Check if user is administrator
-is_admin=$(dsmemberutil checkmembership -U "${username}" -G admin)
-
-# Set Extension value
-if [[ ${is_admin} != *not* ]]; then
-  defaults write "${preference_file_location}" ExtensionValueB -string "Administrator"
-else
-  defaults write "${preference_file_location}" ExtensionValueB -string "Standard User"
-fi
-
-# Stop spinning indicator
-defaults write "${preference_file_location}" ExtensionLoadingB -bool false
+# Run script to populate new values in Extension
+/usr/local/bin/mscp_compliance_status.sh

@@ -1,12 +1,11 @@
-#!/bin/zsh
+#!/bin/zsh --no-rcs
 
 # Support App Extension - Jamf Pro Last Check-In Time
 #
 #
-# Copyright 2022 Root3 B.V. All rights reserved.
+# Copyright 2024 Root3 B.V. All rights reserved.
 #
-# Support App Extension to get the Jamf Pro Last Check-In Time and publish to
-# Extension A.
+# Support App Extension to get the Jamf Pro Last Check-In Time
 #
 # REQUIREMENTS:
 # - Jamf Pro Binary
