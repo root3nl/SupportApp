@@ -3,7 +3,7 @@
 # Support App Extension - macOS Security Compliance Project Failed Results Count
 #
 #
-# Copyright 2023 Root3 B.V. All rights reserved.
+# Copyright 2024 Root3 B.V. All rights reserved.
 # This script is based on a script copyrighted by Jamf Software, LLC (2022).
 # Original project: https://github.com/usnistgov/macos_security 
 #
@@ -13,15 +13,6 @@
 #
 # REQUIREMENTS:
 # - An active mSCP baseline
-# - SupportHelper
-#
-# EXAMPLE:
-# Here's an example how to configure the Support App preferences for Extension A
-# - ExtensionTitleA: Compliance
-# - ExtensionSymbolA: lock.fill
-# - ExtensionTypeA: DistributedNotification
-# - ExtensionLinkA: /usr/local/bin/compliance_status.sh
-# - OnAppearAction: /usr/local/bin/compliance_status.sh
 #
 # THE SOFTWARE IS PROVIDED BY ROOT3 B.V. "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF

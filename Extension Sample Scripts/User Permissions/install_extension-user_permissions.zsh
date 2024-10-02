@@ -11,6 +11,14 @@
 #
 # REQUIREMENTS: -
 #
+# EXAMPLE:
+# Here's an example how to configure the Support App preferences for Extension A
+# - ExtensionTitleA: Account Privileges
+# - ExtensionSymbolA: wallet.pass.fill
+# - ExtensionTypeA: PrivilegedScript
+# - ExtensionLinkA: /usr/local/bin/user_permissions.zsh
+# - OnAppearAction: /usr/local/bin/user_permissions.zsh
+#
 # THE SOFTWARE IS PROVIDED BY ROOT3 B.V. "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 # MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
@@ -21,7 +29,7 @@
 # ------------------    edit the variables below this line    ------------------
 
 # Local script path to create
-path_to_script="/Library/Application Support/Support App/user_permissions.zsh"
+path_to_script="/usr/local/bin/user_permissions.zsh"
 
 # Set Support App Extension A or B
 extension_label="B"
@@ -77,7 +85,7 @@ username=\$(scutil <<< "show State:/Users/ConsoleUser" | awk '/Name :/ && ! /log
 # Check if user is administrator
 is_admin=\$(dsmemberutil checkmembership -U "\${username}" -G admin)
 
-# Change permissions
+# Set Extension value
 if [[ \${is_admin} != *not* ]]; then
   defaults write "\${preference_file_location}" ExtensionValue${extension_label} -string "Administrator"
 else

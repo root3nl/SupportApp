@@ -1055,7 +1055,7 @@
       ]
     },
     "OnAppearAction": {
-      "title": "On Appear Script",
+      "title": "On Appear Action",
       "description": "Path to privileged script to be executed when the Support App is shown by clicking on the menu bar item. The Privileged Helper Tool is required for this feature.",
       "type": "string",
       "options": {
