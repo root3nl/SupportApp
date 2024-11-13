@@ -11,6 +11,7 @@
 "Last Reboot" = "Dias sin reiniciar";
 "RESTART_REGULARLY" = "Reinicia tu Mac con regularidad";
 "ADMIN_RECOMMENDS_RESTARTING_EVERY" = "Se recomienda reiniciar el Mac cada";
+"ADMIN_RECOMMENDS_RESTARTING_EVERY_DAY" = "Your administrator recommends restarting your Mac daily";
 "ago" = "hace";
 "minute" = "minuto";
 "minutes" = "minutos";

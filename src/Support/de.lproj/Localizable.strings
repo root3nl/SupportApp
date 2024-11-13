@@ -11,6 +11,7 @@
 "Last Reboot" = "Letzter Neustart";
 "RESTART_REGULARLY" = "Starten Sie Ihren Mac regelmäßig neu";
 "ADMIN_RECOMMENDS_RESTARTING_EVERY" = "Dein Administrator empfiehlt dir einen Neustart alle";
+"ADMIN_RECOMMENDS_RESTARTING_EVERY_DAY" = "Your administrator recommends restarting your Mac daily";
 "ago" = "vergangen";
 "minute" = "Minute";
 "minutes" = "Minuten";

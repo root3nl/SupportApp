@@ -11,6 +11,7 @@
 "Last Reboot" = "Dernier redémarrage";
 "RESTART_REGULARLY" = "Pensez à redémarrer votre Mac";
 "ADMIN_RECOMMENDS_RESTARTING_EVERY" = "Votre administrateur préféré recommande de redémarrer votre Mac tous les";
+"ADMIN_RECOMMENDS_RESTARTING_EVERY_DAY" = "Your administrator recommends restarting your Mac daily";
 "ago" = "plus tôt";
 "minute" = "minute";
 "minutes" = "minutes";
