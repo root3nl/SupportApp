@@ -54,6 +54,7 @@
 		4947C1552B154A2F00276EFD /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4947C1542B154A2F00276EFD /* main.swift */; };
 		4947C15A2B154A2F00276EFD /* SupportXPC.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = 4947C14E2B154A2F00276EFD /* SupportXPC.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		495924F9265C535B00E083AC /* QuitButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495924F8265C535B00E083AC /* QuitButton.swift */; };
+		495D51CF2CF1431200D13729 /* SupportItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495D51CE2CF1431200D13729 /* SupportItemModel.swift */; };
 		495F74EC28B39A9A00C20304 /* PopoverAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495F74EB28B39A9A00C20304 /* PopoverAlertView.swift */; };
 		4962F3B22C0C8C5F004571DC /* uninstall_privileged_helper_tool.zsh in Resources */ = {isa = PBXBuildFile; fileRef = 4962F3B12C0C8C5F004571DC /* uninstall_privileged_helper_tool.zsh */; };
 		4962F3B62C0CEF24004571DC /* install_privileged_helper_tool.zsh in Resources */ = {isa = PBXBuildFile; fileRef = 4962F3B52C0CEF24004571DC /* install_privileged_helper_tool.zsh */; };
@@ -199,6 +200,7 @@
 		4947C1572B154A2F00276EFD /* SupportXPC.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SupportXPC.entitlements; sourceTree = "<group>"; };
 		495924F8265C535B00E083AC /* QuitButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuitButton.swift; sourceTree = "<group>"; };
 		495B6E6E2A2E3E4E006B575D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		495D51CE2CF1431200D13729 /* SupportItemModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportItemModel.swift; sourceTree = "<group>"; };
 		495F74EB28B39A9A00C20304 /* PopoverAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PopoverAlertView.swift; path = Support/Views/PopoverAlertView.swift; sourceTree = SOURCE_ROOT; };
 		4962F3B12C0C8C5F004571DC /* uninstall_privileged_helper_tool.zsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = uninstall_privileged_helper_tool.zsh; sourceTree = "<group>"; };
 		4962F3B52C0CEF24004571DC /* install_privileged_helper_tool.zsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = install_privileged_helper_tool.zsh; sourceTree = "<group>"; };
@@ -440,6 +442,7 @@
 				498B7000272F460100BFA45E /* KerberosSSOExtensionModel.swift */,
 				490CE0A7294FC144005BC01D /* SoftwareUpdateModel.swift */,
 				4934C7992B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift */,
+				495D51CE2CF1431200D13729 /* SupportItemModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -697,6 +700,7 @@
 				4934C79A2B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift in Sources */,
 				0A4A73852602075F00927DAB /* StorageSubview.swift in Sources */,
 				49857E9824D4B543009B6FBA /* Preferences.swift in Sources */,
+				495D51CF2CF1431200D13729 /* SupportItemModel.swift in Sources */,
 				493DCCB62B08300F00FA2480 /* PrivilegedHelperError.swift in Sources */,
 				0A24AB442624CABB004208C4 /* NotificationBadgeTextView.swift in Sources */,
 				4915291C259CD38800056B5F /* EffectsView.swift in Sources */,
@@ -763,7 +767,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				INFOPLIST_FILE = SupportHelper/Info.plist;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 2.0;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
@@ -802,7 +806,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				INFOPLIST_FILE = SupportHelper/Info.plist;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 2.0;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
@@ -840,7 +844,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = SupportXPC;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2023 Root3 B.V. All rights reserved.";
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = nl.root3.support.xpc;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -873,7 +877,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = SupportXPC;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2023 Root3 B.V. All rights reserved.";
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = nl.root3.support.xpc;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1025,7 +1029,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 2.6;
 				PRODUCT_BUNDLE_IDENTIFIER = nl.root3.support;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1059,7 +1063,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 2.6;
 				PRODUCT_BUNDLE_IDENTIFIER = nl.root3.support;
 				PRODUCT_NAME = "$(TARGET_NAME)";
