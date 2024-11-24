@@ -145,6 +145,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         // Observe changes for App Catalog
         catalogDefaults?.addObserver(self, forKeyPath: "Updates", options: .new, context: nil)
         
+        // Observer changes to 'Rows'
+        defaults.addObserver(self, forKeyPath: "Rows", options: .new, context: nil)
+        
         // Receive notifications after uptime check
         NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.uptimeDaysLimit, object: nil)
         
@@ -461,6 +464,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                 logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.appCatalogController.appUpdates, privacy: .public)")
                 appCatalogController.getAppUpdates()
             }
+        case "Rows":
+            logger.debug("\(keyPath! as NSObject, privacy: .public) changed, decoding rows...")
+            self.decodeRows()
         default:
             logger.debug("Some other change detected...")
         }
@@ -560,6 +566,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     // MARK: - Run functions at startup
     func runAtStartup() {
         // Run uptime and storage once at startup
+        self.decodeRows()
         self.computerinfo.kernelBootTime()
         Task {
             await self.userinfo.getCurrentUserRecord()
@@ -822,5 +829,34 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         semaphore.wait()
         
         return fileURL
+    }
+    
+    // MARK: - Function to load configuration profile
+    func decodeRows() {
+        
+        logger.debug("Loading rows from Configuration Profile...")
+        
+        // Check if "Rows" has data
+        guard let rowsDefaults = UserDefaults.standard.array(forKey: "Rows") else {
+            logger.error("No data found for key: \"Rows\".")
+            return
+        }
+        
+        // Try to decode "Rows"
+        do {
+            let data = try JSONSerialization.data(withJSONObject: rowsDefaults)
+            let decoder = JSONDecoder()
+            
+            let dedodedItems = try? decoder.decode([Row].self, from: data)
+            
+            if let rows = dedodedItems {
+                DispatchQueue.main.async {
+                    self.preferences.rows = rows
+                }
+            }
+                        
+        } catch {
+            logger.error("\(error.localizedDescription)")
+        }
     }
 }

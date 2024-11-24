@@ -5,9 +5,13 @@
 //  Created by Jordy Witteman on 17/05/2021.
 //
 
+import os
 import SwiftUI
 
 struct AppView: View {
+    
+    // Unified Logging
+    let logger = Logger(subsystem: "nl.root3.support", category: "RowDecoder")
     
     // Access AppDelegate
     @EnvironmentObject private var appDelegate: AppDelegate
@@ -22,9 +26,7 @@ struct AppView: View {
     
     // Simple property wrapper boolean to visualize data loading when app opens
     @State var placeholdersEnabled = true
-    
-    @State var rows: [Row] = []
-    
+        
     // Version and build number
     var version = Bundle.main.infoDictionary!["CFBundleShortVersionString"]! as! String
     var build = Bundle.main.infoDictionary!["CFBundleVersion"]! as! String
@@ -73,7 +75,7 @@ struct AppView: View {
                     } else if computerinfo.showUptimeAlert {
                         UptimeAlertView()
                     } else {
-                        ContentView(rows: rows)
+                        ContentView(rows: preferences.rows)
                     }
                 }
                 
@@ -106,10 +108,6 @@ struct AppView: View {
         .onAppear {
             dataLoadingEffect()
         }
-        // MARK: - Load rows from Configuration Profile
-        .task {
-            decodeRows()
-        }
         // MARK: - Show placeholders while loading
         .redacted(reason: placeholdersEnabled ? .placeholder : .init())
     }
@@ -118,33 +116,6 @@ struct AppView: View {
     func dataLoadingEffect() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
             placeholdersEnabled = false
-        }
-    }
-    
-    // MARK: - Function to load configuration profile
-    func decodeRows() {
-        
-        // Check if "Rows" has data
-        guard let rowsDefaults = UserDefaults.standard.array(forKey: "Rows") else {
-            computerinfo.logger.error("No data found for key: \"Rows\".")
-            return
-        }
-        
-        // Try to decode "Rows"
-        do {
-            let data = try JSONSerialization.data(withJSONObject: rowsDefaults)
-            let decoder = JSONDecoder()
-            
-            let dedodedItems = try? decoder.decode([Row].self, from: data)
-            
-            if let rows = dedodedItems {
-                DispatchQueue.main.async {
-                    self.rows = rows
-                }
-            }
-                        
-        } catch {
-            computerinfo.logger.error("\(error.localizedDescription)")
         }
     }
 }
