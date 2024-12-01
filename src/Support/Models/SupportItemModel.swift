@@ -8,7 +8,7 @@
 import Foundation
 
 struct Row: Codable, Hashable {
-    let items: [SupportItem]
+    var items: [SupportItem]?
     
     enum CodingKeys: String, CodingKey {
         case items = "Items"
@@ -23,6 +23,7 @@ struct SupportItem: Codable, Hashable {
     let link: String?
     let symbol: String?
     let extensionIdentifier: String?
+    let onAppearAction: String?
 
     enum CodingKeys: String, CodingKey {
         case type = "Type"
@@ -32,5 +33,6 @@ struct SupportItem: Codable, Hashable {
         case link = "Link"
         case symbol = "Symbol"
         case extensionIdentifier = "ExtensionID"
+        case onAppearAction = "OnAppearAction"
     }
 }

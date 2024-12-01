@@ -177,4 +177,17 @@ class Preferences: ObservableObject {
     
     // Rows shown in the app
     @Published var rows: [Row] = []
+    
+    @Published var rowsTest: [Row] = []
+    
+//    @Published var items: [SupportItem] = [
+//        SupportItem(type: "AppCatalog", title: "Test1", subtitle: "Test", linkType: nil, link: nil, symbol: "tray.fill", extensionIdentifier: nil, onAppearAction: nil),
+//        SupportItem(type: "MacOSVersion", title: "Test2", subtitle: "Test", linkType: nil, link: nil, symbol: "tray.fill", extensionIdentifier: nil, onAppearAction: nil),
+//        SupportItem(type: "Button", title: "Test4", subtitle: "Test", linkType: nil, link: nil, symbol: "tray.fill", extensionIdentifier: nil, onAppearAction: nil),
+//        SupportItem(type: "Button", title: "Test5", subtitle: "Test", linkType: nil, link: nil, symbol: "tray.fill", extensionIdentifier: nil, onAppearAction: nil),
+//        SupportItem(type: "Divider", title: "Test5", subtitle: "Test", linkType: nil, link: nil, symbol: "tray.fill", extensionIdentifier: nil, onAppearAction: nil),
+//        SupportItem(type: "SmallButton", title: "Test1", subtitle: "Test", linkType: nil, link: nil, symbol: "tray.fill", extensionIdentifier: nil, onAppearAction: nil),
+//        SupportItem(type: "SmallButton", title: "Test2", subtitle: "Test", linkType: nil, link: nil, symbol: "tray.fill", extensionIdentifier: nil, onAppearAction: nil),
+//        SupportItem(type: "SmallButton", title: "Test3", subtitle: "Test", linkType: nil, link: nil, symbol: "tray.fill", extensionIdentifier: nil, onAppearAction: nil),
+//    ]
 }

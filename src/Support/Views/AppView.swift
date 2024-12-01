@@ -75,7 +75,8 @@ struct AppView: View {
                     } else if computerinfo.showUptimeAlert {
                         UptimeAlertView()
                     } else {
-                        ContentView(rows: preferences.rows)
+                        ContentView(rows: preferences.rowsTest)
+//                        ContentView(rows: preferences.rows)
                     }
                 }
                 
