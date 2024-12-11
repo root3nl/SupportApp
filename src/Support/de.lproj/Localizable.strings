@@ -20,9 +20,9 @@
 "days" = "Tage";
 "Used" = "belegt";
 "Available" = "verfügbar";
-"About Support" = "Über Support";
+"About Support" = "Über ETH Support";
 "Help and Documentation" = "Hilfe and Dokumentation";
-"Quit Support" = "Support beenden";
+"Quit Support" = "ETH Support beenden";
 "Quit" = "Schließen";
 "Are you sure you want to quit?" = "Sicher, dass du beenden möchtest?";
 "An error occurred" = "Ein Fehler ist aufgetreten";
