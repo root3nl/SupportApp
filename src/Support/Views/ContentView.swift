@@ -42,7 +42,11 @@ struct ContentView: View {
     }
     
     @State private var addRowButtonHovered: Bool = false
+    @State private var addItemButtonHovered: Bool = false
+    @State private var addRowButtonHoveredIndex: Int?
+    
     @State private var rowsTest: [Row] = []
+    let supportItem = SupportItem(type: "AppCatalog", title: nil, subtitle: nil, linkType: nil, link: nil, symbol: nil, extensionIdentifier: nil, onAppearAction: nil)
         
     var body: some View {
         
@@ -50,7 +54,7 @@ struct ContentView: View {
 //        if UserDefaults.standard.object(forKey: "Rows") != nil {
             
             VStack {
-                ForEach(Array(rowsTest.enumerated()), id: \.element.items) { index, row in
+                ForEach(rowsTest.indices, id: \.self) { index in
 //                    if row.items.count >= 2 && row.items.filter({ $0.type == "Button" }).count > 2 {
 //                        VStack {
 //                            Text("Unsupported number of items")
@@ -73,7 +77,7 @@ struct ContentView: View {
 //                        .padding()
 //                    } else {
                         HStack(spacing: 10) {
-                            if let rowItems = row.items {
+                            if let rowItems = rowsTest[index].items {
                                 ForEach(rowItems, id: \.self) { item in
                                     switch item.type {
                                     case "ComputerName":
@@ -106,40 +110,49 @@ struct ContentView: View {
                                 }
                             } else {
                                 
-                                Group {
-                                    ZStack {
-                                        
-                                        Image(systemName: "plus.circle")
-                                            .foregroundStyle(.secondary)
-                                            .imageScale(.large)
-                                            .frame(width: 360, height: 60)
-                                            .overlay(
-                                                RoundedRectangle(cornerRadius: 10)
-                                                    .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [6]))
-                                                    .foregroundStyle(.secondary)
-                                            )
-                                            .onTapGesture {
-                                                // Add item
-                                                print("Add item")
+                                // Add item in row
+                                ZStack {
+                                    
+                                    Image(systemName: addItemButtonHovered && (addRowButtonHoveredIndex == index) ? "plus.circle.fill" : "plus.circle")
+                                        .foregroundStyle(.secondary)
+                                        .imageScale(.large)
+                                        .onHover { hover in
+                                            withAnimation(.easeOut) {
+                                                addItemButtonHovered = hover
                                             }
+                                        }
+                                        .onHover { _ in
+                                            addRowButtonHoveredIndex = index
+                                        }
+                                        .frame(width: 360, height: 60)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 10)
+                                                .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [6]))
+                                                .foregroundStyle(.secondary)
+                                        )
+                                        .onTapGesture {
+                                            // Add item
+//                                            rowsTest[index].items = supportItem
+                                            rowsTest[index].items?.append(supportItem)
+                                            print(rowsTest)
+                                        }
+                                    
+                                    HStack {
                                         
-                                        HStack {
+                                        Spacer()
+                                        
+                                        VStack {
+                                            
+                                            Image(systemName: "minus.circle.fill")
+                                                .imageScale(.large)
+                                                .foregroundStyle(.red)
+                                                .onTapGesture {
+                                                    print("Remove row \(index)")
+                                                    rowsTest.remove(at: index)
+                                                }
                                             
                                             Spacer()
                                             
-                                            VStack {
-                                                
-                                                Image(systemName: "minus.circle.fill")
-                                                    .imageScale(.large)
-                                                    .foregroundStyle(.red)
-                                                    .onTapGesture {
-                                                        print("Remove row \(index)")
-                                                        rowsTest.remove(at: index)
-                                                    }
-                                                
-                                                Spacer()
-                                                
-                                            }
                                         }
                                     }
                                 }
