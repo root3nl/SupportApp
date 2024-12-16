@@ -34,6 +34,9 @@ apple_id=$2
 # Apple ID password
 apple_id_app_specific_password=$3
 
+# Xcode version
+xcode_version=$4
+
 # App Name
 app_name="Support"
 
@@ -66,11 +69,6 @@ keychain_profile="Root3"
 
 # ---------------------    do not edit below this line    ----------------------
 
-# Set Xcode version to latest version available
-# xcode_version=$(ls -d /Applications/Xcode*.app 2>/dev/null | sort -V | tail -n 1)
-# echo "Path to latest Xcode version: ${xcode_version}"
- xcode_version="/Applications/Xcode_16.app"
-
 # Create directory
 mkdir -p "${current_directory}/${app_name}"
 
@@ -84,6 +82,7 @@ fi
 cp -r "${current_directory}/build/${app_name}.app" "${payload}"
 
 # Set credentials for notarization
+echo "Xcode version: ${xcode_version}"
 "${xcode_version}/Contents/Developer/usr/bin/notarytool" store-credentials --apple-id "${apple_id}" --team-id "98LJ4XBGYK" --password "${apple_id_app_specific_password}" "${keychain_profile}"
 
 # Build and sign pkg
