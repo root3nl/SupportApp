@@ -542,7 +542,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             
             Task {
                 await self.userinfo.getCurrentUserRecord()
-                await self.userinfo.getUserFullName()
             }
                         
             // Post Distributed Notification to trigger script for custom info items
@@ -563,7 +562,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         self.computerinfo.kernelBootTime()
         Task {
             await self.userinfo.getCurrentUserRecord()
-            await self.userinfo.getUserFullName()
             await self.computerinfo.getSerialNumber()
         }
         self.computerinfo.getStorage()
