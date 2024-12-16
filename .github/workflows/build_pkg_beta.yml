@@ -79,7 +79,7 @@ jobs:
           # Set Xcode version to latest version available
           # XCODE_VERSION=$(ls -d /Applications/Xcode*.app 2>/dev/null | sort -V | tail -n 1)
           # echo "Path to latest Xcode version: ${XCODE_VERSION}"
-          XCODE_VERSION="${{env.XCODE_VERSION}}"
+          XCODE_VERSION="${{vars.XCODE_VERSION}}"
 
           # Select Xcode version
           sudo xcode-select -s "${XCODE_VERSION}"
