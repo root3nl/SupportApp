@@ -60,7 +60,7 @@ jobs:
 
       - name: Notarize and package macOS app
         run: 
-          ./build_pkg_automated.zsh "${{env.APP_VERSION}}" "${{ secrets.APPLE_ID }}" "${{ secrets.APPLE_ID_APP_SPECIFIC_PASSWORD }}" "${{env.XCODE_VERSION}}"
+          ./build_pkg_automated.zsh "${{env.APP_VERSION}}" "${{ secrets.APPLE_ID }}" "${{ secrets.APPLE_ID_APP_SPECIFIC_PASSWORD }}" "${{vars.XCODE_VERSION}}"
 
       - name: Upload package
         uses: actions/upload-artifact@v4
