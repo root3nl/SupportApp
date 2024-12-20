@@ -39,7 +39,7 @@ class UserInfo: ObservableObject {
     @Published var networkUnavailable: Bool = false
     
     // Full name of macOS user account
-    @Published var fullName: String = ""
+    var fullName: String = NSFullUserName()
     
     // Array of detected Kerberos Realms
     var realmsArray: [String] = []
@@ -441,53 +441,6 @@ class UserInfo: ObservableObject {
             NotificationCenter.default.post(name: Notification.Name.passwordExpiryLimit, object: nil)
         } else {
             logger.debug("Pasword Expiry Limit did not change, no need to reload StatusBarItem")
-        }
-    }
-    
-    // MARK: - Function to get the user record and full name
-    func getUserFullName() {
-        
-        // Skip if user's full name is already available
-        guard fullName.isEmpty else {
-            return
-        }
-        
-        DispatchQueue.global().async { [self] in
-            do {
-                let node = try ODNode.init(session: session, type: UInt32(kODNodeTypeAuthentication))
-                //            let node = try ODNode.init(session: session, type: UInt32(kODNodeTypeLocalNodes))
-                let query = try ODQuery.init(node: node, forRecordTypes: kODRecordTypeUsers, attribute: kODAttributeTypeRecordName, matchType: UInt32(kODMatchEqualTo), queryValues: currentConsoleUserName, returnAttributes: kODAttributeTypeNativeOnly, maximumResults: 0)
-                records = try query.resultsAllowingPartial(false) as! [ODRecord]
-            } catch {
-                logger.error("Unable to get local user account ODRecords")
-            }
-        }
-        
-        // We may have gotten multiple ODRecords that match username,
-        // So make sure it also matches the UID.
-        
-        // Perform on background thread
-        DispatchQueue.global().async { [self] in
-            
-            for case let record in records {
-                let attribute = "dsAttrTypeStandard:UniqueID"
-                if let odUid = try? String(describing: record.values(forAttribute: attribute)[0]) {
-                    if ( odUid == uid) {
-                        
-                        do {
-                            let fullNameArray = try record.values(forAttribute: kODAttributeTypeFullName) as? [String]
-                            DispatchQueue.main.async {
-                                self.fullName = fullNameArray?.first ?? ""
-                                self.logger.debug("Full name is: \(self.fullName, privacy: .public)")
-                            }
-                        } catch {
-                            logger.error("Error while getting user's full name")
-                            logger.error("\(error.localizedDescription)")
-                        }
-                        
-                    }
-                }
-            }
         }
     }
 

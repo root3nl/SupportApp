@@ -49,7 +49,7 @@ struct UptimeSubview: View {
         if preferences.uptimeDaysLimit > 1 {
            return NSLocalizedString("ADMIN_RECOMMENDS_RESTARTING_EVERY", comment: "") + " \(preferences.uptimeDaysLimit)" + NSLocalizedString(" days", comment: "")
         } else {
-            return NSLocalizedString("ADMIN_RECOMMENDS_RESTARTING_EVERY", comment: "") + NSLocalizedString(" day", comment: "")
+            return NSLocalizedString("ADMIN_RECOMMENDS_RESTARTING_EVERY_DAY", comment: "")
         }
     }
     
