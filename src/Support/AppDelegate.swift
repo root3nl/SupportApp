@@ -135,7 +135,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         defaults.addObserver(self, forKeyPath: "PasswordExpiryLimit", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "OpenAtLogin", options: .new, context: nil)
         restrictionsDefaults?.addObserver(self, forKeyPath: "forceDelayedMajorSoftwareUpdates", options: .new, context: nil)
-        ASUdefaults?.addObserver(self, forKeyPath: "LastUpdatesAvailable", options: .new, context: nil)
+//        ASUdefaults?.addObserver(self, forKeyPath: "LastUpdatesAvailable", options: .new, context: nil)
         ASUdefaults?.addObserver(self, forKeyPath: "RecommendedUpdates", options: .new, context: nil)
         
         // Observe changes for Extensions A and B
@@ -157,8 +157,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         // Receive notification after password expiry check
         NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.passwordExpiryLimit, object: nil)
         
-        // Receive notification after major macOS update check
-        NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.majorVersionUpdates, object: nil)
+        // Receive notification after macOS update check
+        NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.recommendedUpdates, object: nil)
         
         // Run functions at startup
         runAtStartup()
@@ -337,12 +337,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             // Check if StatusBarItem notifier is enabled
             if defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
                 // Show notification badge in menu bar icon when info item when needed
-                if ((computerinfo.updatesAvailableToShow == 0 || !infoItemsEnabled.contains("MacOSVersion")) && (appCatalogController.appUpdates == 0 || !infoItemsEnabled.contains("AppCatalog"))) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage")) || (preferences.extensionAlertA && infoItemsEnabled.contains("ExtensionA")) || (preferences.extensionAlertB && infoItemsEnabled.contains("ExtensionB"))) {
+                if ((computerinfo.recommendedUpdates.count == 0 || !infoItemsEnabled.contains("MacOSVersion")) && (appCatalogController.appUpdates == 0 || !infoItemsEnabled.contains("AppCatalog"))) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage")) || (preferences.extensionAlertA && infoItemsEnabled.contains("ExtensionA")) || (preferences.extensionAlertB && infoItemsEnabled.contains("ExtensionB"))) {
                     
                     // Create orange notification badge
                     orangeBadge.isHidden = false
                     
-                } else if (computerinfo.updatesAvailableToShow > 0 && infoItemsEnabled.contains("MacOSVersion")) || (appCatalogController.appUpdates > 0 && infoItemsEnabled.contains("AppCatalog")) {
+                } else if (computerinfo.recommendedUpdates.count > 0 && infoItemsEnabled.contains("MacOSVersion")) || (appCatalogController.appUpdates > 0 && infoItemsEnabled.contains("AppCatalog")) {
                     
                     // Create red notification badge
                     redBadge.isHidden = false
@@ -439,8 +439,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             Task {
                 await self.userinfo.getCurrentUserRecord()
             }
-        case "LastUpdatesAvailable":
-            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.ASUdefaults!.integer(forKey: "LastUpdatesAvailable"), privacy: .public)")
+//        case "LastUpdatesAvailable":
+//            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.ASUdefaults!.integer(forKey: "LastUpdatesAvailable"), privacy: .public)")
         case "RecommendedUpdates":
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed, checking update contents...")
             self.computerinfo.getRecommendedUpdates()

@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleShortVersionString</key>
-	<string>2.6.1</string>
+	<string>2.6.2</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>© 2024 Root3 B.V. All rights reserved.</string>
+	<string>© 2025 Root3 B.V. All rights reserved.</string>
 	<key>CFBundleIdentifier</key>
 	<string>nl.root3.support.helper</string>
 	<key>CFBundleInfoDictionaryVersion</key>

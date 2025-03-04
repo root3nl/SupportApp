@@ -163,7 +163,7 @@ extension String {
             ("$LocalMacosVersionName", computerInfo.macOSVersionName),
             ("$LocalSerialNumber", computerInfo.deviceSerialNumber),
             ("$LocalIpAddress", computerInfo.ipAddress),
-            ("$LocalUpdatesAvailable", "\(computerInfo.updatesAvailableToShow)"),
+            ("$LocalUpdatesAvailable", "\(computerInfo.recommendedUpdates.count)"),
             ("\\n", "\n")
         ]
         
