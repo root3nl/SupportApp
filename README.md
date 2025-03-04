@@ -27,7 +27,7 @@
   * [Welcome Screen](#welcome-screen)
   * [Software Update integration](#software-update-integration)
   * [App Catalog integration](#app-catalog-integration)
-    * [PPPC requirement](#pppc-requirement)
+    * [PPPC requirements](#pppc-requirements)
   * [Last Reboot](#last-reboot)
 - [Configuration](#configuration)
 - [Advanced configuration](#advanced-configuration)
@@ -44,10 +44,12 @@
     * [Security Considerations](#security-considerations)
 - [How to use SF Symbols](#how-to-use-sf-symbols)
 - [MDM deployment](#mdm-deployment)
-  * [Jamf Pro custom JSON Schema](#jamf-pro-custom-json-schema)
+  * [Jamf Pro](#jamf-pro)
+  * [Microsoft Intune](#microsoft-intune)
   * [Installer or app bundle](#installer-or-app-bundle)
   * [Sample LaunchAgent](#sample-launchagent)
   * [Sample Configuration Profile](#sample-configuration-profile)
+  * [Managed Login Item](#managed-login-item)
 - [Logging](#logging)
 - [Known issues](#known-issues)
 - [Changelog](#changelog)
@@ -102,7 +104,7 @@ You can participate in beta versions of Support App using TestFlight. This requi
 ## Features
 
 ### Menu Bar Icon
-The Menu Bar Icon can be customized to your own image such as a PNG with Alpha Channel, an image from URL or an SF Symbol. Any image will be shown as template to match the rest of the Menu Bar Extras. Icons larger than 22 points will automatically be resized to the recommended 16 points and the aspect ration will be preserved. Optionally a notification badge can overlay the icon to attract the user's attention when an Apple Software Update is available or any other warning was triggered. Please check the preference key `StatusBarIconNotifierEnabled`.
+The Menu Bar Icon can be customized to your own image such as a PNG with Alpha Channel, an image from URL or an SF Symbol. Any image will be shown as template to match the rest of the Menu Bar Extras. Icons larger than 22 points will automatically be resized to the recommended 16 points and the aspect ratio will be preserved. Optionally a notification badge can overlay the icon to attract the user's attention when an Apple Software Update is available or any other warning was triggered. Please check the preference key `StatusBarIconNotifierEnabled`.
 
 > **Note**
 > When using a local file, make sure to put the image in a folder accessible from the App Sandbox. We recommend a subfolder in `/Library/Application Support/` such as `/Library/Application Support/MyOrganization`
@@ -334,7 +336,7 @@ Configuration of the top four items with diagnostic information.
 | --- | --- | --- | --- | --- |
 | SecondRowTitleRight | String | Phone | The text shown in the button label. | “Call Helpdesk“, “Phone“ |
 | SecondRowSubtitleRight | String | - | Subtitle text will replace the title when the user hovers over the button. Ignored if left empty. | “+31 00 000 00 00”, “Now”, “Call“ |
-| SecondRowTypeRight | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **PrivilegedScript** (Privileged script)|
+| SecondRowTypeRight | String | URL | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **PrivilegedScript** (Privileged script) |
 | SecondRowLinkRight | String | tel:+31000000000 | The Bundle Identifier of the App, URL or command to open. | “https://yourticketsystem.tld”, “mailto:support@company.tld”, “tel:+31000000000” or “smb://yourfileserver.tld” |
 | SecondRowSymbolRight | String | phone | The SF Symbol shown in the button. | “iphone.homebutton”, “megaphone” or any other SF Symbol. Please check the SF Symbols section. |
 
@@ -342,29 +344,33 @@ Configuration of the top four items with diagnostic information.
 
 ### Support App Extensions
 
-Support App Extensions enable administrators to create custom info items and populate those with output from scripts or commands. You can use your MDM solution to run scripts or commands to populate the Support App Extensions. The Support App can also run scripts with elevated privileges everytime the Support App popover appears to make sure data is up to date. Extensions show a placeholder by default is no value is set. Once 
-Please read [Privileged scripts](#privileged-scripts) down below for more info.
+Support App Extensions enable administrators to create custom info items and populate those with output from scripts or values from MDM. You can use your MDM solution to run scripts or commands to populate the Support App Extensions. The Support App can also run scripts with elevated privileges everytime the Support App popover appears to make sure data is up to date with the `OnAppearAction` key. Extensions show a placeholder by default is no value is set. Please read [Privileged scripts](#privileged-scripts) down below for more info.
+
+##### Static or dynamic
+There are basically two ways to populate the Support App Extensions depending on the use case:
+* **Static**: Set Extension value and trigger warning in the Configuration Profile. Intended for use cases where the value is not changing.
+* **Dynamically**: Set Extension value and trigger warning using privileged scripts with `defaults write`. Intended for use cases where the value changes.
 
 Below are the preference keys to enable Support App Extensions:
 | Preference key | Type | Default value | Description | Example |
 | --- | --- | --- | --- | --- |
 | ExtensionTitleA | String | - | The title shown in the extension. | "Last Check-In", "Compliance" |
-| ExtensionSymbolA | String | - | The SF Symbol shown in the extension. | "clock.badge.checkmark.fill",  |
-| ExtensionTypeA | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **PrivilegedScript** (Privileged script)|
-| ExtensionLinkA | String | - | The Bundle Identifier of the App, URL or command to open. | `defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bool true; /usr/local/bin/jamf policy; `[`/usr/local/bin/jamf_last_check-in_time.zsh`](https://github.com/root3nl/SupportApp/blob/master/Extension%20Sample%20Scripts/jamf_last_check-in_time.zsh) or any other action you prefer by clicking on the Extension |
 | ExtensionValueA | String | `KeyPlaceholder` | The output of the Extension set by script or MDM. If nothing is set, it is shown as placeholder UI element | Anything you want to show here |
+| ExtensionSymbolA | String | - | The SF Symbol shown in the extension. | "clock.badge.checkmark.fill",  |
+| ExtensionTypeA | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **PrivilegedScript** (Privileged script) |
+| ExtensionLinkA | String | - | The Bundle Identifier of the App, URL or command to open. | `defaults write /Library/Preferences/nl.root3.support.plist ExtensionLoadingA -bool true; /usr/local/bin/jamf policy; `[`/usr/local/bin/jamf_last_check-in_time.zsh`](https://github.com/root3nl/SupportApp/blob/master/Extension%20Sample%20Scripts/jamf_last_check-in_time.zsh) or any other action you prefer by clicking on the Extension |
+| ExtensionAlertA | Boolean | false | Controls whether to show a warning badge in the Extension. Set to `true` to enable | `true` |
 | ExtensionTitleB | String | - | The title shown in the extension. | "Account Privileges" |
+| ExtensionValueB | String | `KeyPlaceholder` | The output of the Extension set by script or MDM. If nothing is set, it is shown as placeholder UI element | Anything you want to show here |
 | ExtensionSymbolB | String | - | The SF Symbol shown in the extension. | "wallet.pass.fill" |
 | ExtensionTypeB | String | App | Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. | **App**, **URL**, **Command** or **PrivilegedScript** (Privileged script)|
 | ExtensionLinkB | String | - | The Bundle Identifier of the App, URL or command to open. | [`/usr/local/bin/sap_privileges_change_permissions.zsh`](https://github.com/root3nl/SupportApp/blob/master/Extension%20Sample%20Scripts/sap_privileges_change_permissions.zsh) or any other action you prefer by clicking on the Extension |
+| ExtensionAlertB | Boolean | false | Controls whether to show a warning badge in the Extension. Set to `true` to enable | `true` |
 | ExtensionValueB | String | `KeyPlaceholder` | The output of the Extension set by script or MDM. If nothing is set, it is shown as placeholder UI element | Anything you want to show here |
 | OnAppearAction | String | - | Path to privileged script to be executed when the Support App is shown by clicking on the menu bar item. The Privileged Helper Tool is required for this feature. | `/usr/local/bin/runs_when_support_appears.zsh` such as [`/usr/local/bin/user_permissions.zsh`](https://github.com/root3nl/SupportApp/blob/master/Extension%20Sample%20Scripts/user_permissions.zsh) or [`/usr/local/bin/jamf_last_check-in_time.zsh`](https://github.com/root3nl/SupportApp/blob/master/Extension%20Sample%20Scripts/jamf_last_check-in_time.zsh) or [`/usr/local/bin/mscp_compliance_status.sh`](https://github.com/root3nl/SupportApp/blob/master/Extension%20Sample%20Scripts/mscp_compliance_status.sh) |
 
-> **Warning**
-> Both Support App Extensions have other preference keys `ExtensionValueA` and `ExtensionValueB` but those keys are meant to be dynamically set and changed by a script or command, not by MDM. Once set, the default placeholder will disappear and show the output from the preference keys.
-
 #### How to populate Support App Extensions
-Support App Extensions must be populated by setting the value in a preference key within the preference domain `nl.root3.support`. This can be achieved by running custom scripts from your MDM solution or using the `OnAppearAction` key. This last option will allow you to update the Support App Extension values every time the Support App popover appears by running the script.
+Support App Extensions must be populated by setting the value in a preference key within the preference domain `nl.root3.support`. This can be achieved by using a static value in the Configuration Profile, running custom scripts from your MDM solution or using the `OnAppearAction` key. This last option will allow you to update the Support App Extension values every time the Support App popover appears by running the script.
 
 * Create a custom script and populate the desired value by running the following command: `sudo defaults write /Library/Preferences/nl.root3.support.plist ExtensionValueA -string "OUTPUT_VALUE_HERE"`
 * Add the following command to show a placeholder while getting the value: `sudo defaults write /Library/Preferences/nl.root3.support.plist ExtensionValueA -string "KeyPlaceholder"`
@@ -503,12 +509,38 @@ We choose to go all the way with SF Symbols as these good looking icons are desi
 ## MDM deployment
 It is recommended to deploy the Configuration Profile first before installing the Support app.
 
-### Jamf Pro custom JSON schema
-A JSON Schema for Jamf Pro is provided for easy configuration of all the preference keys without creating/modifying a custom Configuration Profile in XML format. Download the JSON file [**here**](https://github.com/root3nl/SupportApp/blob/master/Jamf%20Pro%20Custom%20Schema/Jamf%20Pro%20Custom%20Schema.json)
+### Jamf Pro
+A Jamf Pro Manifest for Jamf Pro is provided for easy configuration of all the preference keys without creating/modifying a custom Configuration Profile in XML format. Download the JSON file [**here**](https://github.com/root3nl/SupportApp/blob/master/Jamf%20Pro%20Custom%20Schema/Jamf%20Pro%20Custom%20Schema.json)
 
 More information about the JSON Schema feature in Jamf Pro: https://docs.jamf.com/technical-papers/jamf-pro/json-schema/10.19.0/Overview.html
 
 <img src="/Screenshots/jamf_pro_custom_schema.png" width="800">
+
+### Microsoft Intune
+Configuring the Support App for Microsoft Intune is the easiest with the following steps:
+* Prepare the plist file with your key values and save as nl.root3.support.plist. Check the example file below:
+
+```
+<key>Title</key>
+<string>Hi $LocalFullName!</string>
+<key>Logo</key>
+<string>/PATH/TO/IMAGE</string>
+<key>LogoDarkMode</key>
+<string>/PATH/TO/IMAGE</string>
+<key>NotificationIcon</key>
+<string>/PATH/TO/IMAGE</string>
+<key>StatusBarIconNotifierEnabled</key>
+<true/>
+...
+```
+
+* Log into intune.microsoft.com > Devices > macOS > Configuration > Create > New Policy
+* Choose for Templates > Preference file
+* Set the preference domain to `nl.root3.support`
+* Upload the property list
+* Complete the Assignments and Save
+
+<img width="1158" alt="microsoft_intune_configuration" src="https://github.com/user-attachments/assets/5a69e347-2019-4316-a688-635e0285e0c4">
 
 ### Installer or app bundle
 Depending on your preference or MDM solution you can use either the installer or zipped app bundle. The installer includes a LaunchAgent and is the recommended method to make sure the app stays open and relaunches automatically.
@@ -519,7 +551,7 @@ A sample LaunchAgent to always keep the app alive is provided [**here**](https:/
 ### Sample Configuration Profile
 A sample Configuration Profile you can edit to your preferences is provided [**here**](https://github.com/root3nl/SupportApp/blob/master/Configuration%20Profile%20Samples/Support%20App%20Configuration%20Sample.mobileconfig)
 
-#### Background Item Management
+### Managed Login Item
 A sample Configuration Profile is provided (both signed and unsigned) for macOS 13 and higher to avoid users from disabling the LaunchAgent in System Settings > General > Login Items. The profile uses the Root3 Team ID to only allow signed software from Root3. [**Samples**](https://github.com/root3nl/SupportApp/blob/master/Configuration%20Profile%20Samples/Background%20Item%20Management)
 
 ## Logging
