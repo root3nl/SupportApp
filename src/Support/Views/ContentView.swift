@@ -78,39 +78,70 @@ struct ContentView: View {
 //                    } else {
                         HStack(spacing: 10) {
                             if let rowItems = rowsTest[index].items {
-                                ForEach(rowItems, id: \.self) { item in
-                                    switch item.type {
-                                    case "ComputerName":
-                                        ComputerNameSubview()
-                                    case "MacOSVersion":
-                                        MacOSVersionSubview()
-                                    case "Network":
-                                        NetworkSubview()
-                                    case "Password":
-                                        PasswordSubview()
-                                    case "Storage":
-                                        StorageSubview()
-                                    case "Uptime":
-                                        UptimeSubview()
-                                    case "AppCatalog":
-                                        AppCatalogSubview()
-                                    case "Button":
-                                        Item(title: item.title ?? "", subtitle: item.subtitle ?? "", linkType: item.linkType ?? "", link: item.link ?? "", image: item.symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
-                                    case "SmallButton":
-                                        ItemSmall(title: item.title ?? "", subtitle: item.subtitle ?? "", linkType: item.linkType ?? "", link: item.link ?? "", image: item.symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
-                                    case "Divider":
-                                        VStack {
-                                            Divider()
+                                ForEach(rowItems.indices, id: \.self) { itemIndex in
+                                    
+                                    ZStack {
+                                        switch rowItems[itemIndex].type {
+                                        case "ComputerName":
+                                            ComputerNameSubview()
+                                        case "MacOSVersion":
+                                            MacOSVersionSubview()
+                                        case "Network":
+                                            NetworkSubview()
+                                        case "Password":
+                                            PasswordSubview()
+                                        case "Storage":
+                                            StorageSubview()
+                                        case "Uptime":
+                                            UptimeSubview()
+                                        case "AppCatalog":
+                                            AppCatalogSubview()
+                                        case "Button":
+                                            Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
+                                        case "SmallButton":
+                                            ItemSmall(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+                                        case "Divider":
+                                            VStack {
+                                                Divider()
+                                            }
+                                        case "Spacer":
+                                            Spacer()
+                                        default:
+                                            Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
                                         }
-                                    case "Spacer":
-                                        Spacer()
-                                    default:
-                                        Item(title: item.title ?? "", subtitle: item.subtitle ?? "", linkType: item.linkType ?? "", link: item.link ?? "", image: item.symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
+                                        
+                                        // Button to remove item
+                                        Image(systemName: "minus.circle.fill")
+                                            .imageScale(.large)
+                                            .foregroundStyle(.red)
+                                            .onTapGesture {
+                                                print("Remove row \(index)")
+                                                withAnimation {
+                                                    rowsTest[index].items?.remove(at: itemIndex)
+                                                }
+                                            }
+                                            .offset(x: 85, y: -30)
+                                        
+                                        // Button to add additional item
+                                        Image(systemName: "plus.circle.fill")
+                                            .imageScale(.large)
+                                            .foregroundStyle(.secondary)
+                                            .onTapGesture {
+                                                // Add item
+                                                if rowsTest[index].items == nil {
+                                                    rowsTest[index].items = []
+                                                }
+                                                withAnimation {
+                                                    rowsTest[index].items?.append(supportItem)
+                                                }
+                                            }
+                                            .offset(x: 85, y: 0)
+
                                     }
                                 }
                             } else {
                                 
-                                // Add item in row
+                                // View to add first item in row
                                 ZStack {
                                     
                                     Image(systemName: addItemButtonHovered && (addRowButtonHoveredIndex == index) ? "plus.circle.fill" : "plus.circle")
@@ -127,12 +158,15 @@ struct ContentView: View {
                                         .frame(width: 360, height: 60)
                                         .overlay(
                                             RoundedRectangle(cornerRadius: 10)
-                                                .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [6]))
+                                                .strokeBorder(style: StrokeStyle(lineWidth: 1))
                                                 .foregroundStyle(.secondary)
+                                                .opacity(0.5)
                                         )
                                         .onTapGesture {
                                             // Add item
-//                                            rowsTest[index].items = supportItem
+                                            if rowsTest[index].items == nil {
+                                                rowsTest[index].items = []
+                                            }
                                             rowsTest[index].items?.append(supportItem)
                                             print(rowsTest)
                                         }
@@ -150,6 +184,7 @@ struct ContentView: View {
                                                     print("Remove row \(index)")
                                                     rowsTest.remove(at: index)
                                                 }
+                                                .offset(x: 5, y: -10)
                                             
                                             Spacer()
                                             
