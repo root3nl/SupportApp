@@ -110,87 +110,95 @@ struct ContentView: View {
                                             Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
                                         }
                                         
-                                        // Button to remove item
-                                        Image(systemName: "minus.circle.fill")
-                                            .imageScale(.large)
-                                            .foregroundStyle(.red)
-                                            .onTapGesture {
-                                                print("Remove row \(index)")
-                                                withAnimation {
-                                                    rowsTest[index].items?.remove(at: itemIndex)
-                                                }
-                                            }
-                                            .offset(x: 85, y: -30)
-                                        
-                                        // Button to add additional item
-                                        Image(systemName: "plus.circle.fill")
-                                            .imageScale(.large)
-                                            .foregroundStyle(.secondary)
-                                            .onTapGesture {
-                                                // Add item
-                                                if rowsTest[index].items == nil {
-                                                    rowsTest[index].items = []
-                                                }
-                                                withAnimation {
-                                                    rowsTest[index].items?.append(supportItem)
-                                                }
-                                            }
-                                            .offset(x: 85, y: 0)
+//                                        // Button to remove item
+//                                        Image(systemName: "minus.circle.fill")
+//                                            .imageScale(.large)
+//                                            .foregroundStyle(.red)
+//                                            .onTapGesture {
+//                                                print("Remove row \(index)")
+////                                                withAnimation {
+//                                                    rowsTest[index].items?.remove(at: itemIndex)
+////                                                }
+//                                            }
+//                                            .offset(x: 85, y: -30)
+//                                        
+//                                        // Button to add additional item
+//                                        Image(systemName: "plus.circle.fill")
+//                                            .imageScale(.large)
+//                                            .foregroundStyle(.secondary)
+//                                            .onTapGesture {
+//                                                // Add item
+//                                                if rowsTest[index].items == nil {
+//                                                    rowsTest[index].items = []
+//                                                }
+////                                                withAnimation {
+//                                                    rowsTest[index].items?.append(supportItem)
+////                                                }
+//                                            }
+//                                            .offset(x: 85, y: 0)
 
                                     }
-                                }
-                            } else {
-                                
-                                // View to add first item in row
-                                ZStack {
-                                    
-                                    Image(systemName: addItemButtonHovered && (addRowButtonHoveredIndex == index) ? "plus.circle.fill" : "plus.circle")
-                                        .foregroundStyle(.secondary)
-                                        .imageScale(.large)
-                                        .onHover { hover in
-                                            withAnimation(.easeOut) {
-                                                addItemButtonHovered = hover
-                                            }
-                                        }
-                                        .onHover { _ in
-                                            addRowButtonHoveredIndex = index
-                                        }
-                                        .frame(width: 360, height: 60)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .strokeBorder(style: StrokeStyle(lineWidth: 1))
-                                                .foregroundStyle(.secondary)
-                                                .opacity(0.5)
-                                        )
-                                        .onTapGesture {
-                                            // Add item
-                                            if rowsTest[index].items == nil {
-                                                rowsTest[index].items = []
-                                            }
-                                            rowsTest[index].items?.append(supportItem)
-                                            print(rowsTest)
-                                        }
-                                    
-                                    HStack {
-                                        
-                                        Spacer()
-                                        
-                                        VStack {
-                                            
-                                            Image(systemName: "minus.circle.fill")
-                                                .imageScale(.large)
-                                                .foregroundStyle(.red)
-                                                .onTapGesture {
-                                                    print("Remove row \(index)")
-                                                    rowsTest.remove(at: index)
-                                                }
-                                                .offset(x: 5, y: -10)
-                                            
-                                            Spacer()
-                                            
+                                    .contextMenu {
+                                        Button {
+                                            rowsTest[index].items?.remove(at: itemIndex)
+                                        } label: {
+                                            Label("Remove", systemImage: "minus.circle.fill")
                                         }
                                     }
+//                                    .animation(.default, value: rowItems)
                                 }
+//                            } else {
+//                                
+//                                // View to add first item in row
+//                                ZStack {
+//                                    
+//                                    Image(systemName: addItemButtonHovered && (addRowButtonHoveredIndex == index) ? "plus.circle.fill" : "plus.circle")
+//                                        .foregroundStyle(.secondary)
+//                                        .imageScale(.large)
+//                                        .onHover { hover in
+//                                            withAnimation(.easeOut) {
+//                                                addItemButtonHovered = hover
+//                                            }
+//                                        }
+//                                        .onHover { _ in
+//                                            addRowButtonHoveredIndex = index
+//                                        }
+//                                        .frame(width: 360, height: 60)
+//                                        .overlay(
+//                                            RoundedRectangle(cornerRadius: 10)
+//                                                .strokeBorder(style: StrokeStyle(lineWidth: 1))
+//                                                .foregroundStyle(.secondary)
+//                                                .opacity(0.5)
+//                                        )
+//                                        .onTapGesture {
+//                                            // Add item
+//                                            if rowsTest[index].items == nil {
+//                                                rowsTest[index].items = []
+//                                            }
+//                                            rowsTest[index].items?.append(supportItem)
+//                                            print(rowsTest)
+//                                        }
+//                                    
+//                                    HStack {
+//                                        
+//                                        Spacer()
+//                                        
+//                                        VStack {
+//                                            
+//                                            Image(systemName: "minus.circle.fill")
+//                                                .imageScale(.large)
+//                                                .foregroundStyle(.red)
+//                                                .onTapGesture {
+//                                                    print("Remove row \(index)")
+//                                                    rowsTest.remove(at: index)
+//                                                }
+//                                                .offset(x: 5, y: -10)
+//                                            
+//                                            Spacer()
+//                                            
+//                                        }
+//                                    }
+//                                }
                             }
 //                        }
                     }
@@ -211,7 +219,7 @@ struct ContentView: View {
                         .onTapGesture {
                             // Add row
                             print("Adding row")
-                            rowsTest.append(Row(items: nil))
+                            rowsTest.append(Row(items: [supportItem]))
                         }
                     VStack {
                         Divider()
