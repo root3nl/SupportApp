@@ -14,6 +14,6 @@ extension Notification.Name {
     static let storageLimit = Notification.Name("StorageLimit")
     static let networkState = Notification.Name("NetworkState")
     static let passwordExpiryLimit = Notification.Name("PasswordExpiryLimit")
-    static let majorVersionUpdates = Notification.Name("MajorVersionUpdates")
+    static let recommendedUpdates = Notification.Name("RecommendedUpdates")
     
 }
