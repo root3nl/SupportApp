@@ -178,7 +178,11 @@ class Preferences: ObservableObject {
     // Rows shown in the app
     @Published var rows: [Row] = []
     
-    @Published var rowsTest: [Row] = []
+    // Preview rows from local configuration
+    @Published var previewRows: [Row] = []
+    
+    // Edit mode
+    @Published var editModeEnabled = false
     
 //    @Published var items: [SupportItem] = [
 //        SupportItem(type: "AppCatalog", title: "Test1", subtitle: "Test", linkType: nil, link: nil, symbol: "tray.fill", extensionIdentifier: nil, onAppearAction: nil),

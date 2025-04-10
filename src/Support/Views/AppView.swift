@@ -75,7 +75,7 @@ struct AppView: View {
                     } else if computerinfo.showUptimeAlert {
                         UptimeAlertView()
                     } else {
-                        ContentView(rows: preferences.rows)
+                        ContentView()
                     }
                 }
                 
@@ -99,6 +99,28 @@ struct AppView: View {
                     .frame(minWidth: 382, idealWidth: 382, maxWidth: 382)
                     .fixedSize()
                 }
+                
+                HStack {
+                    
+                    Spacer()
+
+                    if preferences.editModeEnabled {
+                        Button {
+                            preferences.editModeEnabled.toggle()
+                        } label: {
+                            Label("Done", systemImage: "")
+                                .labelStyle(.titleOnly)
+                        }
+                    } else {
+                        Button {
+                            preferences.editModeEnabled.toggle()
+                        } label: {
+                            Label("Edit", systemImage: "")
+                                .labelStyle(.titleOnly)
+                        }
+                    }
+                }
+                .padding(.trailing, 10)
             }
             .padding(.bottom, 10)
         }

@@ -11,9 +11,6 @@ import SwiftUI
 
 // The main view
 struct ContentView: View {
-    
-    // Rows
-    var rows: [Row]
         
     // Get  computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo
@@ -44,17 +41,17 @@ struct ContentView: View {
     @State private var addRowButtonHovered: Bool = false
     @State private var addItemButtonHovered: Bool = false
     @State private var addRowButtonHoveredIndex: Int?
+    @State private var showItemConfigurationPopover = false
     
-    @State private var rowsTest: [Row] = []
     let supportItem = SupportItem(type: "AppCatalog", title: nil, subtitle: nil, linkType: nil, link: nil, symbol: nil, extensionIdentifier: nil, onAppearAction: nil)
         
     var body: some View {
         
-//        if UserDefaults.standard.object(forKey: "RowsTest") != nil {
+//        if UserDefaults.standard.object(forKey: "preferences.previewRows") != nil {
 //        if UserDefaults.standard.object(forKey: "Rows") != nil {
             
-            VStack {
-                ForEach(rowsTest.indices, id: \.self) { index in
+        VStack(spacing: 10) {
+                ForEach(preferences.previewRows.indices, id: \.self) { index in
 //                    if row.items.count >= 2 && row.items.filter({ $0.type == "Button" }).count > 2 {
 //                        VStack {
 //                            Text("Unsupported number of items")
@@ -77,7 +74,7 @@ struct ContentView: View {
 //                        .padding()
 //                    } else {
                         HStack(spacing: 10) {
-                            if let rowItems = rowsTest[index].items {
+                            if let rowItems = preferences.previewRows[index].items {
                                 ForEach(rowItems.indices, id: \.self) { itemIndex in
                                     
                                     ZStack {
@@ -109,38 +106,60 @@ struct ContentView: View {
                                         default:
                                             Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
                                         }
-                                        
-//                                        // Button to remove item
-//                                        Image(systemName: "minus.circle.fill")
-//                                            .imageScale(.large)
-//                                            .foregroundStyle(.red)
-//                                            .onTapGesture {
-//                                                print("Remove row \(index)")
-////                                                withAnimation {
-//                                                    rowsTest[index].items?.remove(at: itemIndex)
-////                                                }
-//                                            }
-//                                            .offset(x: 85, y: -30)
-//                                        
-//                                        // Button to add additional item
-//                                        Image(systemName: "plus.circle.fill")
-//                                            .imageScale(.large)
-//                                            .foregroundStyle(.secondary)
-//                                            .onTapGesture {
-//                                                // Add item
-//                                                if rowsTest[index].items == nil {
-//                                                    rowsTest[index].items = []
+                                             
+                                        if preferences.editModeEnabled {
+                                            // Button to remove item
+                                            Image(systemName: "minus.circle.fill")
+                                                .imageScale(.large)
+                                                .symbolRenderingMode(.palette)
+                                                .foregroundStyle(.white, .gray)
+                                                .onTapGesture {
+                                                    if preferences.previewRows[index].items?.count == 1 {
+                                                        preferences.previewRows[index].items?.remove(at: itemIndex)
+                                                    } else {
+                                                        withAnimation {
+                                                            preferences.previewRows[index].items?.remove(at: itemIndex)
+                                                        }
+                                                    }
+                                                    
+                                                    // Remove if row is empty to avoid empty/invisible rows taking up space
+                                                    if preferences.previewRows[index].items?.count == 0 {
+                                                        preferences.previewRows.remove(at: index)
+                                                    }
+                                                    
+//                                                    print(preferences.previewRows)
+                                                }
+                                                .offset(x: -88, y: -30)
+                                            
+                                            // Button to add additional item
+                                            Image(systemName: "plus.circle.fill")
+                                                .imageScale(.large)
+                                                .symbolRenderingMode(.palette)
+                                                .foregroundStyle(.white, .gray)                                                .onTapGesture {
+                                                    // Add item
+                                                    if preferences.previewRows[index].items == nil {
+                                                        preferences.previewRows[index].items = []
+                                                    }
+                                                    withAnimation {
+                                                        preferences.previewRows[index].items?.append(supportItem)
+                                                    }
+                                                }
+                                                .offset(x: 140, y: 0)
+                                            
+//                                            // Button to add additional item
+//                                            Image(systemName: "ellipsis.circle.fill")
+//                                                .imageScale(.large)
+//                                                .symbolRenderingMode(.palette)
+//                                                .foregroundStyle(.white, .gray)
+//                                                .onTapGesture {
+//                                                    showItemConfigurationPopover.toggle()
 //                                                }
-////                                                withAnimation {
-//                                                    rowsTest[index].items?.append(supportItem)
-////                                                }
-//                                            }
-//                                            .offset(x: 85, y: 0)
-
+//                                                .offset(x: 75, y: 16)
+                                        }
                                     }
                                     .contextMenu {
                                         Button {
-                                            rowsTest[index].items?.remove(at: itemIndex)
+                                            preferences.previewRows[index].items?.remove(at: itemIndex)
                                         } label: {
                                             Label("Remove", systemImage: "minus.circle.fill")
                                         }
@@ -172,11 +191,11 @@ struct ContentView: View {
 //                                        )
 //                                        .onTapGesture {
 //                                            // Add item
-//                                            if rowsTest[index].items == nil {
-//                                                rowsTest[index].items = []
+//                                            if preferences.previewRows[index].items == nil {
+//                                                preferences.previewRows[index].items = []
 //                                            }
-//                                            rowsTest[index].items?.append(supportItem)
-//                                            print(rowsTest)
+//                                            preferences.previewRows[index].items?.append(supportItem)
+//                                            print(preferences.previewRows)
 //                                        }
 //                                    
 //                                    HStack {
@@ -190,7 +209,7 @@ struct ContentView: View {
 //                                                .foregroundStyle(.red)
 //                                                .onTapGesture {
 //                                                    print("Remove row \(index)")
-//                                                    rowsTest.remove(at: index)
+//                                                    preferences.previewRows.remove(at: index)
 //                                                }
 //                                                .offset(x: 5, y: -10)
 //                                            
@@ -204,25 +223,27 @@ struct ContentView: View {
                     }
                 }
                 // Add row divider and plus button
-                HStack {
-                    VStack {
-                        Divider()
-                    }
-                    Image(systemName: addRowButtonHovered ? "plus.circle.fill" : "plus.circle")
-                        .imageScale(.large)
-                        .foregroundStyle(.secondary)
-                        .onHover { hover in
-                            withAnimation(.easeOut) {
-                                addRowButtonHovered = hover
+                if preferences.editModeEnabled {
+                    HStack {
+                        VStack {
+                            Divider()
+                        }
+                        Image(systemName: addRowButtonHovered ? "plus.circle.fill" : "plus.circle")
+                            .imageScale(.large)
+                            .foregroundStyle(.secondary)
+                            .onHover { hover in
+                                withAnimation(.easeOut) {
+                                    addRowButtonHovered = hover
+                                }
                             }
+                            .onTapGesture {
+                                // Add row
+                                print("Adding row")
+                                preferences.previewRows.append(Row(items: [supportItem]))
+                            }
+                        VStack {
+                            Divider()
                         }
-                        .onTapGesture {
-                            // Add row
-                            print("Adding row")
-                            rowsTest.append(Row(items: [supportItem]))
-                        }
-                    VStack {
-                        Divider()
                     }
                 }
             }
