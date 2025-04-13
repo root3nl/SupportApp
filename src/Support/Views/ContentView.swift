@@ -146,15 +146,16 @@ struct ContentView: View {
                                                 }
                                                 .offset(x: 140, y: 0)
                                             
-//                                            // Button to add additional item
-//                                            Image(systemName: "ellipsis.circle.fill")
-//                                                .imageScale(.large)
-//                                                .symbolRenderingMode(.palette)
-//                                                .foregroundStyle(.white, .gray)
-//                                                .onTapGesture {
-//                                                    showItemConfigurationPopover.toggle()
-//                                                }
-//                                                .offset(x: 75, y: 16)
+                                            // Button to add additional item
+                                            Image(systemName: "ellipsis.circle.fill")
+                                                .imageScale(.large)
+                                                .symbolRenderingMode(.palette)
+                                                .foregroundStyle(.white, .gray)
+                                                .onTapGesture {
+                                                    preferences.currentConfiguredItem = ConfiguredItem(rowIndex: index, itemIndex: itemIndex)
+                                                    preferences.showItemConfiguration.toggle()
+                                                }
+                                                .offset(x: 75, y: 16)
                                         }
                                     }
                                     .contextMenu {

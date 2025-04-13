@@ -184,6 +184,12 @@ class Preferences: ObservableObject {
     // Edit mode
     @Published var editModeEnabled = false
     
+    // Item configuration view
+    @Published var showItemConfiguration = false
+    
+    // Current item in configuration view
+    @Published var currentConfiguredItem: ConfiguredItem?
+    
 //    @Published var items: [SupportItem] = [
 //        SupportItem(type: "AppCatalog", title: "Test1", subtitle: "Test", linkType: nil, link: nil, symbol: "tray.fill", extensionIdentifier: nil, onAppearAction: nil),
 //        SupportItem(type: "MacOSVersion", title: "Test2", subtitle: "Test", linkType: nil, link: nil, symbol: "tray.fill", extensionIdentifier: nil, onAppearAction: nil),

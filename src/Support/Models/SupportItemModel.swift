@@ -36,3 +36,10 @@ struct SupportItem: Codable, Hashable {
         case onAppearAction = "OnAppearAction"
     }
 }
+
+struct ConfiguredItem {
+    
+    let rowIndex: Int
+    let itemIndex: Int
+    
+}

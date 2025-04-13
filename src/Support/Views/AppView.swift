@@ -74,6 +74,8 @@ struct AppView: View {
                         UpdateView()
                     } else if computerinfo.showUptimeAlert {
                         UptimeAlertView()
+                    } else if preferences.showItemConfiguration {
+                        ItemConfigurationView()
                     } else {
                         ContentView()
                     }

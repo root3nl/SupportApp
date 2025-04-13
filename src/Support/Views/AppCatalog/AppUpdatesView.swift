@@ -9,9 +9,6 @@ import os
 import SwiftUI
 
 struct AppUpdatesView: View {
-    
-    // Access AppDelegate
-    @EnvironmentObject private var appDelegate: AppDelegate
         
     // Get computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo

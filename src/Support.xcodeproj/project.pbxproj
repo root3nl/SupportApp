@@ -27,6 +27,7 @@
 		49152916259CD2C300056B5F /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49152915259CD2C300056B5F /* Item.swift */; };
 		49152919259CD32200056B5F /* ItemSmall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49152918259CD32200056B5F /* ItemSmall.swift */; };
 		4915291C259CD38800056B5F /* EffectsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4915291B259CD38800056B5F /* EffectsView.swift */; };
+		491ECC5A2DAC5BEB00B88732 /* ItemConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 491ECC592DAC5BEB00B88732 /* ItemConfigurationView.swift */; };
 		4934C79A2B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4934C7992B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift */; };
 		4934C79B2B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4934C7992B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift */; };
 		4939A0C829259B7B00731363 /* LogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4939A0C729259B7B00731363 /* LogoView.swift */; };
@@ -171,6 +172,7 @@
 		49152915259CD2C300056B5F /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		49152918259CD32200056B5F /* ItemSmall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSmall.swift; sourceTree = "<group>"; };
 		4915291B259CD38800056B5F /* EffectsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectsView.swift; sourceTree = "<group>"; };
+		491ECC592DAC5BEB00B88732 /* ItemConfigurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemConfigurationView.swift; sourceTree = "<group>"; };
 		4934C7992B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoftwareUpdateDeclarationModel.swift; sourceTree = "<group>"; };
 		4939A0C729259B7B00731363 /* LogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogoView.swift; sourceTree = "<group>"; };
 		493DCC8F2B08292900FA2480 /* nl.root3.support.helper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = nl.root3.support.helper; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -301,6 +303,7 @@
 				498D47D52A38ABC10059465C /* UpdateView.swift */,
 				4976EB8A265317C6006EE097 /* AppView.swift */,
 				49822CE424B4C3F100E8DE54 /* ContentView.swift */,
+				491ECC592DAC5BEB00B88732 /* ItemConfigurationView.swift */,
 				4915291B259CD38800056B5F /* EffectsView.swift */,
 				4915290C259CCF7A00056B5F /* NotificationBadgeView.swift */,
 				0A24AB432624CABB004208C4 /* NotificationBadgeTextView.swift */,
@@ -695,6 +698,7 @@
 				493DCCB82B08304A00FA2480 /* RemoteApplicationProtocol.swift in Sources */,
 				490CE0A8294FC144005BC01D /* SoftwareUpdateModel.swift in Sources */,
 				0A4A7388260208B500927DAB /* UptimeSubview.swift in Sources */,
+				491ECC5A2DAC5BEB00B88732 /* ItemConfigurationView.swift in Sources */,
 				49BF03FC2BC0BE3A00AB7152 /* FileUtilities.swift in Sources */,
 				49822CE324B4C3F100E8DE54 /* AppDelegate.swift in Sources */,
 				4934C79A2B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift in Sources */,
