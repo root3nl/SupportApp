@@ -65,6 +65,7 @@
 		4974BC112B17645A00A3F38A /* SupportXPCProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4947C1522B154A2F00276EFD /* SupportXPCProtocol.swift */; };
 		4976EB892653151A006EE097 /* ChangePassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4976EB882653151A006EE097 /* ChangePassword.swift */; };
 		4976EB8B265317C6006EE097 /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4976EB8A265317C6006EE097 /* AppView.swift */; };
+		497B01022DDDF23900F50BC7 /* InstallTaskQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497B01012DDDF23900F50BC7 /* InstallTaskQueue.swift */; };
 		49822CE324B4C3F100E8DE54 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49822CE224B4C3F100E8DE54 /* AppDelegate.swift */; };
 		49822CE524B4C3F100E8DE54 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49822CE424B4C3F100E8DE54 /* ContentView.swift */; };
 		49822CE724B4C3F200E8DE54 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49822CE624B4C3F200E8DE54 /* Assets.xcassets */; };
@@ -209,6 +210,7 @@
 		4974BC0F2B174A5700A3F38A /* ExecutionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecutionService.swift; sourceTree = "<group>"; };
 		4976EB882653151A006EE097 /* ChangePassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePassword.swift; sourceTree = "<group>"; };
 		4976EB8A265317C6006EE097 /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
+		497B01012DDDF23900F50BC7 /* InstallTaskQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallTaskQueue.swift; sourceTree = "<group>"; };
 		49822CDF24B4C3F100E8DE54 /* Support.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Support.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49822CE224B4C3F100E8DE54 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		49822CE424B4C3F100E8DE54 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -345,6 +347,7 @@
 			isa = PBXGroup;
 			children = (
 				493DCCD12B08E5E500FA2480 /* AppCatalogController.swift */,
+				497B01012DDDF23900F50BC7 /* InstallTaskQueue.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -669,6 +672,7 @@
 				4972476828DBB1AB007194F0 /* StatusItemBadgeView.swift in Sources */,
 				496FE4D12651485E007746ED /* UserInfo.swift in Sources */,
 				4915290D259CCF7A00056B5F /* NotificationBadgeView.swift in Sources */,
+				497B01022DDDF23900F50BC7 /* InstallTaskQueue.swift in Sources */,
 				49857E9A24D4B58B009B6FBA /* ComputerInfo.swift in Sources */,
 				496C2FE1271477B800D51EE1 /* NotificationNames.swift in Sources */,
 				0A4A738E26020A6500927DAB /* MacOSVersionSubview.swift in Sources */,
