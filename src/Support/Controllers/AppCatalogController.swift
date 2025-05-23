@@ -32,6 +32,9 @@ class AppCatalogController: ObservableObject {
     // Current apps updating
     @Published var appsUpdating: [String] = []
     
+    // Current apps in the queue
+    @Published var appsQueued: [String] = []
+    
     // Show app updates
     @Published var showAppUpdates: Bool = false
     

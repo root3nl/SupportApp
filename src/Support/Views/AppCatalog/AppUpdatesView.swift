@@ -41,6 +41,10 @@ struct AppUpdatesView: View {
     
     // Get preferences or default values
     @StateObject var preferences = Preferences()
+    
+    // Update cancel hover state
+    @State private var hoveredCancelButton: Bool = false
+    @State private var hoveredItem: String?
             
     var body: some View {
         
@@ -71,13 +75,22 @@ struct AppUpdatesView: View {
                 
                 if appCatalogController.updateDetails.count > 0 {
                     Button(action: {
-                        for app in appCatalogController.updateDetails {
-                            Task {
+                        Task {
+                            for app in appCatalogController.updateDetails {
                                 // Validate Catalog Agent code requirement
                                 guard verifyAppCatalogCodeRequirement() else {
                                     return
                                 }
-                                await updateApp(bundleID: app.id)
+                                
+                                // Append app to queue
+                                await MainActor.run() {
+                                    appCatalogController.appsQueued.append(app.id)
+                                }
+                                
+                                // Update app
+                                await InstallTaskQueue.shared.submit(id: app.id) {
+                                    await updateApp(bundleID: app.id)
+                                }
                             }
                         }
                     }) {
@@ -202,7 +215,16 @@ struct AppUpdatesView: View {
                                             guard verifyAppCatalogCodeRequirement() else {
                                                 return
                                             }
-                                            await updateApp(bundleID: update.id)
+                                            
+                                            // Append app to queue
+                                            await MainActor.run() {
+                                                appCatalogController.appsQueued.append(update.id)
+                                            }
+                                            
+                                            // Update app
+                                            await InstallTaskQueue.shared.submit(id: update.id) {
+                                                await updateApp(bundleID: update.id)
+                                            }
                                         }
                                     }) {
                                         if appCatalogController.appsUpdating.contains(update.id) {
@@ -210,6 +232,23 @@ struct AppUpdatesView: View {
                                                 .scaleEffect(0.6)
                                                 .frame(width: 26, height: 26)
                                                 .padding(.leading, 10)
+                                        } else if appCatalogController.appsQueued.contains(update.id) {
+                                            Image(systemName: hoveredCancelButton && (hoveredItem == update.id) ? "xmark.circle.fill" : "clock")
+                                                .font(.system(size: 16))
+                                                .frame(width: 26, height: 26)
+                                                .onHover { hover in
+                                                    hoveredCancelButton = hover
+                                                }
+                                                .animation(.easeOut(duration: 0.2), value: hoveredCancelButton && (hoveredItem == update.id))
+                                                .onTapGesture {
+                                                    Task {
+                                                        await InstallTaskQueue.shared.cancel(taskID: update.id)
+                                                        await MainActor.run {
+                                                            appCatalogController.appsQueued.removeAll(where: { $0 == update.id })
+                                                        }
+                                                        appCatalogController.logger.debug("App \(update.id, privacy: .public) update cancelled")
+                                                    }
+                                                }
                                         } else {
                                             Image(systemName: "icloud.and.arrow.down")
                                                 .font(.system(size: 16, weight: .medium))
@@ -220,7 +259,9 @@ struct AppUpdatesView: View {
                                     .buttonStyle(.plain)
                                     
                                 }
-                                
+                                .onHover {_ in
+                                    hoveredItem = update.id
+                                }
                             }
                             
                             // Show update schedule information when configured
@@ -328,58 +369,57 @@ struct AppUpdatesView: View {
     // MARK: - Function to update app using App Catalog
     func updateApp(bundleID: String) async {
         
+        appCatalogController.logger.debug("App \(bundleID, privacy: .public) added to update queue")
+        
         // Command to update app
         let command = "'/usr/local/bin/catalog --install \(bundleID) --update-action --support-app'"
+        
+        // Remove Bundle ID from queued array
+        await MainActor.run {
+            appCatalogController.appsQueued.removeAll(where: { $0 == bundleID })
+        }
         
         // Add bundle ID to apps currently updating
         appCatalogController.appsUpdating.append(bundleID)
         
         do {
-            try ExecutionService.executeScript(command: command) { exitCode in
-                
-                if exitCode == 0 {
-                    appCatalogController.logger.log("App \(bundleID, privacy: .public) successfully updated")
-                    
-                    // Temporarily drop app from updates array so it will not show once completed. Then we check updates again to verify the update was really successful
-                    if appCatalogController.updateDetails.contains(where: { $0.id == bundleID } ) {
-                        if let index = appCatalogController.updateDetails.firstIndex(where: { $0.id == bundleID } ) {
-                            DispatchQueue.main.async {
-                                appCatalogController.updateDetails.remove(at: index)
-                            }
-                        }
-                    }
-                    
-                } else {
-                    appCatalogController.logger.error("Failed to update app \(bundleID, privacy: .public)")
+            
+            let exitCode: NSNumber = try await withCheckedThrowingContinuation { continuation in
+                try? ExecutionService.executeScript(command: command) { exitCode in
+                    continuation.resume(returning: exitCode)
                 }
-                
-                // Stop update spinner
-                if appCatalogController.appsUpdating.contains(bundleID) {
-                    if let index = appCatalogController.appsUpdating.firstIndex(of: bundleID) {
-                        DispatchQueue.main.async {
-                            appCatalogController.appsUpdating.remove(at: index)
-                            
-                            // Check for updates again when apps currently updating is empty
-                            if appCatalogController.appsUpdating.isEmpty {
-                                // Trigger check for app updates
-                                appCatalogController.ignoreUpdateChange = true
-                                appCatalogController.getAppUpdates()
-                            }
-                        }
-                    }
-                }
-                
             }
+            
+            if exitCode == 0 {
+                appCatalogController.logger.log("App \(bundleID, privacy: .public) successfully updated")
+                
+                // Temporarily drop app from updates array so it will not show once completed. Then we check updates again to verify the update was really successful
+                await MainActor.run {
+                    appCatalogController.updateDetails.removeAll(where: { $0.id == bundleID })
+                }
+                
+            } else {
+                appCatalogController.logger.error("Failed to update app \(bundleID, privacy: .public)")
+            }
+            
+            // Stop update spinner
+            await MainActor.run {
+                appCatalogController.appsUpdating.removeAll(where: { $0 == bundleID })
+                
+                // Check for updates again when apps currently updating is empty
+                if appCatalogController.appsUpdating.isEmpty {
+                    // Trigger check for app updates
+                    appCatalogController.ignoreUpdateChange = true
+                    appCatalogController.getAppUpdates()
+                }
+            }
+            
         } catch {
             appCatalogController.logger.log("Failed to update app \(bundleID, privacy: .public)")
             
             // Stop update spinner
-            if appCatalogController.appsUpdating.contains(bundleID) {
-                if let index = appCatalogController.appsUpdating.firstIndex(of: bundleID) {
-                    DispatchQueue.main.async {
-                        appCatalogController.appsUpdating.remove(at: index)
-                    }
-                }
+            await MainActor.run {
+                appCatalogController.appsUpdating.removeAll(where: { $0 == bundleID })
             }
             
             // Trigger check for app updates
