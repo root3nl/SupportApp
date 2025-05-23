@@ -409,12 +409,12 @@ struct AppUpdatesView: View {
             await MainActor.run {
                 appCatalogController.appsUpdating.removeAll(where: { $0 == bundleID })
                 
-//                // Check for updates again when apps currently updating is empty
-//                if appCatalogController.appsUpdating.isEmpty {
-//                    // Trigger check for app updates
-//                    appCatalogController.ignoreUpdateChange = true
-//                    appCatalogController.getAppUpdates()
-//                }
+                // Check for updates again when apps currently updating is empty
+                if appCatalogController.appsUpdating.isEmpty {
+                    // Trigger check for app updates
+                    appCatalogController.ignoreUpdateChange = true
+                    appCatalogController.getAppUpdates()
+                }
             }
             
         } catch {
@@ -425,9 +425,9 @@ struct AppUpdatesView: View {
                 appCatalogController.appsUpdating.removeAll(where: { $0 == bundleID })
             }
             
-//            // Trigger check for app updates
-//            appCatalogController.ignoreUpdateChange = true
-//            appCatalogController.getAppUpdates()
+            // Trigger check for app updates
+            appCatalogController.ignoreUpdateChange = true
+            appCatalogController.getAppUpdates()
         }
         
     }
