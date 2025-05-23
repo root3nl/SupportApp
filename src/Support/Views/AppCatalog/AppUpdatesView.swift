@@ -92,9 +92,6 @@ struct AppUpdatesView: View {
                                     await updateApp(bundleID: app.id)
                                 }
                             }
-                            
-                            // Validate updates
-//                            appCatalogController.getAppUpdates()
                         }
                     }) {
                         Text(NSLocalizedString("UPDATE_ALL", comment: ""))
