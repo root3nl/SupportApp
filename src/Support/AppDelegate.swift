@@ -767,13 +767,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         guard let url = URL(string: url) else {
             return nil
         }
-        
+
         // Path to App Sandbox container
-        guard let container = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "nl.root3.support") else {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        guard let documentsFolder = paths.first else {
             return nil
         }
-        
-        let documentsFolder = container.appendingPathComponent("Documents", isDirectory: true)
         let fileURL = documentsFolder.appendingPathComponent("\(filename).\(url.pathExtension)")
         
         // Remove file if it already exists
@@ -793,7 +792,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             }
         }
         
-        logger.debug("Downloading remote \(logName) from URL")
+        logger.debug("Downloading remote \(logName, privacy: .public) from URL")
                         
         // Create a semaphore to wait for the file removal
         let semaphore = DispatchSemaphore(value: 0)
