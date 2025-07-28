@@ -160,6 +160,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         // Receive notification after macOS update check
         NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.recommendedUpdates, object: nil)
         
+        // Add observer for update count from Catalog Agent
+        DistributedNotificationCenter.default().addObserver(
+            forName: Notification.Name.updateBadge,
+            object: nil,
+            queue: .main
+        ) { [weak self] notification in
+            if let updates = notification.userInfo?["updates"] as? Int {
+                if updates != self?.appCatalogController.appUpdates {
+                    self?.appCatalogController.getAppUpdates()
+                }
+            }
+        }
+        
         // Run functions at startup
         runAtStartup()
         
@@ -439,8 +452,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             Task {
                 await self.userinfo.getCurrentUserRecord()
             }
-//        case "LastUpdatesAvailable":
-//            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.ASUdefaults!.integer(forKey: "LastUpdatesAvailable"), privacy: .public)")
         case "RecommendedUpdates":
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed, checking update contents...")
             self.computerinfo.getRecommendedUpdates()
