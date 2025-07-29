@@ -369,21 +369,6 @@ struct AppUpdatesView: View {
     // MARK: - Function to update app using App Catalog
     func updateApp(bundleID: String) async {
         
-        // Trigger check for app updates at the end of the function
-        defer {
-            // Check for updates again when apps currently updating is empty
-            if appCatalogController.appsUpdating.isEmpty {
-                // Trigger check for app updates
-                appCatalogController.ignoreUpdateChange = true
-                appCatalogController.getAppUpdates()
-            }
-            
-            // Stop update spinner
-            DispatchQueue.main.async {
-                appCatalogController.appsUpdating.removeAll(where: { $0 == bundleID })
-            }
-        }
-        
         appCatalogController.logger.debug("App \(bundleID, privacy: .public) added to update queue")
         
         // Command to update app
@@ -416,8 +401,30 @@ struct AppUpdatesView: View {
             } else {
                 appCatalogController.logger.error("Failed to update app \(bundleID, privacy: .public)")
             }
+            
+            // Stop update spinner
+            await MainActor.run {
+                appCatalogController.appsUpdating.removeAll(where: { $0 == bundleID })
+                
+                // Check for updates again when apps currently updating is empty
+                if appCatalogController.appsUpdating.isEmpty {
+                    // Trigger check for app updates
+                    appCatalogController.ignoreUpdateChange = true
+                    appCatalogController.getAppUpdates()
+                }
+            }
+            
         } catch {
             appCatalogController.logger.log("Failed to update app \(bundleID, privacy: .public)")
+            
+            // Stop update spinner
+            await MainActor.run {
+                appCatalogController.appsUpdating.removeAll(where: { $0 == bundleID })
+            }
+            
+            // Trigger check for app updates
+            appCatalogController.ignoreUpdateChange = true
+            appCatalogController.getAppUpdates()
         }
     }
     
