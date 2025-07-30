@@ -17,6 +17,6 @@ extension Notification.Name {
     static let recommendedUpdates = Notification.Name("RecommendedUpdates")
     
     // Distributed Notifications
-    static let updateBadge = Notification.Name("nl.root3.catalog.updateBadge")
+    static let updateCheckCompleted = Notification.Name("nl.root3.catalog.updateCheckCompleted")
     
 }

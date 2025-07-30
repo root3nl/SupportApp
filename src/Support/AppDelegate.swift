@@ -135,15 +135,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         defaults.addObserver(self, forKeyPath: "PasswordExpiryLimit", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "OpenAtLogin", options: .new, context: nil)
         restrictionsDefaults?.addObserver(self, forKeyPath: "forceDelayedMajorSoftwareUpdates", options: .new, context: nil)
-//        ASUdefaults?.addObserver(self, forKeyPath: "LastUpdatesAvailable", options: .new, context: nil)
         ASUdefaults?.addObserver(self, forKeyPath: "RecommendedUpdates", options: .new, context: nil)
         
         // Observe changes for Extensions A and B
         defaults.addObserver(self, forKeyPath: "ExtensionAlertA", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "ExtensionAlertB", options: .new, context: nil)
-        
-        // Observe changes for App Catalog
-        catalogDefaults?.addObserver(self, forKeyPath: "Updates", options: .new, context: nil)
         
         // Receive notifications after uptime check
         NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.uptimeDaysLimit, object: nil)
@@ -160,17 +156,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         // Receive notification after macOS update check
         NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.recommendedUpdates, object: nil)
         
-        // Add observer for update count from Catalog Agent
-        DistributedNotificationCenter.default().addObserver(
-            forName: Notification.Name.updateBadge,
-            object: nil,
-            queue: .main
-        ) { [weak self] notification in
-            if let updates = notification.userInfo?["updates"] as? Int {
-                if updates != self?.appCatalogController.appUpdates {
-                    self?.appCatalogController.getAppUpdates()
-                }
-            }
+        // Set Status Bar Icon when App Catalog update check is completed
+        DistributedNotificationCenter.default().addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.updateCheckCompleted, object: nil)
+        
+        // Decode app updates and reload status bar item when Catalog Agent or App completed an update check
+        DistributedNotificationCenter.default().addObserver(forName: Notification.Name.updateCheckCompleted, object: nil, queue: .main) { _ in
+            // Decode app updates
+            self.appCatalogController.decodeAppUpdates()
+            
+            // Reload Status bar icon
+            self.setStatusBarIcon()
         }
         
         // Run functions at startup
@@ -465,13 +460,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.preferences.extensionAlertA, privacy: .public)")
         case "ExtensionAlertB":
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.preferences.extensionAlertB, privacy: .public)")
-        case "Updates":
-            if appCatalogController.ignoreUpdateChange {
-                appCatalogController.ignoreUpdateChange.toggle()
-            } else {
-                logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.appCatalogController.appUpdates, privacy: .public)")
-                appCatalogController.getAppUpdates()
-            }
         default:
             logger.debug("Some other change detected...")
         }
