@@ -12,7 +12,7 @@ import SwiftUI
 
 // Popover is based on: https://medium.com/@acwrightdesign/creating-a-macos-menu-bar-application-using-swiftui-54572a5d5f87
 
-@NSApplicationMain
+//@NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 
     var popover: NSPopover!
