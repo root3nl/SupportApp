@@ -28,10 +28,6 @@
 	<true/>
 	<key>NSHumanReadableCopyright</key>
 	<string>© 2025 Root3 B.V. All rights reserved.</string>
-	<key>NSMainStoryboardFile</key>
-	<string>Main</string>
-	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
 	<key>SMPrivilegedExecutables</key>
 	<dict>
 		<key>nl.root3.support.helper</key>
