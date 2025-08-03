@@ -31,7 +31,7 @@ struct AppView: View {
         
         // MARK: - ZStack with blur effect
         ZStack {
-            EffectsView(material: NSVisualEffectView.Material.fullScreenUI, blendingMode: NSVisualEffectView.BlendingMode.behindWindow)
+//            EffectsView(material: NSVisualEffectView.Material.fullScreenUI, blendingMode: NSVisualEffectView.BlendingMode.behindWindow)
             
             // We need to provide Quit option for Apple App Review approval
             if !preferences.hideQuit {
@@ -98,6 +98,7 @@ struct AppView: View {
             }
             .padding(.bottom, 10)
         }
+        .background(EffectsView(material: NSVisualEffectView.Material.fullScreenUI, blendingMode: NSVisualEffectView.BlendingMode.behindWindow))
         // Set default popover width
         .frame(minWidth: 382, idealWidth: 382, maxWidth: 382)
         // MARK: - Run functions when ContentView appears for the first time
