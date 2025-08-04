@@ -52,22 +52,29 @@ struct AppCatalogSubview: View {
     
     var body: some View {
         
-        InfoItem(title: NSLocalizedString("APPS", comment: ""), subtitle: updatesString, image: "arrow.down.app.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: appCatalogController.appUpdates, notificationBadgeBool: appCatalogController.catalogInstalled() ? false : true, loading: appCatalogController.appsUpdating.isEmpty ? false : true, hoverEffectEnable: true)
-            .modify {
-                if #available(macOS 13, *) {
-                    $0.onTapGesture {
-                        self.appCatalogController.showAppUpdates.toggle()
-                    }
-                } else {
-                    $0.onTapGesture {
-                        showAppCatalogPopover.toggle()
+        if #available(macOS 26, *) {
+            InfoItemGlassView(title: NSLocalizedString("APPS", comment: ""), subtitle: updatesString, image: "arrow.down.app.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: appCatalogController.appUpdates, notificationBadgeBool: appCatalogController.catalogInstalled() ? false : true, loading: appCatalogController.appsUpdating.isEmpty ? false : true, hoverEffectEnable: true)
+                .onTapGesture {
+                    self.appCatalogController.showAppUpdates.toggle()
+                }
+        } else {
+            InfoItem(title: NSLocalizedString("APPS", comment: ""), subtitle: updatesString, image: "arrow.down.app.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: appCatalogController.appUpdates, notificationBadgeBool: appCatalogController.catalogInstalled() ? false : true, loading: appCatalogController.appsUpdating.isEmpty ? false : true, hoverEffectEnable: true)
+                .modify {
+                    if #available(macOS 13, *) {
+                        $0.onTapGesture {
+                            self.appCatalogController.showAppUpdates.toggle()
+                        }
+                    } else {
+                        $0.onTapGesture {
+                            showAppCatalogPopover.toggle()
+                        }
                     }
                 }
-            }
             // Legacy popover for macOS 12
-            .popover(isPresented: $showAppCatalogPopover, arrowEdge: .leading) {
-                AppUpdatesView()
-            }
+                .popover(isPresented: $showAppCatalogPopover, arrowEdge: .leading) {
+                    AppUpdatesView()
+                }
+        }
     }
     
 }

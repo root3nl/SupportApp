@@ -522,13 +522,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         if let button = statusBarItem?.button {
             
             // Disable animation when popover opens
-            self.popover.animates = false
+//            self.popover.animates = false
             
             // show popover
             self.popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
             
             // Enable animation again to avoid issues
-            self.popover.animates = true
+//            self.popover.animates = true
+            
+//            if let popoverWindow = popover.contentViewController?.view.window {
+//                popoverWindow.isOpaque = false
+//                popoverWindow.backgroundColor = .clear
+//                popoverWindow.hasShadow = false // Optional: Remove shadow if you want
+//            }
             
             // Start monitoring mouse clicks outside the popover
             eventMonitor?.start()

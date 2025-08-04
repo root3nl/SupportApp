@@ -39,66 +39,101 @@ struct ItemSmall: View {
     // Get preferences or default values
     @ObservedObject var preferences = Preferences()
     
+    // Dark Mode detection
+    @Environment(\.colorScheme) var colorScheme
+    
     var body: some View {
         
-        VStack {
-        
-            if loading ?? false {
-                ProgressView()
-                    .scaleEffect(0.8)
-                    .frame(width: 24, height: 24)
-            } else {
-                Image(systemName: image)
-                    .font(.system(size: 24, weight: .semibold))
-                    .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
-                    .frame(width: 24, height: 24)
+        if #available(macOS 26, *) {
+            VStack(spacing: 5) {
+                
+                if loading ?? false {
+                    ProgressView()
+                        .scaleEffect(0.8)
+                        .frame(width: 24, height: 24)
+                } else {
+                    Image(systemName: image)
+                        .font(.system(size: 20, weight: .semibold))
+                        .foregroundColor(.white)
+                        .frame(width: 24, height: 24)
+                }
+                
+//                Spacer()
+                
+                // Optionally show a subtitle when user hovers over button
+                if subtitle != "" && hoverView {
+                    Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
+                        .font(.system(.subheadline, design: .default))
+                        .foregroundStyle(.white)
+                } else {
+                    Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
+                        .font(.system(.subheadline, design: .default))
+                        .foregroundStyle(.white)
+                }
             }
-
-        Spacer()
-
-            // Optionally show a subtitle when user hovers over button
-            if subtitle != "" && hoverView {
-                Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
-                    .font(.system(.subheadline, design: .rounded))
-            } else {
-                Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
-                    .font(.system(.subheadline, design: .rounded))
-
+//            .padding(.vertical, 10)
+            .frame(width: 114, height: 60)
+            .glassEffect(.clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
+        } else {
+            VStack {
+                
+                if loading ?? false {
+                    ProgressView()
+                        .scaleEffect(0.8)
+                        .frame(width: 24, height: 24)
+                } else {
+                    Image(systemName: image)
+                        .font(.system(size: 24, weight: .semibold))
+                        .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
+                        .frame(width: 24, height: 24)
+                }
+                
+                Spacer()
+                
+                // Optionally show a subtitle when user hovers over button
+                if subtitle != "" && hoverView {
+                    Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
+                        .font(.system(.subheadline, design: .rounded))
+                } else {
+                    Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
+                        .font(.system(.subheadline, design: .rounded))
+                    
+                }
             }
-        }
-        .padding(.vertical, 10)
-        .frame(width: 114, height: 60)
-        .background(hoverView && link != "" ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
-        .cornerRadius(10)
-        // Apply gray and black border in Dark Mode to better view the buttons like Control Center
-        .modifier(DarkModeBorder())
-        .shadow(color: Color.black.opacity(0.2), radius: 4, y: 2)
-        .alert(isPresented: $showingAlert) {
-            Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
-        }
-        .onHover() {
-            hover in self.hoverView = hover
-        }
-        .onTapGesture() {
-            // Don't do anything when no link is specified
-            guard link != "" else {
-                logger.debug("No link specified for \(title, privacy: .public), button disabled...")
-                return
+            .padding(.vertical, 10)
+            .frame(width: 114, height: 60)
+            .background(hoverView && link != "" ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
+            .cornerRadius(10)
+            // Apply gray and black border in Dark Mode to better view the buttons like Control Center
+            .modifier(DarkModeBorder())
+            .shadow(color: Color.black.opacity(0.2), radius: 4, y: 2)
+            .alert(isPresented: $showingAlert) {
+                Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
             }
-            
-            if linkType == "App" {
-                openApp()
-            } else if linkType == "URL" {
-                openLink()
-            } else if linkType == "Command" {
-                runCommand()
-            // MARK: - DistributedNotification is deprecated, use PrivilegedScript instead
-            } else if linkType == "DistributedNotification" || linkType == "PrivilegedScript" {
-                Task {
-                    await runPrivilegedCommand()
-                }            } else {
-                self.showingAlert.toggle()
-                logger.error("Invalid Link Type: \(linkType!)")
+            .onHover() {
+                hover in self.hoverView = hover
+            }
+            .onTapGesture() {
+                // Don't do anything when no link is specified
+                guard link != "" else {
+                    logger.debug("No link specified for \(title, privacy: .public), button disabled...")
+                    return
+                }
+                
+                if linkType == "App" {
+                    openApp()
+                } else if linkType == "URL" {
+                    openLink()
+                } else if linkType == "Command" {
+                    runCommand()
+                    // MARK: - DistributedNotification is deprecated, use PrivilegedScript instead
+                } else if linkType == "DistributedNotification" || linkType == "PrivilegedScript" {
+                    Task {
+                        await runPrivilegedCommand()
+                    }            } else {
+                        self.showingAlert.toggle()
+                        logger.error("Invalid Link Type: \(linkType!)")
+                    }
             }
         }
     }
