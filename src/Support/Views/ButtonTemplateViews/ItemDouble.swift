@@ -39,9 +39,6 @@ struct ItemDouble: View {
     // Get preferences or default values
     @ObservedObject var preferences = Preferences()
     
-    // Dark Mode detection
-    @Environment(\.colorScheme) var colorScheme
-    
     // Alert title options
     var alertTitle: String {
         switch linkType {
@@ -92,7 +89,8 @@ struct ItemDouble: View {
                         
                         Text(hoverView && hoverEffectEnable ? secondSubtitle : subtitle)
                             .font(.system(.subheadline, design: .default))
-                            .foregroundStyle(.white.opacity(0.5))
+//                            .foregroundStyle(.white.opacity(0.8))
+                            .foregroundStyle(.white)
                             .lineLimit(2)
 
                     }
@@ -110,7 +108,8 @@ struct ItemDouble: View {
             }
             .frame(width: 176, height: 64)
             .contentShape(Capsule())
-            .glassEffect(.clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
+//            .glassEffect(.clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
+            .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
             .animation(.bouncy, value: hoverView)
             // FIXME: - Adjust when Jamf Connect Password Change can be triggered
             // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
@@ -211,6 +210,9 @@ struct ItemDouble: View {
         let configuration = NSWorkspace.OpenConfiguration()
         
         NSWorkspace.shared.openApplication(at: url, configuration: configuration, completionHandler: nil)
+        
+        // Close popover
+        appDelegate.togglePopover(nil)
     }
     
     // Open URL

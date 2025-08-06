@@ -50,6 +50,7 @@
 		493DCCB82B08304A00FA2480 /* RemoteApplicationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493DCCA62B082EAD00FA2480 /* RemoteApplicationProtocol.swift */; };
 		493DCCD22B08E5E500FA2480 /* AppCatalogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493DCCD12B08E5E500FA2480 /* AppCatalogController.swift */; };
 		493FBB8D27406B5D002A79F9 /* ExtensionBSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493FBB8C27406B5D002A79F9 /* ExtensionBSubview.swift */; };
+		494746D02E43A30000C81C37 /* GlassEffectModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494746CF2E43A30000C81C37 /* GlassEffectModifier.swift */; };
 		4947C1512B154A2F00276EFD /* SupportXPC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4947C1502B154A2F00276EFD /* SupportXPC.swift */; };
 		4947C1532B154A2F00276EFD /* SupportXPCProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4947C1522B154A2F00276EFD /* SupportXPCProtocol.swift */; };
 		4947C1552B154A2F00276EFD /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4947C1542B154A2F00276EFD /* main.swift */; };
@@ -193,6 +194,7 @@
 		493DCCB32B082FE600FA2480 /* HelperRemote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperRemote.swift; sourceTree = "<group>"; };
 		493DCCD12B08E5E500FA2480 /* AppCatalogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCatalogController.swift; sourceTree = "<group>"; };
 		493FBB8C27406B5D002A79F9 /* ExtensionBSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBSubview.swift; sourceTree = "<group>"; };
+		494746CF2E43A30000C81C37 /* GlassEffectModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassEffectModifier.swift; sourceTree = "<group>"; };
 		4947C14E2B154A2F00276EFD /* SupportXPC.xpc */ = {isa = PBXFileReference; explicitFileType = "wrapper.xpc-service"; includeInIndex = 0; path = SupportXPC.xpc; sourceTree = BUILT_PRODUCTS_DIR; };
 		4947C1502B154A2F00276EFD /* SupportXPC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportXPC.swift; sourceTree = "<group>"; };
 		4947C1522B154A2F00276EFD /* SupportXPCProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportXPCProtocol.swift; sourceTree = "<group>"; };
@@ -460,6 +462,7 @@
 			isa = PBXGroup;
 			children = (
 				49B4952C2642E96A00A6AE64 /* DarkModeBorder.swift */,
+				494746CF2E43A30000C81C37 /* GlassEffectModifier.swift */,
 			);
 			path = ViewModifiers;
 			sourceTree = "<group>";
@@ -669,6 +672,7 @@
 				499F56782AE47BE800CBDE73 /* InstalledAppItem.swift in Sources */,
 				49871A6F287CC98500715C7C /* HeaderView.swift in Sources */,
 				4972476828DBB1AB007194F0 /* StatusItemBadgeView.swift in Sources */,
+				494746D02E43A30000C81C37 /* GlassEffectModifier.swift in Sources */,
 				496FE4D12651485E007746ED /* UserInfo.swift in Sources */,
 				4915290D259CCF7A00056B5F /* NotificationBadgeView.swift in Sources */,
 				497B01022DDDF23900F50BC7 /* InstallTaskQueue.swift in Sources */,

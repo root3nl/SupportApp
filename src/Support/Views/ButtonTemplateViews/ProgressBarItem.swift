@@ -32,9 +32,6 @@ struct ProgressBarItem: View {
     // Get preferences or default values
     @ObservedObject var preferences = Preferences()
     
-    // Dark Mode detection
-    @Environment(\.colorScheme) var colorScheme
-    
     var body: some View {
         
         if #available(macOS 26, *) {
@@ -80,7 +77,8 @@ struct ProgressBarItem: View {
                 openStorageManagement()
             }
 //            .glassEffect(.clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
-            .glassEffect(hoverView && hoverEffectEnable ? .regular.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)) : .clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
+//            .glassEffect(hoverView && hoverEffectEnable ? .regular.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)) : .clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
+            .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
             .animation(.bouncy, value: hoverView)
         } else {
             

@@ -20,9 +20,6 @@ struct InfoItem: View {
     @State var hoverEffectEnable: Bool
     @State var hoverView = false
     
-    // Dark Mode detection
-    @Environment(\.colorScheme) var colorScheme
-    
     var body: some View {
         
         if #available(macOS 26, *) {
@@ -59,7 +56,8 @@ struct InfoItem: View {
                         
                         Text(subtitle)
                             .font(.system(.subheadline, design: .default))
-                            .foregroundStyle(.white.opacity(0.5))
+//                            .foregroundStyle(.white.opacity(0.8))
+                            .foregroundStyle(.white)
                             .lineLimit(2)
                     }
                     Spacer()
@@ -82,7 +80,8 @@ struct InfoItem: View {
                 hover in self.hoverView = hover
             }
 //            .glassEffect(.clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
-            .glassEffect(hoverView && hoverEffectEnable ? .regular.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)) : .clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
+//            .glassEffect(hoverView && hoverEffectEnable ? .regular.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)) : .clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
+            .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
             .animation(.bouncy, value: hoverView)
         } else {
             

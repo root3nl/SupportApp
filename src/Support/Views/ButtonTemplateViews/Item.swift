@@ -45,9 +45,6 @@ struct Item: View {
     // Get preferences or default values
     @ObservedObject var preferences = Preferences()
     
-    // Dark Mode detection
-    @Environment(\.colorScheme) var colorScheme
-    
     // Enable animation
     var animate: Bool
     
@@ -90,14 +87,16 @@ struct Item: View {
                             // Show the subtitle when hover animation is enabled
                             Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
                                 .font(.system(.subheadline, design: .default))
-                                .foregroundStyle(.white.opacity(0.5))
+//                                .foregroundStyle(.white.opacity(0.8))
+                                .foregroundStyle(.white)
                                 .lineLimit(2)
                             
                         } else if !animate {
                             // Always show the subtitle when hover animation is disabled
                             Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
                                 .font(.system(.subheadline, design: .default))
-                                .foregroundStyle(.white.opacity(0.5))
+//                                .foregroundStyle(.white.opacity(0.8))
+                                .foregroundStyle(.white)
                                 .lineLimit(2)
                             // Show placeholder when no initial value is set for Custom Info Items
                                 .redacted(reason: (subtitle == "KeyPlaceholder") ? .placeholder: .init())
@@ -136,7 +135,8 @@ struct Item: View {
                 tapGesture()
             }
 //            .glassEffect(.clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
-            .glassEffect(hoverView && hoverEffectEnable ? .regular.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)) : .clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
+//            .glassEffect(hoverView && hoverEffectEnable ? .regular.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)) : .clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
+            .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
             .animation(.bouncy, value: hoverView)
 
         } else {
@@ -264,6 +264,9 @@ struct Item: View {
         let configuration = NSWorkspace.OpenConfiguration()
         
         NSWorkspace.shared.openApplication(at: url, configuration: configuration, completionHandler: nil)
+        
+        // Close popover
+        appDelegate.togglePopover(nil)
     }
     
     // Open URL

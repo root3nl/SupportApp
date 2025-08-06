@@ -98,7 +98,8 @@ struct AppView: View {
             }
             .padding(.bottom, 10)
         }
-        .background(EffectsView(material: NSVisualEffectView.Material.fullScreenUI, blendingMode: NSVisualEffectView.BlendingMode.behindWindow))
+//        .background(EffectsView(material: NSVisualEffectView.Material.fullScreenUI, blendingMode: NSVisualEffectView.BlendingMode.behindWindow))
+        .background(colorScheme == .dark ? Color.clear : Color.primary.opacity(0.1))
         // Set default popover width
         .frame(minWidth: 382, idealWidth: 382, maxWidth: 382)
         // MARK: - Run functions when ContentView appears for the first time

@@ -39,9 +39,6 @@ struct ItemSmall: View {
     // Get preferences or default values
     @ObservedObject var preferences = Preferences()
     
-    // Dark Mode detection
-    @Environment(\.colorScheme) var colorScheme
-    
     var body: some View {
         
         if #available(macOS 26, *) {
@@ -86,7 +83,8 @@ struct ItemSmall: View {
                 tapGesture()
             }
 //            .glassEffect(.clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
-            .glassEffect(hoverView ? .regular.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)) : .clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
+//            .glassEffect(hoverView ? .regular.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)) : .clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
+            .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: true))
             .animation(.bouncy, value: hoverView)
         } else {
             VStack {
@@ -168,6 +166,9 @@ struct ItemSmall: View {
         let configuration = NSWorkspace.OpenConfiguration()
         
         NSWorkspace.shared.openApplication(at: url, configuration: configuration, completionHandler: nil)
+        
+        // Close popover
+        appDelegate.togglePopover(nil)
     }
     
     // Open URL
@@ -258,3 +259,4 @@ struct ItemSmall: View {
         }
     }
 }
+
