@@ -75,7 +75,19 @@ struct ItemSmall: View {
             }
 //            .padding(.vertical, 10)
             .frame(width: 114, height: 64)
-            .glassEffect(.clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
+            .contentShape(Capsule())
+            .alert(isPresented: $showingAlert) {
+                Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
+            }
+            .onHover() {
+                hover in self.hoverView = hover
+            }
+            .onTapGesture() {
+                tapGesture()
+            }
+//            .glassEffect(.clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
+            .glassEffect(hoverView ? .regular.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)) : .clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
+            .animation(.bouncy, value: hoverView)
         } else {
             VStack {
                 
@@ -116,27 +128,32 @@ struct ItemSmall: View {
                 hover in self.hoverView = hover
             }
             .onTapGesture() {
-                // Don't do anything when no link is specified
-                guard link != "" else {
-                    logger.debug("No link specified for \(title, privacy: .public), button disabled...")
-                    return
-                }
-                
-                if linkType == "App" {
-                    openApp()
-                } else if linkType == "URL" {
-                    openLink()
-                } else if linkType == "Command" {
-                    runCommand()
-                    // MARK: - DistributedNotification is deprecated, use PrivilegedScript instead
-                } else if linkType == "DistributedNotification" || linkType == "PrivilegedScript" {
-                    Task {
-                        await runPrivilegedCommand()
-                    }            } else {
-                        self.showingAlert.toggle()
-                        logger.error("Invalid Link Type: \(linkType!)")
-                    }
+                tapGesture()
             }
+        }
+    }
+    
+    func tapGesture() {
+        // Don't do anything when no link is specified
+        guard link != "" else {
+            logger.debug("No link specified for \(title, privacy: .public), button disabled...")
+            return
+        }
+        
+        if linkType == "App" {
+            openApp()
+        } else if linkType == "URL" {
+            openLink()
+        } else if linkType == "Command" {
+            runCommand()
+            // MARK: - DistributedNotification is deprecated, use PrivilegedScript instead
+        } else if linkType == "DistributedNotification" || linkType == "PrivilegedScript" {
+            Task {
+                await runPrivilegedCommand()
+            }
+        } else {
+                self.showingAlert.toggle()
+                logger.error("Invalid Link Type: \(linkType!)")
         }
     }
     

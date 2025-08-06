@@ -71,7 +71,7 @@ struct Item: View {
                             .foregroundColor(.white)
                             .overlay(
                                 Image(systemName: image)
-                                    .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
+                                    .foregroundColor(symbolColor)
                                     .font(.system(size: 18))
                             )
                             .frame(width: 36, height: 36)
@@ -118,6 +118,7 @@ struct Item: View {
                 }
             }
             .frame(width: 176, height: 64)
+            .contentShape(Capsule())
             .alert(isPresented: $showingAlert) {
                 Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
             }

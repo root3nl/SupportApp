@@ -76,7 +76,7 @@ struct ItemDouble: View {
                         .foregroundColor(.white)
                         .overlay(
                             Image(systemName: image)
-                                .foregroundColor(hoverView ? .primary : symbolColor)
+                                .foregroundColor(symbolColor)
                                 .font(.system(size: 18))
                         )
                         .frame(width: 36, height: 36)
@@ -109,7 +109,9 @@ struct ItemDouble: View {
                 }
             }
             .frame(width: 176, height: 64)
+            .contentShape(Capsule())
             .glassEffect(.clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
+            .animation(.bouncy, value: hoverView)
             // FIXME: - Adjust when Jamf Connect Password Change can be triggered
             // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
             .popover(isPresented: $showingAlert, arrowEdge: .leading) {
@@ -119,23 +121,7 @@ struct ItemDouble: View {
                 hover in self.hoverView = hover
             }
             .onTapGesture() {
-                if linkType == "App" {
-                    openApp()
-                } else if linkType == "URL" {
-                    openLink()
-                } else if linkType == "Command" {
-                    runCommand()
-                    
-                // FIXME: - Asjust when Jamf Connect Password Change can be triggered
-                // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
-                } else if linkType == "JamfConnectPasswordChangeException" {
-                    self.showingAlert.toggle()
-                } else if linkType == "KerberosSSOExtensionUnavailable" {
-                    self.showingAlert.toggle()
-                } else {
-                    self.showingAlert.toggle()
-                    logger.error("Invalid Link Type: \(linkType!)")
-                }
+                tapGesture()
             }
             
         } else {
@@ -189,24 +175,28 @@ struct ItemDouble: View {
                 hover in self.hoverView = hover
             }
             .onTapGesture() {
-                if linkType == "App" {
-                    openApp()
-                } else if linkType == "URL" {
-                    openLink()
-                } else if linkType == "Command" {
-                    runCommand()
-                    
-                    // FIXME: - Asjust when Jamf Connect Password Change can be triggered
-                    // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
-                } else if linkType == "JamfConnectPasswordChangeException" {
-                    self.showingAlert.toggle()
-                } else if linkType == "KerberosSSOExtensionUnavailable" {
-                    self.showingAlert.toggle()
-                } else {
-                    self.showingAlert.toggle()
-                    logger.error("Invalid Link Type: \(linkType!)")
-                }
+                tapGesture()
             }
+        }
+    }
+    
+    func tapGesture() {
+        if linkType == "App" {
+            openApp()
+        } else if linkType == "URL" {
+            openLink()
+        } else if linkType == "Command" {
+            runCommand()
+            
+            // FIXME: - Asjust when Jamf Connect Password Change can be triggered
+            // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
+        } else if linkType == "JamfConnectPasswordChangeException" {
+            self.showingAlert.toggle()
+        } else if linkType == "KerberosSSOExtensionUnavailable" {
+            self.showingAlert.toggle()
+        } else {
+            self.showingAlert.toggle()
+            logger.error("Invalid Link Type: \(linkType!)")
         }
     }
     

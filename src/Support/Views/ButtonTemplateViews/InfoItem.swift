@@ -77,6 +77,7 @@ struct InfoItem: View {
 
             }
             .frame(width: 176, height: 64)
+            .contentShape(Capsule())
             .onHover() {
                 hover in self.hoverView = hover
             }

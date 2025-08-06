@@ -45,13 +45,13 @@ struct ProgressBarItem: View {
                         .foregroundColor(.white)
                         .overlay(
                             Image(systemName: image)
-                                .foregroundColor(hoverView ? .primary : symbolColor)
+                                .foregroundColor(symbolColor)
                                 .font(.system(size: 18))
                         )
                         .frame(width: 36, height: 36)
                         .padding(.leading, 10)
                     
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 0) {
                         HStack {
                             Text(hoverView ? storageAvailable : percentageUsed)
                                 .font(.system(.body, design: .default))
@@ -72,7 +72,16 @@ struct ProgressBarItem: View {
                 }
             }
             .frame(width: 176, height: 64)
-            .glassEffect(.clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
+            .contentShape(Capsule())
+            .onHover() {
+                hover in self.hoverView = hover
+            }
+            .onTapGesture() {
+                openStorageManagement()
+            }
+//            .glassEffect(.clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
+            .glassEffect(hoverView && hoverEffectEnable ? .regular.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)) : .clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
+            .animation(.bouncy, value: hoverView)
         } else {
             
             ZStack {
