@@ -108,7 +108,7 @@ struct ItemDouble: View {
                     NotificationBadgeTextView(badgeCounter: "!")
                 }
             }
-            .frame(width: 176, height: 60)
+            .frame(width: 176, height: 64)
             .glassEffect(.clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
             // FIXME: - Adjust when Jamf Connect Password Change can be triggered
             // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31

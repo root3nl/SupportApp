@@ -34,11 +34,7 @@ struct ModelSubView: View {
     
     var body: some View {
         
-        if #available(macOS 26, *) {
-            ItemGlassView(title: "Model", subtitle: "\(computerinfo.modelShortName) \(computerinfo.modelYear)", linkType: "App", link: "com.apple.AboutThisMacLauncher", image: computerinfo.computerNameIcon, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: false)
-        } else {
-            Item(title: "Model", subtitle: "\(computerinfo.modelShortName) \(computerinfo.modelYear)", linkType: "App", link: "com.apple.AboutThisMacLauncher", image: computerinfo.computerNameIcon, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: false)
-        }
+        Item(title: "Model", subtitle: "\(computerinfo.modelShortName) \(computerinfo.modelYear)", linkType: "App", link: "com.apple.AboutThisMacLauncher", image: computerinfo.computerNameIcon, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: false)
     }
     
 }

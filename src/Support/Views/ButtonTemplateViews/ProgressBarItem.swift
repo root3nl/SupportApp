@@ -32,82 +32,124 @@ struct ProgressBarItem: View {
     // Get preferences or default values
     @ObservedObject var preferences = Preferences()
     
+    // Dark Mode detection
+    @Environment(\.colorScheme) var colorScheme
+    
     var body: some View {
         
-        ZStack {
-            
-            HStack {
-                Ellipse()
-                    .foregroundColor(hoverView ? .primary : symbolColor)
-                    .overlay(
-                        Image(systemName: image)
-                            .foregroundColor(hoverView ? Color("hoverColor") : Color.white)
-                    )
-                    .frame(width: 26, height: 26)
-                    .padding(.leading, 10)
+        if #available(macOS 26, *) {
+            ZStack {
                 
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text(hoverView ? storageAvailable : percentageUsed)
-                            .font(.system(.body, design: .rounded))
-                            .fontWeight(.medium)
-                            .lineLimit(1)
-                    }
+                HStack {
+                    Ellipse()
+                        .foregroundColor(.white)
+                        .overlay(
+                            Image(systemName: image)
+                                .foregroundColor(hoverView ? .primary : symbolColor)
+                                .font(.system(size: 18))
+                        )
+                        .frame(width: 36, height: 36)
+                        .padding(.leading, 10)
                     
-                    ZStack(alignment: .leading) {
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text(hoverView ? storageAvailable : percentageUsed)
+                                .font(.system(.body, design: .default))
+                                .fontWeight(.medium)
+                                .foregroundStyle(.white)
+                                .lineLimit(1)
+                        }
                         
-                        RoundedRectangle(cornerRadius: 4)
-                            .frame(width: 120, height: 4).foregroundColor(.white)
+                        ProgressView(value: percentage , total: 120)
+                            .padding(.trailing, 10)
                         
-                        // Show red bar if more than 90% of 120 points (108)
-                        if percentage >= 108 {
+                    }
+                    Spacer()
+                }
+                
+                if notificationBadgeBool ?? false {
+                    NotificationBadgeTextView(badgeCounter: "!")
+                }
+            }
+            .frame(width: 176, height: 64)
+            .glassEffect(.clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
+        } else {
+            
+            ZStack {
+                
+                HStack {
+                    Ellipse()
+                        .foregroundColor(hoverView ? .primary : symbolColor)
+                        .overlay(
+                            Image(systemName: image)
+                                .foregroundColor(hoverView ? Color("hoverColor") : Color.white)
+                        )
+                        .frame(width: 26, height: 26)
+                        .padding(.leading, 10)
+                    
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text(hoverView ? storageAvailable : percentageUsed)
+                                .font(.system(.body, design: .rounded))
+                                .fontWeight(.medium)
+                                .lineLimit(1)
+                        }
+                        
+                        ZStack(alignment: .leading) {
+                            
                             RoundedRectangle(cornerRadius: 4)
-                                .frame(width: percentage, height: 4).foregroundColor(.red)
+                                .frame(width: 120, height: 4).foregroundColor(.white)
                             
-                            // Animation when loading app
-                                .animation(.easeInOut, value: percentage)
-                                .transition(.scale)
-                        // Show orange bar if optional storageLimit is reached and still below 90%
-                        } else if notificationBadgeBool ?? false && percentage < 108 {
-                            RoundedRectangle(cornerRadius: 4)
-                                .frame(width: percentage, height: 4).foregroundColor(.orange)
-                            
-                            // Animation when loading app
-                                .animation(.easeInOut, value: percentage)
-                                .transition(.scale)
-                            
-                            // Show accentColor in all other cases
-                        } else {
-                            RoundedRectangle(cornerRadius: 4)
-                                .frame(width: percentage, height: 4).foregroundColor(symbolColor)
-                            
-                            // Animation when loading app
-                                .animation(.easeInOut, value: percentage)
-                                .transition(.scale)
+                            // Show red bar if more than 90% of 120 points (108)
+                            if percentage >= 108 {
+                                RoundedRectangle(cornerRadius: 4)
+                                    .frame(width: percentage, height: 4).foregroundColor(.red)
+                                
+                                // Animation when loading app
+                                    .animation(.easeInOut, value: percentage)
+                                    .transition(.scale)
+                                // Show orange bar if optional storageLimit is reached and still below 90%
+                            } else if notificationBadgeBool ?? false && percentage < 108 {
+                                RoundedRectangle(cornerRadius: 4)
+                                    .frame(width: percentage, height: 4).foregroundColor(.orange)
+                                
+                                // Animation when loading app
+                                    .animation(.easeInOut, value: percentage)
+                                    .transition(.scale)
+                                
+                                // Show accentColor in all other cases
+                            } else {
+                                RoundedRectangle(cornerRadius: 4)
+                                    .frame(width: percentage, height: 4).foregroundColor(symbolColor)
+                                
+                                // Animation when loading app
+                                    .animation(.easeInOut, value: percentage)
+                                    .transition(.scale)
+                            }
                         }
                     }
+                    Spacer()
                 }
-                Spacer()
+                
+                if notificationBadgeBool ?? false {
+                    NotificationBadgeTextView(badgeCounter: "!")
+                }
             }
-            
-            if notificationBadgeBool ?? false {
-                NotificationBadgeTextView(badgeCounter: "!")
+            .frame(width: 176, height: 60)
+            .background(hoverView && hoverEffectEnable ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
+            .cornerRadius(10)
+            // Apply gray and black border in Dark Mode to better view the buttons like Control Center
+            .modifier(DarkModeBorder())
+            .shadow(color: Color.black.opacity(0.2), radius: 4, y: 2)
+            .alert(isPresented: $showingAlert) {
+                Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
             }
-        }
-        .frame(width: 176, height: 60)
-        .background(hoverView && hoverEffectEnable ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
-        .cornerRadius(10)
-        // Apply gray and black border in Dark Mode to better view the buttons like Control Center
-        .modifier(DarkModeBorder())
-        .shadow(color: Color.black.opacity(0.2), radius: 4, y: 2)
-        .alert(isPresented: $showingAlert) {
-            Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
-        }
-        .onHover() {
-            hover in self.hoverView = hover
-        }
-        .onTapGesture() {
-            openStorageManagement()
+            .onHover() {
+                hover in self.hoverView = hover
+            }
+            .onTapGesture() {
+                openStorageManagement()
+            }
         }
     }
     

@@ -34,10 +34,6 @@ struct ExtensionASubview: View {
     
     var body: some View {
         
-        if #available(macOS 26, *) {
-            ItemGlassView(title: preferences.extensionTitleA, subtitle: preferences.extensionValueA, linkType: preferences.extensionTypeA, link: preferences.extensionLinkA, image: preferences.extensionSymbolA, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: preferences.extensionAlertA, loading: preferences.extensionLoadingA, linkPrefKey: Preferences.extensionLinkAKey, hoverEffectEnable: true, hoverView: false, animate: false)
-        } else {
-            Item(title: preferences.extensionTitleA, subtitle: preferences.extensionValueA, linkType: preferences.extensionTypeA, link: preferences.extensionLinkA, image: preferences.extensionSymbolA, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: preferences.extensionAlertA, loading: preferences.extensionLoadingA, linkPrefKey: Preferences.extensionLinkAKey, hoverEffectEnable: true, hoverView: false, animate: false)
-        }
+        Item(title: preferences.extensionTitleA, subtitle: preferences.extensionValueA, linkType: preferences.extensionTypeA, link: preferences.extensionLinkA, image: preferences.extensionSymbolA, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: preferences.extensionAlertA, loading: preferences.extensionLoadingA, linkPrefKey: Preferences.extensionLinkAKey, hoverEffectEnable: true, hoverView: false, animate: false)
     }
 }

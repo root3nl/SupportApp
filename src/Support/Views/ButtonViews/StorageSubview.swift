@@ -34,11 +34,7 @@ struct StorageSubview: View {
     
     var body: some View {
         
-        if #available(macOS 26, *) {
-            ProgressBarItemGlassView(percentageUsed: "\(computerinfo.capacityPercentageRounded)% " + NSLocalizedString("Used", comment: ""), storageAvailable: "\(computerinfo.capacityRounded) " + NSLocalizedString("Available", comment: ""), image: "internaldrive.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: computerinfo.storageLimitReached, percentage: computerinfo.capacityPercentage, hoverEffectEnable: true)
-        } else {
-            ProgressBarItem(percentageUsed: "\(computerinfo.capacityPercentageRounded)% " + NSLocalizedString("Used", comment: ""), storageAvailable: "\(computerinfo.capacityRounded) " + NSLocalizedString("Available", comment: ""), image: "internaldrive.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: computerinfo.storageLimitReached, percentage: computerinfo.capacityPercentage, hoverEffectEnable: true)
-        }
+        ProgressBarItem(percentageUsed: "\(computerinfo.capacityPercentageRounded)% " + NSLocalizedString("Used", comment: ""), storageAvailable: "\(computerinfo.capacityRounded) " + NSLocalizedString("Available", comment: ""), image: "internaldrive.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: computerinfo.storageLimitReached, percentage: computerinfo.capacityPercentage, hoverEffectEnable: true)
     }
 }
 

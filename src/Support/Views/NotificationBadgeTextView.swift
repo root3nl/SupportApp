@@ -24,10 +24,10 @@ struct NotificationBadgeTextView: View {
                     .overlay(
                         Text("\(badgeCounter)")
                             .foregroundColor(.white)
-                            .font(Font.system(size: 12))
+                            .font(Font.system(size: 16))
                     )
-                    .frame(width: 18, height: 18)
-                    .padding(4)
+                    .frame(width: 24, height: 24)
+//                    .padding(4)
             }
             Spacer()
         }

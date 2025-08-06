@@ -52,11 +52,7 @@ struct NetworkSubview: View {
     
     var body: some View {
         
-        if #available(macOS 26, *) {
-            ItemGlassView(title: computerinfo.networkName, subtitle: computerinfo.ipAddress, linkType: networkLinkType, link: networkLink, image: computerinfo.networkInterfaceSymbol, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: computerinfo.selfSignedIP, hoverEffectEnable: true, hoverView: false, animate: false)
-        } else {
-            Item(title: computerinfo.networkName, subtitle: computerinfo.ipAddress, linkType: networkLinkType, link: networkLink, image: computerinfo.networkInterfaceSymbol, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: computerinfo.selfSignedIP, hoverEffectEnable: true, hoverView: false, animate: false)
-        }
+        Item(title: computerinfo.networkName, subtitle: computerinfo.ipAddress, linkType: networkLinkType, link: networkLink, image: computerinfo.networkInterfaceSymbol, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: computerinfo.selfSignedIP, hoverEffectEnable: true, hoverView: false, animate: false)
     }
 }
 

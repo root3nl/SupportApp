@@ -67,9 +67,6 @@
 		4976EB892653151A006EE097 /* ChangePassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4976EB882653151A006EE097 /* ChangePassword.swift */; };
 		4976EB8B265317C6006EE097 /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4976EB8A265317C6006EE097 /* AppView.swift */; };
 		497B01022DDDF23900F50BC7 /* InstallTaskQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497B01012DDDF23900F50BC7 /* InstallTaskQueue.swift */; };
-		497B44A02E415A31006109EE /* ItemGlassView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497B449F2E415A31006109EE /* ItemGlassView.swift */; };
-		497B44A22E415E3D006109EE /* InfoItemGlassView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497B44A12E415E3D006109EE /* InfoItemGlassView.swift */; };
-		497B44A42E4161DC006109EE /* ProgressBarItemGlassView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497B44A32E4161DC006109EE /* ProgressBarItemGlassView.swift */; };
 		49822CE324B4C3F100E8DE54 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49822CE224B4C3F100E8DE54 /* AppDelegate.swift */; };
 		49822CE524B4C3F100E8DE54 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49822CE424B4C3F100E8DE54 /* ContentView.swift */; };
 		49822CE724B4C3F200E8DE54 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49822CE624B4C3F200E8DE54 /* Assets.xcassets */; };
@@ -215,9 +212,6 @@
 		4976EB882653151A006EE097 /* ChangePassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePassword.swift; sourceTree = "<group>"; };
 		4976EB8A265317C6006EE097 /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 		497B01012DDDF23900F50BC7 /* InstallTaskQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallTaskQueue.swift; sourceTree = "<group>"; };
-		497B449F2E415A31006109EE /* ItemGlassView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemGlassView.swift; sourceTree = "<group>"; };
-		497B44A12E415E3D006109EE /* InfoItemGlassView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoItemGlassView.swift; sourceTree = "<group>"; };
-		497B44A32E4161DC006109EE /* ProgressBarItemGlassView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarItemGlassView.swift; sourceTree = "<group>"; };
 		49822CDF24B4C3F100E8DE54 /* Support.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Support.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49822CE224B4C3F100E8DE54 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		49822CE424B4C3F100E8DE54 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -388,16 +382,6 @@
 			path = Experimental;
 			sourceTree = "<group>";
 		};
-		497B449E2E415A09006109EE /* GlassViews */ = {
-			isa = PBXGroup;
-			children = (
-				497B449F2E415A31006109EE /* ItemGlassView.swift */,
-				497B44A12E415E3D006109EE /* InfoItemGlassView.swift */,
-				497B44A32E4161DC006109EE /* ProgressBarItemGlassView.swift */,
-			);
-			path = GlassViews;
-			sourceTree = "<group>";
-		};
 		49822CD624B4C3F100E8DE54 = {
 			isa = PBXGroup;
 			children = (
@@ -492,7 +476,6 @@
 		49F779CD27173067009BF0B9 /* ButtonTemplateViews */ = {
 			isa = PBXGroup;
 			children = (
-				497B449E2E415A09006109EE /* GlassViews */,
 				49152918259CD32200056B5F /* ItemSmall.swift */,
 				49152915259CD2C300056B5F /* Item.swift */,
 				0AFB04FC263B422900507B23 /* ItemDouble.swift */,
@@ -694,11 +677,9 @@
 				0A4A738E26020A6500927DAB /* MacOSVersionSubview.swift in Sources */,
 				493DCCD22B08E5E500FA2480 /* AppCatalogController.swift in Sources */,
 				490B145E258A55B90048D8AF /* Extensions.swift in Sources */,
-				497B44A02E415A31006109EE /* ItemGlassView.swift in Sources */,
 				0AFB04FB263AC23000507B23 /* ModelSubView.swift in Sources */,
 				4939A0C829259B7B00731363 /* LogoView.swift in Sources */,
 				0AC50A7524FFE6E100AE62D0 /* EventMonitor.swift in Sources */,
-				497B44A22E415E3D006109EE /* InfoItemGlassView.swift in Sources */,
 				49B4952D2642E96A00A6AE64 /* DarkModeBorder.swift in Sources */,
 				493DCCB52B08300300FA2480 /* HelperConstants.swift in Sources */,
 				49152919259CD32200056B5F /* ItemSmall.swift in Sources */,
@@ -725,7 +706,6 @@
 				0A446D572683A40600667602 /* WelcomeScreenView.swift in Sources */,
 				495F74EC28B39A9A00C20304 /* PopoverAlertView.swift in Sources */,
 				0A94A3832E3D0880001BB59E /* SupportApp.swift in Sources */,
-				497B44A42E4161DC006109EE /* ProgressBarItemGlassView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

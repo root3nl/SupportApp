@@ -45,7 +45,7 @@ struct ItemSmall: View {
     var body: some View {
         
         if #available(macOS 26, *) {
-            VStack(spacing: 5) {
+            VStack {
                 
                 if loading ?? false {
                     ProgressView()
@@ -53,8 +53,10 @@ struct ItemSmall: View {
                         .frame(width: 24, height: 24)
                 } else {
                     Image(systemName: image)
-                        .font(.system(size: 20, weight: .semibold))
-                        .foregroundColor(.white)
+                        .font(.system(size: 24, weight: .semibold))
+                        .foregroundStyle(.white)
+//                        .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
+                        .symbolRenderingMode(.hierarchical)
                         .frame(width: 24, height: 24)
                 }
                 
@@ -72,7 +74,7 @@ struct ItemSmall: View {
                 }
             }
 //            .padding(.vertical, 10)
-            .frame(width: 114, height: 60)
+            .frame(width: 114, height: 64)
             .glassEffect(.clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
         } else {
             VStack {
