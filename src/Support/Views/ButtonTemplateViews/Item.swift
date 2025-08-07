@@ -59,7 +59,7 @@ struct Item: View {
                             .foregroundColor(.white)
                             .overlay(
                                 ProgressView()
-                                    .scaleEffect(0.5)
+                                    .scaleEffect(0.8)
                             )
                             .frame(width: 36, height: 36)
                             .padding(.leading, 10)
