@@ -158,6 +158,7 @@
 		0A4A7387260208B500927DAB /* UptimeSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UptimeSubview.swift; sourceTree = "<group>"; };
 		0A4A738A26020A3800927DAB /* ComputerNameSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComputerNameSubview.swift; sourceTree = "<group>"; };
 		0A4A738D26020A6500927DAB /* MacOSVersionSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacOSVersionSubview.swift; sourceTree = "<group>"; };
+		0A65A36A2E45E9CB005F268F /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0AC50A7424FFE6E000AE62D0 /* EventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMonitor.swift; sourceTree = "<group>"; };
 		0AFB04FA263AC23000507B23 /* ModelSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelSubView.swift; sourceTree = "<group>"; };
 		0AFB04FC263B422900507B23 /* ItemDouble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDouble.swift; sourceTree = "<group>"; };
@@ -578,6 +579,7 @@
 				fr,
 				de,
 				es,
+				sv,
 			);
 			mainGroup = 49822CD624B4C3F100E8DE54;
 			packageReferences = (
@@ -733,6 +735,7 @@
 				49B163AC26FCB154006D57C7 /* fr */,
 				A0532BCB2733F35A005CACF2 /* de */,
 				495B6E6E2A2E3E4E006B575D /* es */,
+				0A65A36A2E45E9CB005F268F /* sv */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -741,6 +744,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				49822CEC24B4C3F200E8DE54 /* Base */,
+				0A65A3692E45E9CB005F268F /* sv */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
