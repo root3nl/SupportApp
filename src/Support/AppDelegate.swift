@@ -156,9 +156,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         // Receive notification after macOS update check
         NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.recommendedUpdates, object: nil)
         
-        // Set Status Bar Icon when App Catalog update check is completed
-        DistributedNotificationCenter.default().addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.updateCheckCompleted, object: nil)
-        
         // Decode app updates and reload status bar item when Catalog Agent or App completed an update check
         DistributedNotificationCenter.default().addObserver(forName: Notification.Name.updateCheckCompleted, object: nil, queue: .main) { _ in
             // Decode app updates
