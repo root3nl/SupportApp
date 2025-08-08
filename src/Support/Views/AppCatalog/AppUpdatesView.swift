@@ -409,7 +409,6 @@ struct AppUpdatesView: View {
                 // Check for updates again when apps currently updating is empty
                 if appCatalogController.appsUpdating.isEmpty {
                     // Trigger check for app updates
-                    appCatalogController.ignoreUpdateChange = true
                     appCatalogController.getAppUpdates()
                 }
             }
@@ -423,10 +422,8 @@ struct AppUpdatesView: View {
             }
             
             // Trigger check for app updates
-            appCatalogController.ignoreUpdateChange = true
             appCatalogController.getAppUpdates()
         }
-        
     }
     
 }

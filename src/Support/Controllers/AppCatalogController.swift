@@ -41,9 +41,6 @@ class AppCatalogController: ObservableObject {
     // Array containing app details
     @Published var updateDetails: [InstalledAppItem] = []
     
-    // Boolean to ignore a value change for "Updates" just once to avoid KVO in AppDelegate to trigger twice
-    var ignoreUpdateChange: Bool = false
-    
     // Calculate when next update schedule will run
     var nextUpdateDate: String {
         let fromDate = Date(timeIntervalSince1970: Double(lastUpdated))
@@ -63,6 +60,7 @@ class AppCatalogController: ObservableObject {
         return relativeDate
     }
     
+    // MARK: - Call Catalog Agent to check for updates
     func getAppUpdates() {
         
         // Check available app updates
@@ -97,6 +95,21 @@ class AppCatalogController: ObservableObject {
             
             // Invalidate connection
             connectionToService.invalidate()
+            
+            // Decode app updates
+            self.decodeAppUpdates()
+        }
+
+    }
+    
+    // MARK: - Decode app updates
+    func decodeAppUpdates() {
+        
+        // Check available app updates
+        logger.debug("Decoding app updates...")
+        
+        // Move to background thread
+        DispatchQueue.global().async {
             
             // Decode app updates
             if let encodedAppUpdates = self.defaults?.object(forKey: "UpdateDetails") as? Data {

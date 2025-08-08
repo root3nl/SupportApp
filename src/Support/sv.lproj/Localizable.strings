@@ -1,0 +1,76 @@
+/*
+  Localizable.strings
+  Support
+
+  Created by Jordy Witteman on 08/08/2025.
+  
+*/
+
+"Computer Name" = "Datornamn";
+"Model" = "Modell";
+"Last Reboot" = "Senast omstartad";
+"RESTART_REGULARLY" = "Starta om din Mac regelbundet";
+"ADMIN_RECOMMENDS_RESTARTING_EVERY" = "Din administratör rekommenderar att du startar om din Mac med ett intervall på max";
+"ADMIN_RECOMMENDS_RESTARTING_EVERY_DAY" = "Din administratör rekommenderar att du startar om din Mac dagligen.";
+"ago" = "sedan";
+"minute" = "minut";
+"minutes" = "minuter";
+"hour" = "timme";
+"hours" = "timmar";
+"day" = "dag";
+"days" = "dagar";
+"Used" = "Använt";
+"Available" = "Tillgänglig";
+"About Support" = "Om Support";
+"Help and Documentation" = "Hjälp och dokumentation";
+"Quit Support" = "Snabbhjälp";
+"Quit" = "Avsluta";
+"Are you sure you want to quit?" = "Är du säker på att du vill avsluta?";
+"An error occurred" = "Ett fel har uppstått";
+"Please contact IT support" = "Var vänlig kontakta IT-avdelningen";
+"Not Connected" = "Inte ansluten";
+"IP Address" = "IP-adress";
+"No IP Address" = "Ingen IP-adress";
+"Password" = "Lösenord";
+"Expires Today" = "Förfaller idag";
+"Never Expires" = "Förfaller aldrig";
+"Expires in " = "Förfaller om ";
+"Expired" = "Förfallen";
+"Change Now" = "Byt nu";
+"Sign In Here" = "Logga in här";
+" days" = " dagar";
+" day" = " dag";
+"Mac diagnosis" = "Macdiagnostik";
+"MAC_DIAGNOSIS_TEXT" = "Ger en överblick av din Mac och hjälper till att hålla den i gott skick";
+"Easy access" = "Enkel åtkomst";
+"EASY_ACCESS_TEXT" = "Få åtkomst till din organisations resurser som program och filer";
+"Get in touch" = "Ta kontakt";
+"GET_IN_TOUCH_TEXT" = "Kontakta supporten enkelt genom att ringa eller skapa en felanmälan";
+"Continue" = "Fortsätt";
+"OPEN_JAMF_CONNECT_MANUALLY" = "Var god öppna Jamf Connect";
+"OPEN_JAMF_CONNECT_MANUALLY_TEXT" = "Öppna Jamf Connect från menybaren för att byta lösenord";
+"NETWORK_UNAVAILABLE" = "Inget nätverk tillgängligt";
+"NETWORK_UNAVAILABLE_TEXT" = "Din organisations nätverk är inte tillgängligt. Var god kontrollera din anslutning och försök igen.";
+"CLOSE" = "Stäng";
+"UPDATES_AVAILABLE" = "Updateringar tillgängliga";
+"NO_UPDATES_AVAILABLE" = "Inga uppdateringar tillgängliga";
+"UPDATE_NOW" = "Updatera nu";
+"SYSTEM_SETTINGS" = "Systeminställningar";
+"SYSTEM_PREFERENCES" = "Systeminställningar";
+"YOUR_MAC_IS_UP_TO_DATE" = "Din Mac är uppdaterad";
+"UPDATE" = "Uppdatera";
+"APP_CATALOG" = "Appkatalog";
+"ALL_APPS_UP_TO_DATE" = "Alla appar är uppdaterade";
+"UPDATE_ALL" = "Updatera alla";
+"APP_UPDATES" = "Appuppdateringar";
+"APP_CATALOG_NOT_CONFIGURED" = "Appkatalogen är inte konfigurerad";
+"DOCUMENTATION" = "Dokumentation";
+"MACOS_UPDATES" = "macOS uppdateringar";
+"ENFORCED_ON" = "Tvinga på";
+"DETAILS" = "Detaljer";
+"RESTART_NOW" = "Var god starta om nu";
+"RESTART" = "Starta om";
+"APPS_WILL_BE_UPDATED_AUTOMATICALLY_DESCRIPTION" = "Appar kommer uppdateras automatiskt";
+"APPS" = "Appar";
+"PRIVILEGED_HELPER_TOOL_NOT_INSTALLED" = "Privileged Helper Tool är inte installerat";
+"UP_TO_DATE" = "Uppdaterad";

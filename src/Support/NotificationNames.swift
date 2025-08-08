@@ -16,4 +16,7 @@ extension Notification.Name {
     static let passwordExpiryLimit = Notification.Name("PasswordExpiryLimit")
     static let recommendedUpdates = Notification.Name("RecommendedUpdates")
     
+    // Distributed Notifications
+    static let updateCheckCompleted = Notification.Name("nl.root3.catalog.updateCheckCompleted")
+    
 }

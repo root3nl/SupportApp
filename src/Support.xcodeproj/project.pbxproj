@@ -15,6 +15,7 @@
 		0A4A7388260208B500927DAB /* UptimeSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4A7387260208B500927DAB /* UptimeSubview.swift */; };
 		0A4A738B26020A3800927DAB /* ComputerNameSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4A738A26020A3800927DAB /* ComputerNameSubview.swift */; };
 		0A4A738E26020A6500927DAB /* MacOSVersionSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4A738D26020A6500927DAB /* MacOSVersionSubview.swift */; };
+		0A94A3832E3D0880001BB59E /* SupportApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A94A3822E3D0880001BB59E /* SupportApp.swift */; };
 		0AC50A7524FFE6E100AE62D0 /* EventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC50A7424FFE6E000AE62D0 /* EventMonitor.swift */; };
 		0AFB04FB263AC23000507B23 /* ModelSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFB04FA263AC23000507B23 /* ModelSubView.swift */; };
 		0AFB04FD263B422900507B23 /* ItemDouble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFB04FC263B422900507B23 /* ItemDouble.swift */; };
@@ -70,7 +71,6 @@
 		49822CE524B4C3F100E8DE54 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49822CE424B4C3F100E8DE54 /* ContentView.swift */; };
 		49822CE724B4C3F200E8DE54 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49822CE624B4C3F200E8DE54 /* Assets.xcassets */; };
 		49822CEA24B4C3F200E8DE54 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49822CE924B4C3F200E8DE54 /* Preview Assets.xcassets */; };
-		49822CED24B4C3F200E8DE54 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 49822CEB24B4C3F200E8DE54 /* Main.storyboard */; };
 		49857E9824D4B543009B6FBA /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49857E9724D4B543009B6FBA /* Preferences.swift */; };
 		49857E9A24D4B58B009B6FBA /* ComputerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49857E9924D4B58B009B6FBA /* ComputerInfo.swift */; };
 		49871A6F287CC98500715C7C /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49871A6E287CC98500715C7C /* HeaderView.swift */; };
@@ -158,6 +158,8 @@
 		0A4A7387260208B500927DAB /* UptimeSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UptimeSubview.swift; sourceTree = "<group>"; };
 		0A4A738A26020A3800927DAB /* ComputerNameSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComputerNameSubview.swift; sourceTree = "<group>"; };
 		0A4A738D26020A6500927DAB /* MacOSVersionSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacOSVersionSubview.swift; sourceTree = "<group>"; };
+		0A65A36A2E45E9CB005F268F /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
+		0A94A3822E3D0880001BB59E /* SupportApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportApp.swift; sourceTree = "<group>"; };
 		0AC50A7424FFE6E000AE62D0 /* EventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMonitor.swift; sourceTree = "<group>"; };
 		0AFB04FA263AC23000507B23 /* ModelSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelSubView.swift; sourceTree = "<group>"; };
 		0AFB04FC263B422900507B23 /* ItemDouble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDouble.swift; sourceTree = "<group>"; };
@@ -216,7 +218,6 @@
 		49822CE424B4C3F100E8DE54 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		49822CE624B4C3F200E8DE54 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		49822CE924B4C3F200E8DE54 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		49822CEC24B4C3F200E8DE54 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		49822CEE24B4C3F200E8DE54 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		49822CEF24B4C3F200E8DE54 /* Support.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Support.entitlements; sourceTree = "<group>"; };
 		49857E9724D4B543009B6FBA /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
@@ -416,12 +417,12 @@
 				49BF03FB2BC0BE3A00AB7152 /* FileUtilities.swift */,
 				49857E9924D4B58B009B6FBA /* ComputerInfo.swift */,
 				0AC50A7424FFE6E000AE62D0 /* EventMonitor.swift */,
+				0A94A3822E3D0880001BB59E /* SupportApp.swift */,
 				49D81F5A2BF2BE7300232100 /* Extensions */,
 				496C2FE0271477B800D51EE1 /* NotificationNames.swift */,
 				49857E9724D4B543009B6FBA /* Preferences.swift */,
 				496FE4D02651485E007746ED /* UserInfo.swift */,
 				49822CE624B4C3F200E8DE54 /* Assets.xcassets */,
-				49822CEB24B4C3F200E8DE54 /* Main.storyboard */,
 				49822CEE24B4C3F200E8DE54 /* Info.plist */,
 				49822CEF24B4C3F200E8DE54 /* Support.entitlements */,
 				49822CE824B4C3F200E8DE54 /* Preview Content */,
@@ -578,6 +579,7 @@
 				fr,
 				de,
 				es,
+				sv,
 			);
 			mainGroup = 49822CD624B4C3F100E8DE54;
 			packageReferences = (
@@ -605,7 +607,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				49822CED24B4C3F200E8DE54 /* Main.storyboard in Resources */,
 				4962F3B22C0C8C5F004571DC /* uninstall_privileged_helper_tool.zsh in Resources */,
 				0AFE0A8325014C6100957B52 /* Localizable.strings in Resources */,
 				49822CEA24B4C3F200E8DE54 /* Preview Assets.xcassets in Resources */,
@@ -706,6 +707,7 @@
 				4915291C259CD38800056B5F /* EffectsView.swift in Sources */,
 				0A446D572683A40600667602 /* WelcomeScreenView.swift in Sources */,
 				495F74EC28B39A9A00C20304 /* PopoverAlertView.swift in Sources */,
+				0A94A3832E3D0880001BB59E /* SupportApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -733,16 +735,9 @@
 				49B163AC26FCB154006D57C7 /* fr */,
 				A0532BCB2733F35A005CACF2 /* de */,
 				495B6E6E2A2E3E4E006B575D /* es */,
+				0A65A36A2E45E9CB005F268F /* sv */,
 			);
 			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		49822CEB24B4C3F200E8DE54 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				49822CEC24B4C3F200E8DE54 /* Base */,
-			);
-			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -758,7 +753,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
-				CURRENT_PROJECT_VERSION = 66;
+				CURRENT_PROJECT_VERSION = 77;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = 98LJ4XBGYK;
@@ -797,7 +792,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
-				CURRENT_PROJECT_VERSION = 66;
+				CURRENT_PROJECT_VERSION = 77;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = 98LJ4XBGYK;
@@ -834,7 +829,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 66;
+				CURRENT_PROJECT_VERSION = 77;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = 98LJ4XBGYK;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -867,7 +862,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 66;
+				CURRENT_PROJECT_VERSION = 77;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = 98LJ4XBGYK;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1018,7 +1013,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 66;
+				CURRENT_PROJECT_VERSION = 77;
 				DEVELOPMENT_ASSET_PATHS = "\"Support/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = 98LJ4XBGYK;
@@ -1052,7 +1047,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 66;
+				CURRENT_PROJECT_VERSION = 77;
 				DEVELOPMENT_ASSET_PATHS = "\"Support/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = 98LJ4XBGYK;

@@ -12,7 +12,7 @@ import SwiftUI
 
 // Popover is based on: https://medium.com/@acwrightdesign/creating-a-macos-menu-bar-application-using-swiftui-54572a5d5f87
 
-@NSApplicationMain
+//@NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 
     var popover: NSPopover!
@@ -135,15 +135,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         defaults.addObserver(self, forKeyPath: "PasswordExpiryLimit", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "OpenAtLogin", options: .new, context: nil)
         restrictionsDefaults?.addObserver(self, forKeyPath: "forceDelayedMajorSoftwareUpdates", options: .new, context: nil)
-//        ASUdefaults?.addObserver(self, forKeyPath: "LastUpdatesAvailable", options: .new, context: nil)
         ASUdefaults?.addObserver(self, forKeyPath: "RecommendedUpdates", options: .new, context: nil)
         
         // Observe changes for Extensions A and B
         defaults.addObserver(self, forKeyPath: "ExtensionAlertA", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "ExtensionAlertB", options: .new, context: nil)
-        
-        // Observe changes for App Catalog
-        catalogDefaults?.addObserver(self, forKeyPath: "Updates", options: .new, context: nil)
         
         // Receive notifications after uptime check
         NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.uptimeDaysLimit, object: nil)
@@ -159,6 +155,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         
         // Receive notification after macOS update check
         NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.recommendedUpdates, object: nil)
+        
+        // Decode app updates and reload status bar item when Catalog Agent or App completed an update check
+        DistributedNotificationCenter.default().addObserver(forName: Notification.Name.updateCheckCompleted, object: nil, queue: .main) { _ in
+            // Decode app updates
+            self.appCatalogController.decodeAppUpdates()
+            
+            // Reload Status bar icon
+            self.setStatusBarIcon()
+        }
         
         // Run functions at startup
         runAtStartup()
@@ -439,8 +444,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             Task {
                 await self.userinfo.getCurrentUserRecord()
             }
-//        case "LastUpdatesAvailable":
-//            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.ASUdefaults!.integer(forKey: "LastUpdatesAvailable"), privacy: .public)")
         case "RecommendedUpdates":
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed, checking update contents...")
             self.computerinfo.getRecommendedUpdates()
@@ -454,13 +457,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.preferences.extensionAlertA, privacy: .public)")
         case "ExtensionAlertB":
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.preferences.extensionAlertB, privacy: .public)")
-        case "Updates":
-            if appCatalogController.ignoreUpdateChange {
-                appCatalogController.ignoreUpdateChange.toggle()
-            } else {
-                logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.appCatalogController.appUpdates, privacy: .public)")
-                appCatalogController.getAppUpdates()
-            }
         default:
             logger.debug("Some other change detected...")
         }
@@ -767,13 +763,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         guard let url = URL(string: url) else {
             return nil
         }
-        
+
         // Path to App Sandbox container
-        guard let container = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "nl.root3.support") else {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        guard let documentsFolder = paths.first else {
             return nil
         }
-        
-        let documentsFolder = container.appendingPathComponent("Documents", isDirectory: true)
         let fileURL = documentsFolder.appendingPathComponent("\(filename).\(url.pathExtension)")
         
         // Remove file if it already exists
@@ -781,7 +776,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             
             // Just return the URL and avoid downloading the image again
             if !newURL {
-                logger.debug("URL for \(logName) is unchanged, no need to download image again")
+                logger.debug("URL for \(logName, privacy: .public) is unchanged, no need to download image again")
                 return fileURL
             }
             
@@ -793,7 +788,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             }
         }
         
-        logger.debug("Downloading remote \(logName) from URL")
+        logger.debug("Downloading remote \(logName, privacy: .public) from URL")
                         
         // Create a semaphore to wait for the file removal
         let semaphore = DispatchSemaphore(value: 0)

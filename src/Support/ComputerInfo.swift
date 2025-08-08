@@ -57,6 +57,8 @@ class ComputerInfo: ObservableObject {
             return "Sonoma"
         case 15:
             return "Sequoia"
+        case 26:
+            return "Tahoe"
         default:
             return ""
         }

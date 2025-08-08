@@ -17,9 +17,9 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.6.3</string>
+	<string>2.6.4</string>
 	<key>CFBundleVersion</key>
-	<string>66</string>
+	<string>77</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.utilities</string>
 	<key>LSMinimumSystemVersion</key>
@@ -28,10 +28,6 @@
 	<true/>
 	<key>NSHumanReadableCopyright</key>
 	<string>© 2025 Root3 B.V. All rights reserved.</string>
-	<key>NSMainStoryboardFile</key>
-	<string>Main</string>
-	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
 	<key>SMPrivilegedExecutables</key>
 	<dict>
 		<key>nl.root3.support.helper</key>
