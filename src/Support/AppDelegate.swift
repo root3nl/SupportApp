@@ -776,7 +776,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             
             // Just return the URL and avoid downloading the image again
             if !newURL {
-                logger.debug("URL for \(logName) is unchanged, no need to download image again")
+                logger.debug("URL for \(logName, privacy: .public) is unchanged, no need to download image again")
                 return fileURL
             }
             
