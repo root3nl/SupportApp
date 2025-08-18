@@ -50,14 +50,29 @@ struct UpdateView: View {
                 Button(action: {
                     computerinfo.showMacosUpdates.toggle()
                 }) {
-                    Ellipse()
-                        .foregroundColor(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
-                        .overlay(
-                            Image(systemName: "chevron.backward")
-                        )
-                        .frame(width: 26, height: 26)
+                    if #available(macOS 26, *) {
+                        Image(systemName: "chevron.backward")
+                            .font(.system(size: 16))
+                            .padding(4)
+                    } else {
+                        Ellipse()
+                            .foregroundColor(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
+                            .overlay(
+                                Image(systemName: "chevron.backward")
+                            )
+                            .frame(width: 26, height: 26)
+                    }
                 }
-                .buttonStyle(.plain)
+                .modify {
+                    if #available(macOS 26, *) {
+                        $0
+                            .buttonStyle(.glass)
+                            .buttonBorderShape(.circle)
+                    } else {
+                        $0
+                            .buttonStyle(.plain)
+                    }
+                }
                 
                 Text(NSLocalizedString("MACOS_UPDATES", comment: ""))
                     .font(.system(.headline, design: .rounded))

@@ -27,7 +27,7 @@ struct NotificationBadgeTextView: View {
                             .font(Font.system(size: 12))
                     )
                     .frame(width: 18, height: 18)
-                    .padding(4)
+                    .padding(12)
             }
             Spacer()
         }

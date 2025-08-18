@@ -12,7 +12,7 @@ import SwiftUI
 
 // Popover is based on: https://medium.com/@acwrightdesign/creating-a-macos-menu-bar-application-using-swiftui-54572a5d5f87
 
-@NSApplicationMain
+//@NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 
     var popover: NSPopover!
@@ -135,19 +135,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         defaults.addObserver(self, forKeyPath: "PasswordExpiryLimit", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "OpenAtLogin", options: .new, context: nil)
         restrictionsDefaults?.addObserver(self, forKeyPath: "forceDelayedMajorSoftwareUpdates", options: .new, context: nil)
-        ASUdefaults?.addObserver(self, forKeyPath: "LastUpdatesAvailable", options: .new, context: nil)
         ASUdefaults?.addObserver(self, forKeyPath: "RecommendedUpdates", options: .new, context: nil)
         
         // Observe changes for Extensions A and B
         defaults.addObserver(self, forKeyPath: "ExtensionAlertA", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "ExtensionAlertB", options: .new, context: nil)
         
-        // Observe changes for App Catalog
-        catalogDefaults?.addObserver(self, forKeyPath: "Updates", options: .new, context: nil)
-        
         // Observer changes to 'Rows'
         defaults.addObserver(self, forKeyPath: "Rows", options: .new, context: nil)
-        
+
         // Receive notifications after uptime check
         NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.uptimeDaysLimit, object: nil)
         
@@ -160,8 +156,20 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         // Receive notification after password expiry check
         NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.passwordExpiryLimit, object: nil)
         
-        // Receive notification after major macOS update check
-        NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.majorVersionUpdates, object: nil)
+        // Receive notification after macOS update check
+        NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.recommendedUpdates, object: nil)
+        
+        // Set Status Bar Icon when App Catalog update check is completed
+        DistributedNotificationCenter.default().addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.updateCheckCompleted, object: nil)
+        
+        // Decode app updates and reload status bar item when Catalog Agent or App completed an update check
+        DistributedNotificationCenter.default().addObserver(forName: Notification.Name.updateCheckCompleted, object: nil, queue: .main) { _ in
+            // Decode app updates
+            self.appCatalogController.decodeAppUpdates()
+            
+            // Reload Status bar icon
+            self.setStatusBarIcon()
+        }
         
         // Run functions at startup
         runAtStartup()
@@ -340,12 +348,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             // Check if StatusBarItem notifier is enabled
             if defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
                 // Show notification badge in menu bar icon when info item when needed
-                if ((computerinfo.updatesAvailableToShow == 0 || !infoItemsEnabled.contains("MacOSVersion")) && (appCatalogController.appUpdates == 0 || !infoItemsEnabled.contains("AppCatalog"))) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage")) || (preferences.extensionAlertA && infoItemsEnabled.contains("ExtensionA")) || (preferences.extensionAlertB && infoItemsEnabled.contains("ExtensionB"))) {
+                if ((computerinfo.recommendedUpdates.count == 0 || !infoItemsEnabled.contains("MacOSVersion")) && (appCatalogController.appUpdates == 0 || !infoItemsEnabled.contains("AppCatalog"))) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage")) || (preferences.extensionAlertA && infoItemsEnabled.contains("ExtensionA")) || (preferences.extensionAlertB && infoItemsEnabled.contains("ExtensionB"))) {
                     
                     // Create orange notification badge
                     orangeBadge.isHidden = false
                     
-                } else if (computerinfo.updatesAvailableToShow > 0 && infoItemsEnabled.contains("MacOSVersion")) || (appCatalogController.appUpdates > 0 && infoItemsEnabled.contains("AppCatalog")) {
+                } else if (computerinfo.recommendedUpdates.count > 0 && infoItemsEnabled.contains("MacOSVersion")) || (appCatalogController.appUpdates > 0 && infoItemsEnabled.contains("AppCatalog")) {
                     
                     // Create red notification badge
                     redBadge.isHidden = false
@@ -442,8 +450,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             Task {
                 await self.userinfo.getCurrentUserRecord()
             }
-        case "LastUpdatesAvailable":
-            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.ASUdefaults!.integer(forKey: "LastUpdatesAvailable"), privacy: .public)")
         case "RecommendedUpdates":
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed, checking update contents...")
             self.computerinfo.getRecommendedUpdates()
@@ -457,13 +463,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.preferences.extensionAlertA, privacy: .public)")
         case "ExtensionAlertB":
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.preferences.extensionAlertB, privacy: .public)")
-        case "Updates":
-            if appCatalogController.ignoreUpdateChange {
-                appCatalogController.ignoreUpdateChange.toggle()
-            } else {
-                logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.appCatalogController.appUpdates, privacy: .public)")
-                appCatalogController.getAppUpdates()
-            }
         case "Rows":
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed, decoding rows...")
             self.decodeRows()
@@ -529,13 +528,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         if let button = statusBarItem?.button {
             
             // Disable animation when popover opens
-            self.popover.animates = false
+//            self.popover.animates = false
             
             // show popover
             self.popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
             
             // Enable animation again to avoid issues
-            self.popover.animates = true
+//            self.popover.animates = true
+            
+//            if let popoverWindow = popover.contentViewController?.view.window {
+//                popoverWindow.isOpaque = false
+//                popoverWindow.backgroundColor = .clear
+//                popoverWindow.hasShadow = false // Optional: Remove shadow if you want
+//            }
             
             // Start monitoring mouse clicks outside the popover
             eventMonitor?.start()
@@ -548,7 +553,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             
             Task {
                 await self.userinfo.getCurrentUserRecord()
-                await self.userinfo.getUserFullName()
             }
                         
             // Post Distributed Notification to trigger script for custom info items
@@ -570,7 +574,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         self.computerinfo.kernelBootTime()
         Task {
             await self.userinfo.getCurrentUserRecord()
-            await self.userinfo.getUserFullName()
             await self.computerinfo.getSerialNumber()
         }
         self.computerinfo.getStorage()
@@ -776,13 +779,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         guard let url = URL(string: url) else {
             return nil
         }
-        
+
         // Path to App Sandbox container
-        guard let container = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "nl.root3.support") else {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        guard let documentsFolder = paths.first else {
             return nil
         }
-        
-        let documentsFolder = container.appendingPathComponent("Documents", isDirectory: true)
         let fileURL = documentsFolder.appendingPathComponent("\(filename).\(url.pathExtension)")
         
         // Remove file if it already exists
@@ -802,7 +804,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             }
         }
         
-        logger.debug("Downloading remote \(logName) from URL")
+        logger.debug("Downloading remote \(logName, privacy: .public) from URL")
                         
         // Create a semaphore to wait for the file removal
         let semaphore = DispatchSemaphore(value: 0)

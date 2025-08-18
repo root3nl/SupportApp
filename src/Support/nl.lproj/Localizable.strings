@@ -11,6 +11,7 @@
 "Last Reboot" = "Laatste herstart";
 "RESTART_REGULARLY" = "Herstart je Mac regelmatig";
 "ADMIN_RECOMMENDS_RESTARTING_EVERY" = "Je beheerder raadt aan je Mac te herstarten tenminste iedere";
+"ADMIN_RECOMMENDS_RESTARTING_EVERY_DAY" = "Je beheerder raadt aan je Mac dagelijks te herstarten.";
 "ago" = "geleden";
 "minute" = "minuut";
 "minutes" = "minuten";

@@ -1,17 +1,6 @@
-name: Build and Notarize Support App Beta
+name: Build and Notarize Support App - Alpha Manual - Xcode Beta
 
-on:
-  push:
-    branches:
-      - development
-    paths-ignore:
-      - 'Configuration Profile Samples/**'
-      - 'Extension Sample Scripts/**'
-      - 'Jamf Pro Custom Schema/**'
-      - 'LaunchAgent Sample/**'
-      - 'Screenshots/**'
-      - 'SupportHelper/**'
-      - 'README.md'
+on: [workflow_dispatch]
 
 jobs:
   build_with_signing:
@@ -79,7 +68,7 @@ jobs:
           # Set Xcode version to latest version available
           # XCODE_VERSION=$(ls -d /Applications/Xcode*.app 2>/dev/null | sort -V | tail -n 1)
           # echo "Path to latest Xcode version: ${XCODE_VERSION}"
-          XCODE_VERSION="${{vars.XCODE_VERSION}}"
+          XCODE_VERSION="${{vars.XCODE_VERSION_BETA}}"
 
           # Select Xcode version
           sudo xcode-select -s "${XCODE_VERSION}"
@@ -91,7 +80,7 @@ jobs:
 
       - name: Notarize and package macOS app
         run: 
-          ./build_pkg_automated.zsh "${{env.APP_VERSION}}" "${{ secrets.APPLE_ID }}" "${{ secrets.APPLE_ID_APP_SPECIFIC_PASSWORD }}" "${{vars.XCODE_VERSION}}"
+          ./build_pkg_automated.zsh "${{env.APP_VERSION}}" "${{ secrets.APPLE_ID }}" "${{ secrets.APPLE_ID_APP_SPECIFIC_PASSWORD }}" "${{vars.XCODE_VERSION_BETA}}"
 
       - name: Upload package
         uses: actions/upload-artifact@v4

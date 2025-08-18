@@ -50,110 +50,206 @@ struct Item: View {
     
     var body: some View {
         
-        ZStack {
-            
-            HStack {
-                if loading ?? false {
-                    Ellipse()
-                        .foregroundColor(Color.gray.opacity(0.5))
-                        .overlay(
-                            ProgressView()
-                                .scaleEffect(0.5)
-                        )
-                        .frame(width: 26, height: 26)
-                        .padding(.leading, 10)
-                } else {
-                    Ellipse()
-                        .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
-                        .overlay(
-                            Image(systemName: image)
-                                .foregroundColor(hoverView && link != "" ? Color("hoverColor") : Color.white)
-                        )
-                        .frame(width: 26, height: 26)
-                        .padding(.leading, 10)
+        if #available(macOS 26, *) {
+            ZStack {
+                
+                HStack {
+                    if loading ?? false {
+                        Ellipse()
+                            .foregroundColor(.white)
+                            .overlay(
+                                ProgressView()
+                                    .scaleEffect(0.8)
+                            )
+                            .frame(width: 36, height: 36)
+                            .padding(.leading, 14)
+                    } else {
+                        Ellipse()
+                            .foregroundColor(.white)
+                            .overlay(
+                                Image(systemName: image)
+                                    .foregroundColor(symbolColor)
+                                    .font(.system(size: 18))
+                            )
+                            .frame(width: 36, height: 36)
+                            .padding(.leading, 14)
+                    }
+                    
+                    VStack(alignment: .leading) {
+                        
+                        Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
+                            .font(.system(.body, design: .default))
+                            .fontWeight(.medium)
+                            .foregroundStyle(.white)
+                            .lineLimit(2)
+                        
+                        if subtitle != "" && hoverView && showSubtitle {
+                            // Show the subtitle when hover animation is enabled
+                            Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
+                                .font(.system(.subheadline, design: .default))
+//                                .foregroundStyle(.white.opacity(0.8))
+                                .foregroundStyle(.white)
+                                .lineLimit(2)
+                            
+                        } else if !animate {
+                            // Always show the subtitle when hover animation is disabled
+                            Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
+                                .font(.system(.subheadline, design: .default))
+//                                .foregroundStyle(.white.opacity(0.8))
+                                .foregroundStyle(.white)
+                                .lineLimit(2)
+                            // Show placeholder when no initial value is set for Custom Info Items
+                                .redacted(reason: (subtitle == "KeyPlaceholder") ? .placeholder: .init())
+                            
+                        }
+                    }
+                    Spacer()
                 }
                 
-                VStack(alignment: .leading) {
-                    
-                    Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
-                        .font(.system(.body, design: .rounded)).fontWeight(.medium)
-                        .lineLimit(2)
-                    
-                    if subtitle != "" && hoverView && showSubtitle {
-                        // Show the subtitle when hover animation is enabled
-                        Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
-                            .font(.system(.subheadline, design: .rounded))
-                            .lineLimit(2)
-                        
-                    } else if !animate {
-                        // Always show the subtitle when hover animation is disabled
-                        Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
-                            .font(.system(.subheadline, design: .rounded))
-                            .lineLimit(2)
-                            // Show placeholder when no initial value is set for Custom Info Items
-                            .redacted(reason: (subtitle == "KeyPlaceholder") ? .placeholder: .init())
-                        
+                // Optionally show notification badge with counter
+                if notificationBadge != nil && notificationBadge! > 0 {
+                    NotificationBadgeView(badgeCounter: notificationBadge!)
+                }
+                
+                // Optionally show notification badge with warning
+                if notificationBadgeBool ?? false {
+                    NotificationBadgeTextView(badgeCounter: "!")
+                }
+            }
+            .frame(width: 176, height: 64)
+            .contentShape(Capsule())
+            .alert(isPresented: $showingAlert) {
+                Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
+            }
+            .onHover() {
+                hover in self.hoverView = hover
+                
+                // Animation when hovering
+                if animate {
+                    withAnimation(.easeInOut) {
+                        self.showSubtitle.toggle()
                     }
                 }
+            }
+            .onTapGesture() {
+                tapGesture()
+            }
+//            .glassEffect(.clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
+//            .glassEffect(hoverView && hoverEffectEnable ? .regular.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)) : .clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
+            .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
+            .animation(.bouncy, value: hoverView)
+
+        } else {
+            
+            ZStack {
                 
-                Spacer()
+                HStack {
+                    if loading ?? false {
+                        Ellipse()
+                            .foregroundColor(Color.gray.opacity(0.5))
+                            .overlay(
+                                ProgressView()
+                                    .scaleEffect(0.5)
+                            )
+                            .frame(width: 26, height: 26)
+                            .padding(.leading, 10)
+                    } else {
+                        Ellipse()
+                            .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
+                            .overlay(
+                                Image(systemName: image)
+                                    .foregroundColor(hoverView && link != "" ? Color("hoverColor") : Color.white)
+                            )
+                            .frame(width: 26, height: 26)
+                            .padding(.leading, 10)
+                    }
+                    
+                    VStack(alignment: .leading) {
+                        
+                        Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
+                            .font(.system(.body, design: .rounded)).fontWeight(.medium)
+                            .lineLimit(2)
+                        
+                        if subtitle != "" && hoverView && showSubtitle {
+                            // Show the subtitle when hover animation is enabled
+                            Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
+                                .font(.system(.subheadline, design: .rounded))
+                                .lineLimit(2)
+                            
+                        } else if !animate {
+                            // Always show the subtitle when hover animation is disabled
+                            Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
+                                .font(.system(.subheadline, design: .rounded))
+                                .lineLimit(2)
+                            // Show placeholder when no initial value is set for Custom Info Items
+                                .redacted(reason: (subtitle == "KeyPlaceholder") ? .placeholder: .init())
+                            
+                        }
+                    }
+                    
+                    Spacer()
+                }
+                
+                // Optionally show notification badge with counter
+                if notificationBadge != nil && notificationBadge! > 0 {
+                    NotificationBadgeView(badgeCounter: notificationBadge!)
+                }
+                
+                // Optionally show notification badge with warning
+                if notificationBadgeBool ?? false {
+                    NotificationBadgeTextView(badgeCounter: "!")
+                }
+                
+                //            if updateView != nil && notificationBadge! > 0 {
+                //                UpdateView(color: symbolColor)
+                //            }
             }
-            
-            // Optionally show notification badge with counter
-            if notificationBadge != nil && notificationBadge! > 0 {
-                NotificationBadgeView(badgeCounter: notificationBadge!)
+            .frame(width: 176, height: 60)
+            .background(hoverView && hoverEffectEnable && link != "" ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
+            .cornerRadius(10)
+            // Apply gray and black border in Dark Mode to better view the buttons like Control Center
+            .modifier(DarkModeBorder())
+            .shadow(color: Color.black.opacity(0.2), radius: 4, y: 2)
+            .alert(isPresented: $showingAlert) {
+                Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
             }
-            
-            // Optionally show notification badge with warning
-            if notificationBadgeBool ?? false {
-                NotificationBadgeTextView(badgeCounter: "!")
-            }
-            
-//            if updateView != nil && notificationBadge! > 0 {
-//                UpdateView(color: symbolColor)
-//            }
-        }
-        .frame(width: 176, height: 60)
-        .background(hoverView && hoverEffectEnable && link != "" ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
-        .cornerRadius(10)
-        // Apply gray and black border in Dark Mode to better view the buttons like Control Center
-        .modifier(DarkModeBorder())
-        .shadow(color: Color.black.opacity(0.2), radius: 4, y: 2)
-        .alert(isPresented: $showingAlert) {
-            Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
-        }
-        .onHover() {
-            hover in self.hoverView = hover
-            
-            // Animation when hovering
-            if animate {
-                withAnimation(.easeInOut) {
-                    self.showSubtitle.toggle()
+            .onHover() {
+                hover in self.hoverView = hover
+                
+                // Animation when hovering
+                if animate {
+                    withAnimation(.easeInOut) {
+                        self.showSubtitle.toggle()
+                    }
                 }
             }
-        }
-        .onTapGesture() {
-            // Don't do anything when no link is specified
-            guard link != "" else {
-                logger.debug("No link specified for \(title, privacy: .public), button disabled...")
-                return
+            .onTapGesture() {
+                tapGesture()
             }
-            
-            if linkType == "App" {
-                openApp()
-            } else if linkType == "URL" {
-                openLink()
-            } else if linkType == "Command" {
-                runCommand()
+        }
+    }
+    
+    func tapGesture() {
+        // Don't do anything when no link is specified
+        guard link != "" else {
+            logger.debug("No link specified for \(title, privacy: .public), button disabled...")
+            return
+        }
+        
+        if linkType == "App" {
+            openApp()
+        } else if linkType == "URL" {
+            openLink()
+        } else if linkType == "Command" {
+            runCommand()
             // MARK: - DistributedNotification is deprecated, use PrivilegedScript instead
-            } else if linkType == "DistributedNotification" || linkType == "PrivilegedScript" {
-                Task {
-                    await runPrivilegedCommand()
-                }
-            } else {
-                self.showingAlert.toggle()
-                logger.error("Invalid Link Type: \(linkType!)")
+        } else if linkType == "DistributedNotification" || linkType == "PrivilegedScript" {
+            Task {
+                await runPrivilegedCommand()
             }
+        } else {
+            self.showingAlert.toggle()
+            logger.error("Invalid Link Type: \(linkType!)")
         }
     }
     
@@ -168,6 +264,9 @@ struct Item: View {
         let configuration = NSWorkspace.OpenConfiguration()
         
         NSWorkspace.shared.openApplication(at: url, configuration: configuration, completionHandler: nil)
+        
+        // Close popover
+        appDelegate.togglePopover(nil)
     }
     
     // Open URL

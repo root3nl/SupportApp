@@ -1,14 +1,16 @@
 //
-//  ItemSmall.swift
+//  ItemCircle.swift
 //  Support
 //
-//  Created by Jordy Witteman on 30/12/2020.
+//  Created by Jordy Witteman on 19/08/2025.
 //
 
 import os
 import SwiftUI
 
-struct ItemSmall: View {
+@available(macOS 26, *)
+struct ItemCircle: View {
+    
     var title: String
     var subtitle: String?
     var linkType: String?
@@ -40,95 +42,32 @@ struct ItemSmall: View {
     @ObservedObject var preferences = Preferences()
     
     var body: some View {
-        
-        if #available(macOS 26, *) {
-            VStack {
-                
-                if loading ?? false {
-                    ProgressView()
-                        .scaleEffect(0.8)
-                        .frame(width: 22, height: 22)
-                } else {
-                    Image(systemName: image)
-                        .font(.system(size: 22, weight: .semibold))
-                        .foregroundStyle(.white)
-//                        .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
-                        .symbolRenderingMode(.hierarchical)
-//                        .frame(width: 22, height: 22)
-                }
-                
-//                Spacer()
-                
-                // Optionally show a subtitle when user hovers over button
-//                if subtitle != "" && hoverView {
-//                    Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
-//                        .font(.system(.subheadline, design: .default))
-//                        .foregroundStyle(.white)
-//                } else {
-//                    Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
-//                        .font(.system(.subheadline, design: .default))
-//                        .foregroundStyle(.white)
-//                }
-            }
-//            .padding(.vertical, 10)
-            .frame(width: 114, height: 64)
-            .contentShape(Capsule())
-            .alert(isPresented: $showingAlert) {
-                Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
-            }
-            .onHover() {
-                hover in self.hoverView = hover
-            }
-            .onTapGesture() {
-                tapGesture()
-            }
-//            .glassEffect(.clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
-//            .glassEffect(hoverView ? .regular.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)) : .clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
-            .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: true))
-            .animation(.bouncy, value: hoverView)
-        } else {
-            VStack {
-                
-                if loading ?? false {
-                    ProgressView()
-                        .scaleEffect(0.8)
-                        .frame(width: 24, height: 24)
-                } else {
-                    Image(systemName: image)
-                        .font(.system(size: 24, weight: .semibold))
-                        .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
-                        .frame(width: 24, height: 24)
-                }
-                
-                Spacer()
-                
-                // Optionally show a subtitle when user hovers over button
-                if subtitle != "" && hoverView {
-                    Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
-                        .font(.system(.subheadline, design: .rounded))
-                } else {
-                    Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
-                        .font(.system(.subheadline, design: .rounded))
-                    
-                }
-            }
-            .padding(.vertical, 10)
-            .frame(width: 114, height: 60)
-            .background(hoverView && link != "" ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
-            .cornerRadius(10)
-            // Apply gray and black border in Dark Mode to better view the buttons like Control Center
-            .modifier(DarkModeBorder())
-            .shadow(color: Color.black.opacity(0.2), radius: 4, y: 2)
-            .alert(isPresented: $showingAlert) {
-                Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
-            }
-            .onHover() {
-                hover in self.hoverView = hover
-            }
-            .onTapGesture() {
-                tapGesture()
+        VStack {
+            
+            if loading ?? false {
+                ProgressView()
+                    .scaleEffect(0.8)
+                    .frame(width: 22, height: 22)
+            } else {
+                Image(systemName: "alarm")
+                    .font(.system(size: 22, weight: .semibold))
+                    .foregroundStyle(.white)
+                    .symbolRenderingMode(.hierarchical)
             }
         }
+        .frame(width: 64, height: 64)
+        .contentShape(.circle)
+        .alert(isPresented: $showingAlert) {
+            Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
+        }
+        .onHover() {
+            hover in self.hoverView = hover
+        }
+        .onTapGesture() {
+            tapGesture()
+        }
+        .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: true))
+        .animation(.bouncy, value: hoverView)
     }
     
     func tapGesture() {
@@ -259,4 +198,3 @@ struct ItemSmall: View {
         }
     }
 }
-

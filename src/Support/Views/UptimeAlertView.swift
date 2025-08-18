@@ -45,7 +45,7 @@ struct UptimeAlertView: View {
         if preferences.uptimeDaysLimit > 1 {
            return NSLocalizedString("ADMIN_RECOMMENDS_RESTARTING_EVERY", comment: "") + " \(preferences.uptimeDaysLimit)" + NSLocalizedString(" days", comment: "")
         } else {
-            return NSLocalizedString("ADMIN_RECOMMENDS_RESTARTING_EVERY", comment: "") + NSLocalizedString(" day", comment: "")
+            return NSLocalizedString("ADMIN_RECOMMENDS_RESTARTING_EVERY_DAY", comment: "")
         }
     }
     
@@ -58,14 +58,29 @@ struct UptimeAlertView: View {
                 Button(action: {
                     computerinfo.showUptimeAlert.toggle()
                 }) {
-                    Ellipse()
-                        .foregroundColor(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
-                        .overlay(
-                            Image(systemName: "chevron.backward")
-                        )
-                        .frame(width: 26, height: 26)
+                    if #available(macOS 26, *) {
+                        Image(systemName: "chevron.backward")
+                            .font(.system(size: 16))
+                            .padding(4)
+                    } else {
+                        Ellipse()
+                            .foregroundColor(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
+                            .overlay(
+                                Image(systemName: "chevron.backward")
+                            )
+                            .frame(width: 26, height: 26)
+                    }
                 }
-                .buttonStyle(.plain)
+                .modify {
+                    if #available(macOS 26, *) {
+                        $0
+                            .buttonStyle(.glass)
+                            .buttonBorderShape(.circle)
+                    } else {
+                        $0
+                            .buttonStyle(.plain)
+                    }
+                }
                 
                 Text(NSLocalizedString("Last Reboot", comment: ""))
                     .font(.system(.headline, design: .rounded))
@@ -112,13 +127,31 @@ struct UptimeAlertView: View {
                         Text(NSLocalizedString("RESTART", comment: ""))
                             .font(.system(.title3, design: .rounded))
                             .fontWeight(.medium)
-                            .foregroundStyle(.white)
-                            .padding(.vertical, 4)
-                            .padding(.horizontal)
-                            .background(Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
-                            .clipShape(Capsule())
+                            .modify {
+                                if #available(macOS 26, *) {
+                                    $0
+                                } else {
+                                    $0
+                                        .foregroundStyle(.white)
+                                        .padding(.vertical, 4)
+                                        .padding(.horizontal)
+                                        .background(Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+                                        .clipShape(Capsule())
+                                }
+                            }
                     }
-                    .buttonStyle(.plain)
+                    .modify {
+                        if #available(macOS 26, *) {
+                            $0
+                                .buttonStyle(.glassProminent)
+                                .buttonBorderShape(.capsule)
+                                .controlSize(.large)
+                                .tint(Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+                        } else {
+                            $0
+                                .buttonStyle(.plain)
+                        }
+                    }
                     .frame(height: 20)
                     
                 }

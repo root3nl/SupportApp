@@ -57,6 +57,8 @@ class ComputerInfo: ObservableObject {
             return "Sonoma"
         case 15:
             return "Sequoia"
+        case 26:
+            return "Tahoe"
         default:
             return ""
         }
@@ -68,19 +70,19 @@ class ComputerInfo: ObservableObject {
     var modelIdentifier = String()
 
     // Get Available Software Updates
-    @AppStorage("LastUpdatesAvailable", store: UserDefaults(suiteName: "com.apple.SoftwareUpdate")) var updatesAvailable: Int = 0
+//    @AppStorage("LastUpdatesAvailable", store: UserDefaults(suiteName: "com.apple.SoftwareUpdate")) var updatesAvailable: Int = 0
     
     // Number of major macOS Software Updates
     @Published var majorVersionUpdates: Int = 0
     
     // Calculate number of updates to show, excluding any major upgrades if hidden using 'forceDelayedMajorSoftwareUpdates' in a restrictions profile
-    var updatesAvailableToShow: Int {
-        if forceDelayedMajorSoftwareUpdates {
-            return updatesAvailable - majorVersionUpdates
-        } else {
-            return updatesAvailable
-        }
-    }
+//    var updatesAvailableToShow: Int {
+//        if forceDelayedMajorSoftwareUpdates {
+//            return updatesAvailable - majorVersionUpdates
+//        } else {
+//            return updatesAvailable
+//        }
+//    }
     
     // Get if major OS updates are deferred using a restrictions profile
     @AppStorage("forceDelayedMajorSoftwareUpdates", store: UserDefaults(suiteName: "com.apple.applicationaccess")) var forceDelayedMajorSoftwareUpdates: Bool = false
@@ -680,6 +682,7 @@ class ComputerInfo: ObservableObject {
                 // Remove all updates from UI
                 DispatchQueue.main.async {
                     self.recommendedUpdates = []
+                    NotificationCenter.default.post(name: Notification.Name.recommendedUpdates, object: nil)
                 }
                 
                 return
@@ -723,11 +726,7 @@ class ComputerInfo: ObservableObject {
                 self.recommendedUpdates = decodedItems
                 
                 // Post changes to notification center
-                if oldMajorVersionUpdates != majorVersionUpdatesTemp {
-                    NotificationCenter.default.post(name: Notification.Name.majorVersionUpdates, object: nil)
-                } else {
-                    self.logger.debug("Number of Major macOS Updates did not change, no need to reload StatusBarItem")
-                }
+                NotificationCenter.default.post(name: Notification.Name.recommendedUpdates, object: nil)
             }
         }
     }

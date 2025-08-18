@@ -24,7 +24,7 @@
 preference_file_location="/Library/Preferences/nl.root3.support.plist"
 
 # SAP Privileges CLI
-sap_privileges_cli="/Applications/Privileges.app/Contents/Resources/PrivilegesCLI"
+sap_privileges_cli="/Applications/Privileges.app/Contents/macOS/PrivilegesCLI"
 
 # Start spinning indicator
 defaults write "${preference_file_location}" ExtensionLoadingB -bool true
@@ -32,17 +32,18 @@ defaults write "${preference_file_location}" ExtensionLoadingB -bool true
 # Replace value with placeholder while loading
 defaults write "${preference_file_location}" ExtensionValueB -string "KeyPlaceholder"
 
-# Get the username of the currently logged in user
+# Get the username and uid of the currently logged in user
 username=$(scutil <<< "show State:/Users/ConsoleUser" | awk '/Name :/ && ! /loginwindow/ { print $3 }')
+uid=$(id -u "$username")
 
 # Check if user is administrator
 is_admin=$(dsmemberutil checkmembership -U "${username}" -G admin)
 
 # Change permissions
 if [[ ${is_admin} != *not* ]]; then
-  sudo -u ${username} ${sap_privileges_cli} --remove
+  launchctl asuser "$uid" sudo -u ${username} ${sap_privileges_cli} --remove
 else
-  sudo -u ${username} ${sap_privileges_cli} --add
+  launchctl asuser "$uid" sudo -u ${username} ${sap_privileges_cli} --add
 fi
 
 # Run Support App Extension to report new permission status

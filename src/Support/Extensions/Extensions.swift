@@ -151,6 +151,8 @@ extension String {
     
     func replaceLocalVariables(computerInfo: ComputerInfo, userInfo: UserInfo) -> String {
         var newString = self
+        
+        // Dictionary containing local variables and their values from ComputerInfo and UserInfo
         let localVariables = [
             ("$LocalComputerName", computerInfo.hostname),
             ("$LocalModelName", computerInfo.modelNameString),
@@ -161,14 +163,18 @@ extension String {
             ("$LocalMacosVersionName", computerInfo.macOSVersionName),
             ("$LocalSerialNumber", computerInfo.deviceSerialNumber),
             ("$LocalIpAddress", computerInfo.ipAddress),
-            ("$LocalUpdatesAvailable", "\(computerInfo.updatesAvailableToShow)"),
+            ("$LocalUpdatesAvailable", "\(computerInfo.recommendedUpdates.count)"),
             ("\\n", "\n")
         ]
+        
+        // Sort local variables by key length in descending order to prevent substring issues
+        let sortedVariables = localVariables.sorted { $0.0.count > $1.0.count }
     
         // Loop through all possible local variables and replace when found
-        for (original, replacement) in localVariables {
+        for (original, replacement) in sortedVariables {
             newString = newString.replacingOccurrences(of: original, with: replacement)
         }
+        
         return newString
     }
 

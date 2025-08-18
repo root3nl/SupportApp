@@ -64,7 +64,7 @@ struct AppCatalogSubview: View {
                     }
                 }
             }
-            // Legacy popover for macOS 12
+        // Legacy popover for macOS 12
             .popover(isPresented: $showAppCatalogPopover, arrowEdge: .leading) {
                 AppUpdatesView()
             }
