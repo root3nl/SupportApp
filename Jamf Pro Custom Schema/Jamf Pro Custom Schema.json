@@ -1082,6 +1082,86 @@
           "href": "https://github.com/root3nl/SupportApp"
         }
       ]
+    },
+    "Rows": {
+      "title": "Rows",
+      "description": "Row configuration and items",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "title": "Row",
+        "properties":{
+          "Items": {
+            "title": "Item",
+            "type": "array",
+            "options": {
+              "infoText": "Bundle ID as shown at appcatalog.cloud. Example:\n\ntld.domain.app"
+            },
+            "items": {
+              "type": "object",
+              "title": "Item",
+              "properties": {
+                "Type": {
+                  "title": "Type",
+                  "type": "string",
+                  "options": {
+                    "enum_titles": ["Button", "Small Button", "Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "App Catalog", "Divider", "Spacer"],
+                    "infoText": "Type"
+                  },
+                  "enum": ["Button", "SmallButton", "ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "AppCatalog", "Divider", "Spacer"]
+                },
+                "Title": {
+                  "title": "Title",
+                  "type": "string",
+                  "options": {
+                    "infoText": "Title"
+                  }
+                },
+                "Subtitle": {
+                  "title": "Subtitle",
+                  "type": "string",
+                  "options": {
+                    "infoText": "Subtitle"
+                  }
+                },
+                "LinkType": {
+                  "title": "Link Type",
+                  "type": "string",
+                  "options": {
+                    "enum_titles": ["App", "URL", "User Command", "Privileged Script"],
+                    "infoText": "LinkType"
+                  },
+                  "enum": ["App", "URL", "Command", "PrivilegedScript"]
+                },
+                "Link": {
+                  "title": "Link",
+                  "type": "string",
+                  "options": {
+                    "infoText": "Link"
+                  }
+                },
+                "Symbol": {
+                  "title": "Symbol",
+                  "type": "string",
+                  "options": {
+                    "infoText": "Symbol"
+                  }
+                },
+                "ExtensionID": {
+                  "title": "Extension ID",
+                  "type": "string",
+                  "options": {
+                    "infoText": "ExtensionID"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "infoText": "Key name: Rows"
+      }
     }
 	}
 }

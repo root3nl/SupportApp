@@ -174,4 +174,30 @@ class Preferences: ObservableObject {
     
     // Enable beta release watermark
     let betaRelease: Bool = false
+    
+    // Rows shown in the app
+    @Published var rows: [Row] = []
+    
+    // Preview rows from local configuration
+    @Published var previewRows: [Row] = []
+    
+    // Edit mode
+    @Published var editModeEnabled = false
+    
+    // Item configuration view
+    @Published var showItemConfiguration = false
+    
+    // Current item in configuration view
+    @Published var currentConfiguredItem: ConfiguredItem?
+    
+//    @Published var items: [SupportItem] = [
+//        SupportItem(type: "AppCatalog", title: "Test1", subtitle: "Test", linkType: nil, link: nil, symbol: "tray.fill", extensionIdentifier: nil, onAppearAction: nil),
+//        SupportItem(type: "MacOSVersion", title: "Test2", subtitle: "Test", linkType: nil, link: nil, symbol: "tray.fill", extensionIdentifier: nil, onAppearAction: nil),
+//        SupportItem(type: "Button", title: "Test4", subtitle: "Test", linkType: nil, link: nil, symbol: "tray.fill", extensionIdentifier: nil, onAppearAction: nil),
+//        SupportItem(type: "Button", title: "Test5", subtitle: "Test", linkType: nil, link: nil, symbol: "tray.fill", extensionIdentifier: nil, onAppearAction: nil),
+//        SupportItem(type: "Divider", title: "Test5", subtitle: "Test", linkType: nil, link: nil, symbol: "tray.fill", extensionIdentifier: nil, onAppearAction: nil),
+//        SupportItem(type: "SmallButton", title: "Test1", subtitle: "Test", linkType: nil, link: nil, symbol: "tray.fill", extensionIdentifier: nil, onAppearAction: nil),
+//        SupportItem(type: "SmallButton", title: "Test2", subtitle: "Test", linkType: nil, link: nil, symbol: "tray.fill", extensionIdentifier: nil, onAppearAction: nil),
+//        SupportItem(type: "SmallButton", title: "Test3", subtitle: "Test", linkType: nil, link: nil, symbol: "tray.fill", extensionIdentifier: nil, onAppearAction: nil),
+//    ]
 }

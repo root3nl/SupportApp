@@ -19,13 +19,10 @@ struct ContentView: View {
     @EnvironmentObject var userinfo: UserInfo
     
     // Get preferences or default values
-    @StateObject var preferences = Preferences()
+    @EnvironmentObject var preferences: Preferences
     
     // Make UserDefaults easy to use
     let defaults = UserDefaults.standard
-        
-//    // Simple property wrapper boolean to visualize data loading when app opens
-//    @State var placeholdersEnabled = true
     
     // Dark Mode detection
     @Environment(\.colorScheme) var colorScheme
@@ -40,288 +37,426 @@ struct ContentView: View {
             return preferences.customColor
         }
     }
+    
+    @State private var addRowButtonHovered: Bool = false
+    @State private var addItemButtonHovered: Bool = false
+    @State private var addRowButtonHoveredIndex: Int?
+    @State private var showItemConfigurationPopover = false
+    
+    let supportItem = SupportItem(type: "AppCatalog", title: nil, subtitle: nil, linkType: nil, link: nil, symbol: nil, extensionIdentifier: nil, onAppearAction: nil)
         
     var body: some View {
         
-//        // MARK: - ZStack with blur effect
-//        ZStack {
-//            EffectsView(material: NSVisualEffectView.Material.fullScreenUI, blendingMode: NSVisualEffectView.BlendingMode.behindWindow)
-//
-//            // We need to provide Quit option for Apple App Review approval
-//            if !preferences.hideQuit {
-//                QuitButton()
-//            }
+//        if UserDefaults.standard.object(forKey: "preferences.previewRows") != nil {
+//        if UserDefaults.standard.object(forKey: "Rows") != nil {
+            
+        VStack(spacing: 10) {
+                ForEach(preferences.previewRows.indices, id: \.self) { index in
+//                    if row.items.count >= 2 && row.items.filter({ $0.type == "Button" }).count > 2 {
+//                        VStack {
+//                            Text("Unsupported number of items")
+//                                .font(.system(.headline, design: .rounded))
+//                            Link(destination: URL(string: "https://github.com/root3nl/SupportApp")!) {
+//                                Text("Documentation")
+//                                    .font(.system(.subheadline, design: .rounded))
+//                            }
+//                        }
+//                        .padding()
+//                    } else if row.items.count >= 3 && row.items.filter({ $0.type == "SmallButton" }).count > 3 {
+//                        VStack {
+//                            Text("Unsupported number of items")
+//                                .font(.system(.headline, design: .rounded))
+//                            Link(destination: URL(string: "https://github.com/root3nl/SupportApp")!) {
+//                                Text("Documentation")
+//                                    .font(.system(.subheadline, design: .rounded))
+//                            }
+//                        }
+//                        .padding()
+//                    } else {
+                        HStack(spacing: 10) {
+                            if let rowItems = preferences.previewRows[index].items {
+                                ForEach(rowItems.indices, id: \.self) { itemIndex in
+                                    
+                                    ZStack {
+                                        switch rowItems[itemIndex].type {
+                                        case "ComputerName":
+                                            ComputerNameSubview()
+                                        case "MacOSVersion":
+                                            MacOSVersionSubview()
+                                        case "Network":
+                                            NetworkSubview()
+                                        case "Password":
+                                            PasswordSubview()
+                                        case "Storage":
+                                            StorageSubview()
+                                        case "Uptime":
+                                            UptimeSubview()
+                                        case "AppCatalog":
+                                            AppCatalogSubview()
+                                        case "Button":
+                                            Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
+                                        case "SmallButton":
+                                            ItemSmall(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+                                        case "Divider":
+                                            VStack {
+                                                Divider()
+                                            }
+                                        case "Spacer":
+                                            Spacer()
+                                        default:
+                                            Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
+                                        }
+                                             
+                                        if preferences.editModeEnabled {
+                                            // Button to remove item
+                                            Image(systemName: "minus.circle.fill")
+                                                .imageScale(.large)
+                                                .symbolRenderingMode(.palette)
+                                                .foregroundStyle(.white, .gray)
+                                                .onTapGesture {
+                                                    if preferences.previewRows[index].items?.count == 1 {
+                                                        preferences.previewRows[index].items?.remove(at: itemIndex)
+                                                    } else {
+                                                        withAnimation {
+                                                            preferences.previewRows[index].items?.remove(at: itemIndex)
+                                                        }
+                                                    }
+                                                    
+                                                    // Remove if row is empty to avoid empty/invisible rows taking up space
+                                                    if preferences.previewRows[index].items?.count == 0 {
+                                                        preferences.previewRows.remove(at: index)
+                                                    }
+                                                    
+//                                                    print(preferences.previewRows)
+                                                }
+                                                .offset(x: -88, y: -30)
+                                            
+                                            // Button to add additional item
+                                            Image(systemName: "plus.circle.fill")
+                                                .imageScale(.large)
+                                                .symbolRenderingMode(.palette)
+                                                .foregroundStyle(.white, .gray)                                                .onTapGesture {
+                                                    // Add item
+                                                    if preferences.previewRows[index].items == nil {
+                                                        preferences.previewRows[index].items = []
+                                                    }
+                                                    withAnimation {
+                                                        preferences.previewRows[index].items?.append(supportItem)
+                                                    }
+                                                }
+                                                .offset(x: 140, y: 0)
+                                            
+                                            // Button to add additional item
+                                            Image(systemName: "ellipsis.circle.fill")
+                                                .imageScale(.large)
+                                                .symbolRenderingMode(.palette)
+                                                .foregroundStyle(.white, .gray)
+                                                .onTapGesture {
+                                                    preferences.currentConfiguredItem = ConfiguredItem(rowIndex: index, itemIndex: itemIndex)
+                                                    preferences.showItemConfiguration.toggle()
+                                                }
+                                                .offset(x: 75, y: 16)
+                                        }
+                                    }
+                                    .contextMenu {
+                                        Button {
+                                            preferences.previewRows[index].items?.remove(at: itemIndex)
+                                        } label: {
+                                            Label("Remove", systemImage: "minus.circle.fill")
+                                        }
+                                    }
+//                                    .animation(.default, value: rowItems)
+                                }
+//                            } else {
+//                                
+//                                // View to add first item in row
+//                                ZStack {
+//                                    
+//                                    Image(systemName: addItemButtonHovered && (addRowButtonHoveredIndex == index) ? "plus.circle.fill" : "plus.circle")
+//                                        .foregroundStyle(.secondary)
+//                                        .imageScale(.large)
+//                                        .onHover { hover in
+//                                            withAnimation(.easeOut) {
+//                                                addItemButtonHovered = hover
+//                                            }
+//                                        }
+//                                        .onHover { _ in
+//                                            addRowButtonHoveredIndex = index
+//                                        }
+//                                        .frame(width: 360, height: 60)
+//                                        .overlay(
+//                                            RoundedRectangle(cornerRadius: 10)
+//                                                .strokeBorder(style: StrokeStyle(lineWidth: 1))
+//                                                .foregroundStyle(.secondary)
+//                                                .opacity(0.5)
+//                                        )
+//                                        .onTapGesture {
+//                                            // Add item
+//                                            if preferences.previewRows[index].items == nil {
+//                                                preferences.previewRows[index].items = []
+//                                            }
+//                                            preferences.previewRows[index].items?.append(supportItem)
+//                                            print(preferences.previewRows)
+//                                        }
+//                                    
+//                                    HStack {
+//                                        
+//                                        Spacer()
+//                                        
+//                                        VStack {
+//                                            
+//                                            Image(systemName: "minus.circle.fill")
+//                                                .imageScale(.large)
+//                                                .foregroundStyle(.red)
+//                                                .onTapGesture {
+//                                                    print("Remove row \(index)")
+//                                                    preferences.previewRows.remove(at: index)
+//                                                }
+//                                                .offset(x: 5, y: -10)
+//                                            
+//                                            Spacer()
+//                                            
+//                                        }
+//                                    }
+//                                }
+                            }
+//                        }
+                    }
+                }
+                // Add row divider and plus button
+                if preferences.editModeEnabled {
+                    HStack {
+                        VStack {
+                            Divider()
+                        }
+                        Image(systemName: addRowButtonHovered ? "plus.circle.fill" : "plus.circle")
+                            .imageScale(.large)
+                            .foregroundStyle(.secondary)
+                            .onHover { hover in
+                                withAnimation(.easeOut) {
+                                    addRowButtonHovered = hover
+                                }
+                            }
+                            .onTapGesture {
+                                // Add row
+                                print("Adding row")
+                                preferences.previewRows.append(Row(items: [supportItem]))
+                            }
+                        VStack {
+                            Divider()
+                        }
+                    }
+                }
+            }
+            .frame(minWidth: 362, idealWidth: 362, maxWidth: 362)
+//        } else {
 //            
-//            // Show "Beta" in the top left corner for beta releases
-//            if preferences.betaRelease {
-//                HStack {
+//            // MARK: - First horizontal stack with Computer Name and macOS version as defaults
+//            if !preferences.hideFirstRowInfoItems {
+//                HStack(spacing: 10) {
 //                    
-//                    VStack {
-//                        Text("Beta release")
-//                            .font(.system(.subheadline, design: .rounded))
-//                            .opacity(0.5)
-//                        
-//                        Spacer()
+//                    // Item left
+//                    switch preferences.infoItemOne {
+//                    case "ComputerName":
+//                        ComputerNameSubview()
+//                    case "MacOSVersion":
+//                        MacOSVersionSubview()
+//                    case "Network":
+//                        NetworkSubview()
+//                    case "Password":
+//                        PasswordSubview()
+//                    case "Storage":
+//                        StorageSubview()
+//                    case "Uptime":
+//                        UptimeSubview()
+//                    case "ExtensionA":
+//                        ExtensionASubview()
+//                    case "ExtensionB":
+//                        ExtensionBSubview()
+//                    case "AppCatalog":
+//                        AppCatalogSubview()
+//                    default:
+//                        ComputerNameSubview()
 //                    }
 //                    
-//                    Spacer()
+//                    // Item right
+//                    switch preferences.infoItemTwo {
+//                    case "ComputerName":
+//                        ComputerNameSubview()
+//                    case "MacOSVersion":
+//                        MacOSVersionSubview()
+//                    case "Network":
+//                        NetworkSubview()
+//                    case "Password":
+//                        PasswordSubview()
+//                    case "Storage":
+//                        StorageSubview()
+//                    case "Uptime":
+//                        UptimeSubview()
+//                    case "ExtensionA":
+//                        ExtensionASubview()
+//                    case "ExtensionB":
+//                        ExtensionBSubview()
+//                    case "AppCatalog":
+//                        AppCatalogSubview()
+//                    default:
+//                        MacOSVersionSubview()
+//                    }
+//                    
 //                }
-//                .padding(.leading, 16.0)
-//                .padding(.top, 10)
+//                .padding(.horizontal, 10)
 //            }
 //            
-//            VStack(spacing: 10) {
-//                
-//                // MARK: - Horizontal stack with Title and Logo
-//                HeaderView()
-                
-                // MARK: - First horizontal stack with Computer Name and macOS version as defaults
-                if !preferences.hideFirstRowInfoItems {
-                    HStack(spacing: 10) {
-                        
-                        // Item left
-                        switch preferences.infoItemOne {
-                        case "ComputerName":
-                            ComputerNameSubview()
-                        case "MacOSVersion":
-                            MacOSVersionSubview()
-                        case "Network":
-                            NetworkSubview()
-                        case "Password":
-                            PasswordSubview()
-                        case "Storage":
-                            StorageSubview()
-                        case "Uptime":
-                            UptimeSubview()
-                        case "ExtensionA":
-                            ExtensionASubview()
-                        case "ExtensionB":
-                            ExtensionBSubview()
-                        case "AppCatalog":
-                            AppCatalogSubview()
-                        default:
-                            ComputerNameSubview()
-                        }
-                        
-                        // Item right
-                        switch preferences.infoItemTwo {
-                        case "ComputerName":
-                            ComputerNameSubview()
-                        case "MacOSVersion":
-                            MacOSVersionSubview()
-                        case "Network":
-                            NetworkSubview()
-                        case "Password":
-                            PasswordSubview()
-                        case "Storage":
-                            StorageSubview()
-                        case "Uptime":
-                            UptimeSubview()
-                        case "ExtensionA":
-                            ExtensionASubview()
-                        case "ExtensionB":
-                            ExtensionBSubview()
-                        case "AppCatalog":
-                            AppCatalogSubview()
-                        default:
-                            MacOSVersionSubview()
-                        }
-                        
-                    }
-                    .padding(.horizontal, 10)
-                }
-                
-                // MARK: - Second horizontal stack with Uptime and StorageView as defaults
-                if !preferences.hideSecondRowInfoItems {
-                    HStack(spacing: 10) {
-                        
-                        // Item left
-                        switch preferences.infoItemThree {
-                        case "ComputerName":
-                            ComputerNameSubview()
-                        case "MacOSVersion":
-                            MacOSVersionSubview()
-                        case "Network":
-                            NetworkSubview()
-                        case "Password":
-                            PasswordSubview()
-                        case "Storage":
-                            StorageSubview()
-                        case "Uptime":
-                            UptimeSubview()
-                        case "ExtensionA":
-                            ExtensionASubview()
-                        case "ExtensionB":
-                            ExtensionBSubview()
-                        case "AppCatalog":
-                            AppCatalogSubview()
-                        default:
-                            UptimeSubview()
-                        }
-                        
-                        // Item right
-                        switch preferences.infoItemFour {
-                        case "ComputerName":
-                            ComputerNameSubview()
-                        case "MacOSVersion":
-                            MacOSVersionSubview()
-                        case "Network":
-                            NetworkSubview()
-                        case "Password":
-                            PasswordSubview()
-                        case "Storage":
-                            StorageSubview()
-                        case "Uptime":
-                            UptimeSubview()
-                        case "ExtensionA":
-                            ExtensionASubview()
-                        case "ExtensionB":
-                            ExtensionBSubview()
-                        case "AppCatalog":
-                            AppCatalogSubview()
-                        default:
-                            StorageSubview()
-                        }
-                    }
-                    .padding(.horizontal, 10)
-                }
-                
-                // MARK: - Third optional horizontal stack with Password and Network as defaults
-                if preferences.infoItemFive != "" || preferences.infoItemSix != "" {
-                    if !preferences.hideThirdRowInfoItems {
-                        HStack(spacing: 10) {
-                            
-                            // Item left
-                            switch preferences.infoItemFive {
-                            case "ComputerName":
-                                ComputerNameSubview()
-                            case "MacOSVersion":
-                                MacOSVersionSubview()
-                            case "Network":
-                                NetworkSubview()
-                            case "Password":
-                                PasswordSubview()
-                            case "Storage":
-                                StorageSubview()
-                            case "Uptime":
-                                UptimeSubview()
-                            case "ExtensionA":
-                                ExtensionASubview()
-                            case "ExtensionB":
-                                ExtensionBSubview()
-                            case "AppCatalog":
-                                AppCatalogSubview()
-                            default:
-                                PasswordSubview()
-                            }
-                            
-                            // Item right
-                            switch preferences.infoItemSix {
-                            case "ComputerName":
-                                ComputerNameSubview()
-                            case "MacOSVersion":
-                                MacOSVersionSubview()
-                            case "Network":
-                                NetworkSubview()
-                            case "Password":
-                                PasswordSubview()
-                            case "Storage":
-                                StorageSubview()
-                            case "Uptime":
-                                UptimeSubview()
-                            case "ExtensionA":
-                                ExtensionASubview()
-                            case "ExtensionB":
-                                ExtensionBSubview()
-                            case "AppCatalog":
-                                AppCatalogSubview()
-                            default:
-                                NetworkSubview()
-                            }
-                            
-                        }
-                        .padding(.horizontal, 10)
-                    }
-                }
-                   
-                // MARK: - Hide row if specified in configuration
-                // MARK: - Key 'HideFirstRow' is deprecated, please use 'HideFirstRowButtons'
-                if !defaults.bool(forKey: "HideFirstRow") && !preferences.hideFirstRowButtons {
-
-                    // MARK: - Horizontal stack with 2 or 3 configurable action buttons
-                    HStack(spacing: 10) {
-                        
-                        if preferences.firstRowTitleMiddle != "" {
-                            ItemSmall(title: preferences.firstRowTitleLeft, subtitle: preferences.firstRowSubtitleLeft, linkType: preferences.firstRowTypeLeft, link: preferences.firstRowLinkLeft, image: preferences.firstRowSymbolLeft, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.firstRowLoadingLeft, linkPrefKey: Preferences.firstRowLinkLeftKey)
-                            ItemSmall(title: preferences.firstRowTitleMiddle, subtitle: preferences.firstRowSubtitleMiddle, linkType: preferences.firstRowTypeMiddle, link: preferences.firstRowLinkMiddle, image: preferences.firstRowSymbolMiddle, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.firstRowLoadingMiddle, linkPrefKey: Preferences.firstRowLinkMiddleKey)
-                            ItemSmall(title: preferences.firstRowTitleRight, subtitle: preferences.firstRowSubtitleRight, linkType: preferences.firstRowTypeRight, link: preferences.firstRowLinkRight, image: preferences.firstRowSymbolRight, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.firstRowLoadingRight, linkPrefKey: Preferences.firstRowLinkRightKey)
-                        } else {
-                            Item(title: preferences.firstRowTitleLeft, subtitle: preferences.firstRowSubtitleLeft, linkType: preferences.firstRowTypeLeft, link: preferences.firstRowLinkLeft, image: preferences.firstRowSymbolLeft, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.firstRowLoadingLeft, linkPrefKey: Preferences.firstRowLinkLeftKey, hoverEffectEnable: true, animate: true)
-                            Item(title: preferences.firstRowTitleRight, subtitle: preferences.firstRowSubtitleRight, linkType: preferences.firstRowTypeRight, link: preferences.firstRowLinkRight, image: preferences.firstRowSymbolRight, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.firstRowLoadingRight, linkPrefKey: Preferences.firstRowLinkRightKey, hoverEffectEnable: true, animate: true)
-                        }
-                    }
-                    .padding(.horizontal, 10)
-                }
-                
-                // MARK: - Hide row if specified in configuration
-                // MARK: - Key 'HideSecondRow' is deprecated, please use 'HideSecondRowButtons'
-                if !defaults.bool(forKey: "HideSecondRow") && !preferences.hideSecondRowButtons {
-                
-                    // MARK: - Horizontal stack with 2 or 3 configurable action buttons
-                    HStack(spacing: 10) {
-                        
-                        if preferences.secondRowTitleMiddle != "" {
-                            ItemSmall(title: preferences.secondRowTitleLeft, subtitle: preferences.secondRowSubtitleLeft, linkType: preferences.secondRowTypeLeft, link: preferences.secondRowLinkLeft, image: preferences.secondRowSymbolLeft, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.secondRowLoadingLeft, linkPrefKey: Preferences.secondRowLinkLeftKey)
-                            ItemSmall(title: preferences.secondRowTitleMiddle, subtitle: preferences.secondRowSubtitleMiddle, linkType: preferences.secondRowTypeMiddle, link: preferences.secondRowLinkMiddle, image: preferences.secondRowSymbolMiddle, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.secondRowLoadingMiddle, linkPrefKey: Preferences.secondRowLinkMiddleKey)
-                            ItemSmall(title: preferences.secondRowTitleRight, subtitle: preferences.secondRowSubtitleRight, linkType: preferences.secondRowTypeRight, link: preferences.secondRowLinkRight, image: preferences.secondRowSymbolRight, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.secondRowLoadingRight, linkPrefKey: Preferences.secondRowLinkRightKey)
-                        } else {
-                            Item(title: preferences.secondRowTitleLeft, subtitle: preferences.secondRowSubtitleLeft, linkType: preferences.secondRowTypeLeft, link: preferences.secondRowLinkLeft, image: preferences.secondRowSymbolLeft, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.secondRowLoadingLeft, linkPrefKey: Preferences.secondRowLinkLeftKey, hoverEffectEnable: true, animate: true)
-                            Item(title: preferences.secondRowTitleRight, subtitle: preferences.secondRowSubtitleRight, linkType: preferences.secondRowTypeRight, link: preferences.secondRowLinkRight, image: preferences.secondRowSymbolRight, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.secondRowLoadingRight, linkPrefKey: Preferences.secondRowLinkRightKey, hoverEffectEnable: true, animate: true)
-                        }
-                    }
-                    .padding(.horizontal, 10)
-                }
-                
-//                // MARK: - Footnote
-//                if preferences.footerText != "" {
-//                    HStack {
+//            // MARK: - Second horizontal stack with Uptime and StorageView as defaults
+//            if !preferences.hideSecondRowInfoItems {
+//                HStack(spacing: 10) {
+//                    
+//                    // Item left
+//                    switch preferences.infoItemThree {
+//                    case "ComputerName":
+//                        ComputerNameSubview()
+//                    case "MacOSVersion":
+//                        MacOSVersionSubview()
+//                    case "Network":
+//                        NetworkSubview()
+//                    case "Password":
+//                        PasswordSubview()
+//                    case "Storage":
+//                        StorageSubview()
+//                    case "Uptime":
+//                        UptimeSubview()
+//                    case "ExtensionA":
+//                        ExtensionASubview()
+//                    case "ExtensionB":
+//                        ExtensionBSubview()
+//                    case "AppCatalog":
+//                        AppCatalogSubview()
+//                    default:
+//                        UptimeSubview()
+//                    }
+//                    
+//                    // Item right
+//                    switch preferences.infoItemFour {
+//                    case "ComputerName":
+//                        ComputerNameSubview()
+//                    case "MacOSVersion":
+//                        MacOSVersionSubview()
+//                    case "Network":
+//                        NetworkSubview()
+//                    case "Password":
+//                        PasswordSubview()
+//                    case "Storage":
+//                        StorageSubview()
+//                    case "Uptime":
+//                        UptimeSubview()
+//                    case "ExtensionA":
+//                        ExtensionASubview()
+//                    case "ExtensionB":
+//                        ExtensionBSubview()
+//                    case "AppCatalog":
+//                        AppCatalogSubview()
+//                    default:
+//                        StorageSubview()
+//                    }
+//                }
+//                .padding(.horizontal, 10)
+//            }
+//            
+//            // MARK: - Third optional horizontal stack with Password and Network as defaults
+//            if preferences.infoItemFive != "" || preferences.infoItemSix != "" {
+//                if !preferences.hideThirdRowInfoItems {
+//                    HStack(spacing: 10) {
 //                        
-//                        // Supports for markdown through a variable:
-//                        // https://blog.eidinger.info/3-surprises-when-using-markdown-in-swiftui
-//                        Text(.init(preferences.footerText.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))
-//                            .font(.system(.subheadline, design: .rounded))
-//                            .foregroundColor(colorScheme == .dark ? .white.opacity(0.5) : .black.opacity(0.5))
-//                            .textSelection(.enabled)
+//                        // Item left
+//                        switch preferences.infoItemFive {
+//                        case "ComputerName":
+//                            ComputerNameSubview()
+//                        case "MacOSVersion":
+//                            MacOSVersionSubview()
+//                        case "Network":
+//                            NetworkSubview()
+//                        case "Password":
+//                            PasswordSubview()
+//                        case "Storage":
+//                            StorageSubview()
+//                        case "Uptime":
+//                            UptimeSubview()
+//                        case "ExtensionA":
+//                            ExtensionASubview()
+//                        case "ExtensionB":
+//                            ExtensionBSubview()
+//                        case "AppCatalog":
+//                            AppCatalogSubview()
+//                        default:
+//                            PasswordSubview()
+//                        }
 //                        
-//                        Spacer()
+//                        // Item right
+//                        switch preferences.infoItemSix {
+//                        case "ComputerName":
+//                            ComputerNameSubview()
+//                        case "MacOSVersion":
+//                            MacOSVersionSubview()
+//                        case "Network":
+//                            NetworkSubview()
+//                        case "Password":
+//                            PasswordSubview()
+//                        case "Storage":
+//                            StorageSubview()
+//                        case "Uptime":
+//                            UptimeSubview()
+//                        case "ExtensionA":
+//                            ExtensionASubview()
+//                        case "ExtensionB":
+//                            ExtensionBSubview()
+//                        case "AppCatalog":
+//                            AppCatalogSubview()
+//                        default:
+//                            NetworkSubview()
+//                        }
 //                        
 //                    }
 //                    .padding(.horizontal, 10)
-//                    // Workaround to support multiple lines
-//                    .frame(minWidth: 382, idealWidth: 382, maxWidth: 382)
-//                    .fixedSize()
 //                }
 //            }
-//            .padding(.bottom, 10)
+//            
+//            // MARK: - Hide row if specified in configuration
+//            // MARK: - Key 'HideFirstRow' is deprecated, please use 'HideFirstRowButtons'
+//            if !defaults.bool(forKey: "HideFirstRow") && !preferences.hideFirstRowButtons {
+//                
+//                // MARK: - Horizontal stack with 2 or 3 configurable action buttons
+//                HStack(spacing: 10) {
+//                    
+//                    if preferences.firstRowTitleMiddle != "" {
+//                        ItemSmall(title: preferences.firstRowTitleLeft, subtitle: preferences.firstRowSubtitleLeft, linkType: preferences.firstRowTypeLeft, link: preferences.firstRowLinkLeft, image: preferences.firstRowSymbolLeft, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.firstRowLoadingLeft, linkPrefKey: Preferences.firstRowLinkLeftKey)
+//                        ItemSmall(title: preferences.firstRowTitleMiddle, subtitle: preferences.firstRowSubtitleMiddle, linkType: preferences.firstRowTypeMiddle, link: preferences.firstRowLinkMiddle, image: preferences.firstRowSymbolMiddle, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.firstRowLoadingMiddle, linkPrefKey: Preferences.firstRowLinkMiddleKey)
+//                        ItemSmall(title: preferences.firstRowTitleRight, subtitle: preferences.firstRowSubtitleRight, linkType: preferences.firstRowTypeRight, link: preferences.firstRowLinkRight, image: preferences.firstRowSymbolRight, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.firstRowLoadingRight, linkPrefKey: Preferences.firstRowLinkRightKey)
+//                    } else {
+//                        Item(title: preferences.firstRowTitleLeft, subtitle: preferences.firstRowSubtitleLeft, linkType: preferences.firstRowTypeLeft, link: preferences.firstRowLinkLeft, image: preferences.firstRowSymbolLeft, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.firstRowLoadingLeft, linkPrefKey: Preferences.firstRowLinkLeftKey, hoverEffectEnable: true, animate: true)
+//                        Item(title: preferences.firstRowTitleRight, subtitle: preferences.firstRowSubtitleRight, linkType: preferences.firstRowTypeRight, link: preferences.firstRowLinkRight, image: preferences.firstRowSymbolRight, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.firstRowLoadingRight, linkPrefKey: Preferences.firstRowLinkRightKey, hoverEffectEnable: true, animate: true)
+//                    }
+//                }
+//                .padding(.horizontal, 10)
+//            }
+//            
+//            // MARK: - Hide row if specified in configuration
+//            // MARK: - Key 'HideSecondRow' is deprecated, please use 'HideSecondRowButtons'
+//            if !defaults.bool(forKey: "HideSecondRow") && !preferences.hideSecondRowButtons {
+//                
+//                // MARK: - Horizontal stack with 2 or 3 configurable action buttons
+//                HStack(spacing: 10) {
+//                    
+//                    if preferences.secondRowTitleMiddle != "" {
+//                        ItemSmall(title: preferences.secondRowTitleLeft, subtitle: preferences.secondRowSubtitleLeft, linkType: preferences.secondRowTypeLeft, link: preferences.secondRowLinkLeft, image: preferences.secondRowSymbolLeft, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.secondRowLoadingLeft, linkPrefKey: Preferences.secondRowLinkLeftKey)
+//                        ItemSmall(title: preferences.secondRowTitleMiddle, subtitle: preferences.secondRowSubtitleMiddle, linkType: preferences.secondRowTypeMiddle, link: preferences.secondRowLinkMiddle, image: preferences.secondRowSymbolMiddle, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.secondRowLoadingMiddle, linkPrefKey: Preferences.secondRowLinkMiddleKey)
+//                        ItemSmall(title: preferences.secondRowTitleRight, subtitle: preferences.secondRowSubtitleRight, linkType: preferences.secondRowTypeRight, link: preferences.secondRowLinkRight, image: preferences.secondRowSymbolRight, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.secondRowLoadingRight, linkPrefKey: Preferences.secondRowLinkRightKey)
+//                    } else {
+//                        Item(title: preferences.secondRowTitleLeft, subtitle: preferences.secondRowSubtitleLeft, linkType: preferences.secondRowTypeLeft, link: preferences.secondRowLinkLeft, image: preferences.secondRowSymbolLeft, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.secondRowLoadingLeft, linkPrefKey: Preferences.secondRowLinkLeftKey, hoverEffectEnable: true, animate: true)
+//                        Item(title: preferences.secondRowTitleRight, subtitle: preferences.secondRowSubtitleRight, linkType: preferences.secondRowTypeRight, link: preferences.secondRowLinkRight, image: preferences.secondRowSymbolRight, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.secondRowLoadingRight, linkPrefKey: Preferences.secondRowLinkRightKey, hoverEffectEnable: true, animate: true)
+//                    }
+//                }
+//                .padding(.horizontal, 10)
+//            }
 //        }
-//        // MARK: - Run functions when ContentView appears for the first time
-//        .onAppear {
-//            dataLoadingEffect()
-//        }
-//        // MARK: - Show placeholders while loading
-//        .redacted(reason: placeholdersEnabled ? .placeholder : .init())
     }
-    
-//    // MARK: - Start app with placeholders and show data after 0.4 seconds to visualize data loading.
-//    func dataLoadingEffect() {
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-//            placeholdersEnabled = false
-//        }
-//    }
-}
-
-struct ContentView_Previews: PreviewProvider {
-  static var previews: some View {
-    ContentView()
-  }
 }

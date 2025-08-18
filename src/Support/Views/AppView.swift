@@ -5,9 +5,13 @@
 //  Created by Jordy Witteman on 17/05/2021.
 //
 
+import os
 import SwiftUI
 
 struct AppView: View {
+    
+    // Unified Logging
+    let logger = Logger(subsystem: "nl.root3.support", category: "RowDecoder")
     
     // Access AppDelegate
     @EnvironmentObject private var appDelegate: AppDelegate
@@ -22,7 +26,7 @@ struct AppView: View {
     
     // Simple property wrapper boolean to visualize data loading when app opens
     @State var placeholdersEnabled = true
-    
+        
     // Version and build number
     var version = Bundle.main.infoDictionary!["CFBundleShortVersionString"]! as! String
     var build = Bundle.main.infoDictionary!["CFBundleVersion"]! as! String
@@ -70,6 +74,8 @@ struct AppView: View {
                         UpdateView()
                     } else if computerinfo.showUptimeAlert {
                         UptimeAlertView()
+                    } else if preferences.showItemConfiguration {
+                        ItemConfigurationView()
                     } else {
                         ContentView()
                     }
@@ -95,6 +101,28 @@ struct AppView: View {
                     .frame(minWidth: 382, idealWidth: 382, maxWidth: 382)
                     .fixedSize()
                 }
+                
+                HStack {
+                    
+                    Spacer()
+
+                    if preferences.editModeEnabled {
+                        Button {
+                            preferences.editModeEnabled.toggle()
+                        } label: {
+                            Label("Done", systemImage: "")
+                                .labelStyle(.titleOnly)
+                        }
+                    } else {
+                        Button {
+                            preferences.editModeEnabled.toggle()
+                        } label: {
+                            Label("Edit", systemImage: "")
+                                .labelStyle(.titleOnly)
+                        }
+                    }
+                }
+                .padding(.trailing, 10)
             }
             .padding(.bottom, 10)
         }
