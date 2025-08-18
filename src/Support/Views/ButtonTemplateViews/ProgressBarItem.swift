@@ -46,8 +46,8 @@ struct ProgressBarItem: View {
                                 .font(.system(size: 18))
                         )
                         .frame(width: 36, height: 36)
-                        .padding(.leading, 10)
-                    
+                        .padding(.leading, 14)
+
                     VStack(alignment: .leading, spacing: 0) {
                         HStack {
                             Text(hoverView ? storageAvailable : percentageUsed)
@@ -58,7 +58,7 @@ struct ProgressBarItem: View {
                         }
                         
                         ProgressView(value: percentage , total: 120)
-                            .padding(.trailing, 10)
+                            .padding(.trailing, 14)
                         
                     }
                     Spacer()

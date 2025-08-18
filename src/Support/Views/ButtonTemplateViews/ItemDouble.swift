@@ -77,8 +77,8 @@ struct ItemDouble: View {
                                 .font(.system(size: 18))
                         )
                         .frame(width: 36, height: 36)
-                        .padding(.leading, 10)
-                    
+                        .padding(.leading, 14)
+
                     VStack(alignment: .leading) {
                         
                         Text(hoverView && hoverEffectEnable ? secondTitle : title)
