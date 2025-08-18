@@ -60,7 +60,7 @@ struct AppView: View {
                 .padding(.top, 10)
             }
             
-            VStack(spacing: 10) {
+            VStack(spacing: 12) {
                 
                 // MARK: - Horizontal stack with Title and Logo
                 HeaderView()

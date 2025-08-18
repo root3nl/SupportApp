@@ -48,8 +48,7 @@ struct ItemConfigurationView: View {
         "AppCatalog",
         "Button",
         "SmallButton",
-        "Divider",
-        "Spacer"
+        "CircleButton"
     ]
     
     var body: some View {
@@ -116,12 +115,10 @@ struct ItemConfigurationView: View {
                     Item(title: item.title ?? "", subtitle: item.subtitle ?? "", linkType: item.linkType ?? "", link: item.link ?? "", image: item.symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
                 case "SmallButton":
                     ItemSmall(title: item.title ?? "", subtitle: item.subtitle ?? "", linkType: item.linkType ?? "", link: item.link ?? "", image: item.symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
-                case "Divider":
-                    VStack {
-                        Divider()
+                case "CircleButton":
+                    if #available(macOS 26, *) {
+                        ItemCircle(title: item.title ?? "", subtitle: item.subtitle ?? "", linkType: item.linkType ?? "", link: item.link ?? "", image: item.symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
                     }
-                case "Spacer":
-                    Spacer()
                 default:
                     Item(title: item.title ?? "", subtitle: item.subtitle ?? "", linkType: item.linkType ?? "", link: item.link ?? "", image: item.symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
                 }

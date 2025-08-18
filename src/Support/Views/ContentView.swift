@@ -50,7 +50,7 @@ struct ContentView: View {
 //        if UserDefaults.standard.object(forKey: "preferences.previewRows") != nil {
 //        if UserDefaults.standard.object(forKey: "Rows") != nil {
             
-        VStack(spacing: 10) {
+        VStack(spacing: 12) {
                 ForEach(preferences.previewRows.indices, id: \.self) { index in
 //                    if row.items.count >= 2 && row.items.filter({ $0.type == "Button" }).count > 2 {
 //                        VStack {
@@ -73,7 +73,7 @@ struct ContentView: View {
 //                        }
 //                        .padding()
 //                    } else {
-                        HStack(spacing: 10) {
+                        HStack(spacing: 12) {
                             if let rowItems = preferences.previewRows[index].items {
                                 ForEach(rowItems.indices, id: \.self) { itemIndex in
                                     
@@ -97,12 +97,10 @@ struct ContentView: View {
                                             Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
                                         case "SmallButton":
                                             ItemSmall(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
-                                        case "Divider":
-                                            VStack {
-                                                Divider()
+                                        case "CircleButton":
+                                            if #available(macOS 26, *) {
+                                                ItemCircle(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
                                             }
-                                        case "Spacer":
-                                            Spacer()
                                         default:
                                             Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
                                         }
@@ -135,7 +133,8 @@ struct ContentView: View {
                                             Image(systemName: "plus.circle.fill")
                                                 .imageScale(.large)
                                                 .symbolRenderingMode(.palette)
-                                                .foregroundStyle(.white, .gray)                                                .onTapGesture {
+                                                .foregroundStyle(.white, .gray)
+                                                .onTapGesture {
                                                     // Add item
                                                     if preferences.previewRows[index].items == nil {
                                                         preferences.previewRows[index].items = []

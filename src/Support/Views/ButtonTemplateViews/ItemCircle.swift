@@ -49,7 +49,7 @@ struct ItemCircle: View {
                     .scaleEffect(0.8)
                     .frame(width: 22, height: 22)
             } else {
-                Image(systemName: "alarm")
+                Image(systemName: image)
                     .font(.system(size: 22, weight: .semibold))
                     .foregroundStyle(.white)
                     .symbolRenderingMode(.hierarchical)
