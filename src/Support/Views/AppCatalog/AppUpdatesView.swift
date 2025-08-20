@@ -292,6 +292,7 @@ struct AppUpdatesView: View {
                                 .onHover {_ in
                                     hoveredItem = update.id
                                 }
+                                .frame(height: 40)
                             }
                             
                             // Show update schedule information when configured
