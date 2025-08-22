@@ -76,6 +76,7 @@ struct ItemConfigurationView: View {
                 
                 Button(action: {
                     preferences.previewRows[preferences.currentConfiguredItem!.rowIndex].items?[preferences.currentConfiguredItem!.itemIndex] = item
+                    preferences.showItemConfiguration.toggle()
                 }) {
                     Text(NSLocalizedString("SAVE", comment: ""))
                         .font(.system(.body, design: .rounded))
@@ -95,6 +96,7 @@ struct ItemConfigurationView: View {
             VStack {
                 Text("ITEM_PREVIEW")
                     .font(.headline)
+                    .foregroundStyle(.secondary)
                 
                 switch item.type {
                 case "ComputerName":
@@ -130,9 +132,9 @@ struct ItemConfigurationView: View {
             
             VStack {
                 
-                Picker("Type", selection: $selectedType, content: {
+                Picker("ITEM_TYPE", selection: $selectedType, content: {
                     ForEach(typeOptions, id: \.self) { type in
-                        Text(type)
+                        Text(type).tag(type)
                     }
                 })
                 
@@ -144,6 +146,7 @@ struct ItemConfigurationView: View {
         .onAppear {
             if let fetchedItem = preferences.previewRows[preferences.currentConfiguredItem!.rowIndex].items?[preferences.currentConfiguredItem!.itemIndex] {
                 item = fetchedItem
+                selectedType = item.type
             }
         }
         .onChange(of: selectedType) { newType in

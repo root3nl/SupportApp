@@ -98,7 +98,7 @@ struct AppView: View {
                     }
                     .padding(.horizontal, 10)
                     // Workaround to support multiple lines
-                    .frame(minWidth: 382, idealWidth: 382, maxWidth: 382)
+                    .frame(minWidth: 388, idealWidth: 388, maxWidth: 388)
                     .fixedSize()
                 }
                 
@@ -106,14 +106,14 @@ struct AppView: View {
                     
                     Spacer()
 
-                    if preferences.editModeEnabled {
+                    if preferences.editModeEnabled && !preferences.showItemConfiguration {
                         Button {
                             preferences.editModeEnabled.toggle()
                         } label: {
                             Label("Done", systemImage: "")
                                 .labelStyle(.titleOnly)
                         }
-                    } else {
+                    } else if !preferences.showItemConfiguration {
                         Button {
                             preferences.editModeEnabled.toggle()
                         } label: {
@@ -129,7 +129,7 @@ struct AppView: View {
 //        .background(EffectsView(material: NSVisualEffectView.Material.fullScreenUI, blendingMode: NSVisualEffectView.BlendingMode.behindWindow))
         .background(colorScheme == .dark ? Color.clear : Color.primary.opacity(0.1))
         // Set default popover width
-        .frame(minWidth: 382, idealWidth: 382, maxWidth: 382)
+        .frame(minWidth: 388, idealWidth: 388, maxWidth: 388)
         // MARK: - Run functions when ContentView appears for the first time
         .onAppear {
             dataLoadingEffect()

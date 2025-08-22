@@ -76,3 +76,7 @@
 "APPS" = "Apps";
 "PRIVILEGED_HELPER_TOOL_NOT_INSTALLED" = "Le Privileged Helper Tool n'est pas installé";
 "UP_TO_DATE" = "A jour";
+"ITEM_CONFIGURATION" = "Item configuration";
+"SAVE" = "Save";
+"ITEM_PREVIEW" = "Item preview";
+"ITEM_TYPE" = "Item type";
