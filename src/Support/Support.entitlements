@@ -6,6 +6,14 @@
 	<true/>
 	<key>com.apple.security.network.client</key>
 	<true/>
+	<key>com.apple.security.temporary-exception.apple-events</key>
+	<array>
+		<string>com.apple.systemevents</string>
+	</array>
+	<key>com.apple.security.temporary-exception.mach-lookup.global-name</key>
+	<array>
+		<string>nl.root3.support.helper</string>
+	</array>
 	<key>com.apple.security.temporary-exception.shared-preference.read-only</key>
 	<array>
 		<string>nl.root3.catalog</string>
@@ -14,14 +22,6 @@
 		<string>com.trusourcelabs.NoMAD</string>
 		<string>com.apple.SoftwareUpdate</string>
 		<string>com.jamf.connect.state</string>
-	</array>
-	<key>com.apple.security.temporary-exception.mach-lookup.global-name</key>
-	<array>
-		<string>nl.root3.support.helper</string>
-	</array>
-	<key>com.apple.security.temporary-exception.apple-events</key>
-	<array>
-		<string>com.apple.systemevents</string>
 	</array>
 </dict>
 </plist>

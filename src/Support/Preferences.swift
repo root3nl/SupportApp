@@ -175,6 +175,8 @@ class Preferences: ObservableObject {
     // Enable beta release watermark
     let betaRelease: Bool = false
     
+    @Published var app: AppModel = AppModel()
+    
     // Rows shown in the app
     @Published var rows: [Row] = []
     

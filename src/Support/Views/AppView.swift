@@ -105,6 +105,23 @@ struct AppView: View {
                 HStack {
                     
                     Spacer()
+                    
+                    Button {
+                        do {
+                           let encoder = PropertyListEncoder()
+                            encoder.outputFormat = .xml
+                            let data = try encoder.encode(preferences.previewRows)
+                            let fileManager = FileManager.default
+                            let downloadFolder = fileManager.urls(for: .downloadsDirectory, in: .userDomainMask)[0]
+                            let plistUrl = downloadFolder.appendingPathComponent("nl.root3.support.plist")
+                            try data.write(to: plistUrl)
+                        } catch {
+                            logger.error("\(error.localizedDescription)")
+                        }
+                    } label: {
+                        Label("Export", systemImage: "square.and.arrow.up")
+                            .labelStyle(.titleOnly)
+                    }
 
                     if preferences.editModeEnabled && !preferences.showItemConfiguration {
                         Button {

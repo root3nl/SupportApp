@@ -105,34 +105,6 @@ struct ContentView: View {
                                     default:
                                         Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
                                     }
-                                    
-//                                    if preferences.editModeEnabled {
-//                                        VStack {
-//                                            Spacer()
-//                                            
-//                                            // Button to add additional item
-//                                            Button {
-//                                                preferences.currentConfiguredItem = ConfiguredItem(rowIndex: index, itemIndex: itemIndex)
-//                                                preferences.showItemConfiguration.toggle()
-//                                            } label: {
-//                                                Image(systemName: "slider.horizontal.3")
-//                                                    .imageScale(.large)
-//                                                    .contentShape(.circle)
-//                                                    .clipShape(.circle)
-//                                            }
-//                                            .modify {
-//                                                if #available(macOS 26, *) {
-//                                                    $0
-//                                                        .buttonStyle(.glass)
-//                                                        .buttonBorderShape(.circle)
-//                                                } else {
-//                                                    $0
-//                                                        .buttonStyle(.plain)
-//                                                }
-//                                            }
-//                                            .controlSize(.small)
-//                                        }
-//                                    }
                                 }
                                 .contextMenu {
                                     Button {
@@ -143,11 +115,7 @@ struct ContentView: View {
                                     }
                                     
                                     Button {
-//                                        if preferences.previewRows[index].items?.count == 1 {
-//                                            preferences.previewRows[index].items?.remove(at: itemIndex)
-//                                        } else {
-                                            preferences.previewRows[index].items?.remove(at: itemIndex)
-//                                        }
+                                        preferences.previewRows[index].items?.remove(at: itemIndex)
                                         
                                         // Remove if row is empty to avoid empty/invisible rows taking up space
                                         if preferences.previewRows[index].items?.count == 0 {
@@ -157,13 +125,16 @@ struct ContentView: View {
                                         Label("Remove", systemImage: "trash")
                                     }
                                 }
+                                //                                        .animation(.easeInOut, value: preferences.previewRows[index].items)
+                                //                                        .animation(.easeInOut, value: preferences.previewRows[index])
                             }
                         }
                     }
-                    .animation(.easeInOut, value: preferences.previewRows[index].items)
-                    .transaction { transaction in
-                        transaction.animation = nil
-                    }
+                    .glassContainerIfAvailable()
+                    //                            .animation(.easeInOut, value: preferences.previewRows[index].items)
+                    //                            .transaction { transaction in
+                    //                                transaction.animation = nil
+                    //                            }
                     // Add row divider and plus button
                     if preferences.editModeEnabled {
                         HStack {
