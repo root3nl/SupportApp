@@ -23,6 +23,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     let menu = NSMenu()
     var statusBarItem: NSStatusItem?
     
+    var configuratorMenuItem: NSMenuItem?
+    
     // Unified logging for StatusBarItem
     let logger = Logger(subsystem: "nl.root3.support", category: "StatusBarItem")
     
@@ -49,6 +51,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     var userinfo = UserInfo()
     var preferences = Preferences()
     var appCatalogController = AppCatalogController()
+    var localPreferences = LocalPreferences()
     
     // Create red notification badge view
     // https://github.com/DeveloperMaris/ToolReleases/blob/master/ToolReleases/PopoverController.swift
@@ -80,6 +83,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             .environmentObject(userinfo)
             .environmentObject(preferences)
             .environmentObject(appCatalogController)
+            .environmentObject((localPreferences))
             .environmentObject(self))
 
         let popover = NSPopover()
@@ -205,6 +209,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         
         // Create menu items for right click
         menu.addItem(NSMenuItem(title: NSLocalizedString("About Support", comment: ""), action: #selector(AppDelegate.showAbout), keyEquivalent: "i"))
+        menu.addItem(NSMenuItem.separator())
+        let configuratorItem = NSMenuItem(title: NSLocalizedString("Configurator Mode", comment: ""),
+                                          action: #selector(AppDelegate.configuratorMode),
+                                          keyEquivalent: "c")
+        configuratorItem.target = self
+        configuratorItem.state = preferences.configuratorModeEnabled ? .on : .off
+        menu.addItem(configuratorItem)
+        self.configuratorMenuItem = configuratorItem
         menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: NSLocalizedString("Quit Support", comment: ""), action: #selector(NSApplication.shared.terminate(_:)), keyEquivalent: "q"))
                 
@@ -617,6 +629,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         NSApp.orderFrontStandardAboutPanel(self)
     }
     
+    //
+    @objc func configuratorMode() {
+        preferences.configuratorModeEnabled.toggle()
+        configuratorMenuItem?.state = preferences.configuratorModeEnabled ? .on : .off
+    }
+    
     // MARK: - Function to uninstall Privileged Helper Tool
     func uninstallPrivilegedHelperTool() {
         
@@ -854,6 +872,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             if let rows = dedodedItems {
                 DispatchQueue.main.async {
                     self.preferences.rows = rows
+                    self.localPreferences.rows = rows
                 }
             }
                         

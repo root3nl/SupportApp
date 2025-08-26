@@ -21,6 +21,8 @@ struct ContentView: View {
     // Get preferences or default values
     @EnvironmentObject var preferences: Preferences
     
+    @EnvironmentObject var localPreferences: LocalPreferences
+    
     // Make UserDefaults easy to use
     let defaults = UserDefaults.standard
     
@@ -45,13 +47,21 @@ struct ContentView: View {
     
     let supportItem = SupportItem(type: "AppCatalog", title: nil, subtitle: nil, linkType: nil, link: nil, symbol: nil, extensionIdentifier: nil, onAppearAction: nil)
     
+    var rows: [Row] {
+        if preferences.configuratorModeEnabled {
+            return localPreferences.rows
+        } else {
+            return preferences.rows
+        }
+    }
+    
     var body: some View {
         
-        //        if UserDefaults.standard.object(forKey: "preferences.previewRows") != nil {
+        //        if UserDefaults.standard.object(forKey: "preferences.rows") != nil {
         //        if UserDefaults.standard.object(forKey: "Rows") != nil {
         
         VStack(spacing: 12) {
-            ForEach(preferences.previewRows.indices, id: \.self) { index in
+            ForEach(rows.indices, id: \.self) { index in
                 //                    if row.items.count >= 2 && row.items.filter({ $0.type == "Button" }).count > 2 {
                 //                        VStack {
                 //                            Text("Unsupported number of items")
@@ -75,7 +85,7 @@ struct ContentView: View {
                 //                    } else {
                 ZStack {
                     HStack(spacing: 12) {
-                        if let rowItems = preferences.previewRows[index].items {
+                        if let rowItems = rows[index].items {
                             ForEach(rowItems.indices, id: \.self) { itemIndex in
                                 
                                 ZStack {
@@ -108,30 +118,30 @@ struct ContentView: View {
                                 }
                                 .contextMenu {
                                     Button {
-                                        preferences.currentConfiguredItem = ConfiguredItem(rowIndex: index, itemIndex: itemIndex)
+                                        localPreferences.currentConfiguredItem = ConfiguredItem(rowIndex: index, itemIndex: itemIndex)
                                         preferences.showItemConfiguration.toggle()
                                     } label: {
                                         Label("Edit", systemImage: "slider.horizontal.3")
                                     }
                                     
                                     Button {
-                                        preferences.previewRows[index].items?.remove(at: itemIndex)
+                                        localPreferences.rows[index].items?.remove(at: itemIndex)
                                         
                                         // Remove if row is empty to avoid empty/invisible rows taking up space
-                                        if preferences.previewRows[index].items?.count == 0 {
-                                            preferences.previewRows.remove(at: index)
+                                        if localPreferences.rows[index].items?.count == 0 {
+                                            localPreferences.rows.remove(at: index)
                                         }
                                     } label: {
                                         Label("Remove", systemImage: "trash")
                                     }
                                 }
-                                //                                        .animation(.easeInOut, value: preferences.previewRows[index].items)
-                                //                                        .animation(.easeInOut, value: preferences.previewRows[index])
+                                //                                        .animation(.easeInOut, value: preferences.rows[index].items)
+                                //                                        .animation(.easeInOut, value: preferences.rows[index])
                             }
                         }
                     }
                     .glassContainerIfAvailable()
-                    //                            .animation(.easeInOut, value: preferences.previewRows[index].items)
+                    //                            .animation(.easeInOut, value: preferences.rows[index].items)
                     //                            .transaction { transaction in
                     //                                transaction.animation = nil
                     //                            }
@@ -144,11 +154,11 @@ struct ContentView: View {
                                 
                                 Button {
                                     // Add item
-                                    if preferences.previewRows[index].items == nil {
-                                        preferences.previewRows[index].items = []
+                                    if localPreferences.rows[index].items == nil {
+                                        localPreferences.rows[index].items = []
                                     }
                                     withAnimation {
-                                        preferences.previewRows[index].items?.append(supportItem)
+                                        localPreferences.rows[index].items?.append(supportItem)
                                     }
                                 } label: {
                                     Image(systemName: "plus")
@@ -195,7 +205,7 @@ struct ContentView: View {
                             .padding(.leading)
                     }
                     Button {
-                        preferences.previewRows.append(Row(items: [supportItem]))
+                        localPreferences.rows.append(Row(items: [supportItem]))
                     } label: {
                         Image(systemName: "plus")
                             .imageScale(.large)

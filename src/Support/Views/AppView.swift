@@ -11,7 +11,7 @@ import SwiftUI
 struct AppView: View {
     
     // Unified Logging
-    let logger = Logger(subsystem: "nl.root3.support", category: "RowDecoder")
+    let logger = Logger(subsystem: "nl.root3.support", category: "Preferences")
     
     // Access AppDelegate
     @EnvironmentObject private var appDelegate: AppDelegate
@@ -20,12 +20,14 @@ struct AppView: View {
     @EnvironmentObject var userinfo: UserInfo
     @EnvironmentObject var preferences: Preferences
     @EnvironmentObject var appCatalogController: AppCatalogController
+    @EnvironmentObject var localPreferences: LocalPreferences
     
     // Dark Mode detection
     @Environment(\.colorScheme) var colorScheme
     
     // Simple property wrapper boolean to visualize data loading when app opens
-    @State var placeholdersEnabled = true
+    @State private var placeholdersEnabled = true
+    @State private var showExportOptions: Bool = false
         
     // Version and build number
     var version = Bundle.main.infoDictionary!["CFBundleShortVersionString"]! as! String
@@ -104,38 +106,47 @@ struct AppView: View {
                 
                 HStack {
                     
-                    Spacer()
-                    
-                    Button {
-                        do {
-                           let encoder = PropertyListEncoder()
-                            encoder.outputFormat = .xml
-                            let data = try encoder.encode(preferences.previewRows)
-                            let fileManager = FileManager.default
-                            let downloadFolder = fileManager.urls(for: .downloadsDirectory, in: .userDomainMask)[0]
-                            let plistUrl = downloadFolder.appendingPathComponent("nl.root3.support.plist")
-                            try data.write(to: plistUrl)
-                        } catch {
-                            logger.error("\(error.localizedDescription)")
-                        }
-                    } label: {
-                        Label("Export", systemImage: "square.and.arrow.up")
-                            .labelStyle(.titleOnly)
-                    }
-
-                    if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    if preferences.configuratorModeEnabled {
+                        Text("Configurator Mode enabled")
+                            .foregroundStyle(.secondary)
+                            .padding(.leading)
+                        
+                        Spacer()
+                        
                         Button {
-                            preferences.editModeEnabled.toggle()
+                            showExportOptions.toggle()
                         } label: {
-                            Label("Done", systemImage: "")
+                            Label("Export", systemImage: "square.and.arrow.up")
                                 .labelStyle(.titleOnly)
                         }
-                    } else if !preferences.showItemConfiguration {
-                        Button {
-                            preferences.editModeEnabled.toggle()
-                        } label: {
-                            Label("Edit", systemImage: "")
-                                .labelStyle(.titleOnly)
+                        .confirmationDialog("Export options", isPresented: $showExportOptions) {
+                            Button("Export as Property List") {
+                                exportPropertyList()
+                            }
+                            Button("Export as Configuration Profile") {
+                                exportMobileConfig()
+                            }
+                        } message: {
+                            Text("Select your preferred format")
+                        }
+                        
+                        if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                            Button {
+                                preferences.editModeEnabled.toggle()
+                                
+                                // Persist preferences
+                                saveUserDefaults()
+                            } label: {
+                                Label("Done", systemImage: "")
+                                    .labelStyle(.titleOnly)
+                            }
+                        } else if !preferences.showItemConfiguration {
+                            Button {
+                                preferences.editModeEnabled.toggle()
+                            } label: {
+                                Label("Edit", systemImage: "")
+                                    .labelStyle(.titleOnly)
+                            }
                         }
                     }
                 }
@@ -159,6 +170,61 @@ struct AppView: View {
     func dataLoadingEffect() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
             placeholdersEnabled = false
+        }
+    }
+    
+    // MARK: - Export all preferences to a property list
+    func exportPropertyList() {
+        do {
+            let encoder = PropertyListEncoder()
+            encoder.outputFormat = .xml
+
+            let appConfiguration = AppModel(title: preferences.title, rows: localPreferences.rows)
+            let data = try encoder.encode(appConfiguration)
+
+            let savePanel = NSSavePanel()
+            savePanel.allowedContentTypes = [.propertyList]
+            savePanel.nameFieldStringValue = "nl.root3.support.plist"
+            savePanel.canCreateDirectories = true
+
+            if savePanel.runModal() == .OK, let url = savePanel.url {
+                try data.write(to: url)
+            }
+        } catch {
+            logger.error("\(error.localizedDescription)")
+        }
+    }
+    
+    // MARK: - Export all preferences to a valid Configuration Profile (.mobileconfig)
+    func exportMobileConfig() {
+        
+    }
+    
+    // MARK: - Save settings from Configurator Mode
+    func saveUserDefaults() {
+        do {
+            // Build the configuration model from current state
+            let appConfiguration = AppModel(title: preferences.title, rows: localPreferences.rows)
+
+            // Encode to a property list-compatible Data
+            let encoder = PropertyListEncoder()
+            encoder.outputFormat = .xml
+            let data = try encoder.encode(appConfiguration)
+
+            // Convert encoded Data into a Foundation property list (Dictionary)
+            let plistObject = try PropertyListSerialization.propertyList(from: data, options: [], format: nil)
+
+            guard let dict = plistObject as? [String: Any] else {
+                logger.error("Failed to convert encoded AppModel to [String: Any] for UserDefaults persistent domain")
+                return
+            }
+
+            // Write to the nl.root3.support UserDefaults domain
+            let defaults = UserDefaults.standard
+            defaults.setPersistentDomain(dict, forName: "nl.root3.support")
+            
+        } catch {
+            logger.error("\(error.localizedDescription)")
         }
     }
 }

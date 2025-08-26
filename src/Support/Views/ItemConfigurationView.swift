@@ -5,10 +5,11 @@
 //  Created by Jordy Witteman on 13/04/2025.
 //
 
+import os
 import SwiftUI
 
 struct ItemConfigurationView: View {
-        
+    
     // Get computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo
     
@@ -17,6 +18,8 @@ struct ItemConfigurationView: View {
     
     // Get preferences or default values
     @EnvironmentObject var preferences: Preferences
+    
+    @EnvironmentObject var localPreferences: LocalPreferences
     
     // Make UserDefaults easy to use
     let defaults = UserDefaults.standard
@@ -75,7 +78,9 @@ struct ItemConfigurationView: View {
                 Spacer()
                 
                 Button(action: {
-                    preferences.previewRows[preferences.currentConfiguredItem!.rowIndex].items?[preferences.currentConfiguredItem!.itemIndex] = item
+                    // Save item
+                    localPreferences.rows[localPreferences.currentConfiguredItem!.rowIndex].items?[localPreferences.currentConfiguredItem!.itemIndex] = item
+                    
                     preferences.showItemConfiguration.toggle()
                 }) {
                     Text(NSLocalizedString("SAVE", comment: ""))
@@ -144,7 +149,7 @@ struct ItemConfigurationView: View {
         .padding(.horizontal)
         .unredacted()
         .onAppear {
-            if let fetchedItem = preferences.previewRows[preferences.currentConfiguredItem!.rowIndex].items?[preferences.currentConfiguredItem!.itemIndex] {
+            if let fetchedItem = localPreferences.rows[localPreferences.currentConfiguredItem!.rowIndex].items?[localPreferences.currentConfiguredItem!.itemIndex] {
                 item = fetchedItem
                 selectedType = item.type
             }
