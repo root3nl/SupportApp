@@ -83,6 +83,7 @@
 		498DB7F02E5D0D5000DDC33B /* GlassContainerIfAvailable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498DB7EF2E5D0D5000DDC33B /* GlassContainerIfAvailable.swift */; };
 		498DB7F22E5D113A00DDC33B /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498DB7F12E5D113A00DDC33B /* AppModel.swift */; };
 		498DB8412E5E49D700DDC33B /* LocalPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498DB8402E5E49D700DDC33B /* LocalPreferences.swift */; };
+		498DB8432E5EE13A00DDC33B /* ConfiguratorSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498DB8422E5EE13A00DDC33B /* ConfiguratorSettingsView.swift */; };
 		499F56732AE0832100CBDE73 /* AppCatalogSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499F56722AE0832100CBDE73 /* AppCatalogSubview.swift */; };
 		499F56752AE47A3900CBDE73 /* AppUpdatesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499F56742AE47A3900CBDE73 /* AppUpdatesView.swift */; };
 		499F56782AE47BE800CBDE73 /* InstalledAppItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499F56772AE47BE800CBDE73 /* InstalledAppItem.swift */; };
@@ -238,6 +239,7 @@
 		498DB7EF2E5D0D5000DDC33B /* GlassContainerIfAvailable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassContainerIfAvailable.swift; sourceTree = "<group>"; };
 		498DB7F12E5D113A00DDC33B /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		498DB8402E5E49D700DDC33B /* LocalPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPreferences.swift; sourceTree = "<group>"; };
+		498DB8422E5EE13A00DDC33B /* ConfiguratorSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfiguratorSettingsView.swift; sourceTree = "<group>"; };
 		499F56722AE0832100CBDE73 /* AppCatalogSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCatalogSubview.swift; sourceTree = "<group>"; };
 		499F56742AE47A3900CBDE73 /* AppUpdatesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUpdatesView.swift; sourceTree = "<group>"; };
 		499F56772AE47BE800CBDE73 /* InstalledAppItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstalledAppItem.swift; sourceTree = "<group>"; };
@@ -324,6 +326,7 @@
 				495F74EB28B39A9A00C20304 /* PopoverAlertView.swift */,
 				4972476728DBB1AB007194F0 /* StatusItemBadgeView.swift */,
 				4939A0C729259B7B00731363 /* LogoView.swift */,
+				498DB8422E5EE13A00DDC33B /* ConfiguratorSettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -721,6 +724,7 @@
 				490CE0A8294FC144005BC01D /* SoftwareUpdateModel.swift in Sources */,
 				0A4A7388260208B500927DAB /* UptimeSubview.swift in Sources */,
 				491ECC5A2DAC5BEB00B88732 /* ItemConfigurationView.swift in Sources */,
+				498DB8432E5EE13A00DDC33B /* ConfiguratorSettingsView.swift in Sources */,
 				49BF03FC2BC0BE3A00AB7152 /* FileUtilities.swift in Sources */,
 				49822CE324B4C3F100E8DE54 /* AppDelegate.swift in Sources */,
 				4934C79A2B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift in Sources */,
@@ -787,7 +791,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				INFOPLIST_FILE = SupportHelper/Info.plist;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 2.0;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
@@ -826,7 +830,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				INFOPLIST_FILE = SupportHelper/Info.plist;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 2.0;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
@@ -864,7 +868,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = SupportXPC;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2023 Root3 B.V. All rights reserved.";
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = nl.root3.support.xpc;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -897,7 +901,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = SupportXPC;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2023 Root3 B.V. All rights reserved.";
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = nl.root3.support.xpc;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1062,7 +1066,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 2.6;
 				PRODUCT_BUNDLE_IDENTIFIER = nl.root3.support;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1109,7 +1113,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 2.6;
 				PRODUCT_BUNDLE_IDENTIFIER = nl.root3.support;
 				PRODUCT_NAME = "$(TARGET_NAME)";
