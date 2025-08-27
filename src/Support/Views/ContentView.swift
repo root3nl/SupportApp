@@ -21,6 +21,7 @@ struct ContentView: View {
     // Get preferences or default values
     @EnvironmentObject var preferences: Preferences
     
+    // Get local preferences for Configurator Mode
     @EnvironmentObject var localPreferences: LocalPreferences
     
     // Make UserDefaults easy to use
@@ -47,6 +48,7 @@ struct ContentView: View {
     
     let supportItem = SupportItem(type: "AppCatalog", title: nil, subtitle: nil, linkType: nil, link: nil, symbol: nil, extensionIdentifier: nil, onAppearAction: nil)
     
+    // Local preferences or (managed) UserDefaults
     var rows: [Row] {
         if preferences.configuratorModeEnabled {
             return localPreferences.rows

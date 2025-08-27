@@ -104,53 +104,62 @@ struct AppView: View {
                     .fixedSize()
                 }
                 
-                HStack {
-                    
-                    if preferences.configuratorModeEnabled {
+                if preferences.configuratorModeEnabled {
+                
+                    VStack(alignment: .leading) {
+                        
+                        HStack {
+                            
+                            if preferences.editModeEnabled {
+                                SettingsLink(label: {
+                                    Label("Other settings", systemImage: "gear")
+                                        .labelStyle(.titleOnly)
+                                })
+                            }
+                            
+                            Spacer()
+                            
+                            Button {
+                                showExportOptions.toggle()
+                            } label: {
+                                Label("Export", systemImage: "square.and.arrow.up")
+                                    .labelStyle(.titleOnly)
+                            }
+                            .confirmationDialog("Export options", isPresented: $showExportOptions) {
+                                Button("Export as Property List") {
+                                    exportPropertyList()
+                                }
+                                Button("Export as Configuration Profile") {
+                                    exportMobileConfig()
+                                }
+                            } message: {
+                                Text("Select your preferred format")
+                            }
+                            
+                            if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                                Button {
+                                    preferences.editModeEnabled.toggle()
+                                    
+                                    // Persist preferences
+                                    saveUserDefaults()
+                                } label: {
+                                    Label("Done", systemImage: "")
+                                        .labelStyle(.titleOnly)
+                                }
+                            } else if !preferences.showItemConfiguration {
+                                Button {
+                                    preferences.editModeEnabled.toggle()
+                                } label: {
+                                    Label("Edit", systemImage: "")
+                                        .labelStyle(.titleOnly)
+                                }
+                            }
+                        }
                         Text("Configurator Mode enabled")
                             .foregroundStyle(.secondary)
-                            .padding(.leading)
-                        
-                        Spacer()
-                        
-                        Button {
-                            showExportOptions.toggle()
-                        } label: {
-                            Label("Export", systemImage: "square.and.arrow.up")
-                                .labelStyle(.titleOnly)
-                        }
-                        .confirmationDialog("Export options", isPresented: $showExportOptions) {
-                            Button("Export as Property List") {
-                                exportPropertyList()
-                            }
-                            Button("Export as Configuration Profile") {
-                                exportMobileConfig()
-                            }
-                        } message: {
-                            Text("Select your preferred format")
-                        }
-                        
-                        if preferences.editModeEnabled && !preferences.showItemConfiguration {
-                            Button {
-                                preferences.editModeEnabled.toggle()
-                                
-                                // Persist preferences
-                                saveUserDefaults()
-                            } label: {
-                                Label("Done", systemImage: "")
-                                    .labelStyle(.titleOnly)
-                            }
-                        } else if !preferences.showItemConfiguration {
-                            Button {
-                                preferences.editModeEnabled.toggle()
-                            } label: {
-                                Label("Edit", systemImage: "")
-                                    .labelStyle(.titleOnly)
-                            }
-                        }
                     }
+                    .padding(.horizontal, 10)
                 }
-                .padding(.trailing, 10)
             }
             .padding(.bottom, 10)
         }
@@ -179,7 +188,7 @@ struct AppView: View {
             let encoder = PropertyListEncoder()
             encoder.outputFormat = .xml
 
-            let appConfiguration = AppModel(title: preferences.title, rows: localPreferences.rows)
+            let appConfiguration = AppModel(title: localPreferences.title, rows: localPreferences.rows)
             let data = try encoder.encode(appConfiguration)
 
             let savePanel = NSSavePanel()

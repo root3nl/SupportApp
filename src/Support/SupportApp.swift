@@ -15,7 +15,9 @@ struct SupportApp: App {
     
     var body: some Scene {
         Settings {
-            EmptyView().frame(width: .zero)
+            ConfiguratorSettingsView()
+                .environmentObject(appDelegate.localPreferences)
+//            EmptyView().frame(width: .zero)
         }
     }
 }

@@ -633,6 +633,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     @objc func configuratorMode() {
         preferences.configuratorModeEnabled.toggle()
         configuratorMenuItem?.state = preferences.configuratorModeEnabled ? .on : .off
+        
+        togglePopover(nil)
     }
     
     // MARK: - Function to uninstall Privileged Helper Tool

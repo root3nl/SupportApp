@@ -16,7 +16,10 @@ struct HeaderView: View {
     @EnvironmentObject var userinfo: UserInfo
     
     // Get preferences or default values
-    @StateObject var preferences = Preferences()
+    @EnvironmentObject var preferences: Preferences
+    
+    // Get local preferences for Configurator Mode
+    @EnvironmentObject var localPreferences: LocalPreferences
     
     // Make UserDefaults easy to use
     let defaults = UserDefaults.standard
@@ -24,13 +27,18 @@ struct HeaderView: View {
     // Dark Mode detection
     @Environment(\.colorScheme) var colorScheme
     
+    // Local preferences or (managed) UserDefaults
+    var test: PreferencesProtocol {
+        preferences.configuratorModeEnabled ? localPreferences : preferences
+    }
+    
     var body: some View {
         
         // MARK: - Horizontal stack with Title and Logo
         HStack(spacing: 10) {
             
             // Supports for markdown through a variable:
-            Text(.init(preferences.title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))
+            Text(.init(localPreferences.title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))
                 .font(.system(size: 20, design: .rounded))
                 .fontWeight(.medium)
                 .fixedSize()

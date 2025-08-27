@@ -11,7 +11,7 @@ class LocalPreferences: ObservableObject {
     
     // MARK: - All preferences used for local configuration
     
-    @Published var title: String?
+    @Published var title: String = ""
     @Published var logo: String?
     @Published var logoDarkMode: String?
     @Published var notificationIcon: String?
@@ -39,3 +39,12 @@ class LocalPreferences: ObservableObject {
     @Published var currentConfiguredItem: ConfiguredItem?
     
 }
+
+protocol PreferencesProtocol {
+    var title: String { get }
+    // add any shared properties you need
+}
+
+extension Preferences: PreferencesProtocol {}
+extension LocalPreferences: PreferencesProtocol {}
+
