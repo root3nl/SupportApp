@@ -46,14 +46,14 @@ struct HeaderView: View {
             Spacer()
             
             // Logo shown in the top right corner
-            if colorScheme == .light && defaults.string(forKey: "Logo") != nil {
-                LogoView(logo: defaults.string(forKey: "Logo")!)
+            if colorScheme == .light && !activePreferences.logo.isEmpty {
+                LogoView(logo: activePreferences.logo)
             // Show different logo in Dark Mode when LogoDarkMode is also set
-            } else if colorScheme == .dark && defaults.string(forKey: "Logo") != nil {
-                if defaults.string(forKey: "LogoDarkMode") != nil {
-                    LogoView(logo: defaults.string(forKey: "LogoDarkMode")!)
-                } else if defaults.string(forKey: "Logo") != nil && defaults.string(forKey: "LogoDarkMode") == nil {
-                    LogoView(logo: defaults.string(forKey: "Logo")!)
+            } else if colorScheme == .dark && !activePreferences.logo.isEmpty {
+                if !activePreferences.logoDarkMode.isEmpty {
+                    LogoView(logo: activePreferences.logoDarkMode)
+                } else if !activePreferences.logo.isEmpty && activePreferences.logoDarkMode.isEmpty {
+                    LogoView(logo: activePreferences.logo)
                 } else {
                     LogoView(logo: "default")
                 }

@@ -13,8 +13,8 @@ struct ModelSubView: View {
     @EnvironmentObject var computerinfo: ComputerInfo
     
     // Get preferences or default values
-    @StateObject var preferences = Preferences()
-    
+    @EnvironmentObject var preferences: Preferences
+
     // Make UserDefaults easy to use
     let defaults = UserDefaults.standard
     

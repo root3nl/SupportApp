@@ -10,7 +10,6 @@ import Foundation
 class LocalPreferences: ObservableObject {
     
     // MARK: - All preferences used for local configuration
-    
     @Published var title: String = ""
     @Published var logo: String = ""
     @Published var logoDarkMode: String = ""
@@ -42,19 +41,20 @@ class LocalPreferences: ObservableObject {
 
 protocol PreferencesProtocol {
     var title: String { get }
-//    var logo: String { get }
-//    var logoDarkMode: String { get }
-//    var notificationIcon: String { get }
-//    var statusBarIcon: String { get }
-//    var statusBarIconSFSymbol: String { get }
-//    var statusBarIconNotifierEnabled: Bool { get }
+    var logo: String { get }
+    var logoDarkMode: String { get }
+    var notificationIcon: String { get }
+    var statusBarIcon: String { get }
+    var statusBarIconSFSymbol: String { get }
+    var statusBarIconNotifierEnabled: Bool { get }
     var updateText: String { get }
     var customColor: String { get }
     var customColorDarkMode: String { get }
     var errorMessage: String { get }
     var showWelcomeScreen: Bool { get }
     var footerText: String { get }
-//    var disablePrivilegedHelperTool: Bool { get }
+    var openAtLogin: Bool { get }
+    var disablePrivilegedHelperTool: Bool { get }
     var uptimeDaysLimit: Int { get }
     var passwordType: String { get }
     var passwordExpiryLimit: Int { get }

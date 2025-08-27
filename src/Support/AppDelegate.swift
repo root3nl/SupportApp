@@ -246,13 +246,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             orangeBadge.isHidden = true
             
             // Use custom Notification Icon if set in UserDefaults with fallback to default icon
-            if let defaultsStatusBarIcon = defaults.string(forKey: "StatusBarIcon") {
+            if !preferences.statusBarIcon.isEmpty {
                 
                 // Empty initializer with URL to local Notification Icon, either directly from the Configuration Profile or the local download location for remote image
                 var localIconURL: String = ""
                 
                 // If image is a remote URL, download the image and store in container Documents folder
-                if defaultsStatusBarIcon.hasPrefix("https") {
+                if preferences.statusBarIcon.hasPrefix("https") {
                                         
                     do {
                         
@@ -260,13 +260,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                         var newURL: Bool
                         
                         // Detect if the URL changed to check whether to download the image again
-                        if defaultsStatusBarIcon != lastKnownStatusBarItemUrl {
+                        if preferences.statusBarIcon != lastKnownStatusBarItemUrl {
                             newURL = true
                         } else {
                             newURL = false
                         }
                         
-                        if let downloadedIconURL = try getRemoteImage(url: defaultsStatusBarIcon, newURL: newURL, filename: "menu_bar_icon", logName: "StatusBarIcon") {
+                        if let downloadedIconURL = try getRemoteImage(url: preferences.statusBarIcon, newURL: newURL, filename: "menu_bar_icon", logName: "StatusBarIcon") {
                             localIconURL = downloadedIconURL.path
                         }
                         
@@ -276,13 +276,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                     }
                     
                     // Set current URL
-                    lastKnownStatusBarItemUrl = defaultsStatusBarIcon
+                    DispatchQueue.main.async {
+                        self.lastKnownStatusBarItemUrl = self.preferences.statusBarIcon
+                    }
                     
                 } else {
                     // Set image to file URL from Configuration Profile
                     logger.debug("StatusBarIcon is local file")
                     
-                    localIconURL = defaultsStatusBarIcon
+                    DispatchQueue.main.async {
+                        localIconURL = self.preferences.statusBarIcon
+                    }
                 }
                 
                 if let customIcon = NSImage(contentsOfFile: localIconURL) {
@@ -318,10 +322,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                     logger.error("StatusBarIcon preference key is set, but no valid image was found. Please check file path/name or permissions. Falling back to default image...")
                 }
                 // Use custom status bar icon using SF Symbols if set in UserDefaults with fallback to default icon
-            } else if defaults.string(forKey: "StatusBarIconSFSymbol") != nil && defaults.string(forKey: "StatusBarIcon") == nil {
+            } else if !preferences.statusBarIconSFSymbol.isEmpty && preferences.statusBarIcon.isEmpty {
                 
                 // https://developer.apple.com/videos/play/wwdc2020/10207/
-                if let customSFSymbol = NSImage(systemSymbolName: defaults.string(forKey: "StatusBarIconSFSymbol")!, accessibilityDescription: nil) {
+                if let customSFSymbol = NSImage(systemSymbolName: preferences.statusBarIconSFSymbol, accessibilityDescription: nil) {
                     
                     // Configure SF Symbol bigger and more bold to match other Menu Bar Extras
                     let config = NSImage.SymbolConfiguration(textStyle: .body, scale: .large)
@@ -582,6 +586,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     // MARK: - Run functions at startup
     func runAtStartup() {
         // Run uptime and storage once at startup
+        self.loadLocalPreferences()
         self.decodeRows()
         self.computerinfo.kernelBootTime()
         Task {
@@ -851,6 +856,34 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         semaphore.wait()
         
         return fileURL
+    }
+    
+    // MARK: - Load all current preferences to Configurator Mode
+    func loadLocalPreferences() {
+        logger.debug("Loading current prefences to Configurator Mode")
+        
+        DispatchQueue.main.async {
+            self.localPreferences.title = self.preferences.title
+            self.localPreferences.logo = self.preferences.logo
+            self.localPreferences.logoDarkMode = self.preferences.logoDarkMode
+            self.localPreferences.notificationIcon = self.preferences.notificationIcon
+            self.localPreferences.statusBarIcon = self.preferences.statusBarIcon
+            self.localPreferences.statusBarIconSFSymbol = self.preferences.statusBarIconSFSymbol
+            self.localPreferences.statusBarIconNotifierEnabled = self.preferences.statusBarIconNotifierEnabled
+            self.localPreferences.updateText = self.preferences.updateText
+            self.localPreferences.customColor = self.preferences.customColor
+            self.localPreferences.customColorDarkMode = self.preferences.customColorDarkMode
+            self.localPreferences.errorMessage = self.preferences.errorMessage
+            self.localPreferences.showWelcomeScreen = self.preferences.showWelcomeScreen
+            self.localPreferences.footerText = self.preferences.footerText
+            self.localPreferences.openAtLogin = self.preferences.openAtLogin
+            self.localPreferences.disablePrivilegedHelperTool = self.preferences.disablePrivilegedHelperTool
+            self.localPreferences.uptimeDaysLimit = self.preferences.uptimeDaysLimit
+            self.localPreferences.passwordType = self.preferences.passwordType
+            self.localPreferences.passwordExpiryLimit = self.preferences.passwordExpiryLimit
+            self.localPreferences.passwordLabel = self.preferences.passwordLabel
+            self.localPreferences.storageLimit = self.preferences.storageLimit
+        }
     }
     
     // MARK: - Function to load configuration profile

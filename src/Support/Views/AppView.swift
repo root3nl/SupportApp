@@ -117,7 +117,7 @@ struct AppView: View {
                             
                             if preferences.editModeEnabled {
                                 SettingsLink(label: {
-                                    Label("Other settings", systemImage: "gear")
+                                    Label("Settings", systemImage: "gear")
                                         .labelStyle(.titleOnly)
                                 })
                             }
@@ -193,7 +193,7 @@ struct AppView: View {
             let encoder = PropertyListEncoder()
             encoder.outputFormat = .xml
 
-            let appConfiguration = AppModel(title: localPreferences.title, footerText: localPreferences.footerText, rows: localPreferences.rows)
+            let appConfiguration = AppModel(title: localPreferences.title, logo: localPreferences.logo, logoDarkMode: localPreferences.logoDarkMode, notificationIcon: localPreferences.notificationIcon, statusBarIcon: localPreferences.statusBarIcon, statusBarIconSFSymbol: localPreferences.statusBarIconSFSymbol, statusBarIconNotifierEnabled: localPreferences.statusBarIconNotifierEnabled, updateText: localPreferences.updateText, customColor: localPreferences.customColor, customColorDarkMode: localPreferences.customColorDarkMode, errorMessage: localPreferences.errorMessage, showWelcomeScreen: localPreferences.showWelcomeScreen, footerText: localPreferences.footerText, openAtLogin: localPreferences.openAtLogin, disablePrivilegedHelperTool: activePreferences.disablePrivilegedHelperTool, uptimeDaysLimit: localPreferences.uptimeDaysLimit, passwordType: localPreferences.passwordType, passwordExpiryLimit: localPreferences.passwordExpiryLimit, passwordLabel: localPreferences.passwordLabel, storageLimit: Int(localPreferences.storageLimit), rows: localPreferences.rows)
             let data = try encoder.encode(appConfiguration)
 
             let savePanel = NSSavePanel()
@@ -218,7 +218,7 @@ struct AppView: View {
     func saveUserDefaults() {
         do {
             // Build the configuration model from current state
-            let appConfiguration = AppModel(title: localPreferences.title, footerText: localPreferences.footerText, rows: localPreferences.rows)
+            let appConfiguration = AppModel(title: localPreferences.title, logo: localPreferences.logo, logoDarkMode: localPreferences.logoDarkMode, notificationIcon: localPreferences.notificationIcon, statusBarIcon: localPreferences.statusBarIcon, statusBarIconSFSymbol: localPreferences.statusBarIconSFSymbol, statusBarIconNotifierEnabled: localPreferences.statusBarIconNotifierEnabled, updateText: localPreferences.updateText, customColor: localPreferences.customColor, customColorDarkMode: localPreferences.customColorDarkMode, errorMessage: localPreferences.errorMessage, showWelcomeScreen: localPreferences.showWelcomeScreen, footerText: localPreferences.footerText, openAtLogin: localPreferences.openAtLogin, disablePrivilegedHelperTool: activePreferences.disablePrivilegedHelperTool, uptimeDaysLimit: localPreferences.uptimeDaysLimit, passwordType: localPreferences.passwordType, passwordExpiryLimit: localPreferences.passwordExpiryLimit, passwordLabel: localPreferences.passwordLabel, storageLimit: Int(localPreferences.storageLimit), rows: localPreferences.rows)
 
             // Encode to a property list-compatible Data
             let encoder = PropertyListEncoder()
@@ -240,6 +240,59 @@ struct AppView: View {
         } catch {
             logger.error("\(error.localizedDescription)")
         }
+    }
+    
+    // MARK: - Function to create a complete Configuration Profile
+    func createMobileConfig() {
+        let mobileConfig = """
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+            <key>PayloadContent</key>
+            <array>
+                <dict>
+                    <key>PayloadDescription</key>
+                    <string></string>
+                    <key>PayloadDisplayName</key>
+                    <string>Custom</string>
+                    <key>PayloadEnabled</key>
+                    <true/>
+                    <key>PayloadIdentifier</key>
+                    <string>E07B484A-FC4A-450B-A0E9-3BC0B737974B</string>
+                    <key>PayloadOrganization</key>
+                    <string>Root3</string>
+                    <key>PayloadType</key>
+                    <string>nl.root3.support</string>
+                    <key>PayloadUUID</key>
+                    <string>E07B484A-FC4A-450B-A0E9-3BC0B737974B</string>
+                    <key>PayloadVersion</key>
+                    <integer>1</integer>
+                </dict>
+            </array>
+            <key>PayloadDescription</key>
+            <string></string>
+            <key>PayloadDisplayName</key>
+            <string>Support App Configuration</string>
+            <key>PayloadEnabled</key>
+            <true/>
+            <key>PayloadIdentifier</key>
+            <string>BDA1AE71-4F70-4D93-9924-F8E77E8F0F10</string>
+            <key>PayloadOrganization</key>
+            <string>Root3</string>
+            <key>PayloadRemovalDisallowed</key>
+            <true/>
+            <key>PayloadScope</key>
+            <string>System</string>
+            <key>PayloadType</key>
+            <string>Configuration</string>
+            <key>PayloadUUID</key>
+            <string>164671D3-3656-41FF-A387-E3229001BB9B</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+        </dict>
+        </plist>
+        """
     }
 }
 

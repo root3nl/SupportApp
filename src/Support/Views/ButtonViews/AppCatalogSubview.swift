@@ -16,8 +16,8 @@ struct AppCatalogSubview: View {
     @EnvironmentObject var appCatalogController: AppCatalogController
     
     // Get preferences or default values
-    @StateObject var preferences = Preferences()
-    
+    @EnvironmentObject var preferences: Preferences
+
     // Make UserDefaults easy to use
     let defaults = UserDefaults.standard
     

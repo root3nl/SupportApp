@@ -41,7 +41,7 @@ struct ConfiguratorSettingsView: View {
         }
         .scenePadding()
 //        .frame(maxWidth: 350, minHeight: 100)
-        .frame(width: 400)
+        .frame(width: 500)
     }
 }
 
@@ -52,14 +52,12 @@ struct GeneralSettingsView: View {
     
     var body: some View {
         Form {
-                TextField("Title", text: $localPreferences.title)
-                TextField("Footer text", text: $localPreferences.footerText)
-                TextField("Error message", text: $localPreferences.errorMessage)
-                Toggle("Welcome screen", isOn: $localPreferences.showWelcomeScreen)
-            
-                Toggle("Menu Bar notifier", isOn: $localPreferences.statusBarIconNotifierEnabled)
-            
-                TextField("Update text", text: $localPreferences.updateText)
+            TextField("Title", text: $localPreferences.title, prompt: Text("Example: IT Support"))
+            TextField("Footer text", text: $localPreferences.footerText, prompt: Text("Example: Provided by your IT department with ❤️"))
+            TextField("Error message", text: $localPreferences.errorMessage, prompt: Text("Example: Please contact IT support"))
+            Toggle("Welcome screen", isOn: $localPreferences.showWelcomeScreen)
+            Toggle("Menu Bar notifier", isOn: $localPreferences.statusBarIconNotifierEnabled)
+            TextField("Update text", text: $localPreferences.updateText, prompt: Text("Example: Your organization requires you to update as soon as possible"))
         }
         .disabled(!preferences.editModeEnabled)
     }
@@ -72,13 +70,13 @@ struct BrandingSettingsView: View {
     
     var body: some View {
         Form {
-            TextField("Logo", text: $localPreferences.logo)
-            TextField("Logo dark mode", text: $localPreferences.logoDarkMode)
-            TextField("Notification icon", text: $localPreferences.notificationIcon)
-            TextField("Status Bar icon", text: $localPreferences.statusBarIcon)
-            TextField("Status Bar icon (SF Symbol)", text: $localPreferences.statusBarIconSFSymbol)
-            TextField("Custom color", text: $localPreferences.customColor)
-            TextField("Custom dark mode", text: $localPreferences.customColorDarkMode)
+            TextField("Logo", text: $localPreferences.logo, prompt: Text("URL or file path to logo"))
+            TextField("Logo dark mode", text: $localPreferences.logoDarkMode, prompt: Text("URL or file path to logo for dark mode"))
+            TextField("Notification icon", text: $localPreferences.notificationIcon, prompt: Text("URL or file path to icon"))
+            TextField("Status Bar icon", text: $localPreferences.statusBarIcon, prompt: Text("URL or file path to icon"))
+            TextField("Status Bar icon (SF Symbol)", text: $localPreferences.statusBarIconSFSymbol, prompt: Text("SF Symbol name"))
+            TextField("Custom color", text: $localPreferences.customColor, prompt: Text("HEX color code"))
+            TextField("Custom dark mode", text: $localPreferences.customColorDarkMode, prompt: Text("HEX color code"))
         }
         .disabled(!preferences.editModeEnabled)
     }
@@ -91,7 +89,7 @@ struct InfoItemSettingsView: View {
     
     var body: some View {
         Form {
-            TextField("Uptime days limit", value: $localPreferences.uptimeDaysLimit, format: .number)
+            TextField("Uptime days limit", value: $localPreferences.uptimeDaysLimit, format: .number, prompt: Text("Example: 14"))
             
             Picker("Password type", selection: $localPreferences.passwordType) {
                 Text("Apple").tag("Apple")
@@ -99,8 +97,8 @@ struct InfoItemSettingsView: View {
                 Text("Kerberos SSO").tag("KerberosSSO")
                 Text("Nomad").tag("Nomad")
             }
-            TextField("Password expiry limit", value: $localPreferences.passwordExpiryLimit, format: .number)
-            TextField("Password label", text: $localPreferences.passwordLabel)
+            TextField("Password expiry limit", value: $localPreferences.passwordExpiryLimit, format: .number, prompt: Text("Example: 14"))
+            TextField("Password label", text: $localPreferences.passwordLabel, prompt: Text("Example: Company Password"))
             
             Slider(value: $localPreferences.storageLimit, in: 0...100, step: 5) {
                 Text("Storage limit")

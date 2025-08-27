@@ -20,6 +20,16 @@ class Preferences: ObservableObject {
     // Title shown in the top of the app
     @AppStorage("Title") var title: String = "Support"
     
+    @AppStorage("Logo") var logo: String = ""
+    @AppStorage("LogoDarkMode") var logoDarkMode: String = ""
+    @AppStorage("NotificationIcon") var notificationIcon: String = ""
+    @AppStorage("StatusBarIcon") var statusBarIcon: String = ""
+    @AppStorage("StatusBarIconSFSymbol") var statusBarIconSFSymbol: String = ""
+    @AppStorage("StatusBarIconNotifierEnabled") var statusBarIconNotifierEnabled: Bool = false
+    
+    // Optional text to show in the Managed Updates view
+    @AppStorage("UpdateText") var updateText: String = ""
+    
     // Custom color for all symbols
     @AppStorage("CustomColor") var customColor: String = ""
     
@@ -41,8 +51,7 @@ class Preferences: ObservableObject {
     // Automatically register modern LaunchAgent on macOS 13 and higher
     @AppStorage("OpenAtLogin") var openAtLogin: Bool = false
     
-    // Optional text to show in the Managed Updates view
-    @AppStorage("UpdateText") var updateText: String = ""
+    @AppStorage("DisablePrivilegedHelperTool") var disablePrivilegedHelperTool: Bool = false
     
     // MARK: - Info items
     

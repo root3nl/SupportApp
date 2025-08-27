@@ -30,7 +30,7 @@ struct ProgressBarItem: View {
     @State private var showingAlert = false
     
     // Get preferences or default values
-    @ObservedObject var preferences = Preferences()
+    @EnvironmentObject var preferences: Preferences
     
     var body: some View {
         
