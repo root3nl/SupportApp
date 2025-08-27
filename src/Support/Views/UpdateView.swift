@@ -20,7 +20,8 @@ struct UpdateView: View {
     @EnvironmentObject var userinfo: UserInfo
     
     // Get preferences or default values
-    @StateObject var preferences = Preferences()
+    @EnvironmentObject var preferences: Preferences
+    @EnvironmentObject var localPreferences: LocalPreferences
     
     // Make UserDefaults easy to use
     let defaults = UserDefaults.standard
@@ -39,6 +40,11 @@ struct UpdateView: View {
         } else {
             return preferences.customColor
         }
+    }
+    
+    // Local preferences for Configurator Mode or (managed) UserDefaults
+    var activePreferences: PreferencesProtocol {
+        preferences.configuratorModeEnabled ? localPreferences : preferences
     }
     
     var body: some View {
@@ -157,7 +163,7 @@ struct UpdateView: View {
                     
                 }
                 
-                if preferences.updateText != "" {
+                if activePreferences.updateText != "" {
                     
                     Divider()
                         .padding(2)
@@ -166,7 +172,7 @@ struct UpdateView: View {
                         
                         // Supports for markdown through a variable:
                         // https://blog.eidinger.info/3-surprises-when-using-markdown-in-swiftui
-                        Text(.init(preferences.updateText.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))
+                        Text(.init(activePreferences.updateText.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))
                             .font(.system(.body, design: .rounded))
                         
                         Spacer()
@@ -229,7 +235,8 @@ struct UpdateViewLegacy: View {
     @EnvironmentObject var userinfo: UserInfo
     
     // Get preferences or default values
-    @StateObject var preferences = Preferences()
+    @EnvironmentObject var preferences: Preferences
+    @EnvironmentObject var localPreferences: LocalPreferences
     
     // Dark Mode detection
     @Environment(\.colorScheme) var colorScheme
@@ -237,6 +244,11 @@ struct UpdateViewLegacy: View {
     // Update counter
     var updateCounter: Int
     var color: Color
+    
+    // Local preferences for Configurator Mode or (managed) UserDefaults
+    var activePreferences: PreferencesProtocol {
+        preferences.configuratorModeEnabled ? localPreferences : preferences
+    }
             
     var body: some View {
         
@@ -275,7 +287,7 @@ struct UpdateViewLegacy: View {
                     
                 }
                 
-                if preferences.updateText != "" {
+                if activePreferences.updateText != "" {
                     
                     Divider()
                         .padding(2)
@@ -289,7 +301,7 @@ struct UpdateViewLegacy: View {
                         
                         // Supports for markdown through a variable:
                         // https://blog.eidinger.info/3-surprises-when-using-markdown-in-swiftui
-                        Text(.init(preferences.updateText.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))
+                        Text(.init(activePreferences.updateText.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))
                             .font(.system(.body, design: .rounded))
                         
                         Spacer()

@@ -17,6 +17,7 @@ struct SupportApp: App {
         Settings {
             ConfiguratorSettingsView()
                 .environmentObject(appDelegate.localPreferences)
+                .environmentObject(appDelegate.preferences)
 //            EmptyView().frame(width: .zero)
         }
     }

@@ -32,6 +32,11 @@ struct AppView: View {
     // Version and build number
     var version = Bundle.main.infoDictionary!["CFBundleShortVersionString"]! as! String
     var build = Bundle.main.infoDictionary!["CFBundleVersion"]! as! String
+    
+    // Local preferences for Configurator Mode or (managed) UserDefaults
+    var activePreferences: PreferencesProtocol {
+        preferences.configuratorModeEnabled ? localPreferences : preferences
+    }
 
     var body: some View {
         
@@ -84,13 +89,13 @@ struct AppView: View {
                 }
                 
                 // MARK: - Footnote
-                if preferences.footerText != "" {
+                if activePreferences.footerText != "" {
                     HStack {
                         
                         
                         // Supports for markdown through a variable:
                         // https://blog.eidinger.info/3-surprises-when-using-markdown-in-swiftui
-                        Text(.init(preferences.footerText.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))
+                        Text(.init(activePreferences.footerText.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))
                             .font(.system(.subheadline, design: .rounded))
                             .foregroundColor(colorScheme == .dark ? .white.opacity(0.5) : .black.opacity(0.5))
                             .textSelection(.enabled)
@@ -188,7 +193,7 @@ struct AppView: View {
             let encoder = PropertyListEncoder()
             encoder.outputFormat = .xml
 
-            let appConfiguration = AppModel(title: localPreferences.title, rows: localPreferences.rows)
+            let appConfiguration = AppModel(title: localPreferences.title, footerText: localPreferences.footerText, rows: localPreferences.rows)
             let data = try encoder.encode(appConfiguration)
 
             let savePanel = NSSavePanel()
@@ -213,7 +218,7 @@ struct AppView: View {
     func saveUserDefaults() {
         do {
             // Build the configuration model from current state
-            let appConfiguration = AppModel(title: preferences.title, rows: localPreferences.rows)
+            let appConfiguration = AppModel(title: localPreferences.title, footerText: localPreferences.footerText, rows: localPreferences.rows)
 
             // Encode to a property list-compatible Data
             let encoder = PropertyListEncoder()

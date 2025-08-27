@@ -28,7 +28,7 @@ struct HeaderView: View {
     @Environment(\.colorScheme) var colorScheme
     
     // Local preferences or (managed) UserDefaults
-    var test: PreferencesProtocol {
+    var activePreferences: PreferencesProtocol {
         preferences.configuratorModeEnabled ? localPreferences : preferences
     }
     
@@ -38,7 +38,7 @@ struct HeaderView: View {
         HStack(spacing: 10) {
             
             // Supports for markdown through a variable:
-            Text(.init(localPreferences.title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))
+            Text(.init(activePreferences.title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))
                 .font(.system(size: 20, design: .rounded))
                 .fontWeight(.medium)
                 .fixedSize()

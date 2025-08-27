@@ -70,7 +70,7 @@ class Preferences: ObservableObject {
     @AppStorage("KerberosRealm") var kerberosRealm: String = ""
     
     // Percentage of storage used after which a notification badge is shown, disabled by default
-    @AppStorage("StorageLimit") var storageLimit: Int = 0
+    @AppStorage("StorageLimit") var storageLimit: Double = 0
     
     // Hide first and/or second row of Info Items, disabled by default
     @AppStorage("HideFirstRowInfoItems") var hideFirstRowInfoItems: Bool = false
