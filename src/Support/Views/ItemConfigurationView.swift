@@ -18,7 +18,6 @@ struct ItemConfigurationView: View {
     
     // Get preferences or default values
     @EnvironmentObject var preferences: Preferences
-    
     @EnvironmentObject var localPreferences: LocalPreferences
     
     // Make UserDefaults easy to use
@@ -38,20 +37,28 @@ struct ItemConfigurationView: View {
         }
     }
     
-    @State private var item: SupportItem = SupportItem(type: "Button", title: "Preview", subtitle: nil, linkType: nil, link: nil, symbol: nil, extensionIdentifier: nil, onAppearAction: nil)
+    @State private var item: SupportItem = SupportItem(type: "Button", title: nil, subtitle: nil, linkType: nil, link: nil, symbol: nil, extensionIdentifier: nil, onAppearAction: nil)
     @State private var selectedType: String = ""
-    
-    let typeOptions: [String] = [
-        "ComputerName",
-        "MacOSVersion",
-        "Network",
-        "Password",
-        "Storage",
-        "Uptime",
-        "AppCatalog",
-        "Button",
-        "SmallButton",
-        "CircleButton"
+    @State private var title: String = ""
+    @State private var subtitle: String = ""
+    @State private var linkType: String = ""
+    @State private var link: String = ""
+    @State private var symbol: String = ""
+    @State private var extensionIdentifier: String = ""
+    @State private var onAppearAction: String = ""
+
+    let typeOptions: [String: String] = [
+        "ComputerName" : "Computer name",
+        "MacOSVersion" : "macOS version",
+        "Network" : "Network",
+        "Password" : "Password",
+        "Storage" : "Storage",
+        "Uptime" : "Uptime",
+        "AppCatalog" : "App Catalog",
+        "Extension" : "Extension",
+        "Button" : "Button",
+        "SmallButton" : "Small button",
+        "CircleButton" : "Circle button"
     ]
     
     var body: some View {
@@ -79,7 +86,12 @@ struct ItemConfigurationView: View {
                 
                 Button(action: {
                     // Save item
-                    localPreferences.rows[localPreferences.currentConfiguredItem!.rowIndex].items?[localPreferences.currentConfiguredItem!.itemIndex] = item
+                    if item.type.contains("Button") || item.type == "Extension" {
+                        localPreferences.rows[localPreferences.currentConfiguredItem!.rowIndex].items?[localPreferences.currentConfiguredItem!.itemIndex] = SupportItem(type: selectedType, title: title, subtitle: subtitle, linkType: linkType, link: link, symbol: symbol, extensionIdentifier: extensionIdentifier, onAppearAction: extensionIdentifier)
+                    } else {
+                        localPreferences.rows[localPreferences.currentConfiguredItem!.rowIndex].items?[localPreferences.currentConfiguredItem!.itemIndex] = SupportItem(type: selectedType, title: nil, subtitle: nil, linkType: nil, link: nil, symbol: nil, extensionIdentifier: nil, onAppearAction: nil)
+
+                    }
                     
                     preferences.showItemConfiguration.toggle()
                 }) {
@@ -119,15 +131,15 @@ struct ItemConfigurationView: View {
                 case "AppCatalog":
                     AppCatalogSubview()
                 case "Button":
-                    Item(title: item.title ?? "", subtitle: item.subtitle ?? "", linkType: item.linkType ?? "", link: item.link ?? "", image: item.symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
+                    Item(title: title, subtitle: subtitle, linkType: linkType, link: link, image: symbol, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
                 case "SmallButton":
-                    ItemSmall(title: item.title ?? "", subtitle: item.subtitle ?? "", linkType: item.linkType ?? "", link: item.link ?? "", image: item.symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+                    ItemSmall(title: title, subtitle: subtitle, linkType: linkType, link: link, image: symbol, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
                 case "CircleButton":
                     if #available(macOS 26, *) {
-                        ItemCircle(title: item.title ?? "", subtitle: item.subtitle ?? "", linkType: item.linkType ?? "", link: item.link ?? "", image: item.symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+                        ItemCircle(title: title, subtitle: subtitle, linkType: linkType, link: link, image: symbol, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
                     }
                 default:
-                    Item(title: item.title ?? "", subtitle: item.subtitle ?? "", linkType: item.linkType ?? "", link: item.link ?? "", image: item.symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
+                    Item(title: title, subtitle: subtitle, linkType: linkType, link: link, image: symbol, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
                 }
                 
             }
@@ -135,13 +147,30 @@ struct ItemConfigurationView: View {
             Divider()
                 .padding(2)
             
-            VStack {
+            Form {
                 
-                Picker("ITEM_TYPE", selection: $selectedType, content: {
-                    ForEach(typeOptions, id: \.self) { type in
-                        Text(type).tag(type)
+                Picker("ITEM_TYPE", selection: $selectedType) {
+                    ForEach(typeOptions.sorted(by: { $0.value < $1.value }), id: \.key) { key, value in
+                        Text(value).tag(key)
                     }
-                })
+                }
+                
+                if item.type.contains("Button") || item.type == "Extension" {
+                    TextField("Title", text: $title)
+                    TextField("Subtitle", text: $subtitle)
+                    Picker("Link Type", selection: $linkType) {
+                        Text("App").tag("App")
+                        Text("URL").tag("URL")
+                        Text("Command").tag("Command")
+                        Text("Privileged Script").tag("PrivilegedScript")
+                    }
+                    TextField("Link", text: $link)
+                    TextField("SF Symbol", text: $symbol)
+                    if item.type == "Extension" {
+                        TextField("Extension Identifier", text: $extensionIdentifier)
+                        TextField("On appear action", text: $onAppearAction)
+                    }
+                }
                 
             }
             
@@ -155,7 +184,7 @@ struct ItemConfigurationView: View {
             }
         }
         .onChange(of: selectedType) { newType in
-            item = SupportItem(type: newType, title: "Preview", subtitle: nil, linkType: nil, link: nil, symbol: nil, extensionIdentifier: nil, onAppearAction: nil)
+            item = SupportItem(type: newType, title: title, subtitle: nil, linkType: nil, link: nil, symbol: nil, extensionIdentifier: nil, onAppearAction: nil)
         }
     }
 }
