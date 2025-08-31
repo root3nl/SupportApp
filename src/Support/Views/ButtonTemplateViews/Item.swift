@@ -43,7 +43,7 @@ struct Item: View {
     @State var showingAlert = false
     
     // Get preferences or default values
-    @ObservedObject var preferences = Preferences()
+    @EnvironmentObject var preferences: Preferences
     
     // Enable animation
     var animate: Bool

@@ -39,7 +39,7 @@ struct ItemCircle: View {
     @State var showingAlert = false
     
     // Get preferences or default values
-    @ObservedObject var preferences = Preferences()
+    @EnvironmentObject var preferences: Preferences
     
     var body: some View {
         VStack {
@@ -68,6 +68,7 @@ struct ItemCircle: View {
         }
         .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: true))
         .animation(.bouncy, value: hoverView)
+//        .padding(.horizontal, 9)
     }
     
     func tapGesture() {

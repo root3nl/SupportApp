@@ -37,7 +37,7 @@ struct ItemDouble: View {
     @State var showingAlert = false
     
     // Get preferences or default values
-    @ObservedObject var preferences = Preferences()
+    @EnvironmentObject var preferences: Preferences
     
     // Alert title options
     var alertTitle: String {
