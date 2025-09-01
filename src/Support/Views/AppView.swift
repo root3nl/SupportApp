@@ -37,6 +37,10 @@ struct AppView: View {
     var activePreferences: PreferencesProtocol {
         preferences.configuratorModeEnabled ? localPreferences : preferences
     }
+    
+    var appConfiguration: AppModel {
+        return AppModel(title: localPreferences.title, logo: localPreferences.logo, logoDarkMode: localPreferences.logoDarkMode, notificationIcon: localPreferences.notificationIcon, statusBarIcon: localPreferences.statusBarIcon, statusBarIconSFSymbol: localPreferences.statusBarIconSFSymbol, statusBarIconNotifierEnabled: localPreferences.statusBarIconNotifierEnabled, updateText: localPreferences.updateText, customColor: localPreferences.customColor, customColorDarkMode: localPreferences.customColorDarkMode, errorMessage: localPreferences.errorMessage, showWelcomeScreen: localPreferences.showWelcomeScreen, footerText: localPreferences.footerText, openAtLogin: localPreferences.openAtLogin, disablePrivilegedHelperTool: activePreferences.disablePrivilegedHelperTool, uptimeDaysLimit: localPreferences.uptimeDaysLimit, passwordType: localPreferences.passwordType, passwordExpiryLimit: localPreferences.passwordExpiryLimit, passwordLabel: localPreferences.passwordLabel, storageLimit: Int(localPreferences.storageLimit), rows: localPreferences.rows)
+    }
 
     var body: some View {
         
@@ -103,7 +107,7 @@ struct AppView: View {
                         Spacer()
                         
                     }
-                    .padding(.horizontal, 10)
+                    .padding(.horizontal, 12)
                     // Workaround to support multiple lines
                     .frame(minWidth: 388, idealWidth: 388, maxWidth: 388)
                     .fixedSize()
@@ -163,10 +167,10 @@ struct AppView: View {
                         Text("Configurator Mode enabled")
                             .foregroundStyle(.secondary)
                     }
-                    .padding(.horizontal, 10)
+                    .padding(.horizontal, 12)
                 }
             }
-            .padding(.bottom, 10)
+            .padding(.bottom, 12)
         }
 //        .background(EffectsView(material: NSVisualEffectView.Material.fullScreenUI, blendingMode: NSVisualEffectView.BlendingMode.behindWindow))
         .background(colorScheme == .dark ? Color.clear : Color.primary.opacity(0.1))
@@ -193,10 +197,9 @@ struct AppView: View {
             let encoder = PropertyListEncoder()
             encoder.outputFormat = .xml
 
-            let appConfiguration = AppModel(title: localPreferences.title, logo: localPreferences.logo, logoDarkMode: localPreferences.logoDarkMode, notificationIcon: localPreferences.notificationIcon, statusBarIcon: localPreferences.statusBarIcon, statusBarIconSFSymbol: localPreferences.statusBarIconSFSymbol, statusBarIconNotifierEnabled: localPreferences.statusBarIconNotifierEnabled, updateText: localPreferences.updateText, customColor: localPreferences.customColor, customColorDarkMode: localPreferences.customColorDarkMode, errorMessage: localPreferences.errorMessage, showWelcomeScreen: localPreferences.showWelcomeScreen, footerText: localPreferences.footerText, openAtLogin: localPreferences.openAtLogin, disablePrivilegedHelperTool: activePreferences.disablePrivilegedHelperTool, uptimeDaysLimit: localPreferences.uptimeDaysLimit, passwordType: localPreferences.passwordType, passwordExpiryLimit: localPreferences.passwordExpiryLimit, passwordLabel: localPreferences.passwordLabel, storageLimit: Int(localPreferences.storageLimit), rows: localPreferences.rows)
             let data = try encoder.encode(appConfiguration)
             
-            // Hide popover to provide the best export experience and activate the save window 
+            // Hide popover to provide the best export experience and activate the save window
             appDelegate.togglePopover(nil)
 
             let savePanel = NSSavePanel()
@@ -214,15 +217,67 @@ struct AppView: View {
     
     // MARK: - Export all preferences to a valid Configuration Profile (.mobileconfig)
     func exportMobileConfig() {
-        
+        do {
+            let encoder = PropertyListEncoder()
+            encoder.outputFormat = .xml
+            let appData = try encoder.encode(appConfiguration)
+
+            // Turn encoded data into a Foundation property list dictionary
+            let plistObject = try PropertyListSerialization.propertyList(from: appData, options: [], format: nil)
+            guard var appDict = plistObject as? [String: Any] else {
+                logger.error("Failed to convert encoded AppModel to [String: Any] for mobileconfig export")
+                return
+            }
+
+            // Compose a proper Configuration Profile
+            let innerUUID = UUID().uuidString
+            let outerUUID = UUID().uuidString
+
+            // Add required keys
+            appDict["PayloadDescription"] = ""
+            appDict["PayloadDisplayName"] = "Custom"
+            appDict["PayloadEnabled"] = true
+            appDict["PayloadIdentifier"] = "nl.root3.support.\(innerUUID)"
+            appDict["PayloadOrganization"] = "Root3"
+            appDict["PayloadType"] = "nl.root3.support"
+            appDict["PayloadUUID"] = innerUUID
+            appDict["PayloadVersion"] = 1
+
+            let profileDict: [String: Any] = [
+                "PayloadContent": [appDict],
+                "PayloadDescription": "",
+                "PayloadDisplayName": "Support App Configuration",
+                "PayloadEnabled": true,
+                "PayloadIdentifier": "nl.root3.support.profile.\(outerUUID)",
+                "PayloadOrganization": "Root3",
+                "PayloadRemovalDisallowed": true,
+                "PayloadScope": "System",
+                "PayloadType": "Configuration",
+                "PayloadUUID": outerUUID,
+                "PayloadVersion": 1
+            ]
+
+            let profileData = try PropertyListSerialization.data(fromPropertyList: profileDict, format: .xml, options: 0)
+
+            appDelegate.togglePopover(nil)
+
+            // Save as .mobileconfig
+            let savePanel = NSSavePanel()
+            savePanel.allowedContentTypes = [.init(filenameExtension: "mobileconfig")!]
+            savePanel.nameFieldStringValue = "nl.root3.support.mobileconfig"
+            savePanel.canCreateDirectories = true
+
+            if savePanel.runModal() == .OK, let url = savePanel.url {
+                try profileData.write(to: url)
+            }
+        } catch {
+            logger.error("Exporting .mobileconfig failed: \(error.localizedDescription)")
+        }
     }
     
     // MARK: - Save settings from Configurator Mode
     func saveUserDefaults() {
         do {
-            // Build the configuration model from current state
-            let appConfiguration = AppModel(title: localPreferences.title, logo: localPreferences.logo, logoDarkMode: localPreferences.logoDarkMode, notificationIcon: localPreferences.notificationIcon, statusBarIcon: localPreferences.statusBarIcon, statusBarIconSFSymbol: localPreferences.statusBarIconSFSymbol, statusBarIconNotifierEnabled: localPreferences.statusBarIconNotifierEnabled, updateText: localPreferences.updateText, customColor: localPreferences.customColor, customColorDarkMode: localPreferences.customColorDarkMode, errorMessage: localPreferences.errorMessage, showWelcomeScreen: localPreferences.showWelcomeScreen, footerText: localPreferences.footerText, openAtLogin: localPreferences.openAtLogin, disablePrivilegedHelperTool: activePreferences.disablePrivilegedHelperTool, uptimeDaysLimit: localPreferences.uptimeDaysLimit, passwordType: localPreferences.passwordType, passwordExpiryLimit: localPreferences.passwordExpiryLimit, passwordLabel: localPreferences.passwordLabel, storageLimit: Int(localPreferences.storageLimit), rows: localPreferences.rows)
-
             // Encode to a property list-compatible Data
             let encoder = PropertyListEncoder()
             encoder.outputFormat = .xml
@@ -245,58 +300,6 @@ struct AppView: View {
         }
     }
     
-    // MARK: - Function to create a complete Configuration Profile
-    func createMobileConfig() {
-        let mobileConfig = """
-        <?xml version="1.0" encoding="UTF-8"?>
-        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-        <plist version="1.0">
-        <dict>
-            <key>PayloadContent</key>
-            <array>
-                <dict>
-                    <key>PayloadDescription</key>
-                    <string></string>
-                    <key>PayloadDisplayName</key>
-                    <string>Custom</string>
-                    <key>PayloadEnabled</key>
-                    <true/>
-                    <key>PayloadIdentifier</key>
-                    <string>E07B484A-FC4A-450B-A0E9-3BC0B737974B</string>
-                    <key>PayloadOrganization</key>
-                    <string>Root3</string>
-                    <key>PayloadType</key>
-                    <string>nl.root3.support</string>
-                    <key>PayloadUUID</key>
-                    <string>E07B484A-FC4A-450B-A0E9-3BC0B737974B</string>
-                    <key>PayloadVersion</key>
-                    <integer>1</integer>
-                </dict>
-            </array>
-            <key>PayloadDescription</key>
-            <string></string>
-            <key>PayloadDisplayName</key>
-            <string>Support App Configuration</string>
-            <key>PayloadEnabled</key>
-            <true/>
-            <key>PayloadIdentifier</key>
-            <string>BDA1AE71-4F70-4D93-9924-F8E77E8F0F10</string>
-            <key>PayloadOrganization</key>
-            <string>Root3</string>
-            <key>PayloadRemovalDisallowed</key>
-            <true/>
-            <key>PayloadScope</key>
-            <string>System</string>
-            <key>PayloadType</key>
-            <string>Configuration</string>
-            <key>PayloadUUID</key>
-            <string>164671D3-3656-41FF-A387-E3229001BB9B</string>
-            <key>PayloadVersion</key>
-            <integer>1</integer>
-        </dict>
-        </plist>
-        """
-    }
 }
 
 struct AppView_Previews: PreviewProvider {

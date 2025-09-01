@@ -89,6 +89,8 @@
 		499F56782AE47BE800CBDE73 /* InstalledAppItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499F56772AE47BE800CBDE73 /* InstalledAppItem.swift */; };
 		49B4952D2642E96A00A6AE64 /* DarkModeBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B4952C2642E96A00A6AE64 /* DarkModeBorder.swift */; };
 		49BF03FC2BC0BE3A00AB7152 /* FileUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BF03FB2BC0BE3A00AB7152 /* FileUtilities.swift */; };
+		49CB03B12E663F8200D0016D /* LegacyContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CB03B02E663F8200D0016D /* LegacyContentView.swift */; };
+		49CB03B42E6640C800D0016D /* AddIconButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CB03B32E6640C800D0016D /* AddIconButtonStyle.swift */; };
 		49CB64452BA3BC58009E6026 /* UptimeAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CB64442BA3BC58009E6026 /* UptimeAlertView.swift */; };
 		49D81F5C2BF2BE8B00232100 /* RemoveEscapingCharacters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D81F5B2BF2BE8B00232100 /* RemoveEscapingCharacters.swift */; };
 		49D81F5D2BF2BE8B00232100 /* RemoveEscapingCharacters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D81F5B2BF2BE8B00232100 /* RemoveEscapingCharacters.swift */; };
@@ -246,6 +248,8 @@
 		49B163AC26FCB154006D57C7 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		49B4952C2642E96A00A6AE64 /* DarkModeBorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeBorder.swift; sourceTree = "<group>"; };
 		49BF03FB2BC0BE3A00AB7152 /* FileUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileUtilities.swift; sourceTree = "<group>"; };
+		49CB03B02E663F8200D0016D /* LegacyContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyContentView.swift; sourceTree = "<group>"; };
+		49CB03B32E6640C800D0016D /* AddIconButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddIconButtonStyle.swift; sourceTree = "<group>"; };
 		49CB64442BA3BC58009E6026 /* UptimeAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UptimeAlertView.swift; sourceTree = "<group>"; };
 		49D81F5B2BF2BE8B00232100 /* RemoveEscapingCharacters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveEscapingCharacters.swift; sourceTree = "<group>"; };
 		49F6744D273F2DBC00C47403 /* ExtensionASubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionASubview.swift; sourceTree = "<group>"; };
@@ -307,6 +311,7 @@
 		4915290A259CCF2500056B5F /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				49CB03B22E6640B400D0016D /* ButtonStyles */,
 				0A4A737F260204B000927DAB /* ButtonViews */,
 				49F779CD27173067009BF0B9 /* ButtonTemplateViews */,
 				0A446D5326837D7F00667602 /* WelcomeScreen */,
@@ -317,6 +322,7 @@
 				498D47D52A38ABC10059465C /* UpdateView.swift */,
 				4976EB8A265317C6006EE097 /* AppView.swift */,
 				49822CE424B4C3F100E8DE54 /* ContentView.swift */,
+				49CB03B02E663F8200D0016D /* LegacyContentView.swift */,
 				491ECC592DAC5BEB00B88732 /* ItemConfigurationView.swift */,
 				4915291B259CD38800056B5F /* EffectsView.swift */,
 				4915290C259CCF7A00056B5F /* NotificationBadgeView.swift */,
@@ -485,6 +491,14 @@
 				498DB7EF2E5D0D5000DDC33B /* GlassContainerIfAvailable.swift */,
 			);
 			path = ViewModifiers;
+			sourceTree = "<group>";
+		};
+		49CB03B22E6640B400D0016D /* ButtonStyles */ = {
+			isa = PBXGroup;
+			children = (
+				49CB03B32E6640C800D0016D /* AddIconButtonStyle.swift */,
+			);
+			path = ButtonStyles;
 			sourceTree = "<group>";
 		};
 		49D81F5A2BF2BE7300232100 /* Extensions */ = {
@@ -715,6 +729,7 @@
 				498DB7F02E5D0D5000DDC33B /* GlassContainerIfAvailable.swift in Sources */,
 				496FE4D326514C59007746ED /* PasswordSubview.swift in Sources */,
 				49152910259CD09400056B5F /* InfoItem.swift in Sources */,
+				49CB03B42E6640C800D0016D /* AddIconButtonStyle.swift in Sources */,
 				49822CE524B4C3F100E8DE54 /* ContentView.swift in Sources */,
 				0A4A738B26020A3800927DAB /* ComputerNameSubview.swift in Sources */,
 				4976EB892653151A006EE097 /* ChangePassword.swift in Sources */,
@@ -736,6 +751,7 @@
 				496ECB662E53DE1F001C93FC /* ItemCircle.swift in Sources */,
 				4915291C259CD38800056B5F /* EffectsView.swift in Sources */,
 				0A446D572683A40600667602 /* WelcomeScreenView.swift in Sources */,
+				49CB03B12E663F8200D0016D /* LegacyContentView.swift in Sources */,
 				495F74EC28B39A9A00C20304 /* PopoverAlertView.swift in Sources */,
 				0A94A3832E3D0880001BB59E /* SupportApp.swift in Sources */,
 			);

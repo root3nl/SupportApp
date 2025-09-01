@@ -121,9 +121,20 @@ struct AdvancedSettingsView: View {
     var body: some View {
         Form {
             Toggle("Open at login (non-PKG version)", isOn: $localPreferences.openAtLogin)
+                .disabled(!preferences.editModeEnabled)
             Toggle("Disable Privileged Helper Tool", isOn: $localPreferences.disablePrivilegedHelperTool)
+                .disabled(!preferences.editModeEnabled)
+                .padding(.bottom)
+            
+//            Button {
+//                if let bundleID = Bundle.main.bundleIdentifier {
+//                    UserDefaults.standard.removePersistentDomain(forName: bundleID)
+//                }
+//            } label: {
+//                Label("Clear all data", systemImage: "trash")
+//                    .foregroundStyle(.red)
+//            }
         }
-        .disabled(!preferences.editModeEnabled)
     }
 }
 
