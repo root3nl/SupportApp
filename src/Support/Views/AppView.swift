@@ -71,7 +71,7 @@ struct AppView: View {
                 .padding(.top, 10)
             }
             
-            VStack(spacing: 12) {
+            VStack(spacing: 10) {
                 
                 // MARK: - Horizontal stack with Title and Logo
                 HeaderView()
@@ -107,9 +107,9 @@ struct AppView: View {
                         Spacer()
                         
                     }
-                    .padding(.horizontal, 12)
+                    .padding(.horizontal, 10)
                     // Workaround to support multiple lines
-                    .frame(minWidth: 388, idealWidth: 388, maxWidth: 388)
+                    .frame(minWidth: 382, idealWidth: 382, maxWidth: 382)
                     .fixedSize()
                 }
                 
@@ -167,15 +167,15 @@ struct AppView: View {
                         Text("Configurator Mode enabled")
                             .foregroundStyle(.secondary)
                     }
-                    .padding(.horizontal, 12)
+                    .padding(.horizontal, 10)
                 }
             }
-            .padding(.bottom, 12)
+            .padding(.bottom, 10)
         }
 //        .background(EffectsView(material: NSVisualEffectView.Material.fullScreenUI, blendingMode: NSVisualEffectView.BlendingMode.behindWindow))
         .background(colorScheme == .dark ? Color.clear : Color.primary.opacity(0.1))
         // Set default popover width
-        .frame(minWidth: 388, idealWidth: 388, maxWidth: 388)
+        .frame(minWidth: 382, idealWidth: 382, maxWidth: 382)
         // MARK: - Run functions when ContentView appears for the first time
         .onAppear {
             dataLoadingEffect()

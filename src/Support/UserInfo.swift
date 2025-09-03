@@ -285,7 +285,7 @@ class UserInfo: ObservableObject {
         do {
             self.realmsArray = try decoder.decode([String].self, from: data)
         } catch {
-            self.logger.error("Error obtaining Kerberos Realm from Kerberos SSO Extension. Please explicitely set the key 'KerberosRealm' to the Kerberos Realm used in capitals")
+            self.logger.error("Error obtaining Kerberos Realm from Kerberos SSO Extension")
         }
     }
     

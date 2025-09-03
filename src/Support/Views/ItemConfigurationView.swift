@@ -39,26 +39,26 @@ struct ItemConfigurationView: View {
     
     @State private var item: SupportItem = SupportItem(type: "Button", title: nil, subtitle: nil, linkType: nil, link: nil, symbol: nil, extensionIdentifier: nil, onAppearAction: nil)
     @State private var selectedType: String = ""
-    @State private var title: String = ""
-    @State private var subtitle: String = ""
-    @State private var linkType: String = ""
+    @State private var title: String = "Title Example"
+    @State private var subtitle: String = "Subtitle Example"
+    @State private var linkType: String = "App"
     @State private var link: String = ""
-    @State private var symbol: String = ""
+    @State private var symbol: String = "cart.fill.badge.plus"
     @State private var extensionIdentifier: String = ""
     @State private var onAppearAction: String = ""
 
     let typeOptions: [String: String] = [
-        "ComputerName" : "Computer name",
-        "MacOSVersion" : "macOS version",
-        "Network" : "Network",
-        "Password" : "Password",
-        "Storage" : "Storage",
-        "Uptime" : "Uptime",
-        "AppCatalog" : "App Catalog",
+        "ComputerName" : "Info Item - Computer name",
+        "MacOSVersion" : "Info Item - macOS version",
+        "Network" : "Info Item - Network",
+        "Password" : "Info Item - Password",
+        "Storage" : "Info Item - Storage",
+        "Uptime" : "Info Item - Uptime",
+        "AppCatalog" : "Info Item - App Catalog",
         "Extension" : "Extension",
-        "Button" : "Button",
-        "SmallButton" : "Small button",
-        "CircleButton" : "Circle button"
+        "Button" : "Button - Regular",
+        "ButtonMedium" : "Button - Medium",
+        "ButtonSmall" : "Button - Small"
     ]
     
     var body: some View {
@@ -86,8 +86,10 @@ struct ItemConfigurationView: View {
                 
                 Button(action: {
                     // Save item
-                    if item.type.contains("Button") || item.type == "Extension" {
-                        localPreferences.rows[localPreferences.currentConfiguredItem!.rowIndex].items?[localPreferences.currentConfiguredItem!.itemIndex] = SupportItem(type: selectedType, title: title, subtitle: subtitle, linkType: linkType, link: link, symbol: symbol, extensionIdentifier: extensionIdentifier, onAppearAction: extensionIdentifier)
+                    if item.type.contains("Button") {
+                        localPreferences.rows[localPreferences.currentConfiguredItem!.rowIndex].items?[localPreferences.currentConfiguredItem!.itemIndex] = SupportItem(type: selectedType, title: title, subtitle: subtitle, linkType: linkType, link: link, symbol: symbol, extensionIdentifier: nil, onAppearAction: nil)
+                    } else if item.type == "Extension" {
+                        localPreferences.rows[localPreferences.currentConfiguredItem!.rowIndex].items?[localPreferences.currentConfiguredItem!.itemIndex] = SupportItem(type: selectedType, title: title, subtitle: nil, linkType: linkType, link: link, symbol: symbol, extensionIdentifier: extensionIdentifier, onAppearAction: onAppearAction)
                     } else {
                         localPreferences.rows[localPreferences.currentConfiguredItem!.rowIndex].items?[localPreferences.currentConfiguredItem!.itemIndex] = SupportItem(type: selectedType, title: nil, subtitle: nil, linkType: nil, link: nil, symbol: nil, extensionIdentifier: nil, onAppearAction: nil)
 
@@ -130,11 +132,13 @@ struct ItemConfigurationView: View {
                     UptimeSubview()
                 case "AppCatalog":
                     AppCatalogSubview()
+                case "Extension":
+                    Item(title: title, subtitle: subtitle, linkType: linkType, link: link, image: symbol, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: false)
                 case "Button":
                     Item(title: title, subtitle: subtitle, linkType: linkType, link: link, image: symbol, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
-                case "SmallButton":
+                case "ButtonMedium":
                     ItemSmall(title: title, subtitle: subtitle, linkType: linkType, link: link, image: symbol, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
-                case "CircleButton":
+                case "ButtonSmall":
                     if #available(macOS 26, *) {
                         ItemCircle(title: title, subtitle: subtitle, linkType: linkType, link: link, image: symbol, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
                     }
@@ -157,8 +161,11 @@ struct ItemConfigurationView: View {
                 
                 if item.type.contains("Button") || item.type == "Extension" {
                     TextField("Title", text: $title)
-                    TextField("Subtitle", text: $subtitle)
+                    if item.type != "Extension" {
+                        TextField("Subtitle", text: $subtitle)
+                    }
                     Picker("Link Type", selection: $linkType) {
+                        Text("None").tag("None")
                         Text("App").tag("App")
                         Text("URL").tag("URL")
                         Text("Command").tag("Command")
@@ -180,11 +187,33 @@ struct ItemConfigurationView: View {
         .onAppear {
             if let fetchedItem = localPreferences.rows[localPreferences.currentConfiguredItem!.rowIndex].items?[localPreferences.currentConfiguredItem!.itemIndex] {
                 item = fetchedItem
+                
                 selectedType = item.type
+                if let title = item.title {
+                    self.title = title
+                }
+                if let subtitle = item.subtitle {
+                    self.subtitle = subtitle
+                }
+                if let linkType = item.linkType {
+                    self.linkType = linkType
+                }
+                if let link = item.link {
+                    self.link = link
+                }
+                if let symbol = item.symbol {
+                    self.symbol = symbol
+                }
+                if let extensionIdentifier = item.extensionIdentifier {
+                    self.extensionIdentifier = extensionIdentifier
+                }
+                if let onAppearAction = item.onAppearAction {
+                    self.onAppearAction = onAppearAction
+                }
             }
         }
-        .onChange(of: selectedType) { newType in
-            item = SupportItem(type: newType, title: title, subtitle: nil, linkType: nil, link: nil, symbol: nil, extensionIdentifier: nil, onAppearAction: nil)
+        .onChange(of: selectedType) { _, newValue in
+            item = SupportItem(type: newValue, title: title, subtitle: nil, linkType: nil, link: nil, symbol: nil, extensionIdentifier: nil, onAppearAction: nil)
         }
     }
 }

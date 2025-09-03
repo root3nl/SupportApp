@@ -87,6 +87,7 @@
 		499F56732AE0832100CBDE73 /* AppCatalogSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499F56722AE0832100CBDE73 /* AppCatalogSubview.swift */; };
 		499F56752AE47A3900CBDE73 /* AppUpdatesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499F56742AE47A3900CBDE73 /* AppUpdatesView.swift */; };
 		499F56782AE47BE800CBDE73 /* InstalledAppItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499F56772AE47BE800CBDE73 /* InstalledAppItem.swift */; };
+		49B054482E68C45E0068ABFA /* PopoverLifecycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B054472E68C45E0068ABFA /* PopoverLifecycle.swift */; };
 		49B4952D2642E96A00A6AE64 /* DarkModeBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B4952C2642E96A00A6AE64 /* DarkModeBorder.swift */; };
 		49BF03FC2BC0BE3A00AB7152 /* FileUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BF03FB2BC0BE3A00AB7152 /* FileUtilities.swift */; };
 		49CB03B12E663F8200D0016D /* LegacyContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CB03B02E663F8200D0016D /* LegacyContentView.swift */; };
@@ -245,6 +246,7 @@
 		499F56722AE0832100CBDE73 /* AppCatalogSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCatalogSubview.swift; sourceTree = "<group>"; };
 		499F56742AE47A3900CBDE73 /* AppUpdatesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUpdatesView.swift; sourceTree = "<group>"; };
 		499F56772AE47BE800CBDE73 /* InstalledAppItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstalledAppItem.swift; sourceTree = "<group>"; };
+		49B054472E68C45E0068ABFA /* PopoverLifecycle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverLifecycle.swift; sourceTree = "<group>"; };
 		49B163AC26FCB154006D57C7 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		49B4952C2642E96A00A6AE64 /* DarkModeBorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeBorder.swift; sourceTree = "<group>"; };
 		49BF03FB2BC0BE3A00AB7152 /* FileUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileUtilities.swift; sourceTree = "<group>"; };
@@ -441,6 +443,7 @@
 				49857E9924D4B58B009B6FBA /* ComputerInfo.swift */,
 				0AC50A7424FFE6E000AE62D0 /* EventMonitor.swift */,
 				0A94A3822E3D0880001BB59E /* SupportApp.swift */,
+				49B054472E68C45E0068ABFA /* PopoverLifecycle.swift */,
 				49D81F5A2BF2BE7300232100 /* Extensions */,
 				496C2FE0271477B800D51EE1 /* NotificationNames.swift */,
 				49857E9724D4B543009B6FBA /* Preferences.swift */,
@@ -749,6 +752,7 @@
 				493DCCB62B08300F00FA2480 /* PrivilegedHelperError.swift in Sources */,
 				0A24AB442624CABB004208C4 /* NotificationBadgeTextView.swift in Sources */,
 				496ECB662E53DE1F001C93FC /* ItemCircle.swift in Sources */,
+				49B054482E68C45E0068ABFA /* PopoverLifecycle.swift in Sources */,
 				4915291C259CD38800056B5F /* EffectsView.swift in Sources */,
 				0A446D572683A40600667602 /* WelcomeScreenView.swift in Sources */,
 				49CB03B12E663F8200D0016D /* LegacyContentView.swift in Sources */,

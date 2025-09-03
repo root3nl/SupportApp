@@ -33,7 +33,7 @@ struct LegacyContentView: View {
         
         //MARK: - First horizontal stack with Computer Name and macOS version as defaults
         if !preferences.hideFirstRowInfoItems {
-            HStack(spacing: 12) {
+            HStack(spacing: 10) {
                 
                 // Item left
                 switch preferences.infoItemOne {
@@ -84,12 +84,12 @@ struct LegacyContentView: View {
                 }
                 
             }
-            .padding(.horizontal, 12)
+            .padding(.horizontal, 10)
         }
         
         // MARK: - Second horizontal stack with Uptime and StorageView as defaults
         if !preferences.hideSecondRowInfoItems {
-            HStack(spacing: 12) {
+            HStack(spacing: 10) {
                 
                 // Item left
                 switch preferences.infoItemThree {
@@ -139,13 +139,13 @@ struct LegacyContentView: View {
                     StorageSubview()
                 }
             }
-            .padding(.horizontal, 12)
+            .padding(.horizontal, 10)
         }
         
         // MARK: - Third optional horizontal stack with Password and Network as defaults
         if preferences.infoItemFive != "" || preferences.infoItemSix != "" {
             if !preferences.hideThirdRowInfoItems {
-                HStack(spacing: 12) {
+                HStack(spacing: 10) {
                     
                     // Item left
                     switch preferences.infoItemFive {
@@ -196,7 +196,7 @@ struct LegacyContentView: View {
                     }
                     
                 }
-                .padding(.horizontal, 12)
+                .padding(.horizontal, 10)
             }
         }
         
@@ -205,7 +205,7 @@ struct LegacyContentView: View {
         if !defaults.bool(forKey: "HideFirstRow") && !preferences.hideFirstRowButtons {
             
             // MARK: - Horizontal stack with 2 or 3 configurable action buttons
-            HStack(spacing: 12) {
+            HStack(spacing: 10) {
                 
                 if preferences.firstRowTitleMiddle != "" {
                     ItemSmall(title: preferences.firstRowTitleLeft, subtitle: preferences.firstRowSubtitleLeft, linkType: preferences.firstRowTypeLeft, link: preferences.firstRowLinkLeft, image: preferences.firstRowSymbolLeft, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.firstRowLoadingLeft, linkPrefKey: Preferences.firstRowLinkLeftKey)
@@ -216,7 +216,7 @@ struct LegacyContentView: View {
                     Item(title: preferences.firstRowTitleRight, subtitle: preferences.firstRowSubtitleRight, linkType: preferences.firstRowTypeRight, link: preferences.firstRowLinkRight, image: preferences.firstRowSymbolRight, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.firstRowLoadingRight, linkPrefKey: Preferences.firstRowLinkRightKey, hoverEffectEnable: true, animate: true)
                 }
             }
-            .padding(.horizontal, 12)
+            .padding(.horizontal, 10)
         }
         
         // MARK: - Hide row if specified in configuration
@@ -224,7 +224,7 @@ struct LegacyContentView: View {
         if !defaults.bool(forKey: "HideSecondRow") && !preferences.hideSecondRowButtons {
             
             // MARK: - Horizontal stack with 2 or 3 configurable action buttons
-            HStack(spacing: 12) {
+            HStack(spacing: 10) {
                 
                 if preferences.secondRowTitleMiddle != "" {
                     ItemSmall(title: preferences.secondRowTitleLeft, subtitle: preferences.secondRowSubtitleLeft, linkType: preferences.secondRowTypeLeft, link: preferences.secondRowLinkLeft, image: preferences.secondRowSymbolLeft, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.secondRowLoadingLeft, linkPrefKey: Preferences.secondRowLinkLeftKey)
@@ -235,7 +235,7 @@ struct LegacyContentView: View {
                     Item(title: preferences.secondRowTitleRight, subtitle: preferences.secondRowSubtitleRight, linkType: preferences.secondRowTypeRight, link: preferences.secondRowLinkRight, image: preferences.secondRowSymbolRight, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), loading: preferences.secondRowLoadingRight, linkPrefKey: Preferences.secondRowLinkRightKey, hoverEffectEnable: true, animate: true)
                 }
             }
-            .padding(.horizontal, 12)
+            .padding(.horizontal, 10)
         }
     }
 }

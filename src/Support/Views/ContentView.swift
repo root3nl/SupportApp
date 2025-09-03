@@ -46,7 +46,7 @@ struct ContentView: View {
     @State private var addRowButtonHoveredIndex: Int?
     @State private var showItemConfigurationPopover = false
     
-    let supportItem = SupportItem(type: "AppCatalog", title: nil, subtitle: nil, linkType: nil, link: nil, symbol: nil, extensionIdentifier: nil, onAppearAction: nil)
+    let supportItem = SupportItem(type: "Button", title: "Title", subtitle: "Subtitle", linkType: nil, link: nil, symbol: "cart.fill.badge.plus", extensionIdentifier: nil, onAppearAction: nil)
     
     // Local preferences or (managed) UserDefaults
     var rows: [Row] {
@@ -59,11 +59,11 @@ struct ContentView: View {
     
     var body: some View {
         
-        VStack(spacing: 12) {
+        VStack(spacing: 10) {
             if !preferences.rows.isEmpty || preferences.editModeEnabled {
                 ForEach(rows.indices, id: \.self) { index in
                     ZStack {
-                        HStack(spacing: 12) {
+                        HStack(spacing: 10) {
                             if let rowItems = rows[index].items {
                                 ForEach(rowItems.indices, id: \.self) { itemIndex in
                                     
@@ -83,11 +83,13 @@ struct ContentView: View {
                                             UptimeSubview()
                                         case "AppCatalog":
                                             AppCatalogSubview()
+                                        case "Extension":
+                                            Item(title: rowItems[itemIndex].title ?? "", subtitle: nil, linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), extensionIdentifier: rowItems[itemIndex].extensionIdentifier ?? "", onAppearAction: rowItems[itemIndex].onAppearAction, hoverEffectEnable: true, animate: false)
                                         case "Button":
                                             Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
-                                        case "SmallButton":
+                                        case "ButtonMedium":
                                             ItemSmall(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
-                                        case "CircleButton":
+                                        case "ButtonSmall":
                                             if #available(macOS 26, *) {
                                                 ItemCircle(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
                                             }
@@ -169,7 +171,7 @@ struct ContentView: View {
                 LegacyContentView()
             }
         }
-        .frame(minWidth: 388, idealWidth: 388, maxWidth: 388)
+        .frame(minWidth: 382, idealWidth: 382, maxWidth: 382)
         .animation(.snappy, value: preferences.editModeEnabled)
     }
 }

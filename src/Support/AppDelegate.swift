@@ -47,11 +47,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     let catalogDefaults = UserDefaults(suiteName: "nl.root3.catalog")
     
     // Make properties and preferences available
-    var computerinfo = ComputerInfo()
-    var userinfo = UserInfo()
-    var preferences = Preferences()
-    var appCatalogController = AppCatalogController()
-    var localPreferences = LocalPreferences()
+    let computerinfo = ComputerInfo()
+    let userinfo = UserInfo()
+    let preferences = Preferences()
+    let appCatalogController = AppCatalogController()
+    let localPreferences = LocalPreferences()
+    let popoverLifecycle = PopoverLifecycle()
     
     // Create red notification badge view
     // https://github.com/DeveloperMaris/ToolReleases/blob/master/ToolReleases/PopoverController.swift
@@ -84,6 +85,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             .environmentObject(preferences)
             .environmentObject(appCatalogController)
             .environmentObject((localPreferences))
+            .environmentObject(popoverLifecycle)
             .environmentObject(self))
 
         let popover = NSPopover()
@@ -577,6 +579,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                     await runOnAppearAction()
                 }
             }
+            
+            // Create new presentation token ID
+            popoverLifecycle.bump()
             
         }
         // Necessary to make the view active without having to do an extra click

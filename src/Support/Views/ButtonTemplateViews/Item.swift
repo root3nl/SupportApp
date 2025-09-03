@@ -19,7 +19,9 @@ struct Item: View {
     var notificationBadgeBool: Bool?
     var loading: Bool?
     var linkPrefKey: String?
-//    var updateView: Bool?
+    var extensionIdentifier: String?
+    var onAppearAction: String?
+//    var index: Int?
     
     // Access AppDelegate
     @EnvironmentObject private var appDelegate: AppDelegate
@@ -45,6 +47,11 @@ struct Item: View {
     // Get preferences or default values
     @EnvironmentObject var preferences: Preferences
     
+    // Get unique presentation token on every appearance
+    @EnvironmentObject var popoverLifecycle: PopoverLifecycle
+    
+    let defaults = UserDefaults.standard
+    
     // Enable animation
     var animate: Bool
     
@@ -54,12 +61,12 @@ struct Item: View {
             ZStack {
                 
                 HStack {
-                    if loading ?? false {
+                    if loading ?? false || defaults.bool(forKey: extensionIdentifier ?? "" + "_loading") {
                         Ellipse()
-                            .foregroundColor(.white)
+                            .foregroundColor(.white.opacity(0.5))
                             .overlay(
                                 ProgressView()
-                                    .scaleEffect(0.8)
+                                    .controlSize(.small)
                             )
                             .frame(width: 36, height: 36)
                             .padding(.leading, 14)
@@ -83,24 +90,37 @@ struct Item: View {
                             .foregroundStyle(.white)
                             .lineLimit(2)
                         
-                        if subtitle != "" && hoverView && showSubtitle {
-                            // Show the subtitle when hover animation is enabled
-                            Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
-                                .font(.system(.subheadline, design: .default))
-//                                .foregroundStyle(.white.opacity(0.8))
-                                .foregroundStyle(.white)
-                                .lineLimit(2)
-                            
-                        } else if !animate {
+                        if let subtitle {
+                            if hoverView && showSubtitle {
+                                // Show the subtitle when hover animation is enabled
+                                Text(subtitle.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
+                                    .font(.system(.subheadline, design: .default))
+                                //                                .foregroundStyle(.white.opacity(0.8))
+                                    .foregroundStyle(.white)
+                                    .lineLimit(2)
+                                
+                            } else if !animate {
+                                // Always show the subtitle when hover animation is disabled
+                                Text(subtitle.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
+                                    .font(.system(.subheadline, design: .default))
+                                //                                .foregroundStyle(.white.opacity(0.8))
+                                    .foregroundStyle(.white)
+                                    .lineLimit(2)
+                                // Show placeholder when no initial value is set for Custom Info Items
+                                    .redacted(reason: (subtitle == "KeyPlaceholder") ? .placeholder: .init())
+                                
+                            }
+                        }
+                        
+                        if let extensionValue = defaults.string(forKey: extensionIdentifier ?? "") {
                             // Always show the subtitle when hover animation is disabled
-                            Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
+                            Text(extensionValue.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
                                 .font(.system(.subheadline, design: .default))
 //                                .foregroundStyle(.white.opacity(0.8))
                                 .foregroundStyle(.white)
                                 .lineLimit(2)
                             // Show placeholder when no initial value is set for Custom Info Items
-                                .redacted(reason: (subtitle == "KeyPlaceholder") ? .placeholder: .init())
-                            
+                                .redacted(reason: (extensionValue == "KeyPlaceholder") ? .placeholder: .init())
                         }
                     }
                     Spacer()
@@ -134,8 +154,12 @@ struct Item: View {
             .onTapGesture() {
                 tapGesture()
             }
-//            .glassEffect(.clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
-//            .glassEffect(hoverView && hoverEffectEnable ? .regular.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)) : .clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
+            .task(id: popoverLifecycle.presentationToken) {
+                guard let onAppearAction else {
+                    return
+                }
+                await runPrivilegedCommand(command: onAppearAction)
+            }
             .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
             .animation(.bouncy, value: hoverView)
 
@@ -144,7 +168,7 @@ struct Item: View {
             ZStack {
                 
                 HStack {
-                    if loading ?? false {
+                    if loading ?? false || defaults.bool(forKey: extensionIdentifier ?? "" + "_loading") {
                         Ellipse()
                             .foregroundColor(Color.gray.opacity(0.5))
                             .overlay(
@@ -170,20 +194,30 @@ struct Item: View {
                             .font(.system(.body, design: .rounded)).fontWeight(.medium)
                             .lineLimit(2)
                         
-                        if subtitle != "" && hoverView && showSubtitle {
-                            // Show the subtitle when hover animation is enabled
-                            Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
-                                .font(.system(.subheadline, design: .rounded))
-                                .lineLimit(2)
-                            
-                        } else if !animate {
+                        if let subtitle {
+                            if hoverView && showSubtitle {
+                                // Show the subtitle when hover animation is enabled
+                                Text(subtitle.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
+                                    .font(.system(.subheadline, design: .rounded))
+                                    .lineLimit(2)
+                                
+                            } else if !animate {
+                                // Always show the subtitle when hover animation is disabled
+                                Text(subtitle.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
+                                    .font(.system(.subheadline, design: .rounded))
+                                    .lineLimit(2)
+                                // Show placeholder when no initial value is set for Custom Info Items
+                                    .redacted(reason: (subtitle == "KeyPlaceholder") ? .placeholder: .init())
+                            }
+                        }
+                        
+                        if let extensionValue = defaults.string(forKey: extensionIdentifier ?? "") {
                             // Always show the subtitle when hover animation is disabled
-                            Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
+                            Text(extensionValue.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
                                 .font(.system(.subheadline, design: .rounded))
                                 .lineLimit(2)
                             // Show placeholder when no initial value is set for Custom Info Items
-                                .redacted(reason: (subtitle == "KeyPlaceholder") ? .placeholder: .init())
-                            
+                                .redacted(reason: (extensionValue == "KeyPlaceholder") ? .placeholder: .init())
                         }
                     }
                     
@@ -226,6 +260,12 @@ struct Item: View {
             .onTapGesture() {
                 tapGesture()
             }
+            .task(id: popoverLifecycle.presentationToken) {
+                guard let onAppearAction else {
+                    return
+                }
+                await runPrivilegedCommand(command: onAppearAction)
+            }
         }
     }
     
@@ -244,8 +284,11 @@ struct Item: View {
             runCommand()
             // MARK: - DistributedNotification is deprecated, use PrivilegedScript instead
         } else if linkType == "DistributedNotification" || linkType == "PrivilegedScript" {
+            guard let link else {
+                return
+            }
             Task {
-                await runPrivilegedCommand()
+                await runPrivilegedCommand(command: link)
             }
         } else {
             self.showingAlert.toggle()
@@ -320,31 +363,23 @@ struct Item: View {
     }
     
     // MARK: - Function to run privileged script
-    func runPrivilegedCommand() async {
+    func runPrivilegedCommand(command: String) async {
         
         logger.log("Trying to run privileged script...")
         
-        let defaults = UserDefaults.standard
-        
-        // Exit when no script was found
-        guard let privilegedCommand = link else {
-            logger.error("Privileged script was not found")
-            return
-        }
-        
         // Check value comes from a Configuration Profile. If not, the script may be maliciously set and needs to be ignored
-        guard defaults.objectIsForced(forKey: linkPrefKey!) == true else {
-            logger.error("Script \(privilegedCommand, privacy: .public) is not set by an administrator and is not trusted. Action will not be executed")
-            return
-        }
+//        guard defaults.objectIsForced(forKey: linkPrefKey!) == true else {
+//            logger.error("Script \(command, privacy: .public) is not set by an administrator and is not trusted. Action will not be executed")
+//            return
+//        }
         
         // Verify permissions
-        guard FileUtilities().verifyPermissions(pathname: privilegedCommand) else {
+        guard FileUtilities().verifyPermissions(pathname: command) else {
             return
         }
         
         do {
-            try ExecutionService.executeScript(command: privilegedCommand) { exitCode in
+            try ExecutionService.executeScript(command: command) { exitCode in
                 
                 if exitCode == 0 {
                     self.logger.debug("Privileged script ran successfully with exit code 0")
