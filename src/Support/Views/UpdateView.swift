@@ -93,12 +93,29 @@ struct UpdateView: View {
                         Text(NSLocalizedString("UPDATE_NOW", comment: ""))
                             .font(.system(.body, design: .rounded))
                             .fontWeight(.regular)
-                            .padding(.vertical, 4)
-                            .padding(.horizontal)
-                            .background(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
-                            .clipShape(Capsule())
+                            .modify {
+                                if #available(macOS 26, *) {
+                                    $0
+                                } else {
+                                    $0
+                                        .padding(.vertical, 4)
+                                        .padding(.horizontal)
+                                        .background(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
+                                        .clipShape(Capsule())
+                                }
+                            }
                     }
-                    .buttonStyle(.plain)
+                    .modify {
+                        if #available(macOS 26, *) {
+                            $0
+                                .buttonStyle(.glass)
+                                .buttonBorderShape(.capsule)
+                                .controlSize(.large)
+                        } else {
+                            $0
+                                .buttonStyle(.plain)
+                        }
+                    }
                     
                 }
                 

@@ -124,15 +124,36 @@ struct AppView: View {
                                     Label("Settings", systemImage: "gear")
                                         .labelStyle(.titleOnly)
                                 })
+                                .modify {
+                                    if #available(macOS 26, *) {
+                                        $0
+                                            .buttonStyle(.glass)
+                                            .buttonBorderShape(.capsule)
+                                            .controlSize(.large)
+                                    } else {
+                                        $0
+                                    }
+                                }
                             }
                             
                             Spacer()
+                            
                             
                             Button {
                                 showExportOptions.toggle()
                             } label: {
                                 Label("Export", systemImage: "square.and.arrow.up")
                                     .labelStyle(.titleOnly)
+                            }
+                            .modify {
+                                if #available(macOS 26, *) {
+                                    $0
+                                        .buttonStyle(.glass)
+                                        .buttonBorderShape(.capsule)
+                                        .controlSize(.large)
+                                } else {
+                                    $0
+                                }
                             }
                             .confirmationDialog("Export options", isPresented: $showExportOptions) {
                                 Button("Export as Property List") {
@@ -155,6 +176,16 @@ struct AppView: View {
                                     Label("Done", systemImage: "")
                                         .labelStyle(.titleOnly)
                                 }
+                                .modify {
+                                    if #available(macOS 26, *) {
+                                        $0
+                                            .buttonStyle(.glassProminent)
+                                            .buttonBorderShape(.capsule)
+                                            .controlSize(.large)
+                                    } else {
+                                        $0
+                                    }
+                                }
                             } else if !preferences.showItemConfiguration {
                                 Button {
                                     preferences.editModeEnabled.toggle()
@@ -162,9 +193,19 @@ struct AppView: View {
                                     Label("Edit", systemImage: "")
                                         .labelStyle(.titleOnly)
                                 }
+                                .modify {
+                                    if #available(macOS 26, *) {
+                                        $0
+                                            .buttonStyle(.glassProminent)
+                                            .buttonBorderShape(.capsule)
+                                            .controlSize(.large)
+                                    } else {
+                                        $0
+                                    }
+                                }
                             }
                         }
-                        Text("Configurator Mode enabled")
+                        Text("Configurator Mode")
                             .foregroundStyle(.secondary)
                     }
                     .padding(.horizontal, 10)

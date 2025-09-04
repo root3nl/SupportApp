@@ -48,39 +48,35 @@ struct AppUpdatesView: View {
         Group {
             
             HStack {
-                
-                if #available(macOS 13, *) {
-                    
-                    Button(action: {
-                        appCatalogController.showAppUpdates.toggle()
-                    }) {
-                        if #available(macOS 26, *) {
-                            Image(systemName: "chevron.backward")
-                                .font(.system(size: 16))
-                                .padding(4)
-                        } else {
-                            Ellipse()
-                                .foregroundColor(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
-                                .overlay(
-                                    Image(systemName: "chevron.backward")
-                                )
-                                .frame(width: 26, height: 26)
-                        }
+                                    
+                Button(action: {
+                    appCatalogController.showAppUpdates.toggle()
+                }) {
+                    if #available(macOS 26, *) {
+                        Image(systemName: "chevron.backward")
+                            .font(.system(size: 16))
+                            .padding(4)
+                    } else {
+                        Ellipse()
+                            .foregroundColor(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
+                            .overlay(
+                                Image(systemName: "chevron.backward")
+                            )
+                            .frame(width: 26, height: 26)
                     }
-                    .modify {
-                        if #available(macOS 26, *) {
-                            $0
-                                .buttonStyle(.glass)
-                                .buttonBorderShape(.circle)
-//                                .controlSize(.small)
-                        } else {
-                            $0
-                                .buttonStyle(.plain)
-                        }
-                    }
-                    
                 }
-                    
+                .modify {
+                    if #available(macOS 26, *) {
+                        $0
+                            .buttonStyle(.glass)
+                            .buttonBorderShape(.circle)
+                        //                                .controlSize(.small)
+                    } else {
+                        $0
+                            .buttonStyle(.plain)
+                    }
+                }
+                                        
                 Text(NSLocalizedString("APP_UPDATES", comment: ""))
                         .font(.system(.headline, design: .rounded))
                                     

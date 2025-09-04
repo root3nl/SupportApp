@@ -70,14 +70,30 @@ struct ItemConfigurationView: View {
                 Button(action: {
                     preferences.showItemConfiguration = false
                 }) {
-                    Ellipse()
-                        .foregroundColor(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
-                        .overlay(
-                            Image(systemName: "chevron.backward")
-                        )
-                        .frame(width: 26, height: 26)
+                    if #available(macOS 26, *) {
+                        Image(systemName: "chevron.backward")
+                            .font(.system(size: 16))
+                            .padding(4)
+                    } else {
+                        Ellipse()
+                            .foregroundColor(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
+                            .overlay(
+                                Image(systemName: "chevron.backward")
+                            )
+                            .frame(width: 26, height: 26)
+                    }
                 }
-                .buttonStyle(.plain)
+                .modify {
+                    if #available(macOS 26, *) {
+                        $0
+                            .buttonStyle(.glass)
+                            .buttonBorderShape(.circle)
+                        //                                .controlSize(.small)
+                    } else {
+                        $0
+                            .buttonStyle(.plain)
+                    }
+                }
                 
                 Text(NSLocalizedString("ITEM_CONFIGURATION", comment: ""))
                     .font(.system(.headline, design: .rounded))
@@ -100,12 +116,29 @@ struct ItemConfigurationView: View {
                     Text(NSLocalizedString("SAVE", comment: ""))
                         .font(.system(.body, design: .rounded))
                         .fontWeight(.regular)
-                        .padding(.vertical, 4)
-                        .padding(.horizontal)
-                        .background(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
-                        .clipShape(Capsule())
+                        .modify {
+                            if #available(macOS 26, *) {
+                                $0
+                            } else {
+                                $0
+                                    .padding(.vertical, 4)
+                                    .padding(.horizontal)
+                                    .background(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
+                                    .clipShape(Capsule())
+                            }
+                        }
                 }
-                .buttonStyle(.plain)
+                .modify {
+                    if #available(macOS 26, *) {
+                        $0
+                            .buttonStyle(.glass)
+                            .buttonBorderShape(.capsule)
+                            .controlSize(.large)
+                    } else {
+                        $0
+                            .buttonStyle(.plain)
+                    }
+                }
                 
             }
             
