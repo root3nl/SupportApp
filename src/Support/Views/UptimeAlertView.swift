@@ -125,35 +125,21 @@ struct UptimeAlertView: View {
                         restartMac()
                     }) {
                         Text(NSLocalizedString("RESTART", comment: ""))
-                            .font(.system(.title3, design: .rounded))
-                            .fontWeight(.medium)
-                            .modify {
-                                if #available(macOS 26, *) {
-                                    $0
-                                } else {
-                                    $0
-                                        .foregroundStyle(.white)
-                                        .padding(.vertical, 4)
-                                        .padding(.horizontal)
-                                        .background(Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
-                                        .clipShape(Capsule())
-                                }
-                            }
+//                            .font(.system(.title3, design: .rounded))
+                            .fontWeight(.bold)
                     }
                     .modify {
                         if #available(macOS 26, *) {
                             $0
                                 .buttonStyle(.glassProminent)
-                                .buttonBorderShape(.capsule)
-                                .controlSize(.large)
-                                .tint(Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
                         } else {
                             $0
-                                .buttonStyle(.plain)
+                                .buttonStyle(.borderedProminent)
                         }
                     }
-                    .frame(height: 20)
-                    
+                    .tint(Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+                    .buttonBorderShape(.capsule)
+                    .controlSize(.extraLarge)
                 }
                                     
             }

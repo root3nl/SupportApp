@@ -31,9 +31,7 @@ struct WelcomeView: View {
             return preferences.customColor
         }
     }
-    
-    @State var hoverButton = false
-    
+        
     var body: some View {
         
         VStack(alignment: .leading) {
@@ -46,27 +44,25 @@ struct WelcomeView: View {
             
         }
         
-        HStack {
-            Spacer()
-            Text(NSLocalizedString("Continue", comment: ""))
-                .font(.system(.body, design: .rounded))
-                .fontWeight(.bold)
-                .foregroundColor(.white)
-            Spacer()
-        }
-        .frame(width: 200, height: 35)
-        .background(Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
-        .opacity(hoverButton ? 0.5 : 1.0)
-        .cornerRadius(10)
-        .onTapGesture {
+        Button {
             preferences.hasSeenWelcomeScreen.toggle()
+        } label: {
+            Text(NSLocalizedString("Continue", comment: ""))
+                .fontWeight(.bold)
         }
-        .onHover {_ in
-            withAnimation(.easeInOut) {
-                hoverButton.toggle()
+        .modify {
+            if #available(macOS 26, *) {
+                $0
+                    .buttonStyle(.glassProminent)
+            } else {
+                $0
+                    .buttonStyle(.borderedProminent)
             }
         }
-        .padding(.top)
+        .tint(Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+        .buttonBorderShape(.capsule)
+        .controlSize(.extraLarge)
+        .padding(.vertical)
     }
 }
 
