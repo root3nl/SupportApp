@@ -6,10 +6,13 @@
 //
 
 import Foundation
+import os
 import SwiftUI
 
 // Class to publish preference updates from variables to ContentView
 class Preferences: ObservableObject {
+    
+    let logger = Logger(subsystem: "nl.root3.support", category: "Preferences")
     
     // Where possible we use the @AppStorage property wrapper which uses UserDefaults to get and store preferences.
     // The benefit of @AppStorage is that value changes are automatically observed by SwiftUI and updates the view
@@ -192,4 +195,29 @@ class Preferences: ObservableObject {
     
     // Item configuration view
     @Published var showItemConfiguration = false
+    
+    // MARK: - Save settings from Configurator Mode
+    func saveUserDefaults(appConfiguration: AppModel) {
+        do {
+            // Encode to a property list-compatible Data
+            let encoder = PropertyListEncoder()
+            encoder.outputFormat = .xml
+            let data = try encoder.encode(appConfiguration)
+
+            // Convert encoded Data into a Foundation property list (Dictionary)
+            let plistObject = try PropertyListSerialization.propertyList(from: data, options: [], format: nil)
+
+            guard let dict = plistObject as? [String: Any] else {
+                logger.error("Failed to convert encoded AppModel to [String: Any] for UserDefaults persistent domain")
+                return
+            }
+
+            // Write to the nl.root3.support UserDefaults domain
+            let defaults = UserDefaults.standard
+            defaults.setPersistentDomain(dict, forName: "nl.root3.support")
+            
+        } catch {
+            logger.error("\(error.localizedDescription)")
+        }
+    }
 }

@@ -644,6 +644,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         preferences.configuratorModeEnabled.toggle()
         configuratorMenuItem?.state = preferences.configuratorModeEnabled ? .on : .off
         
+        if preferences.configuratorModeEnabled {
+            preferences.editModeEnabled = true
+        } else {
+            preferences.editModeEnabled = false
+        }
+        
         togglePopover(nil)
     }
     

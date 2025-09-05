@@ -171,7 +171,7 @@ struct AppView: View {
                                     preferences.editModeEnabled.toggle()
                                     
                                     // Persist preferences
-                                    saveUserDefaults()
+                                    preferences.saveUserDefaults(appConfiguration: appConfiguration)
                                 } label: {
                                     Label("Done", systemImage: "")
                                         .labelStyle(.titleOnly)
@@ -315,32 +315,6 @@ struct AppView: View {
             logger.error("Exporting .mobileconfig failed: \(error.localizedDescription)")
         }
     }
-    
-    // MARK: - Save settings from Configurator Mode
-    func saveUserDefaults() {
-        do {
-            // Encode to a property list-compatible Data
-            let encoder = PropertyListEncoder()
-            encoder.outputFormat = .xml
-            let data = try encoder.encode(appConfiguration)
-
-            // Convert encoded Data into a Foundation property list (Dictionary)
-            let plistObject = try PropertyListSerialization.propertyList(from: data, options: [], format: nil)
-
-            guard let dict = plistObject as? [String: Any] else {
-                logger.error("Failed to convert encoded AppModel to [String: Any] for UserDefaults persistent domain")
-                return
-            }
-
-            // Write to the nl.root3.support UserDefaults domain
-            let defaults = UserDefaults.standard
-            defaults.setPersistentDomain(dict, forName: "nl.root3.support")
-            
-        } catch {
-            logger.error("\(error.localizedDescription)")
-        }
-    }
-    
 }
 
 struct AppView_Previews: PreviewProvider {
