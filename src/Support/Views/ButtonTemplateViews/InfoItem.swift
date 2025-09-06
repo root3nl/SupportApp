@@ -76,11 +76,9 @@ struct InfoItem: View {
             }
             .frame(width: 176, height: 64)
             .contentShape(Capsule())
-            .onHover() {
-                hover in self.hoverView = hover
+            .onHover() { hover in
+                self.hoverView = hover
             }
-//            .glassEffect(.clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
-//            .glassEffect(hoverView && hoverEffectEnable ? .regular.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)) : .clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
             .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
             .animation(.bouncy, value: hoverView)
         } else {

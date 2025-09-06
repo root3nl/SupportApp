@@ -88,7 +88,12 @@ struct AppView: View {
                     } else if preferences.showItemConfiguration {
                         ItemConfigurationView()
                     } else {
-                        ContentView()
+                        // Show new structure when rows are not empty or Configurator Mode is enabled
+                        if !preferences.rows.isEmpty || preferences.editModeEnabled {
+                            ContentView()
+                        } else {
+                            LegacyContentView()
+                        }
                     }
                 }
                 

@@ -90,10 +90,10 @@ struct Item: View {
                             .foregroundStyle(.white)
                             .lineLimit(2)
                         
-                        if let subtitle {
+                        if subtitle != "" {
                             if hoverView && showSubtitle {
                                 // Show the subtitle when hover animation is enabled
-                                Text(subtitle.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
+                                Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
                                     .font(.system(.subheadline, design: .default))
                                 //                                .foregroundStyle(.white.opacity(0.8))
                                     .foregroundStyle(.white)
@@ -101,7 +101,7 @@ struct Item: View {
                                 
                             } else if !animate {
                                 // Always show the subtitle when hover animation is disabled
-                                Text(subtitle.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
+                                Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
                                     .font(.system(.subheadline, design: .default))
                                 //                                .foregroundStyle(.white.opacity(0.8))
                                     .foregroundStyle(.white)
@@ -141,8 +141,8 @@ struct Item: View {
             .alert(isPresented: $showingAlert) {
                 Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
             }
-            .onHover() {
-                hover in self.hoverView = hover
+            .onHover() { hover in
+                self.hoverView = hover
                 
                 // Animation when hovering
                 if animate {
@@ -194,16 +194,16 @@ struct Item: View {
                             .font(.system(.body, design: .rounded)).fontWeight(.medium)
                             .lineLimit(2)
                         
-                        if let subtitle {
+                        if subtitle != "" {
                             if hoverView && showSubtitle {
                                 // Show the subtitle when hover animation is enabled
-                                Text(subtitle.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
+                                Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
                                     .font(.system(.subheadline, design: .rounded))
                                     .lineLimit(2)
                                 
                             } else if !animate {
                                 // Always show the subtitle when hover animation is disabled
-                                Text(subtitle.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
+                                Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
                                     .font(.system(.subheadline, design: .rounded))
                                     .lineLimit(2)
                                 // Show placeholder when no initial value is set for Custom Info Items

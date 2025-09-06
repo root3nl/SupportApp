@@ -108,7 +108,6 @@ struct ItemDouble: View {
             }
             .frame(width: 176, height: 64)
             .contentShape(Capsule())
-//            .glassEffect(.clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
             .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
             .animation(.bouncy, value: hoverView)
             // FIXME: - Adjust when Jamf Connect Password Change can be triggered
@@ -116,8 +115,8 @@ struct ItemDouble: View {
             .popover(isPresented: $showingAlert, arrowEdge: .leading) {
                 PopoverAlertView(uptimeAlert: $showingAlert, title: alertTitle, message: alertMessage)
             }
-            .onHover() {
-                hover in self.hoverView = hover
+            .onHover() { hover in
+                self.hoverView = hover
             }
             .onTapGesture() {
                 tapGesture()

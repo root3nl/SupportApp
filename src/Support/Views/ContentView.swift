@@ -60,117 +60,113 @@ struct ContentView: View {
     var body: some View {
         
         VStack(spacing: 10) {
-            if !preferences.rows.isEmpty || preferences.editModeEnabled {
-                ForEach(rows.indices, id: \.self) { index in
-                    ZStack {
-                        HStack(spacing: 10) {
-                            if let rowItems = rows[index].items {
-                                ForEach(rowItems.indices, id: \.self) { itemIndex in
-                                    
-                                    ZStack {
-                                        switch rowItems[itemIndex].type {
-                                        case "ComputerName":
-                                            ComputerNameSubview()
-                                        case "MacOSVersion":
-                                            MacOSVersionSubview()
-                                        case "Network":
-                                            NetworkSubview()
-                                        case "Password":
-                                            PasswordSubview()
-                                        case "Storage":
-                                            StorageSubview()
-                                        case "Uptime":
-                                            UptimeSubview()
-                                        case "AppCatalog":
-                                            AppCatalogSubview()
-                                        case "Extension":
-                                            Item(title: rowItems[itemIndex].title ?? "", subtitle: nil, linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), extensionIdentifier: rowItems[itemIndex].extensionIdentifier ?? "", onAppearAction: rowItems[itemIndex].onAppearAction, hoverEffectEnable: true, animate: false)
-                                        case "Button":
-                                            Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
-                                        case "ButtonMedium":
-                                            ItemSmall(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
-                                        case "ButtonSmall":
-                                            if #available(macOS 26, *) {
-                                                ItemCircle(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
-                                            }
-                                        default:
-                                            Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
-                                        }
-                                    }
-                                    .contextMenu {
-                                        if preferences.editModeEnabled {
-                                            Button {
-                                                localPreferences.currentConfiguredItem = ConfiguredItem(rowIndex: index, itemIndex: itemIndex)
-                                                preferences.showItemConfiguration.toggle()
-                                            } label: {
-                                                Label("Edit", systemImage: "slider.horizontal.3")
-                                            }
-                                            
-                                            Button {
-                                                localPreferences.rows[index].items?.remove(at: itemIndex)
-                                                
-                                                // Remove if row is empty to avoid empty/invisible rows taking up space
-                                                if localPreferences.rows[index].items?.count == 0 {
-                                                    localPreferences.rows.remove(at: index)
-                                                }
-                                            } label: {
-                                                Label("Remove", systemImage: "trash")
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        .glassContainerIfAvailable()
-                        
-                        // Add row divider and plus button
-                        if preferences.editModeEnabled {
-                            HStack {
-                                Spacer()
+            ForEach(rows.indices, id: \.self) { index in
+                ZStack {
+                    HStack(spacing: 10) {
+                        if let rowItems = rows[index].items {
+                            ForEach(rowItems.indices, id: \.self) { itemIndex in
                                 
-                                VStack {
-                                    
-                                    Button {
-                                        // Add item
-                                        if localPreferences.rows[index].items == nil {
-                                            localPreferences.rows[index].items = []
+                                ZStack {
+                                    switch rowItems[itemIndex].type {
+                                    case "ComputerName":
+                                        ComputerNameSubview()
+                                    case "MacOSVersion":
+                                        MacOSVersionSubview()
+                                    case "Network":
+                                        NetworkSubview()
+                                    case "Password":
+                                        PasswordSubview()
+                                    case "Storage":
+                                        StorageSubview()
+                                    case "Uptime":
+                                        UptimeSubview()
+                                    case "AppCatalog":
+                                        AppCatalogSubview()
+                                    case "Extension":
+                                        Item(title: rowItems[itemIndex].title ?? "", subtitle: nil, linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), extensionIdentifier: rowItems[itemIndex].extensionIdentifier ?? "", onAppearAction: rowItems[itemIndex].onAppearAction, hoverEffectEnable: true, animate: false)
+                                    case "Button":
+                                        Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
+                                    case "ButtonMedium":
+                                        ItemSmall(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+                                    case "ButtonSmall":
+                                        if #available(macOS 26, *) {
+                                            ItemCircle(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
                                         }
-                                        withAnimation {
-                                            localPreferences.rows[index].items?.append(supportItem)
-                                        }
-                                    } label: {
-                                        Label("Add item", systemImage: "plus")
-                                            .labelStyle(.iconOnly)
+                                    default:
+                                        Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
                                     }
-                                    .buttonStyle(AddIconButtonStyle())
+                                }
+                                .contextMenu {
+                                    if preferences.editModeEnabled {
+                                        Button {
+                                            localPreferences.currentConfiguredItem = ConfiguredItem(rowIndex: index, itemIndex: itemIndex)
+                                            preferences.showItemConfiguration.toggle()
+                                        } label: {
+                                            Label("Edit", systemImage: "slider.horizontal.3")
+                                        }
+                                        
+                                        Button {
+                                            localPreferences.rows[index].items?.remove(at: itemIndex)
+                                            
+                                            // Remove if row is empty to avoid empty/invisible rows taking up space
+                                            if localPreferences.rows[index].items?.count == 0 {
+                                                localPreferences.rows.remove(at: index)
+                                            }
+                                        } label: {
+                                            Label("Remove", systemImage: "trash")
+                                        }
+                                    }
                                 }
                             }
-                            .padding(.trailing, 4)
                         }
                     }
-                }
-                // Add row divider and plus button
-                if preferences.editModeEnabled {
-                    HStack {
-                        VStack {
-                            Divider()
-                                .padding(.leading)
+                    .glassContainerIfAvailable()
+                    
+                    // Add row divider and plus button
+                    if preferences.editModeEnabled {
+                        HStack {
+                            Spacer()
+                            
+                            VStack {
+                                
+                                Button {
+                                    // Add item
+                                    if localPreferences.rows[index].items == nil {
+                                        localPreferences.rows[index].items = []
+                                    }
+                                    withAnimation {
+                                        localPreferences.rows[index].items?.append(supportItem)
+                                    }
+                                } label: {
+                                    Label("Add item", systemImage: "plus")
+                                        .labelStyle(.iconOnly)
+                                }
+                                .buttonStyle(AddIconButtonStyle())
+                            }
                         }
-                        Button {
-                            localPreferences.rows.append(Row(items: [supportItem]))
-                        } label: {
-                            Label("Add row", systemImage: "plus")
-                                .labelStyle(.iconOnly)
-                        }
-                        .buttonStyle(AddIconButtonStyle())
-                        VStack {
-                            Divider()
-                                .padding(.trailing)
-                        }
+                        .padding(.trailing, 4)
                     }
                 }
-            } else {
-                LegacyContentView()
+            }
+            // Add row divider and plus button
+            if preferences.editModeEnabled {
+                HStack {
+                    VStack {
+                        Divider()
+                            .padding(.leading)
+                    }
+                    Button {
+                        localPreferences.rows.append(Row(items: [supportItem]))
+                    } label: {
+                        Label("Add row", systemImage: "plus")
+                            .labelStyle(.iconOnly)
+                    }
+                    .buttonStyle(AddIconButtonStyle())
+                    VStack {
+                        Divider()
+                            .padding(.trailing)
+                    }
+                }
             }
         }
         .frame(minWidth: 382, idealWidth: 382, maxWidth: 382)
