@@ -98,22 +98,24 @@ struct ContentView: View {
                                         }
                                     }
                                     .contextMenu {
-                                        Button {
-                                            localPreferences.currentConfiguredItem = ConfiguredItem(rowIndex: index, itemIndex: itemIndex)
-                                            preferences.showItemConfiguration.toggle()
-                                        } label: {
-                                            Label("Edit", systemImage: "slider.horizontal.3")
-                                        }
-                                        
-                                        Button {
-                                            localPreferences.rows[index].items?.remove(at: itemIndex)
-                                            
-                                            // Remove if row is empty to avoid empty/invisible rows taking up space
-                                            if localPreferences.rows[index].items?.count == 0 {
-                                                localPreferences.rows.remove(at: index)
+                                        if preferences.editModeEnabled {
+                                            Button {
+                                                localPreferences.currentConfiguredItem = ConfiguredItem(rowIndex: index, itemIndex: itemIndex)
+                                                preferences.showItemConfiguration.toggle()
+                                            } label: {
+                                                Label("Edit", systemImage: "slider.horizontal.3")
                                             }
-                                        } label: {
-                                            Label("Remove", systemImage: "trash")
+                                            
+                                            Button {
+                                                localPreferences.rows[index].items?.remove(at: itemIndex)
+                                                
+                                                // Remove if row is empty to avoid empty/invisible rows taking up space
+                                                if localPreferences.rows[index].items?.count == 0 {
+                                                    localPreferences.rows.remove(at: index)
+                                                }
+                                            } label: {
+                                                Label("Remove", systemImage: "trash")
+                                            }
                                         }
                                     }
                                 }
