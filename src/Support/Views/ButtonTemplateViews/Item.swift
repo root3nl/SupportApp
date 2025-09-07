@@ -70,6 +70,7 @@ struct Item: View {
                             )
                             .frame(width: 36, height: 36)
                             .padding(.leading, 14)
+                            .accessibilityHidden(true)
                     } else {
                         Ellipse()
                             .foregroundColor(.white)
@@ -80,6 +81,7 @@ struct Item: View {
                             )
                             .frame(width: 36, height: 36)
                             .padding(.leading, 14)
+                            .accessibilityHidden(true)
                     }
                     
                     VStack(alignment: .leading) {
@@ -123,6 +125,8 @@ struct Item: View {
                                 .redacted(reason: (extensionValue == "KeyPlaceholder") ? .placeholder: .init())
                         }
                     }
+                    .accessibilityElement(children: .ignore)
+                    
                     Spacer()
                 }
                 
@@ -138,6 +142,7 @@ struct Item: View {
             }
             .frame(width: 176, height: 64)
             .contentShape(Capsule())
+            .accessibilityLabel(title + " " + (subtitle ?? ""))
             .alert(isPresented: $showingAlert) {
                 Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
             }
@@ -177,6 +182,7 @@ struct Item: View {
                             )
                             .frame(width: 26, height: 26)
                             .padding(.leading, 10)
+                            .accessibilityHidden(true)
                     } else {
                         Ellipse()
                             .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
@@ -186,6 +192,7 @@ struct Item: View {
                             )
                             .frame(width: 26, height: 26)
                             .padding(.leading, 10)
+                            .accessibilityHidden(true)
                     }
                     
                     VStack(alignment: .leading) {
@@ -220,6 +227,7 @@ struct Item: View {
                                 .redacted(reason: (extensionValue == "KeyPlaceholder") ? .placeholder: .init())
                         }
                     }
+                    .accessibilityElement(children: .ignore)
                     
                     Spacer()
                 }
@@ -239,6 +247,7 @@ struct Item: View {
                 //            }
             }
             .frame(width: 176, height: 60)
+            .accessibilityLabel(title + " " + (subtitle ?? ""))
             .background(hoverView && hoverEffectEnable && link != "" ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
             .cornerRadius(10)
             // Apply gray and black border in Dark Mode to better view the buttons like Control Center

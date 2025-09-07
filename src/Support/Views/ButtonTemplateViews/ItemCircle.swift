@@ -48,15 +48,18 @@ struct ItemCircle: View {
                 ProgressView()
                     .scaleEffect(0.8)
                     .frame(width: 22, height: 22)
+                    .accessibilityHidden(true)
             } else {
                 Image(systemName: image)
                     .font(.system(size: 22, weight: .semibold))
                     .foregroundStyle(.white)
                     .symbolRenderingMode(.hierarchical)
+                    .accessibilityHidden(true)
             }
         }
         .frame(width: 64, height: 64)
         .contentShape(.circle)
+        .accessibilityLabel(title + " " + (subtitle ?? ""))
         .alert(isPresented: $showingAlert) {
             Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
         }

@@ -78,6 +78,7 @@ struct ItemDouble: View {
                         )
                         .frame(width: 36, height: 36)
                         .padding(.leading, 14)
+                        .accessibilityHidden(true)
 
                     VStack(alignment: .leading) {
                         
@@ -94,16 +95,19 @@ struct ItemDouble: View {
                             .lineLimit(2)
 
                     }
+                    .accessibilityElement(children: .combine)
                     
                     Spacer()
                 }
                 
                 if notificationBadge != nil && notificationBadge! > 0 {
                     NotificationBadgeView(badgeCounter: notificationBadge!)
+                        .accessibilityHidden(true)
                 }
                 
                 if notificationBadgeBool ?? false {
                     NotificationBadgeTextView(badgeCounter: "!")
+                        .accessibilityHidden(true)
                 }
             }
             .frame(width: 176, height: 64)
@@ -134,6 +138,7 @@ struct ItemDouble: View {
                         )
                         .frame(width: 26, height: 26)
                         .padding(.leading, 10)
+                        .accessibilityHidden(true)
                     
                     VStack(alignment: .leading) {
                         
@@ -146,6 +151,7 @@ struct ItemDouble: View {
                             .lineLimit(2)
                         
                     }
+                    .accessibilityElement(children: .combine)
                     
                     Spacer()
                 }

@@ -47,6 +47,7 @@ struct ProgressBarItem: View {
                         )
                         .frame(width: 36, height: 36)
                         .padding(.leading, 14)
+                        .accessibilityHidden(true)
 
                     VStack(alignment: .leading, spacing: 0) {
                         HStack {
@@ -61,6 +62,8 @@ struct ProgressBarItem: View {
                             .padding(.trailing, 14)
                         
                     }
+                    .accessibilityElement(children: .combine)
+                    
                     Spacer()
                 }
                 
@@ -93,6 +96,7 @@ struct ProgressBarItem: View {
                         )
                         .frame(width: 26, height: 26)
                         .padding(.leading, 10)
+                        .accessibilityHidden(true)
                     
                     VStack(alignment: .leading) {
                         HStack {
@@ -135,6 +139,8 @@ struct ProgressBarItem: View {
                             }
                         }
                     }
+                    .accessibilityElement(children: .combine)
+                    
                     Spacer()
                 }
                 

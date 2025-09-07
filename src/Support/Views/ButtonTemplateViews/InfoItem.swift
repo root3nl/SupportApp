@@ -35,6 +35,7 @@ struct InfoItem: View {
                             )
                             .frame(width: 36, height: 36)
                             .padding(.leading, 14)
+                            .accessibilityHidden(true)
                     } else {
                         Ellipse()
                             .foregroundColor(.white)
@@ -45,6 +46,7 @@ struct InfoItem: View {
                             )
                             .frame(width: 36, height: 36)
                             .padding(.leading, 14)
+                            .accessibilityHidden(true)
                     }
                     
                     VStack(alignment: .leading) {
@@ -60,22 +62,27 @@ struct InfoItem: View {
                             .foregroundStyle(.white)
                             .lineLimit(2)
                     }
+                    .accessibilityElement(children: .ignore)
+                    
                     Spacer()
                 }
                 
                 // Optionally show notification badge with counter
                 if notificationBadge != nil && notificationBadge! > 0 {
                     NotificationBadgeView(badgeCounter: notificationBadge!)
+                        .accessibilityHidden(true)
                 }
                 
                 // Optionally show notification badge with warning
                 if notificationBadgeBool ?? false {
                     NotificationBadgeTextView(badgeCounter: "!")
+                        .accessibilityHidden(true)
                 }
 
             }
             .frame(width: 176, height: 64)
             .contentShape(Capsule())
+            .accessibilityLabel(title + " " + "\(notificationBadge ?? 0)" + " " + (subtitle))
             .onHover() { hover in
                 self.hoverView = hover
             }
@@ -113,6 +120,8 @@ struct InfoItem: View {
                         Text(subtitle).font(.system(.subheadline, design: .rounded))
                             .lineLimit(2)
                     }
+                    .accessibilityElement(children: .ignore)
+                    
                     Spacer()
                 }
                 
@@ -128,6 +137,7 @@ struct InfoItem: View {
                 
             }
             .frame(width: 176, height: 60)
+            .accessibilityLabel(title + " " + "\(notificationBadge ?? 0)" + " " + (subtitle))
             .background(hoverView && hoverEffectEnable ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
             .cornerRadius(10)
             // Apply gray and black border in Dark Mode to better view the buttons like Control Center
