@@ -210,18 +210,30 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             
         }
         
-        // Create menu items for right click
-        menu.addItem(NSMenuItem(title: NSLocalizedString("About Support", comment: ""), action: #selector(AppDelegate.showAbout), keyEquivalent: "i"))
+        // MARK: - Create menu items for right click
+        // About button
+        let aboutItem = NSMenuItem(title: NSLocalizedString("About Support", comment: ""), action: #selector(AppDelegate.showAbout), keyEquivalent: "i")
+        aboutItem.image = NSImage(systemSymbolName: "info.circle", accessibilityDescription: nil)
+        menu.addItem(aboutItem)
+
+        // Separator
         menu.addItem(NSMenuItem.separator())
+        
+        // Configurator Mode button
         let configuratorItem = NSMenuItem(title: NSLocalizedString("Configurator Mode", comment: ""),
                                           action: #selector(AppDelegate.configuratorMode),
                                           keyEquivalent: "c")
+        configuratorItem.image = NSImage(systemSymbolName: "switch.2", accessibilityDescription: nil)
         configuratorItem.target = self
         configuratorItem.state = preferences.configuratorModeEnabled ? .on : .off
         menu.addItem(configuratorItem)
         self.configuratorMenuItem = configuratorItem
         menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: NSLocalizedString("Quit Support", comment: ""), action: #selector(NSApplication.shared.terminate(_:)), keyEquivalent: "q"))
+        
+        // Quit button
+        let quitItem = NSMenuItem(title: NSLocalizedString("Quit Support", comment: ""), action: #selector(NSApplication.shared.terminate(_:)), keyEquivalent: "q")
+        quitItem.image = NSImage(systemSymbolName: "xmark.circle", accessibilityDescription: nil)
+        menu.addItem(quitItem)
                 
         // Event monitor to hide popover when clicked outside the popover.
         eventMonitor = EventMonitor(mask: [.leftMouseDown, .rightMouseDown]) { [weak self] event in
