@@ -15,6 +15,7 @@ class LocalPreferences: ObservableObject {
     @Published var logoDarkMode: String = ""
     @Published var notificationIcon: String = ""
     @Published var statusBarIcon: String = ""
+    @Published var statusBarIconAllowsColor: Bool = false
     @Published var statusBarIconSFSymbol: String = ""
     @Published var statusBarIconNotifierEnabled: Bool = false
     @Published var updateText: String = ""
@@ -45,6 +46,7 @@ protocol PreferencesProtocol {
     var logoDarkMode: String { get }
     var notificationIcon: String { get }
     var statusBarIcon: String { get }
+    var statusBarIconAllowsColor: Bool { get }
     var statusBarIconSFSymbol: String { get }
     var statusBarIconNotifierEnabled: Bool { get }
     var updateText: String { get }

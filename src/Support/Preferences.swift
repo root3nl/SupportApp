@@ -81,6 +81,8 @@ class Preferences: ObservableObject {
     // Percentage of storage used after which a notification badge is shown, disabled by default
     @AppStorage("StorageLimit") var storageLimit: Double = 0
     
+    @AppStorage("StatusBarIconAllowsColor") var statusBarIconAllowsColor: Bool = false
+    
     // Hide first and/or second row of Info Items, disabled by default
     @AppStorage("HideFirstRowInfoItems") var hideFirstRowInfoItems: Bool = false
     @AppStorage("HideSecondRowInfoItems") var hideSecondRowInfoItems: Bool = false

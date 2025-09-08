@@ -74,6 +74,7 @@ struct BrandingSettingsView: View {
             TextField("Logo dark mode", text: $localPreferences.logoDarkMode, prompt: Text("URL or file path to logo for dark mode"))
             TextField("Notification icon", text: $localPreferences.notificationIcon, prompt: Text("URL or file path to icon"))
             TextField("Status Bar icon", text: $localPreferences.statusBarIcon, prompt: Text("URL or file path to icon"))
+            Toggle("Status Bar Icon Allows Color", isOn: $localPreferences.statusBarIconAllowsColor)
             TextField("Status Bar icon (SF Symbol)", text: $localPreferences.statusBarIconSFSymbol, prompt: Text("SF Symbol name"))
             TextField("Custom color", text: $localPreferences.customColor, prompt: Text("HEX color code"))
             TextField("Custom dark mode", text: $localPreferences.customColorDarkMode, prompt: Text("HEX color code"))

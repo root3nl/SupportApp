@@ -14,6 +14,7 @@ struct AppModel: Codable, Hashable {
     var logoDarkMode: String?
     var notificationIcon: String?
     var statusBarIcon: String?
+    var statusBarIconAllowsColor: Bool?
     var statusBarIconSFSymbol: String?
     var statusBarIconNotifierEnabled: Bool?
     var updateText: String?
@@ -37,6 +38,7 @@ struct AppModel: Codable, Hashable {
         case logoDarkMode = "LogoDarkMode"
         case notificationIcon = "NotificationIcon"
         case statusBarIcon = "StatusBarIcon"
+        case statusBarIconAllowsColor = "StatusBarIconAllowsColor"
         case statusBarIconSFSymbol = "StatusBarIconSFSymbol"
         case statusBarIconNotifierEnabled = "StatusBarIconNotifierEnabled"
         case updateText = "UpdateText"

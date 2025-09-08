@@ -134,6 +134,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         
         // Observe changes for UserDefaults
         defaults.addObserver(self, forKeyPath: "StatusBarIcon", options: .new, context: nil)
+        defaults.addObserver(self, forKeyPath: "StatusBarIconAllowsColor", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "StatusBarIconSFSymbol", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "StatusBarIconNotifierEnabled", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "UptimeDaysLimit", options: .new, context: nil)
@@ -316,7 +317,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                     button.image = customIcon
                     
                     // Render as template to make icon white and match system default
-                    button.image?.isTemplate = true
+                    if preferences.statusBarIconAllowsColor {
+                        button.image?.isTemplate = false
+                    } else {
+                        button.image?.isTemplate = true
+                    }
                     logger.debug("StatusBarIcon preference key is set")
                     
                 } else {
@@ -450,6 +455,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         switch keyPath {
         case "StatusBarIcon":
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.defaults.string(forKey: "StatusBarIcon") ?? "", privacy: .public)")
+        case "StatusBarIconAllowsColor":
+            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.defaults.string(forKey: "StatusBarIconAllowsColor") ?? "", privacy: .public)")
         case "StatusBarIconSFSymbol":
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.defaults.string(forKey: "StatusBarIconSFSymbol") ?? "", privacy: .public)")
         case "StatusBarIconNotifierEnabled":
@@ -879,6 +886,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             self.localPreferences.logoDarkMode = self.preferences.logoDarkMode
             self.localPreferences.notificationIcon = self.preferences.notificationIcon
             self.localPreferences.statusBarIcon = self.preferences.statusBarIcon
+            self.localPreferences.statusBarIconAllowsColor = self.preferences.statusBarIconAllowsColor
             self.localPreferences.statusBarIconSFSymbol = self.preferences.statusBarIconSFSymbol
             self.localPreferences.statusBarIconNotifierEnabled = self.preferences.statusBarIconNotifierEnabled
             self.localPreferences.updateText = self.preferences.updateText
