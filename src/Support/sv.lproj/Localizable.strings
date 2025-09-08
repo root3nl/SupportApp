@@ -11,7 +11,7 @@
 "Last Reboot" = "Senast omstartad";
 "RESTART_REGULARLY" = "Starta om din Mac regelbundet";
 "ADMIN_RECOMMENDS_RESTARTING_EVERY" = "Din administratör rekommenderar att du startar om din Mac med ett intervall på max";
-"ADMIN_RECOMMENDS_RESTARTING_EVERY_DAY" = "Din administratör rekommenderar att du startar om din Mac dagligen."
+"ADMIN_RECOMMENDS_RESTARTING_EVERY_DAY" = "Din administratör rekommenderar att du startar om din Mac dagligen.";
 "ago" = "sedan";
 "minute" = "minut";
 "minutes" = "minuter";
@@ -54,7 +54,7 @@
 "CLOSE" = "Stäng";
 "UPDATES_AVAILABLE" = "Updateringar tillgängliga";
 "NO_UPDATES_AVAILABLE" = "Inga uppdateringar tillgängliga";
-"UPDATE_NOW" = "Updatera nu";
+"UPDATE_NOW" = "Uppdatera nu";
 "SYSTEM_SETTINGS" = "Systeminställningar";
 "SYSTEM_PREFERENCES" = "Systeminställningar";
 "YOUR_MAC_IS_UP_TO_DATE" = "Din Mac är uppdaterad";
