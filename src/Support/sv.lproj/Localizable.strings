@@ -74,3 +74,7 @@
 "APPS" = "Appar";
 "PRIVILEGED_HELPER_TOOL_NOT_INSTALLED" = "Privileged Helper Tool är inte installerat";
 "UP_TO_DATE" = "Uppdaterad";
+"ITEM_CONFIGURATION" = "Objektkonfiguration";
+"SAVE" = "Spara";
+"ITEM_PREVIEW" = "Objektförhandsvisning";
+"ITEM_TYPE" = "Objekttyp";
