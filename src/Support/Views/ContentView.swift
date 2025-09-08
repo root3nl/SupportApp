@@ -96,6 +96,7 @@ struct ContentView: View {
                                         Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
                                     }
                                 }
+                                .frame(maxWidth: .infinity)
                                 .contextMenu {
                                     if preferences.editModeEnabled {
                                         Button {
@@ -120,6 +121,7 @@ struct ContentView: View {
                             }
                         }
                     }
+                    .padding(.horizontal, 10)
                     .glassContainerIfAvailable()
                     
                     // Add row divider and plus button
