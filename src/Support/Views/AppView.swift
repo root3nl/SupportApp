@@ -124,7 +124,7 @@ struct AppView: View {
                         
                         HStack {
                             
-                            if preferences.editModeEnabled {
+//                            if preferences.editModeEnabled {
                                 SettingsLink(label: {
                                     Label("Settings", systemImage: "gear")
                                         .labelStyle(.titleOnly)
@@ -139,7 +139,7 @@ struct AppView: View {
                                         $0
                                     }
                                 }
-                            }
+//                            }
                             
                             Spacer()
                             
