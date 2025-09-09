@@ -60,6 +60,7 @@ if is-at-least 13.0 ${os_version}; then
 		uid=$(id -u "${username}")
 
 		launchctl asuser "${uid}" sudo -u "${username}" open -na "${install_location}"
+		sleep 5 # need to let it build the app sandbox to avoid permissions pop ups
 	fi
 fi
 
