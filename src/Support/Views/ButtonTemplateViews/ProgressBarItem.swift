@@ -60,6 +60,7 @@ struct ProgressBarItem: View {
                         
                         ProgressView(value: percentage , total: 120)
                             .padding(.trailing, 14)
+                            .accessibilityHidden(true)
                         
                     }
                     .accessibilityElement(children: .combine)

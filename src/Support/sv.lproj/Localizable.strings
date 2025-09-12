@@ -78,3 +78,5 @@
 "SAVE" = "Spara";
 "ITEM_PREVIEW" = "Objektförhandsvisning";
 "ITEM_TYPE" = "Objekttyp";
+"STORAGE" = "Storage";
+"NETWORK_IP_ADDRESS" = "Network IP Address";

@@ -48,32 +48,39 @@ struct ItemSmall: View {
                     ProgressView()
                         .scaleEffect(0.8)
                         .frame(width: 22, height: 22)
+                        .accessibilityHidden(true)
                 } else {
                     Image(systemName: image)
                         .font(.system(size: 22, weight: .semibold))
                         .foregroundStyle(.white)
 //                        .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
                         .symbolRenderingMode(.hierarchical)
-//                        .frame(width: 22, height: 22)
+                        .frame(width: 22, height: 22)
+                        .accessibilityHidden(true)
                 }
                 
-//                Spacer()
+                Spacer()
                 
                 // Optionally show a subtitle when user hovers over button
-//                if subtitle != "" && hoverView {
-//                    Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
-//                        .font(.system(.subheadline, design: .default))
-//                        .foregroundStyle(.white)
-//                } else {
-//                    Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
-//                        .font(.system(.subheadline, design: .default))
-//                        .foregroundStyle(.white)
-//                }
+                if subtitle != "" && hoverView {
+                    Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
+                        .font(.system(.subheadline, design: .default))
+                        .foregroundStyle(.white)
+                        .frame(width: 80)
+                        .lineLimit(1)
+                } else {
+                    Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
+                        .font(.system(.subheadline, design: .default))
+                        .foregroundStyle(.white)
+                        .frame(width: 80)
+                        .lineLimit(1)
+                }
             }
-//            .padding(.vertical, 10)
+            .padding(10)
             .frame(width: 114, height: 64)
             .contentShape(Capsule())
-            .accessibilityLabel(title + " " + (subtitle ?? ""))
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(title + ", " + (subtitle ?? ""))
             .alert(isPresented: $showingAlert) {
                 Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
             }
@@ -83,8 +90,6 @@ struct ItemSmall: View {
             .onTapGesture() {
                 tapGesture()
             }
-//            .glassEffect(.clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
-//            .glassEffect(hoverView ? .regular.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)) : .clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
             .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: true))
             .animation(.bouncy, value: hoverView)
         } else {
@@ -94,11 +99,13 @@ struct ItemSmall: View {
                     ProgressView()
                         .scaleEffect(0.8)
                         .frame(width: 24, height: 24)
+                        .accessibilityHidden(true)
                 } else {
                     Image(systemName: image)
                         .font(.system(size: 24, weight: .semibold))
                         .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
                         .frame(width: 24, height: 24)
+                        .accessibilityHidden(true)
                 }
                 
                 Spacer()
@@ -115,7 +122,8 @@ struct ItemSmall: View {
             }
             .padding(.vertical, 10)
             .frame(width: 114, height: 60)
-            .accessibilityLabel(title + " " + (subtitle ?? ""))
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(title + ", " + (subtitle ?? ""))
             .background(hoverView && link != "" ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
             .cornerRadius(10)
             // Apply gray and black border in Dark Mode to better view the buttons like Control Center

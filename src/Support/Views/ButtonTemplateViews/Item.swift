@@ -142,7 +142,7 @@ struct Item: View {
             }
             .frame(width: 176, height: 64)
             .contentShape(Capsule())
-            .accessibilityLabel(title + " " + (subtitle ?? ""))
+            .accessibilityLabel(title + ", " + (subtitle ?? ""))
             .alert(isPresented: $showingAlert) {
                 Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
             }
@@ -247,7 +247,7 @@ struct Item: View {
                 //            }
             }
             .frame(width: 176, height: 60)
-            .accessibilityLabel(title + " " + (subtitle ?? ""))
+            .accessibilityLabel(title + ", " + (subtitle ?? ""))
             .background(hoverView && hoverEffectEnable && link != "" ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
             .cornerRadius(10)
             // Apply gray and black border in Dark Mode to better view the buttons like Control Center

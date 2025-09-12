@@ -53,6 +53,8 @@ struct NetworkSubview: View {
     var body: some View {
         
         Item(title: computerinfo.networkName, subtitle: computerinfo.ipAddress, linkType: networkLinkType, link: networkLink, image: computerinfo.networkInterfaceSymbol, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: computerinfo.selfSignedIP, hoverEffectEnable: true, hoverView: false, animate: false)
+            .accessibilityValue(NSLocalizedString("NETWORK_IP_ADDRESS", comment: ""))
+            .accessibilityLabel(computerinfo.ipAddress)
     }
 }
 

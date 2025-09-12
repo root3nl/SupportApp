@@ -82,7 +82,7 @@ struct InfoItem: View {
             }
             .frame(width: 176, height: 64)
             .contentShape(Capsule())
-            .accessibilityLabel(title + " " + "\(notificationBadge ?? 0)" + " " + (subtitle))
+            .accessibilityLabel(title + ", " + subtitle)
             .onHover() { hover in
                 self.hoverView = hover
             }
@@ -137,7 +137,7 @@ struct InfoItem: View {
                 
             }
             .frame(width: 176, height: 60)
-            .accessibilityLabel(title + " " + "\(notificationBadge ?? 0)" + " " + (subtitle))
+            .accessibilityLabel(title + ", " + subtitle)
             .background(hoverView && hoverEffectEnable ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
             .cornerRadius(10)
             // Apply gray and black border in Dark Mode to better view the buttons like Control Center
