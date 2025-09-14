@@ -70,6 +70,7 @@ struct ProgressBarItem: View {
                 
                 if notificationBadgeBool ?? false {
                     NotificationBadgeTextView(badgeCounter: "!")
+                        .accessibilityHidden(true)
                 }
             }
             .frame(width: 176, height: 64)
@@ -147,6 +148,7 @@ struct ProgressBarItem: View {
                 
                 if notificationBadgeBool ?? false {
                     NotificationBadgeTextView(badgeCounter: "!")
+                        .accessibilityHidden(true)
                 }
             }
             .frame(width: 176, height: 60)

@@ -158,10 +158,12 @@ struct ItemDouble: View {
                 
                 if notificationBadge != nil && notificationBadge! > 0 {
                     NotificationBadgeView(badgeCounter: notificationBadge!)
+                        .accessibilityHidden(true)
                 }
                 
                 if notificationBadgeBool ?? false {
                     NotificationBadgeTextView(badgeCounter: "!")
+                        .accessibilityHidden(true)
                 }
             }
             .frame(width: 176, height: 60)

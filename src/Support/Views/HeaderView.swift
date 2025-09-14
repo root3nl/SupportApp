@@ -45,22 +45,25 @@ struct HeaderView: View {
 
             Spacer()
             
-            // Logo shown in the top right corner
-            if colorScheme == .light && !activePreferences.logo.isEmpty {
-                LogoView(logo: activePreferences.logo)
-            // Show different logo in Dark Mode when LogoDarkMode is also set
-            } else if colorScheme == .dark && !activePreferences.logo.isEmpty {
-                if !activePreferences.logoDarkMode.isEmpty {
-                    LogoView(logo: activePreferences.logoDarkMode)
-                } else if !activePreferences.logo.isEmpty && activePreferences.logoDarkMode.isEmpty {
+            Group {
+                // Logo shown in the top right corner
+                if colorScheme == .light && !activePreferences.logo.isEmpty {
                     LogoView(logo: activePreferences.logo)
+                    // Show different logo in Dark Mode when LogoDarkMode is also set
+                } else if colorScheme == .dark && !activePreferences.logo.isEmpty {
+                    if !activePreferences.logoDarkMode.isEmpty {
+                        LogoView(logo: activePreferences.logoDarkMode)
+                    } else if !activePreferences.logo.isEmpty && activePreferences.logoDarkMode.isEmpty {
+                        LogoView(logo: activePreferences.logo)
+                    } else {
+                        LogoView(logo: "default")
+                    }
+                    // Show default logo in all other cases
                 } else {
                     LogoView(logo: "default")
                 }
-            // Show default logo in all other cases
-            } else {
-                LogoView(logo: "default")
             }
+            .accessibilityHidden(true)
             
         }
         .foregroundColor(Color.primary)

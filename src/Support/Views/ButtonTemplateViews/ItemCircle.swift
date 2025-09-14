@@ -59,7 +59,8 @@ struct ItemCircle: View {
         }
         .frame(width: 64, height: 64)
         .contentShape(.circle)
-        .accessibilityLabel(title + " " + (subtitle ?? ""))
+        .accessibilityElement()
+        .accessibilityLabel(title + ", " + (subtitle ?? ""))
         .alert(isPresented: $showingAlert) {
             Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
         }

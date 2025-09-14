@@ -217,6 +217,7 @@ struct AppUpdatesView: View {
                                             }
                                         }
                                         .frame(width: 40, height: 40)
+                                        .accessibilityHidden(true)
                                         
                                     }
                                     
@@ -229,6 +230,7 @@ struct AppUpdatesView: View {
                                             Text("\(update.version ?? "") → \(update.newVersion ?? "")")
                                                 .foregroundColor(.secondary)
                                                 .font(.system(.subheadline, design: .rounded))
+                                                .accessibilityHidden(true)
                                         }
                                         
                                     }
@@ -258,6 +260,8 @@ struct AppUpdatesView: View {
                                                 .scaleEffect(0.6)
                                                 .frame(width: 26, height: 26)
                                                 .padding(.leading, 10)
+                                                .accessibilityValue(NSLocalizedString("UPDATING", comment: ""))
+                                                .accessibilityLabel(update.name ?? "")
                                         } else if appCatalogController.appsQueued.contains(update.id) {
                                             Image(systemName: hoveredCancelButton && (hoveredItem == update.id) ? "xmark.circle.fill" : "clock")
                                                 .font(.system(size: 16))
@@ -280,6 +284,8 @@ struct AppUpdatesView: View {
                                                 .font(.system(size: 16, weight: .medium))
                                                 .frame(width: 26, height: 26)
                                                 .padding(.leading, 10)
+                                                .accessibilityValue(NSLocalizedString("UPDATE", comment: ""))
+                                                .accessibilityLabel(update.name ?? "")
                                         }
                                     }
                                     .buttonStyle(.plain)
@@ -289,6 +295,7 @@ struct AppUpdatesView: View {
                                     hoveredItem = update.id
                                 }
                                 .frame(height: 40)
+                                .accessibilityElement(children: .combine)
                             }
                             
                             // Show update schedule information when configured

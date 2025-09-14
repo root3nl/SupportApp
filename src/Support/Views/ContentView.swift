@@ -172,6 +172,7 @@ struct ContentView: View {
             }
         }
         .frame(minWidth: 382, idealWidth: 382, maxWidth: 382)
+//        .accessibilityElement(children: .combine)
         .animation(.snappy, value: preferences.editModeEnabled)
     }
 }

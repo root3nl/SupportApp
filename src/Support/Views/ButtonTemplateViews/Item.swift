@@ -133,11 +133,13 @@ struct Item: View {
                 // Optionally show notification badge with counter
                 if notificationBadge != nil && notificationBadge! > 0 {
                     NotificationBadgeView(badgeCounter: notificationBadge!)
+                        .accessibilityHidden(true)
                 }
                 
                 // Optionally show notification badge with warning
                 if notificationBadgeBool ?? false {
                     NotificationBadgeTextView(badgeCounter: "!")
+                        .accessibilityHidden(true)
                 }
             }
             .frame(width: 176, height: 64)
@@ -235,11 +237,13 @@ struct Item: View {
                 // Optionally show notification badge with counter
                 if notificationBadge != nil && notificationBadge! > 0 {
                     NotificationBadgeView(badgeCounter: notificationBadge!)
+                        .accessibilityHidden(true)
                 }
                 
                 // Optionally show notification badge with warning
                 if notificationBadgeBool ?? false {
                     NotificationBadgeTextView(badgeCounter: "!")
+                        .accessibilityHidden(true)
                 }
                 
                 //            if updateView != nil && notificationBadge! > 0 {

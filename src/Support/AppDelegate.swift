@@ -511,7 +511,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 
     // MARK: - Process left and right clicks. https://samoylov.eu/2016/09/14/handling-left-and-right-click-at-nsstatusbar-with-swift-3/
     @objc func statusBarButtonClicked(sender: NSStatusBarButton) {
-        let event = NSApp.currentEvent!
+        guard let event = NSApp.currentEvent else {
+            logger.debug("No event available, assuming accessibility or Voice Control click...")
+            togglePopover(nil)
+            return
+        }
         
         // Show menu for right click
         if event.type == NSEvent.EventType.rightMouseUp {

@@ -205,6 +205,7 @@ struct UpdateView: View {
                         .frame(width: 50, height: 50)
                         .symbolRenderingMode(.palette)
                         .foregroundStyle(.white, Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+                        .accessibilityHidden(true)
                     
                     Text(NSLocalizedString("YOUR_MAC_IS_UP_TO_DATE", comment: ""))
                         .font(.system(.title, design: .rounded))

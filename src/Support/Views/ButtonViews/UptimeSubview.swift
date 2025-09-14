@@ -57,24 +57,10 @@ struct UptimeSubview: View {
         
         if hoverEffectEnabled {
             InfoItem(title: NSLocalizedString("Last Reboot", comment: ""), subtitle: "\(computerinfo.uptimeRounded) \(computerinfo.uptimeText) " + NSLocalizedString("ago", comment: ""), image: "clock.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: computerinfo.uptimeLimitReached, hoverEffectEnable: true)
-                .modify {
-                    if #available(macOS 13, *) {
-                        $0.onTapGesture {
-                            if hoverEffectEnabled {
-                                computerinfo.showUptimeAlert.toggle()
-                            }
-                        }
-                    } else {
-                        $0.onTapGesture {
-                            if hoverEffectEnabled {
-                                uptimeAlert.toggle()
-                            }
-                        }
+                .onTapGesture {
+                    if hoverEffectEnabled {
+                        computerinfo.showUptimeAlert.toggle()
                     }
-                }
-            // Legacy popover for macOS 12
-                .popover(isPresented: $uptimeAlert, arrowEdge: .leading) {
-                    PopoverAlertView(uptimeAlert: $uptimeAlert, title: NSLocalizedString("RESTART_REGULARLY", comment: ""), message: alertText)
                 }
         } else {
             InfoItem(title: NSLocalizedString("Last Reboot", comment: ""), subtitle: "\(computerinfo.uptimeRounded) \(computerinfo.uptimeText) " + NSLocalizedString("ago", comment: ""), image: "clock.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: false, hoverEffectEnable: false)

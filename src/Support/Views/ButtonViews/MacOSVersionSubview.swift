@@ -38,20 +38,8 @@ struct MacOSVersionSubview: View {
     var body: some View {
         
         InfoItem(title: "macOS \(computerinfo.macOSVersionName)", subtitle: computerinfo.macOSVersion, image: "applelogo", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: computerinfo.recommendedUpdates.count, hoverEffectEnable: true)
-            .modify {
-                if #available(macOS 13, *) {
-                    $0.onTapGesture {
-                        computerinfo.showMacosUpdates.toggle()
-                    }
-                } else {
-                    $0.onTapGesture {
-                        showUpdatePopover.toggle()
-                    }
-                }
-            }
-        // Legacy popover for macOS 12
-            .popover(isPresented: $showUpdatePopover, arrowEdge: .leading) {
-                UpdateViewLegacy(updateCounter: computerinfo.recommendedUpdates.count, color: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+            .onTapGesture {
+                computerinfo.showMacosUpdates.toggle()
             }
     }
 }
