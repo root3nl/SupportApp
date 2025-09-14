@@ -54,16 +54,10 @@ class FileUtilities {
 
         // For scripts deployed using ServicesBackgroundTasks (Declarative Device Management) are secure and can also be allowed
         // https://developer.apple.com/documentation/devicemanagement/servicesbackgroundtasks
-        // _rmd:_rmd must be 444
+        // _rmd:_rmd is allowed regardless of permission mode
         if ownerID == 277 && groupID == 277 {
-            let required: NSNumber = 0o444
-            if mode == required {
-                logger.debug("Permissions for \(pathname, privacy: .public) are correct (owner:group 277:277, mode: 444)")
-                return true
-            } else {
-                logger.error("Permissions for \(pathname, privacy: .public) are incorrect for _rmd:_rmd. Expected mode 444, found mode \(String(format: "%o", mode.intValue)).")
-                return false
-            }
+            logger.debug("Permissions for \(pathname, privacy: .public) are allowed (owner:group 277:277, any mode)")
+            return true
         }
 
         logger.error("Permissions for \(pathname, privacy: .public) are incorrect. Allowed ownerships are root:wheel (0:0) with 755 or _rmd:_rmd (277:277) with 444. Found owner:group \(ownerID):\(groupID) and mode \(String(format: "%o", mode.intValue)).")

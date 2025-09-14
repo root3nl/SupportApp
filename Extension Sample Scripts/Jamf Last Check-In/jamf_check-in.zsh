@@ -40,4 +40,4 @@ defaults write "${preference_file_location}" "${extension_id}" -string "Checking
 /usr/local/bin/jamf policy
 
 # Run script to populate new values in Extension
-zsh /private/var/db/ManagedConfigurationFiles/com.apple.zsh/jamf_last_check-in_time.zsh
+/private/var/db/ManagedConfigurationFiles/BackgroundTaskServices/Services/nl.root3.support/jamf_last_check-in_time.zsh
