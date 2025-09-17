@@ -222,7 +222,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         configuratorItem.image = NSImage(systemSymbolName: "switch.2", accessibilityDescription: nil)
         configuratorItem.target = self
         configuratorItem.state = preferences.configuratorModeEnabled ? .on : .off
+        // Disable Configutor Mode when configured
+        configuratorItem.isHidden = preferences.disableConfiguratorMode && defaults.objectIsForced(forKey: "DisableConfiguratorMode")
         menu.addItem(configuratorItem)
+        
         self.configuratorMenuItem = configuratorItem
         menu.addItem(NSMenuItem.separator())
         
@@ -909,6 +912,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             self.localPreferences.footerText = self.preferences.footerText
             self.localPreferences.openAtLogin = self.preferences.openAtLogin
             self.localPreferences.disablePrivilegedHelperTool = self.preferences.disablePrivilegedHelperTool
+            self.localPreferences.disableConfiguratorMode = self.preferences.disableConfiguratorMode
             self.localPreferences.uptimeDaysLimit = self.preferences.uptimeDaysLimit
             self.localPreferences.passwordType = self.preferences.passwordType
             self.localPreferences.passwordExpiryLimit = self.preferences.passwordExpiryLimit

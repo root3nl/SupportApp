@@ -25,6 +25,7 @@ struct AppModel: Codable, Hashable {
     var footerText: String?
     var openAtLogin: Bool?
     var disablePrivilegedHelperTool: Bool?
+    var disableConfiguratorMode: Bool?
     var uptimeDaysLimit: Int?
     var passwordType: String?
     var passwordExpiryLimit: Int?
@@ -49,6 +50,7 @@ struct AppModel: Codable, Hashable {
         case footerText = "FooterText"
         case openAtLogin = "OpenAtLogin"
         case disablePrivilegedHelperTool = "DisablePrivilegedHelperTool"
+        case disableConfiguratorMode = "DisableConfiguratorMode"
         case uptimeDaysLimit = "UptimeDaysLimit"
         case passwordType = "PasswordType"
         case passwordExpiryLimit = "PasswordExpiryLimit"

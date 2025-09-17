@@ -125,6 +125,8 @@ struct AdvancedSettingsView: View {
                 .disabled(!preferences.editModeEnabled)
             Toggle("Disable Privileged Helper Tool", isOn: $localPreferences.disablePrivilegedHelperTool)
                 .disabled(!preferences.editModeEnabled)
+            Toggle("Disable Configurator Mode", isOn: $localPreferences.disableConfiguratorMode)
+                .disabled(!preferences.editModeEnabled)
                 .padding(.bottom)
             
 //            Button {

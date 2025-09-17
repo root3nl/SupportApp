@@ -26,6 +26,7 @@ class LocalPreferences: ObservableObject {
     @Published var footerText: String = ""
     @Published var openAtLogin: Bool = false
     @Published var disablePrivilegedHelperTool: Bool = false
+    @Published var disableConfiguratorMode: Bool = false
     @Published var uptimeDaysLimit: Int = 0
     @Published var passwordType: String = ""
     @Published var passwordExpiryLimit: Int = 0
@@ -57,6 +58,7 @@ protocol PreferencesProtocol {
     var footerText: String { get }
     var openAtLogin: Bool { get }
     var disablePrivilegedHelperTool: Bool { get }
+    var disableConfiguratorMode: Bool { get }
     var uptimeDaysLimit: Int { get }
     var passwordType: String { get }
     var passwordExpiryLimit: Int { get }

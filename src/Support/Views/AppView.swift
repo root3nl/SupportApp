@@ -39,7 +39,7 @@ struct AppView: View {
     }
     
     var appConfiguration: AppModel {
-        return AppModel(title: localPreferences.title, logo: localPreferences.logo, logoDarkMode: localPreferences.logoDarkMode, notificationIcon: localPreferences.notificationIcon, statusBarIcon: localPreferences.statusBarIcon, statusBarIconAllowsColor: localPreferences.statusBarIconAllowsColor, statusBarIconSFSymbol: localPreferences.statusBarIconSFSymbol, statusBarIconNotifierEnabled: localPreferences.statusBarIconNotifierEnabled, updateText: localPreferences.updateText, customColor: localPreferences.customColor, customColorDarkMode: localPreferences.customColorDarkMode, errorMessage: localPreferences.errorMessage, showWelcomeScreen: localPreferences.showWelcomeScreen, footerText: localPreferences.footerText, openAtLogin: localPreferences.openAtLogin, disablePrivilegedHelperTool: activePreferences.disablePrivilegedHelperTool, uptimeDaysLimit: localPreferences.uptimeDaysLimit, passwordType: localPreferences.passwordType, passwordExpiryLimit: localPreferences.passwordExpiryLimit, passwordLabel: localPreferences.passwordLabel, storageLimit: Int(localPreferences.storageLimit), rows: localPreferences.rows)
+        return AppModel(title: localPreferences.title, logo: localPreferences.logo, logoDarkMode: localPreferences.logoDarkMode, notificationIcon: localPreferences.notificationIcon, statusBarIcon: localPreferences.statusBarIcon, statusBarIconAllowsColor: localPreferences.statusBarIconAllowsColor, statusBarIconSFSymbol: localPreferences.statusBarIconSFSymbol, statusBarIconNotifierEnabled: localPreferences.statusBarIconNotifierEnabled, updateText: localPreferences.updateText, customColor: localPreferences.customColor, customColorDarkMode: localPreferences.customColorDarkMode, errorMessage: localPreferences.errorMessage, showWelcomeScreen: localPreferences.showWelcomeScreen, footerText: localPreferences.footerText, openAtLogin: localPreferences.openAtLogin, disablePrivilegedHelperTool: activePreferences.disablePrivilegedHelperTool, disableConfiguratorMode: activePreferences.disableConfiguratorMode, uptimeDaysLimit: localPreferences.uptimeDaysLimit, passwordType: localPreferences.passwordType, passwordExpiryLimit: localPreferences.passwordExpiryLimit, passwordLabel: localPreferences.passwordLabel, storageLimit: Int(localPreferences.storageLimit), rows: localPreferences.rows)
     }
 
     var body: some View {
@@ -120,11 +120,13 @@ struct AppView: View {
                 
                 if preferences.configuratorModeEnabled {
                 
-                    VStack(alignment: .leading) {
+//                    VStack(alignment: .leading) {
                         
                         HStack {
                             
-//                            if preferences.editModeEnabled {
+                            Spacer()
+                            
+                            if preferences.editModeEnabled {
                                 SettingsLink(label: {
                                     Label("Settings", systemImage: "gear")
                                         .labelStyle(.titleOnly)
@@ -139,86 +141,94 @@ struct AppView: View {
                                         $0
                                     }
                                 }
-//                            }
+                            } else {
                             
-                            Spacer()
+//                            Spacer()
                             
-                            
-                            Button {
-                                showExportOptions.toggle()
-                            } label: {
-                                Label("Export", systemImage: "square.and.arrow.up")
-                                    .labelStyle(.titleOnly)
-                            }
-                            .modify {
-                                if #available(macOS 26, *) {
-                                    $0
-                                        .buttonStyle(.glass)
-                                        .buttonBorderShape(.capsule)
-                                        .controlSize(.large)
-                                } else {
-                                    $0
-                                }
-                            }
-                            .confirmationDialog("Export options", isPresented: $showExportOptions) {
-                                Button("Export as Property List") {
-                                    exportPropertyList()
-                                }
-                                Button("Export as Configuration Profile") {
-                                    exportMobileConfig()
-                                }
-                            } message: {
-                                Text("Select your preferred format")
-                            }
-                            
-                            if preferences.editModeEnabled && !preferences.showItemConfiguration {
+//                            if !preferences.editModeEnabled {
                                 Button {
-                                    preferences.editModeEnabled.toggle()
-                                    
-                                    // Persist preferences
-                                    preferences.saveUserDefaults(appConfiguration: appConfiguration)
+                                    showExportOptions.toggle()
                                 } label: {
-                                    Label("Done", systemImage: "")
+                                    Label("Export", systemImage: "square.and.arrow.up")
                                         .labelStyle(.titleOnly)
                                 }
                                 .modify {
                                     if #available(macOS 26, *) {
                                         $0
-                                            .buttonStyle(.glassProminent)
+                                            .buttonStyle(.glass)
                                             .buttonBorderShape(.capsule)
                                             .controlSize(.large)
                                     } else {
                                         $0
                                     }
                                 }
-                            } else if !preferences.showItemConfiguration {
-                                Button {
-                                    preferences.editModeEnabled.toggle()
-                                } label: {
-                                    Label("Edit", systemImage: "")
-                                        .labelStyle(.titleOnly)
-                                }
-                                .modify {
-                                    if #available(macOS 26, *) {
-                                        $0
-                                            .buttonStyle(.glassProminent)
-                                            .buttonBorderShape(.capsule)
-                                            .controlSize(.large)
-                                    } else {
-                                        $0
+                                .confirmationDialog("Export options", isPresented: $showExportOptions) {
+                                    Button("Export as Property List") {
+                                        exportPropertyList()
                                     }
+                                    Button("Export as Configuration Profile") {
+                                        exportMobileConfig()
+                                    }
+                                } message: {
+                                    Text("Select your preferred format")
                                 }
                             }
+                            
+                                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                                    Button {
+//                                        withAnimation {
+                                            preferences.editModeEnabled.toggle()
+//                                        }
+                                        
+                                        // Persist preferences
+                                        preferences.saveUserDefaults(appConfiguration: appConfiguration)
+                                    } label: {
+                                        Label("Done", systemImage: "")
+                                            .labelStyle(.titleOnly)
+                                    }
+                                    .modify {
+                                        if #available(macOS 26, *) {
+                                            $0
+                                                .buttonStyle(.glassProminent)
+                                                .buttonBorderShape(.capsule)
+                                                .controlSize(.large)
+                                        } else {
+                                            $0
+                                        }
+                                    }
+                                } else if !preferences.showItemConfiguration {
+                                    Button {
+//                                        withAnimation {
+                                            preferences.editModeEnabled.toggle()
+//                                        }
+                                    } label: {
+                                        Label("Edit", systemImage: "")
+                                            .labelStyle(.titleOnly)
+                                    }
+                                    .modify {
+                                        if #available(macOS 26, *) {
+                                            $0
+                                                .buttonStyle(.glassProminent)
+                                                .buttonBorderShape(.capsule)
+                                                .controlSize(.large)
+                                        } else {
+                                            $0
+                                        }
+                                    }
+                                }
                         }
-                        Text("Configurator Mode")
-                            .foregroundStyle(.secondary)
-                    }
-                    .padding(.horizontal, 10)
+                        .glassContainerIfAvailable(spacing: 0)
+                        .animation(.easeInOut, value: preferences.editModeEnabled)
+                        .padding(.horizontal, 10)
+                        
+//                        Text("Configurator Mode")
+//                            .foregroundStyle(.secondary)
+//                    }
+//                    .padding(.horizontal, 10)
                 }
             }
             .padding(.bottom, 10)
         }
-//        .background(EffectsView(material: NSVisualEffectView.Material.fullScreenUI, blendingMode: NSVisualEffectView.BlendingMode.behindWindow))
         .background(colorScheme == .dark ? Color.clear : Color.primary.opacity(0.1))
         // Set default popover width
         .frame(minWidth: 382, idealWidth: 382, maxWidth: 382)

@@ -83,6 +83,8 @@ class Preferences: ObservableObject {
     
     @AppStorage("StatusBarIconAllowsColor") var statusBarIconAllowsColor: Bool = false
     
+    @AppStorage("DisableConfiguratorMode") var disableConfiguratorMode: Bool = false
+    
     // Hide first and/or second row of Info Items, disabled by default
     @AppStorage("HideFirstRowInfoItems") var hideFirstRowInfoItems: Bool = false
     @AppStorage("HideSecondRowInfoItems") var hideSecondRowInfoItems: Bool = false
