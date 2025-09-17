@@ -92,10 +92,10 @@ struct Item: View {
                             .foregroundStyle(.white)
                             .lineLimit(2)
                         
-                        if subtitle != "" {
+                        if let subtitle = subtitle {
                             if hoverView && showSubtitle {
                                 // Show the subtitle when hover animation is enabled
-                                Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
+                                Text(subtitle.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
                                     .font(.system(.subheadline, design: .default))
                                 //                                .foregroundStyle(.white.opacity(0.8))
                                     .foregroundStyle(.white)
@@ -103,7 +103,7 @@ struct Item: View {
                                 
                             } else if !animate {
                                 // Always show the subtitle when hover animation is disabled
-                                Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
+                                Text(subtitle.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
                                     .font(.system(.subheadline, design: .default))
                                 //                                .foregroundStyle(.white.opacity(0.8))
                                     .foregroundStyle(.white)
@@ -203,16 +203,16 @@ struct Item: View {
                             .font(.system(.body, design: .rounded)).fontWeight(.medium)
                             .lineLimit(2)
                         
-                        if subtitle != "" {
+                        if let subtitle = subtitle {
                             if hoverView && showSubtitle {
                                 // Show the subtitle when hover animation is enabled
-                                Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
+                                Text(subtitle.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
                                     .font(.system(.subheadline, design: .rounded))
                                     .lineLimit(2)
                                 
                             } else if !animate {
                                 // Always show the subtitle when hover animation is disabled
-                                Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
+                                Text(subtitle.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
                                     .font(.system(.subheadline, design: .rounded))
                                     .lineLimit(2)
                                 // Show placeholder when no initial value is set for Custom Info Items
