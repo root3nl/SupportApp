@@ -245,7 +245,7 @@ struct ItemSmall: View {
         
         // Check value comes from a Configuration Profile. If not, the script may be maliciously set and needs to be ignored
         guard defaults.objectIsForced(forKey: linkPrefKey!) == true else {
-            logger.error("Script \(privilegedCommand, privacy: .public) is not set by an administrator and is not trusted. Action will not be executed")
+            logger.error("Action \(privilegedCommand, privacy: .public) is not set by an administrator and is not trusted. Action will not be executed")
             return
         }
         

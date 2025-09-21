@@ -38,11 +38,9 @@ struct Item: View {
     // Vars to activate hover effect
     @State var hoverEffectEnable: Bool
     @State var hoverView = false
-    
     @State var showSubtitle = false
-    
-    // Var to show alert when no or invalid BundleID is given
     @State var showingAlert = false
+//    @State var extensionValue: String? = nil
     
     // Get preferences or default values
     @EnvironmentObject var preferences: Preferences
@@ -54,6 +52,18 @@ struct Item: View {
     
     // Enable animation
     var animate: Bool
+
+    // Read string directly
+    var extensionValue: String? {
+        guard let key = extensionIdentifier else { return nil }
+        return UserDefaults.standard.string(forKey: key)
+    }
+
+    // Read bool directly
+    var extensionLoading: Bool {
+        guard let key = extensionIdentifier else { return false }
+        return UserDefaults.standard.bool(forKey: "\(key)_loading")
+    }
     
     var body: some View {
         
@@ -61,7 +71,7 @@ struct Item: View {
             ZStack {
                 
                 HStack {
-                    if loading ?? false || defaults.bool(forKey: extensionIdentifier ?? "" + "_loading") {
+                    if loading ?? false || extensionLoading {
                         Ellipse()
                             .foregroundColor(.white.opacity(0.5))
                             .overlay(
@@ -114,7 +124,7 @@ struct Item: View {
                             }
                         }
                         
-                        if let extensionValue = defaults.string(forKey: extensionIdentifier ?? "") {
+                        if let extensionValue {
                             // Always show the subtitle when hover animation is disabled
                             Text(extensionValue.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
                                 .font(.system(.subheadline, design: .default))
@@ -169,13 +179,12 @@ struct Item: View {
             }
             .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
             .animation(.bouncy, value: hoverView)
-
         } else {
             
             ZStack {
                 
                 HStack {
-                    if loading ?? false || defaults.bool(forKey: extensionIdentifier ?? "" + "_loading") {
+                    if loading ?? false || extensionLoading {
                         Ellipse()
                             .foregroundColor(Color.gray.opacity(0.5))
                             .overlay(
@@ -220,7 +229,7 @@ struct Item: View {
                             }
                         }
                         
-                        if let extensionValue = defaults.string(forKey: extensionIdentifier ?? "") {
+                        if let extensionValue {
                             // Always show the subtitle when hover animation is disabled
                             Text(extensionValue.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
                                 .font(.system(.subheadline, design: .rounded))
@@ -381,8 +390,8 @@ struct Item: View {
         logger.log("Trying to run privileged script...")
         
         // Check value comes from a Configuration Profile. If not, the script may be maliciously set and needs to be ignored
-//        guard defaults.objectIsForced(forKey: linkPrefKey!) == true else {
-//            logger.error("Script \(command, privacy: .public) is not set by an administrator and is not trusted. Action will not be executed")
+//        guard defaults.objectIsForced(forKey: command) == true else {
+//            logger.error("Action \(command, privacy: .public) is not set by an administrator and is not trusted. Action will not be executed")
 //            return
 //        }
         
@@ -406,3 +415,4 @@ struct Item: View {
         }
     }
 }
+
