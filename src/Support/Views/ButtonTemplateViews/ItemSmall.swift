@@ -54,7 +54,7 @@ struct ItemSmall: View {
                         .font(.system(size: 22, weight: .semibold))
                         .foregroundStyle(.white)
 //                        .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
-                        .symbolRenderingMode(.hierarchical)
+//                        .symbolRenderingMode(.hierarchical)
                         .frame(width: 22, height: 22)
                         .accessibilityHidden(true)
                 }

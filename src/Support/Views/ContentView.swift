@@ -83,7 +83,7 @@ struct ContentView: View {
                                     case "AppCatalog":
                                         AppCatalogSubview()
                                     case "Extension":
-                                        Item(title: rowItems[itemIndex].title ?? "", subtitle: nil, linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), extensionIdentifier: rowItems[itemIndex].extensionIdentifier ?? "", onAppearAction: rowItems[itemIndex].onAppearAction, hoverEffectEnable: true, animate: false)
+                                        ItemExtension(title: rowItems[itemIndex].title ?? "", subtitle: nil, linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), extensionIdentifier: rowItems[itemIndex].extensionIdentifier ?? "", onAppearAction: rowItems[itemIndex].onAppearAction, hoverEffectEnable: true, animate: false)
                                     case "Button":
                                         Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
                                     case "ButtonMedium":
@@ -149,24 +149,47 @@ struct ContentView: View {
                         .padding(.trailing, 4)
                     }
                 }
+                // Add row divider and plus button
+                if preferences.editModeEnabled {
+                    HStack {
+                        VStack {
+                            Divider()
+                                .padding(.leading)
+                        }
+                        Button {
+//                            localPreferences.rows.append(Row(items: [supportItem]))
+                            localPreferences.rows.insert(Row(items: [supportItem]), at: index + 1)
+                        } label: {
+                            Label("Add row", systemImage: "plus")
+                                .labelStyle(.iconOnly)
+                        }
+                        .buttonStyle(AddIconButtonStyle())
+                        VStack {
+                            Divider()
+                                .padding(.trailing)
+                        }
+                    }
+                }
             }
-            // Add row divider and plus button
-            if preferences.editModeEnabled {
-                HStack {
-                    VStack {
-                        Divider()
-                            .padding(.leading)
-                    }
-                    Button {
-                        localPreferences.rows.append(Row(items: [supportItem]))
-                    } label: {
-                        Label("Add row", systemImage: "plus")
-                            .labelStyle(.iconOnly)
-                    }
-                    .buttonStyle(AddIconButtonStyle())
-                    VStack {
-                        Divider()
-                            .padding(.trailing)
+            if rows.isEmpty {
+                // Add row divider and plus button
+                if preferences.editModeEnabled {
+                    HStack {
+                        VStack {
+                            Divider()
+                                .padding(.leading)
+                        }
+                        Button {
+                            localPreferences.rows.append(Row(items: [supportItem]))
+                        } label: {
+                            Label("Add row", systemImage: "plus")
+                                .labelStyle(.iconOnly)
+                        }
+                        .buttonStyle(AddIconButtonStyle())
+                        VStack {
+                            Divider()
+                                .padding(.trailing)
+                        }
                     }
                 }
             }

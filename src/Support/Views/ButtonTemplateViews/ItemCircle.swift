@@ -53,11 +53,11 @@ struct ItemCircle: View {
                 Image(systemName: image)
                     .font(.system(size: 22, weight: .semibold))
                     .foregroundStyle(.white)
-                    .symbolRenderingMode(.hierarchical)
+//                    .symbolRenderingMode(.hierarchical)
                     .accessibilityHidden(true)
             }
         }
-        .frame(width: 64, height: 64)
+        .frame(width: 83, height: 83)
         .contentShape(.circle)
         .accessibilityElement()
         .accessibilityLabel(title + ", " + (subtitle ?? ""))

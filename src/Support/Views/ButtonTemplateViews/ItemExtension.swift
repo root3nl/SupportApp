@@ -1,5 +1,5 @@
 //
-//  Item.swift
+//  ItemExtension.swift
 //  Support
 //
 //  Created by Jordy Witteman on 30/12/2020.
@@ -8,7 +8,7 @@
 import os
 import SwiftUI
 
-struct Item: View {
+struct ItemExtension: View {
     var title: String
     var subtitle: String?
     var linkType: String?
@@ -19,6 +19,8 @@ struct Item: View {
     var notificationBadgeBool: Bool?
     var loading: Bool?
     var linkPrefKey: String?
+    var extensionIdentifier: String?
+    var onAppearAction: String?
     
     // Access AppDelegate
     @EnvironmentObject private var appDelegate: AppDelegate
@@ -37,6 +39,7 @@ struct Item: View {
     @State var hoverView = false
     @State var showSubtitle = false
     @State var showingAlert = false
+//    @State var extensionValue: String? = nil
     
     // Get preferences or default values
     @EnvironmentObject var preferences: Preferences
@@ -48,6 +51,56 @@ struct Item: View {
     
     // Enable animation
     var animate: Bool
+
+    // Read string directly
+//    var extensionValue: String? {
+//        guard let key = extensionIdentifier else { return nil }
+//        return UserDefaults.standard.string(forKey: key)
+//    }
+
+//    // Read bool directly
+//    var extensionLoading: Bool {
+//        guard let key = extensionIdentifier else { return false }
+//        return UserDefaults.standard.bool(forKey: "\(key)_loading")
+//    }
+    
+    @AppStorage private var extensionValue: String?
+    @AppStorage private var extensionLoading: Bool
+
+    init(title: String,
+         subtitle: String? = nil,
+         linkType: String? = nil,
+         link: String? = nil,
+         image: String,
+         symbolColor: Color,
+         notificationBadge: Int? = nil,
+         notificationBadgeBool: Bool? = nil,
+         loading: Bool? = nil,
+         linkPrefKey: String? = nil,
+         extensionIdentifier: String,
+         onAppearAction: String? = nil,
+         hoverEffectEnable: Bool = true,
+         animate: Bool = true) {
+        
+        self.title = title
+        self.subtitle = subtitle
+        self.linkType = linkType
+        self.link = link
+        self.image = image
+        self.symbolColor = symbolColor
+        self.notificationBadge = notificationBadge
+        self.notificationBadgeBool = notificationBadgeBool
+        self.loading = loading
+        self.linkPrefKey = linkPrefKey
+        self.extensionIdentifier = extensionIdentifier
+        self.onAppearAction = onAppearAction
+        self.hoverEffectEnable = hoverEffectEnable
+        self.animate = animate
+        
+        self._extensionValue = AppStorage(extensionIdentifier, store: .standard)
+        self._extensionLoading = AppStorage(wrappedValue: false, "\(extensionIdentifier)_loading", store: .standard)
+    }
+
     
     var body: some View {
         
@@ -55,7 +108,7 @@ struct Item: View {
             ZStack {
                 
                 HStack {
-                    if loading ?? false {
+                    if loading ?? false || extensionLoading {
                         Ellipse()
                             .foregroundColor(.white.opacity(0.5))
                             .overlay(
@@ -86,26 +139,15 @@ struct Item: View {
                             .foregroundStyle(.white)
                             .lineLimit(2)
                         
-                        if let subtitle = subtitle {
-                            if hoverView && showSubtitle {
-                                // Show the subtitle when hover animation is enabled
-                                Text(subtitle.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
-                                    .font(.system(.subheadline, design: .default))
-                                //                                .foregroundStyle(.white.opacity(0.8))
-                                    .foregroundStyle(.white)
-                                    .lineLimit(2)
-                                
-                            } else if !animate {
-                                // Always show the subtitle when hover animation is disabled
-                                Text(subtitle.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
-                                    .font(.system(.subheadline, design: .default))
-                                //                                .foregroundStyle(.white.opacity(0.8))
-                                    .foregroundStyle(.white)
-                                    .lineLimit(2)
-                                // Show placeholder when no initial value is set for Custom Info Items
-                                    .redacted(reason: (subtitle == "KeyPlaceholder") ? .placeholder: .init())
-                                
-                            }
+                        if let extensionValue {
+                            // Always show the subtitle when hover animation is disabled
+                            Text(extensionValue.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
+                                .font(.system(.subheadline, design: .default))
+//                                .foregroundStyle(.white.opacity(0.8))
+                                .foregroundStyle(.white)
+                                .lineLimit(2)
+                            // Show placeholder when no initial value is set for Custom Info Items
+                                .redacted(reason: (extensionValue == "KeyPlaceholder") ? .placeholder: .init())
                         }
                     }
                     .accessibilityElement(children: .ignore)
@@ -144,6 +186,12 @@ struct Item: View {
             .onTapGesture() {
                 tapGesture()
             }
+            .task(id: popoverLifecycle.presentationToken) {
+                guard let onAppearAction else {
+                    return
+                }
+                await runPrivilegedCommand(command: onAppearAction)
+            }
             .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
             .animation(.bouncy, value: hoverView)
         } else {
@@ -151,7 +199,7 @@ struct Item: View {
             ZStack {
                 
                 HStack {
-                    if loading ?? false {
+                    if loading ?? false || extensionLoading {
                         Ellipse()
                             .foregroundColor(Color.gray.opacity(0.5))
                             .overlay(
@@ -179,21 +227,13 @@ struct Item: View {
                             .font(.system(.body, design: .rounded)).fontWeight(.medium)
                             .lineLimit(2)
                         
-                        if let subtitle = subtitle {
-                            if hoverView && showSubtitle {
-                                // Show the subtitle when hover animation is enabled
-                                Text(subtitle.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
-                                    .font(.system(.subheadline, design: .rounded))
-                                    .lineLimit(2)
-                                
-                            } else if !animate {
-                                // Always show the subtitle when hover animation is disabled
-                                Text(subtitle.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
-                                    .font(.system(.subheadline, design: .rounded))
-                                    .lineLimit(2)
-                                // Show placeholder when no initial value is set for Custom Info Items
-                                    .redacted(reason: (subtitle == "KeyPlaceholder") ? .placeholder: .init())
-                            }
+                        if let extensionValue {
+                            // Always show the subtitle when hover animation is disabled
+                            Text(extensionValue.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
+                                .font(.system(.subheadline, design: .rounded))
+                                .lineLimit(2)
+                            // Show placeholder when no initial value is set for Custom Info Items
+                                .redacted(reason: (extensionValue == "KeyPlaceholder") ? .placeholder: .init())
                         }
                     }
                     .accessibilityElement(children: .ignore)
@@ -239,6 +279,12 @@ struct Item: View {
             }
             .onTapGesture() {
                 tapGesture()
+            }
+            .task(id: popoverLifecycle.presentationToken) {
+                guard let onAppearAction else {
+                    return
+                }
+                await runPrivilegedCommand(command: onAppearAction)
             }
         }
     }
