@@ -39,7 +39,31 @@ struct AppView: View {
     }
     
     var appConfiguration: AppModel {
-        return AppModel(title: localPreferences.title, logo: localPreferences.logo, logoDarkMode: localPreferences.logoDarkMode, notificationIcon: localPreferences.notificationIcon, statusBarIcon: localPreferences.statusBarIcon, statusBarIconAllowsColor: localPreferences.statusBarIconAllowsColor, statusBarIconSFSymbol: localPreferences.statusBarIconSFSymbol, statusBarIconNotifierEnabled: localPreferences.statusBarIconNotifierEnabled, updateText: localPreferences.updateText, customColor: localPreferences.customColor, customColorDarkMode: localPreferences.customColorDarkMode, errorMessage: localPreferences.errorMessage, showWelcomeScreen: localPreferences.showWelcomeScreen, footerText: localPreferences.footerText, openAtLogin: localPreferences.openAtLogin, disablePrivilegedHelperTool: activePreferences.disablePrivilegedHelperTool, disableConfiguratorMode: activePreferences.disableConfiguratorMode, uptimeDaysLimit: localPreferences.uptimeDaysLimit, passwordType: localPreferences.passwordType, passwordExpiryLimit: localPreferences.passwordExpiryLimit, passwordLabel: localPreferences.passwordLabel, storageLimit: Int(localPreferences.storageLimit), rows: localPreferences.rows)
+        return AppModel(
+            title: localPreferences.title.nilIfEmpty,
+            logo: localPreferences.logo.nilIfEmpty,
+            logoDarkMode: localPreferences.logoDarkMode.nilIfEmpty,
+            notificationIcon: localPreferences.notificationIcon.nilIfEmpty,
+            statusBarIcon: localPreferences.statusBarIcon.nilIfEmpty,
+            statusBarIconAllowsColor: localPreferences.statusBarIconAllowsColor,
+            statusBarIconSFSymbol: localPreferences.statusBarIconSFSymbol.nilIfEmpty,
+            statusBarIconNotifierEnabled: localPreferences.statusBarIconNotifierEnabled,
+            updateText: localPreferences.updateText.nilIfEmpty,
+            customColor: localPreferences.customColor.nilIfEmpty,
+            customColorDarkMode: localPreferences.customColorDarkMode.nilIfEmpty,
+            errorMessage: localPreferences.errorMessage.nilIfEmpty,
+            showWelcomeScreen: localPreferences.showWelcomeScreen,
+            footerText: localPreferences.footerText.nilIfEmpty,
+            openAtLogin: localPreferences.openAtLogin,
+            disablePrivilegedHelperTool: activePreferences.disablePrivilegedHelperTool,
+            disableConfiguratorMode: activePreferences.disableConfiguratorMode,
+            uptimeDaysLimit: localPreferences.uptimeDaysLimit,
+            passwordType: localPreferences.passwordType.nilIfEmpty,
+            passwordExpiryLimit: localPreferences.passwordExpiryLimit,
+            passwordLabel: localPreferences.passwordLabel.nilIfEmpty,
+            storageLimit: Int(localPreferences.storageLimit),
+            rows: localPreferences.rows
+        )
     }
 
     var body: some View {
