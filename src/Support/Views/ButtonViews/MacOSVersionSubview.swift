@@ -14,6 +14,7 @@ struct MacOSVersionSubview: View {
     
     // Get preferences or default values
     @EnvironmentObject var preferences: Preferences
+    @EnvironmentObject var localPreferences: LocalPreferences
 
     // Make UserDefaults easy to use
     let defaults = UserDefaults.standard
@@ -24,20 +25,25 @@ struct MacOSVersionSubview: View {
     // Boolean to show UpdateViewLegacy as popover
     @State var showUpdatePopover: Bool = false
     
+    // Local preferences for Configurator Mode or (managed) UserDefaults
+    var activePreferences: PreferencesProtocol {
+        preferences.configuratorModeEnabled ? localPreferences : preferences
+    }
+    
     // Set the custom color for all symbols depending on Light or Dark Mode.
-    var customColor: String {
-        if colorScheme == .light && defaults.string(forKey: "CustomColor") != nil {
-            return preferences.customColor
-        } else if colorScheme == .dark && defaults.string(forKey: "CustomColorDarkMode") != nil {
-            return preferences.customColorDarkMode
+    var color: Color {
+        if colorScheme == .dark && !activePreferences.customColorDarkMode.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColorDarkMode)") ?? NSColor.controlAccentColor)
+        } else if !activePreferences.customColor.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColor)") ?? NSColor.controlAccentColor)
         } else {
-            return preferences.customColor
+            return .accentColor
         }
     }
     
     var body: some View {
         
-        InfoItem(title: "macOS \(computerinfo.macOSVersionName)", subtitle: computerinfo.macOSVersion, image: "applelogo", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: computerinfo.recommendedUpdates.count, hoverEffectEnable: true)
+        InfoItem(title: "macOS \(computerinfo.macOSVersionName)", subtitle: computerinfo.macOSVersion, image: "applelogo", symbolColor: color, notificationBadge: computerinfo.recommendedUpdates.count, hoverEffectEnable: true)
             .onTapGesture {
                 computerinfo.showMacosUpdates.toggle()
             }

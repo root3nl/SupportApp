@@ -73,7 +73,7 @@ class Preferences: ObservableObject {
     @AppStorage("PasswordExpiryLimit") var passwordExpiryLimit: Int = 0
     
     // Text to show in Password info item
-    @AppStorage("PasswordLabel") var passwordLabel: String = "Mac " + NSLocalizedString("Password", comment: "")
+    @AppStorage("PasswordLabel") var passwordLabel: String = ""
     
     // Password type
     @AppStorage("PasswordType") var passwordType: String = "Apple"

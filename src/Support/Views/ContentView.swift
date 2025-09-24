@@ -30,14 +30,19 @@ struct ContentView: View {
     // Dark Mode detection
     @Environment(\.colorScheme) var colorScheme
     
+    // Local preferences for Configurator Mode or (managed) UserDefaults
+    var activePreferences: PreferencesProtocol {
+        preferences.configuratorModeEnabled ? localPreferences : preferences
+    }
+    
     // Set the custom color for all symbols depending on Light or Dark Mode.
-    var customColor: String {
-        if colorScheme == .light && defaults.string(forKey: "CustomColor") != nil {
-            return preferences.customColor
-        } else if colorScheme == .dark && defaults.string(forKey: "CustomColorDarkMode") != nil {
-            return preferences.customColorDarkMode
+    var color: Color {
+        if colorScheme == .dark && !activePreferences.customColorDarkMode.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColorDarkMode)") ?? NSColor.controlAccentColor)
+        } else if !activePreferences.customColor.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColor)") ?? NSColor.controlAccentColor)
         } else {
-            return preferences.customColor
+            return .accentColor
         }
     }
     
@@ -59,7 +64,7 @@ struct ContentView: View {
     
     var body: some View {
         
-        VStack(spacing: 10) {
+        VStack(spacing: preferences.editModeEnabled ? 0 : 10) {
             ForEach(rows.indices, id: \.self) { index in
                 ZStack {
                     HStack(spacing: 10) {
@@ -83,17 +88,17 @@ struct ContentView: View {
                                     case "AppCatalog":
                                         AppCatalogSubview()
                                     case "Extension":
-                                        ItemExtension(title: rowItems[itemIndex].title ?? "", subtitle: nil, linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), extensionIdentifier: rowItems[itemIndex].extensionIdentifier ?? "", onAppearAction: rowItems[itemIndex].onAppearAction, hoverEffectEnable: true, animate: false)
+                                        ItemExtension(title: rowItems[itemIndex].title ?? "", subtitle: nil, linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: color, extensionIdentifier: rowItems[itemIndex].extensionIdentifier ?? "", onAppearAction: rowItems[itemIndex].onAppearAction, hoverEffectEnable: true, animate: false)
                                     case "Button":
-                                        Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
+                                        Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: color, hoverEffectEnable: true, animate: true)
                                     case "ButtonMedium":
-                                        ItemSmall(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+                                        ItemSmall(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: color)
                                     case "ButtonSmall":
                                         if #available(macOS 26, *) {
-                                            ItemCircle(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+                                            ItemCircle(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: color)
                                         }
                                     default:
-                                        Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true, animate: true)
+                                        Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: color, hoverEffectEnable: true, animate: true)
                                     }
                                 }
                                 .frame(maxWidth: .infinity)

@@ -16,6 +16,10 @@ struct AppUpdatesView: View {
     // Get user info from functions in class
     @EnvironmentObject var userinfo: UserInfo
     
+    // Get preferences or default values
+    @EnvironmentObject var preferences: Preferences
+    @EnvironmentObject var localPreferences: LocalPreferences
+    
     // Get App Catalog information
     @EnvironmentObject var appCatalogController: AppCatalogController
     
@@ -25,19 +29,21 @@ struct AppUpdatesView: View {
     // Dark Mode detection
     @Environment(\.colorScheme) var colorScheme
     
-    // Set the custom color for all symbols depending on Light or Dark Mode.
-    var customColor: String {
-        if colorScheme == .light && defaults.string(forKey: "CustomColor") != nil {
-            return preferences.customColor
-        } else if colorScheme == .dark && defaults.string(forKey: "CustomColorDarkMode") != nil {
-            return preferences.customColorDarkMode
-        } else {
-            return preferences.customColor
-        }
+    // Local preferences for Configurator Mode or (managed) UserDefaults
+    var activePreferences: PreferencesProtocol {
+        preferences.configuratorModeEnabled ? localPreferences : preferences
     }
     
-    // Get preferences or default values
-    @StateObject var preferences = Preferences()
+    // Set the custom color for all symbols depending on Light or Dark Mode.
+    var color: Color {
+        if colorScheme == .dark && !activePreferences.customColorDarkMode.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColorDarkMode)") ?? NSColor.controlAccentColor)
+        } else if !activePreferences.customColor.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColor)") ?? NSColor.controlAccentColor)
+        } else {
+            return .accentColor
+        }
+    }
     
     // Update cancel hover state
     @State private var hoveredCancelButton: Bool = false
@@ -322,7 +328,7 @@ struct AppUpdatesView: View {
                                     .resizable()
                                     .frame(width: 50, height: 50)
                                     .symbolRenderingMode(.palette)
-                                    .foregroundStyle(.white, Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+                                    .foregroundStyle(.white, color)
                                 
                                 Text(NSLocalizedString("ALL_APPS_UP_TO_DATE", comment: ""))
                                     .font(.system(.title, design: .rounded))

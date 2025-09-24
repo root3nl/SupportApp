@@ -51,21 +51,10 @@ struct ItemExtension: View {
     
     // Enable animation
     var animate: Bool
-
-    // Read string directly
-//    var extensionValue: String? {
-//        guard let key = extensionIdentifier else { return nil }
-//        return UserDefaults.standard.string(forKey: key)
-//    }
-
-//    // Read bool directly
-//    var extensionLoading: Bool {
-//        guard let key = extensionIdentifier else { return false }
-//        return UserDefaults.standard.bool(forKey: "\(key)_loading")
-//    }
     
     @AppStorage private var extensionValue: String?
     @AppStorage private var extensionLoading: Bool
+    @AppStorage private var extensionAlert: Bool
 
     init(title: String,
          subtitle: String? = nil,
@@ -99,6 +88,7 @@ struct ItemExtension: View {
         
         self._extensionValue = AppStorage(extensionIdentifier, store: .standard)
         self._extensionLoading = AppStorage(wrappedValue: false, "\(extensionIdentifier)_loading", store: .standard)
+        self._extensionAlert = AppStorage(wrappedValue: false, "\(extensionIdentifier)_alert", store: .standard)
     }
 
     
@@ -155,14 +145,8 @@ struct ItemExtension: View {
                     Spacer()
                 }
                 
-                // Optionally show notification badge with counter
-                if notificationBadge != nil && notificationBadge! > 0 {
-                    NotificationBadgeView(badgeCounter: notificationBadge!)
-                        .accessibilityHidden(true)
-                }
-                
                 // Optionally show notification badge with warning
-                if notificationBadgeBool ?? false {
+                if extensionAlert {
                     NotificationBadgeTextView(badgeCounter: "!")
                         .accessibilityHidden(true)
                 }
@@ -241,21 +225,11 @@ struct ItemExtension: View {
                     Spacer()
                 }
                 
-                // Optionally show notification badge with counter
-                if notificationBadge != nil && notificationBadge! > 0 {
-                    NotificationBadgeView(badgeCounter: notificationBadge!)
-                        .accessibilityHidden(true)
-                }
-                
                 // Optionally show notification badge with warning
-                if notificationBadgeBool ?? false {
+                if extensionAlert {
                     NotificationBadgeTextView(badgeCounter: "!")
                         .accessibilityHidden(true)
                 }
-                
-                //            if updateView != nil && notificationBadge! > 0 {
-                //                UpdateView(color: symbolColor)
-                //            }
             }
             .frame(width: 176, height: 60)
             .accessibilityLabel(title + ", " + (subtitle ?? ""))

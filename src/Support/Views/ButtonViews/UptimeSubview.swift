@@ -14,6 +14,7 @@ struct UptimeSubview: View {
     
     // Get preferences or default values
     @EnvironmentObject var preferences: Preferences
+    @EnvironmentObject var localPreferences: LocalPreferences
     
     // Make UserDefaults easy to use
     let defaults = UserDefaults.standard
@@ -24,14 +25,19 @@ struct UptimeSubview: View {
     // Boolean to show legacy uptime alert when clicked
     @State var uptimeAlert: Bool = false
     
+    // Local preferences for Configurator Mode or (managed) UserDefaults
+    var activePreferences: PreferencesProtocol {
+        preferences.configuratorModeEnabled ? localPreferences : preferences
+    }
+    
     // Set the custom color for all symbols depending on Light or Dark Mode.
-    var customColor: String {
-        if colorScheme == .light && defaults.string(forKey: "CustomColor") != nil {
-            return preferences.customColor
-        } else if colorScheme == .dark && defaults.string(forKey: "CustomColorDarkMode") != nil {
-            return preferences.customColorDarkMode
+    var color: Color {
+        if colorScheme == .dark && !activePreferences.customColorDarkMode.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColorDarkMode)") ?? NSColor.controlAccentColor)
+        } else if !activePreferences.customColor.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColor)") ?? NSColor.controlAccentColor)
         } else {
-            return preferences.customColor
+            return .accentColor
         }
     }
     
@@ -56,14 +62,14 @@ struct UptimeSubview: View {
     var body: some View {
         
         if hoverEffectEnabled {
-            InfoItem(title: NSLocalizedString("Last Reboot", comment: ""), subtitle: "\(computerinfo.uptimeRounded) \(computerinfo.uptimeText) " + NSLocalizedString("ago", comment: ""), image: "clock.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: computerinfo.uptimeLimitReached, hoverEffectEnable: true)
+            InfoItem(title: NSLocalizedString("Last Reboot", comment: ""), subtitle: "\(computerinfo.uptimeRounded) \(computerinfo.uptimeText) " + NSLocalizedString("ago", comment: ""), image: "clock.fill", symbolColor: color, notificationBadgeBool: computerinfo.uptimeLimitReached, hoverEffectEnable: true)
                 .onTapGesture {
                     if hoverEffectEnabled {
                         computerinfo.showUptimeAlert.toggle()
                     }
                 }
         } else {
-            InfoItem(title: NSLocalizedString("Last Reboot", comment: ""), subtitle: "\(computerinfo.uptimeRounded) \(computerinfo.uptimeText) " + NSLocalizedString("ago", comment: ""), image: "clock.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: false, hoverEffectEnable: false)
+            InfoItem(title: NSLocalizedString("Last Reboot", comment: ""), subtitle: "\(computerinfo.uptimeRounded) \(computerinfo.uptimeText) " + NSLocalizedString("ago", comment: ""), image: "clock.fill", symbolColor: color, notificationBadgeBool: false, hoverEffectEnable: false)
         }
     }
 }

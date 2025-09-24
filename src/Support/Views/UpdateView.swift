@@ -31,20 +31,20 @@ struct UpdateView: View {
     
     @Environment(\.openURL) var openURL
 
-    // Set the custom color for all symbols depending on Light or Dark Mode.
-    var customColor: String {
-        if colorScheme == .light && defaults.string(forKey: "CustomColor") != nil {
-            return preferences.customColor
-        } else if colorScheme == .dark && defaults.string(forKey: "CustomColorDarkMode") != nil {
-            return preferences.customColorDarkMode
-        } else {
-            return preferences.customColor
-        }
-    }
-    
     // Local preferences for Configurator Mode or (managed) UserDefaults
     var activePreferences: PreferencesProtocol {
         preferences.configuratorModeEnabled ? localPreferences : preferences
+    }
+    
+    // Set the custom color for all symbols depending on Light or Dark Mode.
+    var color: Color {
+        if colorScheme == .dark && !activePreferences.customColorDarkMode.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColorDarkMode)") ?? NSColor.controlAccentColor)
+        } else if !activePreferences.customColor.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColor)") ?? NSColor.controlAccentColor)
+        } else {
+            return .accentColor
+        }
     }
     
     var body: some View {
@@ -204,7 +204,7 @@ struct UpdateView: View {
                         .resizable()
                         .frame(width: 50, height: 50)
                         .symbolRenderingMode(.palette)
-                        .foregroundStyle(.white, Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+                        .foregroundStyle(.white, color)
                         .accessibilityHidden(true)
                     
                     Text(NSLocalizedString("YOUR_MAC_IS_UP_TO_DATE", comment: ""))

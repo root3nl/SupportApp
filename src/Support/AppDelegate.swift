@@ -365,7 +365,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             // Set notification counter next to the menu bar icon if enabled. https://www.hackingwithswift.com/example-code/system/how-to-insert-images-into-an-attributed-string-with-nstextattachment
             
             // Create array with configured info items. Disabled info items should not show a notification badge in the menu bar icon
-            let infoItemsEnabled: [String] = [
+            var infoItemsEnabled: [String] = [
                 preferences.infoItemOne,
                 preferences.infoItemTwo,
                 preferences.infoItemThree,
@@ -374,6 +374,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                 preferences.infoItemSix
             ]
             
+            // Append all types from new structure
+            if !preferences.rows.isEmpty {
+                for row in preferences.rows {
+                    if let items = row.items {
+                        let allTypes = items.compactMap { $0.type }
+                        infoItemsEnabled.append(contentsOf: allTypes)
+                    }
+                }
+            }
+                        
             // If configured, ignore major macOS version updates
             if computerinfo.forceDelayedMajorSoftwareUpdates {
                 logger.debug("forceDelayedMajorSoftwareUpdates is enabled, hiding \(self.computerinfo.majorVersionUpdates) major macOS updates")
@@ -568,13 +578,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         if let button = statusBarItem?.button {
             
             // Disable animation when popover opens
-//            self.popover.animates = false
+            self.popover.animates = false
             
             // show popover
             self.popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
             
             // Enable animation again to avoid issues
-//            self.popover.animates = true
+            self.popover.animates = true
             
 //            if let popoverWindow = popover.contentViewController?.view.window {
 //                popoverWindow.isOpaque = false
@@ -615,6 +625,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         // Run uptime and storage once at startup
         self.loadLocalPreferences()
         self.decodeRows()
+        
+//        if preferences.rows.isEmpty {
+//            for row in preferences.rows {
+//                if let items = row.items {
+//                    let extensions = items.filter { $0.type == "Extension" }
+//                    for extensionItem in extensions {
+//                        defaults.addObserver(self, forKeyPath: "\(extensionItem.extensionIdentifier ?? "")_alert", options: .new, context: nil)
+//                    }
+//                }
+//            }
+//        }
+        
         self.computerinfo.kernelBootTime()
         Task {
             await self.userinfo.getCurrentUserRecord()

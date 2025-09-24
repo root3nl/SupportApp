@@ -38,6 +38,17 @@ struct AppView: View {
         preferences.configuratorModeEnabled ? localPreferences : preferences
     }
     
+    // Set the custom color for all symbols depending on Light or Dark Mode.
+    var color: Color {
+        if colorScheme == .dark && !activePreferences.customColorDarkMode.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColorDarkMode)") ?? NSColor.controlAccentColor)
+        } else if !activePreferences.customColor.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColor)") ?? NSColor.controlAccentColor)
+        } else {
+            return .accentColor
+        }
+    }
+    
     var appConfiguration: AppModel {
         return AppModel(
             title: localPreferences.title.nilIfEmpty,
@@ -57,11 +68,11 @@ struct AppView: View {
             openAtLogin: localPreferences.openAtLogin,
             disablePrivilegedHelperTool: activePreferences.disablePrivilegedHelperTool,
             disableConfiguratorMode: activePreferences.disableConfiguratorMode,
-            uptimeDaysLimit: localPreferences.uptimeDaysLimit,
+            uptimeDaysLimit: localPreferences.uptimeDaysLimit.nilIfZero,
             passwordType: localPreferences.passwordType.nilIfEmpty,
-            passwordExpiryLimit: localPreferences.passwordExpiryLimit,
+            passwordExpiryLimit: localPreferences.passwordExpiryLimit.nilIfZero,
             passwordLabel: localPreferences.passwordLabel.nilIfEmpty,
-            storageLimit: Int(localPreferences.storageLimit),
+            storageLimit: Int(localPreferences.storageLimit).nilIfZero,
             rows: localPreferences.rows
         )
     }
@@ -214,6 +225,7 @@ struct AppView: View {
                                         if #available(macOS 26, *) {
                                             $0
                                                 .buttonStyle(.glassProminent)
+                                                .tint(color)
                                                 .buttonBorderShape(.capsule)
                                                 .controlSize(.large)
                                         } else {

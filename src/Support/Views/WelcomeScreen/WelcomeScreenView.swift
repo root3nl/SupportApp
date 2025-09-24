@@ -14,6 +14,7 @@ struct WelcomeView: View {
     
     // Get preferences or default values
     @EnvironmentObject var preferences: Preferences
+    @EnvironmentObject var localPreferences: LocalPreferences
     
     // Make UserDefaults easy to use
     let defaults = UserDefaults.standard
@@ -21,14 +22,19 @@ struct WelcomeView: View {
     // Dark Mode detection
     @Environment(\.colorScheme) var colorScheme
     
+    // Local preferences for Configurator Mode or (managed) UserDefaults
+    var activePreferences: PreferencesProtocol {
+        preferences.configuratorModeEnabled ? localPreferences : preferences
+    }
+    
     // Set the custom color for all symbols depending on Light or Dark Mode.
-    var customColor: String {
-        if colorScheme == .light && defaults.string(forKey: "CustomColor") != nil {
-            return preferences.customColor
-        } else if colorScheme == .dark && defaults.string(forKey: "CustomColorDarkMode") != nil {
-            return preferences.customColorDarkMode
+    var color: Color {
+        if colorScheme == .dark && !activePreferences.customColorDarkMode.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColorDarkMode)") ?? NSColor.controlAccentColor)
+        } else if !activePreferences.customColor.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColor)") ?? NSColor.controlAccentColor)
         } else {
-            return preferences.customColor
+            return .accentColor
         }
     }
         
@@ -36,11 +42,11 @@ struct WelcomeView: View {
         
         VStack(alignment: .leading) {
             
-            FeatureView(image: "stethoscope", title: NSLocalizedString("Mac diagnosis", comment: ""), subtitle: NSLocalizedString("MAC_DIAGNOSIS_TEXT", comment: ""), color: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+            FeatureView(image: "stethoscope", title: NSLocalizedString("Mac diagnosis", comment: ""), subtitle: NSLocalizedString("MAC_DIAGNOSIS_TEXT", comment: ""), color: color)
             
-            FeatureView(image: "briefcase", title: NSLocalizedString("Easy access", comment: ""), subtitle: NSLocalizedString("EASY_ACCESS_TEXT", comment: ""), color: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+            FeatureView(image: "briefcase", title: NSLocalizedString("Easy access", comment: ""), subtitle: NSLocalizedString("EASY_ACCESS_TEXT", comment: ""), color: color)
             
-            FeatureView(image: "lifepreserver", title: NSLocalizedString("Get in touch", comment: ""), subtitle: NSLocalizedString("GET_IN_TOUCH_TEXT", comment: ""), color: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+            FeatureView(image: "lifepreserver", title: NSLocalizedString("Get in touch", comment: ""), subtitle: NSLocalizedString("GET_IN_TOUCH_TEXT", comment: ""), color: color)
             
         }
         
@@ -59,7 +65,7 @@ struct WelcomeView: View {
                     .buttonStyle(.borderedProminent)
             }
         }
-        .tint(Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+        .tint(color)
         .buttonBorderShape(.capsule)
         .controlSize(.extraLarge)
         .padding(.vertical)

@@ -17,6 +17,7 @@ struct PasswordSubview: View {
     
     // Get preferences or default values
     @EnvironmentObject var preferences: Preferences
+    @EnvironmentObject var localPreferences: LocalPreferences
 
     // Make UserDefaults easy to use
     let defaults = UserDefaults.standard
@@ -29,14 +30,19 @@ struct PasswordSubview: View {
     // Dark Mode detection
     @Environment(\.colorScheme) var colorScheme
     
+    // Local preferences for Configurator Mode or (managed) UserDefaults
+    var activePreferences: PreferencesProtocol {
+        preferences.configuratorModeEnabled ? localPreferences : preferences
+    }
+    
     // Set the custom color for all symbols depending on Light or Dark Mode.
-    var customColor: String {
-        if colorScheme == .light && defaults.string(forKey: "CustomColor") != nil {
-            return preferences.customColor
-        } else if colorScheme == .dark && defaults.string(forKey: "CustomColorDarkMode") != nil {
-            return preferences.customColorDarkMode
+    var color: Color {
+        if colorScheme == .dark && !activePreferences.customColorDarkMode.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColorDarkMode)") ?? NSColor.controlAccentColor)
+        } else if !activePreferences.customColor.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColor)") ?? NSColor.controlAccentColor)
         } else {
-            return preferences.customColor
+            return .accentColor
         }
     }
     
@@ -72,18 +78,26 @@ struct PasswordSubview: View {
             }
         }
     }
+    
+    var passwordLabel: String {
+        if !activePreferences.passwordLabel.isEmpty {
+            return activePreferences.passwordLabel
+        } else {
+            return "Mac " + NSLocalizedString("Password", comment: "")
+        }
+    }
         
     var body: some View {
 
-//        Item(title: "Mac " + NSLocalizedString("Password", comment: ""), subtitle: userinfo.userPasswordExpiryString, linkType: "Command", link: "open /System/Library/PreferencePanes/Accounts.prefPane", image: "key.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: userinfo.passwordExpiryLimitReached, hoverEffectEnable: true, animate: false)
+//        Item(title: "Mac " + NSLocalizedString("Password", comment: ""), subtitle: userinfo.userPasswordExpiryString, linkType: "Command", link: "open /System/Library/PreferencePanes/Accounts.prefPane", image: "key.fill", symbolColor: color, notificationBadgeBool: userinfo.passwordExpiryLimitReached, hoverEffectEnable: true, animate: false)
         
         // Option to show another subtitle offering to change the local Mac password
         
-        ItemDouble(title: preferences.passwordLabel, secondTitle: preferences.passwordLabel, subtitle: userinfo.userPasswordExpiryString, secondSubtitle: userinfo.passwordChangeString, linkType: linkType, link: userinfo.passwordChangeLink, image: "key.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: userinfo.passwordExpiryLimitReached, hoverEffectEnable: true)
+        ItemDouble(title: passwordLabel, secondTitle: passwordLabel, subtitle: userinfo.userPasswordExpiryString, secondSubtitle: userinfo.passwordChangeString, linkType: linkType, link: userinfo.passwordChangeLink, image: "key.fill", symbolColor: color, notificationBadgeBool: userinfo.passwordExpiryLimitReached, hoverEffectEnable: true)
         
         // Expirimental view with link to password change view
         
-//        InfoItem(title: "Mac " + NSLocalizedString("Password", comment: ""), subtitle: userinfo.passwordString, image: "key.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: userinfo.passwordExpiryLimitReached, hoverEffectEnable: true)
+//        InfoItem(title: "Mac " + NSLocalizedString("Password", comment: ""), subtitle: userinfo.passwordString, image: "key.fill", symbolColor: color, notificationBadge: userinfo.passwordExpiryLimitReached, hoverEffectEnable: true)
 //            .onTapGesture {
 //                computerinfo.showPasswordChange.toggle()
 //            }
