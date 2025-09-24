@@ -12,6 +12,18 @@ struct LogoView: View {
     
     var logo: String
     
+    // Dark Mode detection
+    @Environment(\.colorScheme) var colorScheme
+    
+    // Return light or dark default logo
+    var defaultLogo: String {
+        if colorScheme == .dark {
+            return "DefaultLogoDark"
+        } else {
+            return "DefaultLogo"
+        }
+    }
+    
     // Get string between "SF=" and optionally ","
     var symbol: String {
         if logo.components(separatedBy: ",").indices.contains(0) {
@@ -42,7 +54,7 @@ struct LogoView: View {
                     .frame(height: 48)
                 
             } placeholder: {
-                Image("DefaultLogo")
+                Image(defaultLogo)
                     .resizable()
                     .scaledToFit()
                     .cornerRadius(6)
@@ -88,13 +100,13 @@ struct LogoView: View {
             }
         // Show default logo
         } else if logo == "default" {
-            Image("DefaultLogo")
+            Image(defaultLogo)
                 .resizable()
                 .scaledToFit()
                 .frame(height: 48)
         // In all other cases the file is expected to be local but fallback to default logo when not present
         } else {
-            Image(nsImage: (NSImage(contentsOfFile: logo) ?? NSImage(named: "DefaultLogo"))!)
+            Image(nsImage: (NSImage(contentsOfFile: logo) ?? NSImage(named: defaultLogo))!)
                 .resizable()
                 .scaledToFit()
                 .frame(height: 48)
