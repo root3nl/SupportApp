@@ -75,9 +75,7 @@ class SupportHelper: NSObject, NSXPCListenerDelegate, SupportHelperProtocol {
         newConnection.remoteObjectInterface = NSXPCInterface(with: RemoteApplicationProtocol.self)
         
         // Check Code Requirement
-        if #available(macOS 13.0, *) {
-            newConnection.setCodeSigningRequirement(codeRequirement)
-        }
+        newConnection.setCodeSigningRequirement(codeRequirement)
         
         newConnection.exportedObject = self
         newConnection.invalidationHandler = (() -> Void)? {

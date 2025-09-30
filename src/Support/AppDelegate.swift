@@ -93,13 +93,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         // https://stackoverflow.com/questions/68744895/swift-ui-macos-menubar-nspopover-no-arrow
         popover.setValue(true, forKeyPath: "shouldHideAnchor")
         
-        // Make the popover auto resizing for macOS 13 and later. macOS 12 may leave empty space some views are too large
-        if #available(macOS 13.0, *) {
-            content.sizingOptions = .preferredContentSize
-        } else {
-            // Fallback on earlier versions
-            popover.contentSize = content.view.intrinsicContentSize
-        }
+        // Make the popover auto resizing
+        content.sizingOptions = .preferredContentSize
         
         // Set popover size
         popover.behavior = .transient
@@ -645,9 +640,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         self.computerinfo.getStorage()
         self.computerinfo.getRecommendedUpdates()
         self.computerinfo.getModelName()
-        if #available(macOS 13, *) {
-            self.computerinfo.getRSRVersion()
-        }
+        self.computerinfo.getRSRVersion()
         
         // Only run when App Catalog is installed
         if appCatalogController.catalogInstalled() {
@@ -777,79 +770,76 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     
     // Use SMAppService to handle LaunchAgent on macOS 13 and higher
     func configureLaunchAgent() {
-        if #available(macOS 13.0, *) {
+        // Set LaunchAgent PLIST name
+        let agent = SMAppService.agent(plistName: "nl.root3.support.plist")
+        launchAgentLogger.debug("LaunchAgent status: \(agent.status.rawValue)")
+        
+        // Set Legacy LaunchAgent file path URL
+        let legacyLAStatus = SMAppService.statusForLegacyPlist(at: URL(filePath: "/Library/LaunchAgents/nl.root3.support.plist"))
+        launchAgentLogger.debug("Legacy LaunchAgent status: \(legacyLAStatus.rawValue)")
+        
+        // Don't register SMAppService when Legacy LaunchAgent is active
+        guard legacyLAStatus != .enabled else {
+            launchAgentLogger.debug("Legacy LaunchAgent is active")
+            return
+        }
+        
+        // Try to register LaunchAgent unless disabled in Configuration Profile
+        if preferences.openAtLogin {
             
-            // Set LaunchAgent PLIST name
-            let agent = SMAppService.agent(plistName: "nl.root3.support.plist")
-            launchAgentLogger.debug("LaunchAgent status: \(agent.status.rawValue)")
-            
-            // Set Legacy LaunchAgent file path URL
-            let legacyLAStatus = SMAppService.statusForLegacyPlist(at: URL(filePath: "/Library/LaunchAgents/nl.root3.support.plist"))
-            launchAgentLogger.debug("Legacy LaunchAgent status: \(legacyLAStatus.rawValue)")
-            
-            // Don't register SMAppService when Legacy LaunchAgent is active
-            guard legacyLAStatus != .enabled else {
-                launchAgentLogger.debug("Legacy LaunchAgent is active")
-                return
-            }
-            
-            // Try to register LaunchAgent unless disabled in Configuration Profile
-            if preferences.openAtLogin {
-                
-                switch agent.status {
-                case .enabled:
-                    launchAgentLogger.debug("LaunchAgent is already registered and enabled")
-                case .notFound:
-                    launchAgentLogger.error("LaunchAgent not found")
-                    // Try to register LaunchAgent
-                    do {
-                        try agent.register()
-                        launchAgentLogger.debug("LaunchAgent was successfully registered")
-                        
-                        // Terminate the application to avoid running multiple instances of the app
-                        NSApplication.shared.terminate(self)
-                    } catch {
-                        launchAgentLogger.error("Error registering LaunchAgent")
-                        launchAgentLogger.error("\(error, privacy: .public)")
-                    }
-                case .notRegistered:
-                    launchAgentLogger.debug("LaunchAgent is not registered, trying to register...")
-                    // Try to register LaunchAgent
-                    do {
-                        try agent.register()
-                        launchAgentLogger.debug("LaunchAgent was successfully registered")
-                        
-                        // Terminate the application to avoid running multiple instances of the app
-                        NSApplication.shared.terminate(self)
-                    } catch {
-                        launchAgentLogger.error("Error registering LaunchAgent")
-                        launchAgentLogger.error("\(error, privacy: .public)")
-                    }
-                case .requiresApproval:
-                    launchAgentLogger.debug("LaunchAgent requires user approval")
-                    SMAppService.openSystemSettingsLoginItems()
+            switch agent.status {
+            case .enabled:
+                launchAgentLogger.debug("LaunchAgent is already registered and enabled")
+            case .notFound:
+                launchAgentLogger.error("LaunchAgent not found")
+                // Try to register LaunchAgent
+                do {
+                    try agent.register()
+                    launchAgentLogger.debug("LaunchAgent was successfully registered")
                     
                     // Terminate the application to avoid running multiple instances of the app
                     NSApplication.shared.terminate(self)
-                default:
-                    launchAgentLogger.error("Unknown error with LaunchAgent")
+                } catch {
+                    launchAgentLogger.error("Error registering LaunchAgent")
+                    launchAgentLogger.error("\(error, privacy: .public)")
                 }
-            } else {
-                
-                guard agent.status != .notRegistered else {
-                    launchAgentLogger.debug("LaunchAgent is already unregistered")
-                    return
+            case .notRegistered:
+                launchAgentLogger.debug("LaunchAgent is not registered, trying to register...")
+                // Try to register LaunchAgent
+                do {
+                    try agent.register()
+                    launchAgentLogger.debug("LaunchAgent was successfully registered")
+                    
+                    // Terminate the application to avoid running multiple instances of the app
+                    NSApplication.shared.terminate(self)
+                } catch {
+                    launchAgentLogger.error("Error registering LaunchAgent")
+                    launchAgentLogger.error("\(error, privacy: .public)")
                 }
+            case .requiresApproval:
+                launchAgentLogger.debug("LaunchAgent requires user approval")
+                SMAppService.openSystemSettingsLoginItems()
                 
-                // Try to unregister LaunchAgent when disabled in Configuration Profile
-                agent.unregister(completionHandler: { error in
-                    if let error = error {
-                        self.launchAgentLogger.error("Error unregistering LaunchAgent: \(error, privacy: .public)")
-                    } else {
-                        self.launchAgentLogger.debug("LaunchAgent successfully unregistered")
-                    }
-                })
+                // Terminate the application to avoid running multiple instances of the app
+                NSApplication.shared.terminate(self)
+            default:
+                launchAgentLogger.error("Unknown error with LaunchAgent")
             }
+        } else {
+            
+            guard agent.status != .notRegistered else {
+                launchAgentLogger.debug("LaunchAgent is already unregistered")
+                return
+            }
+            
+            // Try to unregister LaunchAgent when disabled in Configuration Profile
+            agent.unregister(completionHandler: { error in
+                if let error = error {
+                    self.launchAgentLogger.error("Error unregistering LaunchAgent: \(error, privacy: .public)")
+                } else {
+                    self.launchAgentLogger.debug("LaunchAgent successfully unregistered")
+                }
+            })
         }
     }
     

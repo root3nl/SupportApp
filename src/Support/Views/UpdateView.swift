@@ -219,10 +219,8 @@ struct UpdateView: View {
         .padding(.horizontal)
         .unredacted()
         .task {
-            if #available(macOS 14, *) {
-                if !computerinfo.recommendedUpdates.isEmpty {
-                    self.computerinfo.getUpdateDeclaration()
-                }
+            if !computerinfo.recommendedUpdates.isEmpty {
+                self.computerinfo.getUpdateDeclaration()
             }
         }
     }

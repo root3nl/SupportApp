@@ -386,12 +386,7 @@ class ComputerInfo: ObservableObject {
                     self.computerNameIcon = "macpro.gen3.fill"
                 } else if self.modelNameString.localizedCaseInsensitiveContains("Mac Studio") {
                     self.modelShortName = "Mac Studio"
-                    // SF Symbol for Mac Studio is only available in macOS 13 and higher
-                    if #available(macOS 13, *) {
-                        self.computerNameIcon = "macstudio.fill"
-                    } else {
-                        self.computerNameIcon = "desktopcomputer"
-                    }
+                    self.computerNameIcon = "macstudio.fill"
                 } else if self.modelNameString.localizedCaseInsensitiveContains("Apple Virtual Machine") {
                     self.modelShortName = "Apple Virtual Machine"
                     self.computerNameIcon = "server.rack"
@@ -731,7 +726,6 @@ class ComputerInfo: ObservableObject {
         }
     }
     
-    @available(macOS 13, *)
     // MARK: - Get optional Rapid Security Response version
     func getRSRVersion() {
         

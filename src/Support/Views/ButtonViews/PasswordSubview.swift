@@ -49,11 +49,7 @@ struct PasswordSubview: View {
     // Link type for Password item
     var linkType: String {
         if preferences.passwordType == "Apple" {
-            if #available(macOS 13, *) {
-                return "URL"
-            } else {
-                return "Command"
-            }
+            return "URL"
         } else if preferences.passwordType == "KerberosSSO"  {
             if userinfo.networkUnavailable {
                 return "KerberosSSOExtensionUnavailable"
@@ -71,11 +67,7 @@ struct PasswordSubview: View {
                 return "Command"
             }
         } else {
-            if #available(macOS 13, *) {
-                return "URL"
-            } else {
-                return "Command"
-            }
+            return "URL"
         }
     }
     

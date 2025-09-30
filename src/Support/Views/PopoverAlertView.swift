@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-@available(macOS 12.0, *)
 struct PopoverAlertView: View {
     
     // Get preferences or default values

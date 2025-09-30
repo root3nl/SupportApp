@@ -171,32 +171,12 @@ struct ProgressBarItem: View {
     
     // Open Storage Management
     func openStorageManagement() {
+        guard let url = URL(string: "x-apple.systempreferences:com.apple.settings.Storage") else {
+            self.showingAlert.toggle()
+            return }
+        NSWorkspace.shared.open(url)
         
-        if #available(macOS 13, *) {
-            
-            guard let url = URL(string: "x-apple.systempreferences:com.apple.settings.Storage")
-                    // Show alert when there is an error
-            else {
-                self.showingAlert.toggle()
-                return }
-            NSWorkspace.shared.open(url)
-            
-            // Close the popover
-//            NSApp.deactivate()
-            
-            // Close popover
-            appDelegate.togglePopover(nil)
-            
-        } else {
-            
-            guard let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: "com.apple.StorageManagementLauncher")
-                    // Show alert when there is an error
-            else {
-                self.showingAlert.toggle()
-                return }
-            let configuration = NSWorkspace.OpenConfiguration()
-            
-            NSWorkspace.shared.openApplication(at: url, configuration: configuration, completionHandler: nil)
-        }
+        // Close popover
+        appDelegate.togglePopover(nil)
     }
 }

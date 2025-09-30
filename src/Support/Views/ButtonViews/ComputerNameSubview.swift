@@ -38,28 +38,10 @@ struct ComputerNameSubview: View {
         }
     }
     
-    // Link to About This Mac
-    var aboutLink: String {
-        if #available(macOS 13, *) {
-            return "x-apple.systempreferences:com.apple.SystemProfiler.AboutExtension"
-        } else {
-            return "com.apple.AboutThisMacLauncher"
-        }
-    }
-    
-    // Link type for About This Mac
-    var aboutLinkType: String {
-        if #available(macOS 13, *) {
-            return "URL"
-        } else {
-            return "App"
-        }
-    }
-    
     var body: some View {
         
 //        InfoItem(title: NSLocalizedString("Computer Name", comment: ""), subtitle: computerinfo.hostname, image: computerinfo.computerNameIcon, symbolColor: color, hoverEffectEnable: false)
-        ItemDouble(title: NSLocalizedString("Computer Name", comment: ""), secondTitle: NSLocalizedString("Model", comment: ""), subtitle: computerinfo.hostname, secondSubtitle: computerinfo.modelNameString, linkType: aboutLinkType, link: aboutLink, image: computerinfo.computerNameIcon, symbolColor: color, hoverEffectEnable: true)
+        ItemDouble(title: NSLocalizedString("Computer Name", comment: ""), secondTitle: NSLocalizedString("Model", comment: ""), subtitle: computerinfo.hostname, secondSubtitle: computerinfo.modelNameString, linkType: "URL", link: "x-apple.systempreferences:com.apple.SystemProfiler.AboutExtension", image: computerinfo.computerNameIcon, symbolColor: color, hoverEffectEnable: true)
         
     }
 }
