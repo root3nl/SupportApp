@@ -54,7 +54,7 @@ struct AppUpdatesView: View {
         Group {
             
             HStack {
-                                    
+                
                 Button(action: {
                     appCatalogController.showAppUpdates.toggle()
                 }) {
@@ -82,10 +82,10 @@ struct AppUpdatesView: View {
                             .buttonStyle(.plain)
                     }
                 }
-                                        
+                
                 Text(NSLocalizedString("APP_UPDATES", comment: ""))
-                        .font(.system(.headline, design: .rounded))
-                                    
+                    .font(.system(.headline, design: .rounded))
+                
                 Spacer()
                 
                 if appCatalogController.updateDetails.count > 0 {
@@ -139,20 +139,33 @@ struct AppUpdatesView: View {
                 }
                 
             }
-            .modify {
-                if #unavailable(macOS 13) {
-                    $0.padding(.top)
-                } else {
-                    $0
-                }
-            }
             
             Divider()
                 .padding(2)
             
-            VStack {
+            if !appCatalogController.catalogInstalled() {
                 
-                if !appCatalogController.catalogInstalled() {
+                VStack(alignment: .center, spacing: 20) {
+                    
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .resizable()
+                        .frame(width: 50, height: 50)
+                        .symbolRenderingMode(.palette)
+                        .foregroundStyle(.white, .orange)
+                    
+                    Text(NSLocalizedString("APP_CATALOG_NOT_CONFIGURED", comment: ""))
+                        .font(.system(.title, design: .rounded))
+                        .fontWeight(.medium)
+                        .multilineTextAlignment(.center)
+                    
+                    Link(NSLocalizedString("DOCUMENTATION", comment: ""), destination: URL(string: "https://docs.appcatalog.cloud")!)
+                    
+                }
+                .padding(.vertical, 40)
+                
+            } else {
+                
+                if !FileUtilities().fileOrFolderExists(path: "/Library/PrivilegedHelperTools/nl.root3.support.helper") {
                     
                     VStack(alignment: .center, spacing: 20) {
                         
@@ -162,210 +175,175 @@ struct AppUpdatesView: View {
                             .symbolRenderingMode(.palette)
                             .foregroundStyle(.white, .orange)
                         
-                        Text(NSLocalizedString("APP_CATALOG_NOT_CONFIGURED", comment: ""))
+                        Text(NSLocalizedString("PRIVILEGED_HELPER_TOOL_NOT_INSTALLED", comment: ""))
                             .font(.system(.title, design: .rounded))
                             .fontWeight(.medium)
                             .multilineTextAlignment(.center)
                         
-                        Link(NSLocalizedString("DOCUMENTATION", comment: ""), destination: URL(string: "https://docs.appcatalog.cloud")!)
+                        Link(NSLocalizedString("DOCUMENTATION", comment: ""), destination: URL(string: "https://github.com/root3nl/SupportApp")!)
                         
                     }
                     .padding(.vertical, 40)
                     
                 } else {
                     
-                    if !FileUtilities().fileOrFolderExists(path: "/Library/PrivilegedHelperTools/nl.root3.support.helper") {
+                    if appCatalogController.updateDetails.count > 0 {
+                        
+                        ForEach(appCatalogController.updateDetails, id: \.self) { update in
+                            
+                            HStack {
+                                
+                                if let icon = update.icon {
+                                    
+                                    AsyncImage(url: URL(string: icon)) { phase in
+                                        switch phase {
+                                        case .empty:
+                                            Image(systemName: "app.dashed")
+                                                .font(.system(size: 30))
+                                                .foregroundStyle(.secondary)
+                                        case .success(let image):
+                                            image
+                                                .resizable()
+                                                .scaledToFit()
+                                        case .failure(_):
+                                            Image(systemName: "exclamationmark.circle")
+                                                .font(.system(size: 30))
+                                                .foregroundStyle(.secondary)
+                                        @unknown default:
+                                            EmptyView()
+                                        }
+                                    }
+                                    .frame(width: 40, height: 40)
+                                    .accessibilityHidden(true)
+                                    
+                                }
+                                
+                                VStack(alignment: .leading) {
+                                    
+                                    Text(update.name ?? "")
+                                        .font(.system(.headline, design: .rounded))
+                                    
+                                    if update.version != nil && update.newVersion != nil {
+                                        Text("\(update.version ?? "") → \(update.newVersion ?? "")")
+                                            .foregroundColor(.secondary)
+                                            .font(.system(.subheadline, design: .rounded))
+                                            .accessibilityHidden(true)
+                                    }
+                                    
+                                }
+                                
+                                Spacer()
+                                
+                                Button(action: {
+                                    Task {
+                                        // Validate Catalog Agent code requirement
+                                        guard verifyAppCatalogCodeRequirement() else {
+                                            return
+                                        }
+                                        
+                                        // Append app to queue
+                                        await MainActor.run() {
+                                            appCatalogController.appsQueued.append(update.id)
+                                        }
+                                        
+                                        // Update app
+                                        await InstallTaskQueue.shared.submit(id: update.id) {
+                                            await updateApp(bundleID: update.id)
+                                        }
+                                    }
+                                }) {
+                                    if appCatalogController.appsUpdating.contains(update.id) {
+                                        ProgressView()
+                                            .scaleEffect(0.6)
+                                            .frame(width: 26, height: 26)
+                                            .padding(.leading, 10)
+                                            .accessibilityValue(NSLocalizedString("UPDATING", comment: ""))
+                                            .accessibilityLabel(update.name ?? "")
+                                    } else if appCatalogController.appsQueued.contains(update.id) {
+                                        Image(systemName: hoveredCancelButton && (hoveredItem == update.id) ? "xmark.circle.fill" : "clock")
+                                            .font(.system(size: 16))
+                                            .frame(width: 26, height: 26)
+                                            .onHover { hover in
+                                                hoveredCancelButton = hover
+                                            }
+                                            .animation(.easeOut(duration: 0.2), value: hoveredCancelButton && (hoveredItem == update.id))
+                                            .onTapGesture {
+                                                Task {
+                                                    await InstallTaskQueue.shared.cancel(taskID: update.id)
+                                                    await MainActor.run {
+                                                        appCatalogController.appsQueued.removeAll(where: { $0 == update.id })
+                                                    }
+                                                    appCatalogController.logger.debug("App \(update.id, privacy: .public) update cancelled")
+                                                }
+                                            }
+                                    } else {
+                                        Image(systemName: "icloud.and.arrow.down")
+                                            .font(.system(size: 16, weight: .medium))
+                                            .frame(width: 26, height: 26)
+                                            .padding(.leading, 10)
+                                            .accessibilityValue(NSLocalizedString("UPDATE", comment: ""))
+                                            .accessibilityLabel(update.name ?? "")
+                                    }
+                                }
+                                .buttonStyle(.plain)
+                                
+                            }
+                            .onHover {_ in
+                                hoveredItem = update.id
+                            }
+                            .frame(height: 40)
+                            .accessibilityElement(children: .combine)
+                        }
+                        
+                        // Show update schedule information when configured
+                        if appCatalogController.updateInterval > 0 {
+                            
+                            Divider()
+                                .padding(2)
+                            
+                            HStack(alignment: .top) {
+                                
+                                Text("\(NSLocalizedString("APPS_WILL_BE_UPDATED_AUTOMATICALLY_DESCRIPTION", comment: "")) \(appCatalogController.nextUpdateDate)")
+                                    .font(.system(.body, design: .rounded))
+                                //                                .foregroundStyle(.secondary)
+                                
+                                Spacer()
+                            }
+                        }
+                        
+                    } else {
                         
                         VStack(alignment: .center, spacing: 20) {
                             
-                            Image(systemName: "exclamationmark.triangle.fill")
+                            Image(systemName: "checkmark.circle.fill")
                                 .resizable()
                                 .frame(width: 50, height: 50)
                                 .symbolRenderingMode(.palette)
-                                .foregroundStyle(.white, .orange)
+                                .foregroundStyle(.white, color)
                             
-                            Text(NSLocalizedString("PRIVILEGED_HELPER_TOOL_NOT_INSTALLED", comment: ""))
+                            Text(NSLocalizedString("ALL_APPS_UP_TO_DATE", comment: ""))
                                 .font(.system(.title, design: .rounded))
                                 .fontWeight(.medium)
                                 .multilineTextAlignment(.center)
                             
-                            Link(NSLocalizedString("DOCUMENTATION", comment: ""), destination: URL(string: "https://github.com/root3nl/SupportApp")!)
+                            if appCatalogController.updateInterval > 0 {
+                                
+                                Text("\(NSLocalizedString("APPS_WILL_BE_UPDATED_AUTOMATICALLY_DESCRIPTION", comment: "")) \(appCatalogController.nextUpdateDate)")
+                                // Set frame to 250 to allow multiline text
+                                    .frame(width: 250)
+                                    .font(.system(.title3, design: .rounded))
+                                    .multilineTextAlignment(.center)
+                                    .foregroundStyle(.secondary)
+                                
+                            }
                             
                         }
                         .padding(.vertical, 40)
-                        
-                    } else {
-                        
-                        if appCatalogController.updateDetails.count > 0 {
-                            
-                            ForEach(appCatalogController.updateDetails, id: \.self) { update in
-                                
-                                HStack {
-                                    
-                                    if let icon = update.icon {
-                                        
-                                        AsyncImage(url: URL(string: icon)) { phase in
-                                            switch phase {
-                                            case .empty:
-                                                Image(systemName: "app.dashed")
-                                                    .font(.system(size: 30))
-                                                    .foregroundStyle(.secondary)
-                                            case .success(let image):
-                                                image
-                                                    .resizable()
-                                                    .scaledToFit()
-                                            case .failure(_):
-                                                Image(systemName: "exclamationmark.circle")
-                                                    .font(.system(size: 30))
-                                                    .foregroundStyle(.secondary)
-                                            @unknown default:
-                                                EmptyView()
-                                            }
-                                        }
-                                        .frame(width: 40, height: 40)
-                                        .accessibilityHidden(true)
-                                        
-                                    }
-                                    
-                                    VStack(alignment: .leading) {
-                                        
-                                        Text(update.name ?? "")
-                                            .font(.system(.headline, design: .rounded))
-                                        
-                                        if update.version != nil && update.newVersion != nil {
-                                            Text("\(update.version ?? "") → \(update.newVersion ?? "")")
-                                                .foregroundColor(.secondary)
-                                                .font(.system(.subheadline, design: .rounded))
-                                                .accessibilityHidden(true)
-                                        }
-                                        
-                                    }
-                                    
-                                    Spacer()
-                                    
-                                    Button(action: {
-                                        Task {
-                                            // Validate Catalog Agent code requirement
-                                            guard verifyAppCatalogCodeRequirement() else {
-                                                return
-                                            }
-                                            
-                                            // Append app to queue
-                                            await MainActor.run() {
-                                                appCatalogController.appsQueued.append(update.id)
-                                            }
-                                            
-                                            // Update app
-                                            await InstallTaskQueue.shared.submit(id: update.id) {
-                                                await updateApp(bundleID: update.id)
-                                            }
-                                        }
-                                    }) {
-                                        if appCatalogController.appsUpdating.contains(update.id) {
-                                            ProgressView()
-                                                .scaleEffect(0.6)
-                                                .frame(width: 26, height: 26)
-                                                .padding(.leading, 10)
-                                                .accessibilityValue(NSLocalizedString("UPDATING", comment: ""))
-                                                .accessibilityLabel(update.name ?? "")
-                                        } else if appCatalogController.appsQueued.contains(update.id) {
-                                            Image(systemName: hoveredCancelButton && (hoveredItem == update.id) ? "xmark.circle.fill" : "clock")
-                                                .font(.system(size: 16))
-                                                .frame(width: 26, height: 26)
-                                                .onHover { hover in
-                                                    hoveredCancelButton = hover
-                                                }
-                                                .animation(.easeOut(duration: 0.2), value: hoveredCancelButton && (hoveredItem == update.id))
-                                                .onTapGesture {
-                                                    Task {
-                                                        await InstallTaskQueue.shared.cancel(taskID: update.id)
-                                                        await MainActor.run {
-                                                            appCatalogController.appsQueued.removeAll(where: { $0 == update.id })
-                                                        }
-                                                        appCatalogController.logger.debug("App \(update.id, privacy: .public) update cancelled")
-                                                    }
-                                                }
-                                        } else {
-                                            Image(systemName: "icloud.and.arrow.down")
-                                                .font(.system(size: 16, weight: .medium))
-                                                .frame(width: 26, height: 26)
-                                                .padding(.leading, 10)
-                                                .accessibilityValue(NSLocalizedString("UPDATE", comment: ""))
-                                                .accessibilityLabel(update.name ?? "")
-                                        }
-                                    }
-                                    .buttonStyle(.plain)
-                                    
-                                }
-                                .onHover {_ in
-                                    hoveredItem = update.id
-                                }
-                                .frame(height: 40)
-                                .accessibilityElement(children: .combine)
-                            }
-                            
-                            // Show update schedule information when configured
-                            if appCatalogController.updateInterval > 0 {
-                                
-                                Divider()
-                                    .padding(2)
-                                
-                                HStack(alignment: .top) {
-                                    
-                                    Text("\(NSLocalizedString("APPS_WILL_BE_UPDATED_AUTOMATICALLY_DESCRIPTION", comment: "")) \(appCatalogController.nextUpdateDate)")
-                                        .font(.system(.body, design: .rounded))
-                                    //                                .foregroundStyle(.secondary)
-                                    
-                                    Spacer()
-                                }
-                            }
-                            
-                        } else {
-                            
-                            VStack(alignment: .center, spacing: 20) {
-                                
-                                Image(systemName: "checkmark.circle.fill")
-                                    .resizable()
-                                    .frame(width: 50, height: 50)
-                                    .symbolRenderingMode(.palette)
-                                    .foregroundStyle(.white, color)
-                                
-                                Text(NSLocalizedString("ALL_APPS_UP_TO_DATE", comment: ""))
-                                    .font(.system(.title, design: .rounded))
-                                    .fontWeight(.medium)
-                                    .multilineTextAlignment(.center)
-                                
-                                if appCatalogController.updateInterval > 0 {
-                                    
-                                    Text("\(NSLocalizedString("APPS_WILL_BE_UPDATED_AUTOMATICALLY_DESCRIPTION", comment: "")) \(appCatalogController.nextUpdateDate)")
-                                    // Set frame to 250 to allow multiline text
-                                        .frame(width: 250)
-                                        .font(.system(.title3, design: .rounded))
-                                        .multilineTextAlignment(.center)
-                                        .foregroundStyle(.secondary)
-                                    
-                                }
-                                
-                            }
-                            .padding(.vertical, 40)
-                        }
                     }
                 }
             }
-            .modify {
-                if #unavailable(macOS 13) {
-                    $0.padding(.bottom)
-                } else {
-                    $0
-                }
-            }
         }
-        .modify {
-            if #unavailable(macOS 13) {
-                $0.frame(minWidth: 300)
-            } else {
-                $0
-            }        }
+        .frame(minWidth: 300)
         .padding(.horizontal)
         .unredacted()
     }
