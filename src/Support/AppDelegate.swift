@@ -232,7 +232,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         // Event monitor to hide popover when clicked outside the popover.
         eventMonitor = EventMonitor(mask: [.leftMouseDown, .rightMouseDown]) { [weak self] event in
             if let strongSelf = self, strongSelf.popover.isShown {
-                strongSelf.closePopover(sender: event)
+                if !strongSelf.preferences.configuratorModeEnabled {
+                    strongSelf.closePopover(sender: event)
+                }
             }
         }
     }
@@ -683,8 +685,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         
         if preferences.configuratorModeEnabled {
             preferences.editModeEnabled = true
+            
+            // Make sure the popover stays open when configurator mode and settings are presented
+            popover.behavior = .applicationDefined
         } else {
             preferences.editModeEnabled = false
+            
+            // Make sure the popover is set back to transient and hides when needed
+            popover.behavior = .transient
         }
         
         togglePopover(nil)
@@ -963,3 +971,4 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         }
     }
 }
+

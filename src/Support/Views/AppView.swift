@@ -25,6 +25,8 @@ struct AppView: View {
     // Dark Mode detection
     @Environment(\.colorScheme) var colorScheme
     
+    @Environment(\.openSettings) private var openSettings
+    
     // Simple property wrapper boolean to visualize data loading when app opens
     @State private var placeholdersEnabled = true
     @State private var showExportOptions: Bool = false
@@ -162,10 +164,14 @@ struct AppView: View {
                             Spacer()
                             
                             if preferences.editModeEnabled {
-                                SettingsLink(label: {
+                                Button {
+                                    NSApplication.shared.activate(ignoringOtherApps: true)
+                                    openSettings()
+                                } label: {
+//                                SettingsLink(label: {
                                     Label("Settings", systemImage: "gear")
                                         .labelStyle(.titleOnly)
-                                })
+                                }
                                 .modify {
                                     if #available(macOS 26, *) {
                                         $0
