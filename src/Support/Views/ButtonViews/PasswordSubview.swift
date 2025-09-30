@@ -48,17 +48,17 @@ struct PasswordSubview: View {
     
     // Link type for Password item
     var linkType: String {
-        if preferences.passwordType == "Apple" {
+        if activePreferences.passwordType == "Apple" {
             return "URL"
-        } else if preferences.passwordType == "KerberosSSO"  {
+        } else if activePreferences.passwordType == "KerberosSSO"  {
             if userinfo.networkUnavailable {
                 return "KerberosSSOExtensionUnavailable"
             } else {
                 return "Command"
             }
-        } else if preferences.passwordType == "Nomad" {
+        } else if activePreferences.passwordType == "Nomad" {
             return "Command"
-        } else if preferences.passwordType == "JamfConnect" {
+        } else if activePreferences.passwordType == "JamfConnect" {
             // FIXME: - Remove when Jamf Connect Password Change can be triggered
             // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
             if defaultsJamfConnect?.bool(forKey: "PasswordCurrent") ?? false {
