@@ -23,7 +23,7 @@ struct GlassEffectModifier: ViewModifier {
                 .glassEffect(hoverView && hoverEffectEnable ? .clear.tint(.white.opacity(0.1)) : .clear)
         } else {
             content
-                .glassEffect(hoverView && hoverEffectEnable ? .clear.tint(.primary.opacity(0.2)) : .clear.tint(.primary.opacity(0.3)))
+                .glassEffect(hoverView && hoverEffectEnable ? .clear.tint(.primary.opacity(0.3)) : .clear.tint(.primary.opacity(0.4)))
         }
     }
 }
