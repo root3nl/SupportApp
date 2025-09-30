@@ -167,6 +167,7 @@ struct AppView: View {
                                 Button {
                                     NSApplication.shared.activate(ignoringOtherApps: true)
                                     openSettings()
+                                    NSApplication.shared.activate(ignoringOtherApps: true)
                                 } label: {
 //                                SettingsLink(label: {
                                     Label("Settings", systemImage: "gear")
