@@ -25,7 +25,7 @@ struct InfoItem: View {
     @EnvironmentObject var preferences: Preferences
     
     // Get local preferences for Configurator Mode
-    @EnvironmentObject var localPreferences: LocalPreferences
+//    @EnvironmentObject var localPreferences: LocalPreferences
     
     var body: some View {
         
@@ -86,30 +86,9 @@ struct InfoItem: View {
                         .accessibilityHidden(true)
                 }
                 
-                if preferences.editModeEnabled {
-                    HStack {
-                        VStack {
-                            Button {
-                                guard let configurationItem else {
-                                    return
-                                }
-                                localPreferences.rows[configurationItem.rowIndex].items?.remove(at: configurationItem.itemIndex)
-                                
-                                // Remove if row is empty to avoid empty/invisible rows taking up space
-                                if localPreferences.rows[configurationItem.rowIndex].items?.count == 0 {
-                                    localPreferences.rows.remove(at: configurationItem.itemIndex)
-                                }
-                            } label: {
-                                Label("Remove item", systemImage: "minus")
-                                    .labelStyle(.iconOnly)
-                            }
-                            .buttonStyle(AddIconButtonStyle(color: .red))
-                            
-                            Spacer()
-                        }
-                        Spacer()
-                    }
-                    .padding(.trailing, 4)
+                // Optionally show remove item button
+                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    RemoveItemButtonView(configurationItem: configurationItem)
                 }
 
             }
@@ -170,32 +149,9 @@ struct InfoItem: View {
                         .accessibilityHidden(true)
                 }
                 
-                if preferences.editModeEnabled {
-                    HStack {
-                        Spacer()
-                        
-                        VStack {
-                            
-                            Button {
-                                guard let configurationItem else {
-                                    return
-                                }
-                                localPreferences.rows[configurationItem.rowIndex].items?.remove(at: configurationItem.itemIndex)
-                                
-                                // Remove if row is empty to avoid empty/invisible rows taking up space
-                                if localPreferences.rows[configurationItem.rowIndex].items?.count == 0 {
-                                    localPreferences.rows.remove(at: configurationItem.itemIndex)
-                                }
-                            } label: {
-                                Label("Add item", systemImage: "minus")
-                                    .labelStyle(.iconOnly)
-                            }
-                            .buttonStyle(AddIconButtonStyle(color: .clear))
-                            
-                            Spacer()
-                        }
-                    }
-                    .padding(.trailing, 4)
+                // Optionally show remove item button
+                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    RemoveItemButtonView(configurationItem: configurationItem)
                 }
                 
             }

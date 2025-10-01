@@ -46,19 +46,26 @@ struct ItemCircle: View {
     @EnvironmentObject var localPreferences: LocalPreferences
     
     var body: some View {
-        VStack {
+        ZStack {
+            VStack {
+                
+                if loading ?? false {
+                    ProgressView()
+                        .scaleEffect(0.8)
+                        .frame(width: 22, height: 22)
+                        .accessibilityHidden(true)
+                } else {
+                    Image(systemName: image)
+                        .font(.system(size: 22, weight: .semibold))
+                        .foregroundStyle(.white)
+                    //                    .symbolRenderingMode(.hierarchical)
+                        .accessibilityHidden(true)
+                }
+            }
             
-            if loading ?? false {
-                ProgressView()
-                    .scaleEffect(0.8)
-                    .frame(width: 22, height: 22)
-                    .accessibilityHidden(true)
-            } else {
-                Image(systemName: image)
-                    .font(.system(size: 22, weight: .semibold))
-                    .foregroundStyle(.white)
-//                    .symbolRenderingMode(.hierarchical)
-                    .accessibilityHidden(true)
+            // Optionally show remove item button
+            if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                RemoveItemButtonView(configurationItem: configurationItem)
             }
         }
         .frame(width: 83, height: 83)

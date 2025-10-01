@@ -22,6 +22,7 @@
 		0AFE0A8325014C6100957B52 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0AFE0A8525014C6100957B52 /* Localizable.strings */; };
 		490B145E258A55B90048D8AF /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490B145D258A55B90048D8AF /* Extensions.swift */; };
 		490B26EF2E84111200DE50E0 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 490B26EE2E84111200DE50E0 /* AppIcon.icon */; };
+		490B27982E8D49C700DE50E0 /* RemoveItemButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490B27972E8D49C700DE50E0 /* RemoveItemButtonView.swift */; };
 		490CE0A8294FC144005BC01D /* SoftwareUpdateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490CE0A7294FC144005BC01D /* SoftwareUpdateModel.swift */; };
 		4915290D259CCF7A00056B5F /* NotificationBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4915290C259CCF7A00056B5F /* NotificationBadgeView.swift */; };
 		49152910259CD09400056B5F /* InfoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4915290F259CD09400056B5F /* InfoItem.swift */; };
@@ -180,6 +181,7 @@
 		0AFE0A8625014C8300957B52 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		490B145D258A55B90048D8AF /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		490B26EE2E84111200DE50E0 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
+		490B27972E8D49C700DE50E0 /* RemoveItemButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveItemButtonView.swift; sourceTree = "<group>"; };
 		490CE0A7294FC144005BC01D /* SoftwareUpdateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoftwareUpdateModel.swift; sourceTree = "<group>"; };
 		4915290C259CCF7A00056B5F /* NotificationBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBadgeView.swift; sourceTree = "<group>"; };
 		4915290F259CD09400056B5F /* InfoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoItem.swift; sourceTree = "<group>"; };
@@ -330,6 +332,7 @@
 				4976EB8A265317C6006EE097 /* AppView.swift */,
 				49822CE424B4C3F100E8DE54 /* ContentView.swift */,
 				49CB03B02E663F8200D0016D /* LegacyContentView.swift */,
+				490B27972E8D49C700DE50E0 /* RemoveItemButtonView.swift */,
 				491ECC592DAC5BEB00B88732 /* ItemConfigurationView.swift */,
 				4915291B259CD38800056B5F /* EffectsView.swift */,
 				4915290C259CCF7A00056B5F /* NotificationBadgeView.swift */,
@@ -716,6 +719,7 @@
 				498B7001272F460100BFA45E /* KerberosSSOExtensionModel.swift in Sources */,
 				4976EB8B265317C6006EE097 /* AppView.swift in Sources */,
 				49F6744E273F2DBC00C47403 /* ExtensionASubview.swift in Sources */,
+				490B27982E8D49C700DE50E0 /* RemoveItemButtonView.swift in Sources */,
 				49CB64452BA3BC58009E6026 /* UptimeAlertView.swift in Sources */,
 				499F56732AE0832100CBDE73 /* AppCatalogSubview.swift in Sources */,
 				498DB8412E5E49D700DDC33B /* LocalPreferences.swift in Sources */,

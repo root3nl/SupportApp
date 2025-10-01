@@ -46,38 +46,46 @@ struct ItemSmall: View {
     var body: some View {
         
         if #available(macOS 26, *) {
-            VStack {
+            ZStack {
                 
-                if loading ?? false {
-                    ProgressView()
-                        .scaleEffect(0.8)
-                        .frame(width: 22, height: 22)
-                        .accessibilityHidden(true)
-                } else {
-                    Image(systemName: image)
-                        .font(.system(size: 22, weight: .semibold))
-                        .foregroundStyle(.white)
-//                        .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
-//                        .symbolRenderingMode(.hierarchical)
-                        .frame(width: 22, height: 22)
-                        .accessibilityHidden(true)
+                VStack {
+                    
+                    if loading ?? false {
+                        ProgressView()
+                            .scaleEffect(0.8)
+                            .frame(width: 22, height: 22)
+                            .accessibilityHidden(true)
+                    } else {
+                        Image(systemName: image)
+                            .font(.system(size: 22, weight: .semibold))
+                            .foregroundStyle(.white)
+                        //                        .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
+                        //                        .symbolRenderingMode(.hierarchical)
+                            .frame(width: 22, height: 22)
+                            .accessibilityHidden(true)
+                    }
+                    
+                    Spacer()
+                    
+                    // Optionally show a subtitle when user hovers over button
+                    if subtitle != "" && hoverView {
+                        Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
+                            .font(.system(.subheadline, design: .default))
+                            .foregroundStyle(.white)
+                            .frame(width: 80)
+                            .lineLimit(1)
+                    } else {
+                        Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
+                            .font(.system(.subheadline, design: .default))
+                            .foregroundStyle(.white)
+                            .frame(width: 80)
+                            .lineLimit(1)
+                    }
                 }
                 
-                Spacer()
-                
-                // Optionally show a subtitle when user hovers over button
-                if subtitle != "" && hoverView {
-                    Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
-                        .font(.system(.subheadline, design: .default))
-                        .foregroundStyle(.white)
-                        .frame(width: 80)
-                        .lineLimit(1)
-                } else {
-                    Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
-                        .font(.system(.subheadline, design: .default))
-                        .foregroundStyle(.white)
-                        .frame(width: 80)
-                        .lineLimit(1)
+                // Optionally show remove item button
+                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    RemoveItemButtonView(configurationItem: configurationItem)
                 }
             }
             .padding(10)
@@ -106,31 +114,38 @@ struct ItemSmall: View {
             .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: true))
             .animation(.bouncy, value: hoverView)
         } else {
-            VStack {
-                
-                if loading ?? false {
-                    ProgressView()
-                        .scaleEffect(0.8)
-                        .frame(width: 24, height: 24)
-                        .accessibilityHidden(true)
-                } else {
-                    Image(systemName: image)
-                        .font(.system(size: 24, weight: .semibold))
-                        .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
-                        .frame(width: 24, height: 24)
-                        .accessibilityHidden(true)
+            ZStack {
+                VStack {
+                    
+                    if loading ?? false {
+                        ProgressView()
+                            .scaleEffect(0.8)
+                            .frame(width: 24, height: 24)
+                            .accessibilityHidden(true)
+                    } else {
+                        Image(systemName: image)
+                            .font(.system(size: 24, weight: .semibold))
+                            .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
+                            .frame(width: 24, height: 24)
+                            .accessibilityHidden(true)
+                    }
+                    
+                    Spacer()
+                    
+                    // Optionally show a subtitle when user hovers over button
+                    if subtitle != "" && hoverView {
+                        Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
+                            .font(.system(.subheadline, design: .rounded))
+                    } else {
+                        Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
+                            .font(.system(.subheadline, design: .rounded))
+                        
+                    }
                 }
                 
-                Spacer()
-                
-                // Optionally show a subtitle when user hovers over button
-                if subtitle != "" && hoverView {
-                    Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
-                        .font(.system(.subheadline, design: .rounded))
-                } else {
-                    Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
-                        .font(.system(.subheadline, design: .rounded))
-                    
+                // Optionally show remove item button
+                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    RemoveItemButtonView(configurationItem: configurationItem)
                 }
             }
             .padding(.vertical, 10)

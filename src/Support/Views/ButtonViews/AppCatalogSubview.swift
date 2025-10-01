@@ -60,7 +60,7 @@ struct AppCatalogSubview: View {
     
     var body: some View {
         
-        InfoItem(title: NSLocalizedString("APPS", comment: ""), subtitle: updatesString, image: "arrow.down.app.fill", symbolColor: color, notificationBadge: appCatalogController.appUpdates, notificationBadgeBool: appCatalogController.catalogInstalled() ? false : true, loading: appCatalogController.appsUpdating.isEmpty ? false : true, hoverEffectEnable: true)
+        InfoItem(title: NSLocalizedString("APPS", comment: ""), subtitle: updatesString, image: "arrow.down.app.fill", symbolColor: color, notificationBadge: appCatalogController.appUpdates, notificationBadgeBool: appCatalogController.catalogInstalled() ? false : true, loading: appCatalogController.appsUpdating.isEmpty ? false : true, configurationItem: configurationItem, hoverEffectEnable: true)
             .onTapGesture {
                 if preferences.editModeEnabled {
                     guard let configurationItem else {

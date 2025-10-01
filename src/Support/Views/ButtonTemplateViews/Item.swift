@@ -128,6 +128,11 @@ struct Item: View {
                     NotificationBadgeTextView(badgeCounter: "!")
                         .accessibilityHidden(true)
                 }
+                
+                // Optionally show remove item button
+                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    RemoveItemButtonView(configurationItem: configurationItem)
+                }
             }
             .frame(width: 176, height: 64)
             .contentShape(Capsule())
@@ -226,9 +231,10 @@ struct Item: View {
                         .accessibilityHidden(true)
                 }
                 
-                //            if updateView != nil && notificationBadge! > 0 {
-                //                UpdateView(color: symbolColor)
-                //            }
+                // Optionally show remove item button
+                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    RemoveItemButtonView(configurationItem: configurationItem)
+                }
             }
             .frame(width: 176, height: 60)
             .accessibilityLabel(title + ", " + (subtitle ?? ""))

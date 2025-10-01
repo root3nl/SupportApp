@@ -155,6 +155,11 @@ struct ItemExtension: View {
                     NotificationBadgeTextView(badgeCounter: "!")
                         .accessibilityHidden(true)
                 }
+                
+                // Optionally show remove item button
+                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    RemoveItemButtonView(configurationItem: configurationItem)
+                }
             }
             .frame(width: 176, height: 64)
             .contentShape(Capsule())
@@ -243,6 +248,11 @@ struct ItemExtension: View {
                 if extensionAlert {
                     NotificationBadgeTextView(badgeCounter: "!")
                         .accessibilityHidden(true)
+                }
+                
+                // Optionally show remove item button
+                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    RemoveItemButtonView(configurationItem: configurationItem)
                 }
             }
             .frame(width: 176, height: 60)

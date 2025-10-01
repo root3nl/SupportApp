@@ -64,7 +64,7 @@ struct UptimeSubview: View {
     var body: some View {
         
         if hoverEffectEnabled {
-            InfoItem(title: NSLocalizedString("Last Reboot", comment: ""), subtitle: "\(computerinfo.uptimeRounded) \(computerinfo.uptimeText) " + NSLocalizedString("ago", comment: ""), image: "clock.fill", symbolColor: color, notificationBadgeBool: computerinfo.uptimeLimitReached, hoverEffectEnable: true)
+            InfoItem(title: NSLocalizedString("Last Reboot", comment: ""), subtitle: "\(computerinfo.uptimeRounded) \(computerinfo.uptimeText) " + NSLocalizedString("ago", comment: ""), image: "clock.fill", symbolColor: color, notificationBadgeBool: computerinfo.uptimeLimitReached, configurationItem: configurationItem, hoverEffectEnable: true)
                 .onTapGesture {
                     if preferences.editModeEnabled {
                         guard let configurationItem else {

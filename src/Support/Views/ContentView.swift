@@ -75,7 +75,6 @@ struct ContentView: View {
                                 .padding(.leading)
                         }
                         Button {
-//                            localPreferences.rows.append(Row(items: [supportItem]))
                             localPreferences.rows.insert(Row(items: [supportItem]), at: 0)
                         } label: {
                             Label("Add row", systemImage: "plus")
