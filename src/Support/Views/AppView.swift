@@ -83,7 +83,6 @@ struct AppView: View {
         
         // MARK: - ZStack with blur effect
         ZStack {
-//            EffectsView(material: NSVisualEffectView.Material.fullScreenUI, blendingMode: NSVisualEffectView.BlendingMode.behindWindow)
             
             // We need to provide Quit option for Apple App Review approval
             if !preferences.hideQuit {
