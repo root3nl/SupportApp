@@ -1,17 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "AppIcon-iOS-Dark-60x60@2x.png",
+      "filename" : "Support-128.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "AppIcon-iOS-Dark-60x60@2x 1.png",
+      "filename" : "Support-256.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "AppIcon-iOS-Dark-60x60@2x 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

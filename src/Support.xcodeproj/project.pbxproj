@@ -21,7 +21,7 @@
 		0AFB04FD263B422900507B23 /* ItemDouble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFB04FC263B422900507B23 /* ItemDouble.swift */; };
 		0AFE0A8325014C6100957B52 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0AFE0A8525014C6100957B52 /* Localizable.strings */; };
 		490B145E258A55B90048D8AF /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490B145D258A55B90048D8AF /* Extensions.swift */; };
-		490B26EF2E84111200DE50E0 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 490B26EE2E84111200DE50E0 /* AppIcon.icon */; };
+		490B26EF2E84111200DE50E0 /* AppIconNew.icon in Resources */ = {isa = PBXBuildFile; fileRef = 490B26EE2E84111200DE50E0 /* AppIconNew.icon */; };
 		490B27982E8D49C700DE50E0 /* RemoveItemButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490B27972E8D49C700DE50E0 /* RemoveItemButtonView.swift */; };
 		490CE0A8294FC144005BC01D /* SoftwareUpdateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490CE0A7294FC144005BC01D /* SoftwareUpdateModel.swift */; };
 		4915290D259CCF7A00056B5F /* NotificationBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4915290C259CCF7A00056B5F /* NotificationBadgeView.swift */; };
@@ -180,7 +180,7 @@
 		0AFE0A8425014C6100957B52 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0AFE0A8625014C8300957B52 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		490B145D258A55B90048D8AF /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		490B26EE2E84111200DE50E0 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
+		490B26EE2E84111200DE50E0 /* AppIconNew.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIconNew.icon; sourceTree = "<group>"; };
 		490B27972E8D49C700DE50E0 /* RemoveItemButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveItemButtonView.swift; sourceTree = "<group>"; };
 		490CE0A7294FC144005BC01D /* SoftwareUpdateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoftwareUpdateModel.swift; sourceTree = "<group>"; };
 		4915290C259CCF7A00056B5F /* NotificationBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBadgeView.swift; sourceTree = "<group>"; };
@@ -461,7 +461,7 @@
 				49822CEE24B4C3F200E8DE54 /* Info.plist */,
 				49822CEF24B4C3F200E8DE54 /* Support.entitlements */,
 				49822CE824B4C3F200E8DE54 /* Preview Content */,
-				490B26EE2E84111200DE50E0 /* AppIcon.icon */,
+				490B26EE2E84111200DE50E0 /* AppIconNew.icon */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -662,7 +662,7 @@
 				49822CEA24B4C3F200E8DE54 /* Preview Assets.xcassets in Resources */,
 				4962F3B62C0CEF24004571DC /* install_privileged_helper_tool.zsh in Resources */,
 				49822CE724B4C3F200E8DE54 /* Assets.xcassets in Resources */,
-				490B26EF2E84111200DE50E0 /* AppIcon.icon in Resources */,
+				490B26EF2E84111200DE50E0 /* AppIconNew.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
