@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ComputerNameSubview: View {
     
+    var configurationItem: ConfiguredItem?
+    
     // Get  computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo
     
@@ -41,7 +43,7 @@ struct ComputerNameSubview: View {
     var body: some View {
         
 //        InfoItem(title: NSLocalizedString("Computer Name", comment: ""), subtitle: computerinfo.hostname, image: computerinfo.computerNameIcon, symbolColor: color, hoverEffectEnable: false)
-        ItemDouble(title: NSLocalizedString("Computer Name", comment: ""), secondTitle: NSLocalizedString("Model", comment: ""), subtitle: computerinfo.hostname, secondSubtitle: computerinfo.modelNameString, linkType: "URL", link: "x-apple.systempreferences:com.apple.SystemProfiler.AboutExtension", image: computerinfo.computerNameIcon, symbolColor: color, hoverEffectEnable: true)
+        ItemDouble(title: NSLocalizedString("Computer Name", comment: ""), secondTitle: NSLocalizedString("Model", comment: ""), subtitle: computerinfo.hostname, secondSubtitle: computerinfo.modelNameString, linkType: "URL", link: "x-apple.systempreferences:com.apple.SystemProfiler.AboutExtension", image: computerinfo.computerNameIcon, symbolColor: color, configurationItem: configurationItem, hoverEffectEnable: true)
         
     }
 }

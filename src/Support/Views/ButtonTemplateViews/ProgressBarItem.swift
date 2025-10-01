@@ -15,6 +15,7 @@ struct ProgressBarItem: View {
     var symbolColor: Color
     var notificationBadgeBool: Bool?
     var percentage: CGFloat
+    var configurationItem: ConfiguredItem?
     
     // Declare unified logging
     let logger = Logger(subsystem: "nl.root3.support", category: "Action")
@@ -31,6 +32,9 @@ struct ProgressBarItem: View {
     
     // Get preferences or default values
     @EnvironmentObject var preferences: Preferences
+    
+    // Get local preferences for Configurator Mode
+    @EnvironmentObject var localPreferences: LocalPreferences
     
     var body: some View {
         
@@ -79,10 +83,17 @@ struct ProgressBarItem: View {
                 hover in self.hoverView = hover
             }
             .onTapGesture() {
-                openStorageManagement()
+                if preferences.editModeEnabled {
+                    guard let configurationItem else {
+                        return
+                    }
+                    localPreferences.currentConfiguredItem = configurationItem
+                    preferences.showItemConfiguration.toggle()
+                    
+                } else {
+                    openStorageManagement()
+                }
             }
-//            .glassEffect(.clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
-//            .glassEffect(hoverView && hoverEffectEnable ? .regular.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)) : .clear.tint(colorScheme == .dark ? .clear : .secondary.opacity(0.6)))
             .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
             .animation(.bouncy, value: hoverView)
         } else {
@@ -164,7 +175,16 @@ struct ProgressBarItem: View {
                 hover in self.hoverView = hover
             }
             .onTapGesture() {
-                openStorageManagement()
+                if preferences.editModeEnabled {
+                    guard let configurationItem else {
+                        return
+                    }
+                    localPreferences.currentConfiguredItem = configurationItem
+                    preferences.showItemConfiguration.toggle()
+                    
+                } else {
+                    openStorageManagement()
+                }
             }
         }
     }

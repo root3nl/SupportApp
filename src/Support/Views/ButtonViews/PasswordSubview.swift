@@ -9,6 +9,8 @@ import SwiftUI
 
 struct PasswordSubview: View {
     
+    var configurationItem: ConfiguredItem?
+    
     // Get computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo
     
@@ -85,7 +87,7 @@ struct PasswordSubview: View {
         
         // Option to show another subtitle offering to change the local Mac password
         
-        ItemDouble(title: passwordLabel, secondTitle: passwordLabel, subtitle: userinfo.userPasswordExpiryString, secondSubtitle: userinfo.passwordChangeString, linkType: linkType, link: userinfo.passwordChangeLink, image: "key.fill", symbolColor: color, notificationBadgeBool: userinfo.passwordExpiryLimitReached, hoverEffectEnable: true)
+        ItemDouble(title: passwordLabel, secondTitle: passwordLabel, subtitle: userinfo.userPasswordExpiryString, secondSubtitle: userinfo.passwordChangeString, linkType: linkType, link: userinfo.passwordChangeLink, image: "key.fill", symbolColor: color, notificationBadgeBool: userinfo.passwordExpiryLimitReached, configurationItem: configurationItem, hoverEffectEnable: true)
         
         // Expirimental view with link to password change view
         

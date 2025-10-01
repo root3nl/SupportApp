@@ -9,6 +9,8 @@ import SwiftUI
 
 struct UptimeSubview: View {
     
+    var configurationItem: ConfiguredItem?
+    
     // Get  computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo
     
@@ -64,12 +66,27 @@ struct UptimeSubview: View {
         if hoverEffectEnabled {
             InfoItem(title: NSLocalizedString("Last Reboot", comment: ""), subtitle: "\(computerinfo.uptimeRounded) \(computerinfo.uptimeText) " + NSLocalizedString("ago", comment: ""), image: "clock.fill", symbolColor: color, notificationBadgeBool: computerinfo.uptimeLimitReached, hoverEffectEnable: true)
                 .onTapGesture {
-                    if hoverEffectEnabled {
+                    if preferences.editModeEnabled {
+                        guard let configurationItem else {
+                            return
+                        }
+                        localPreferences.currentConfiguredItem = configurationItem
+                        preferences.showItemConfiguration.toggle()
+                    } else {
                         computerinfo.showUptimeAlert.toggle()
                     }
                 }
         } else {
             InfoItem(title: NSLocalizedString("Last Reboot", comment: ""), subtitle: "\(computerinfo.uptimeRounded) \(computerinfo.uptimeText) " + NSLocalizedString("ago", comment: ""), image: "clock.fill", symbolColor: color, notificationBadgeBool: false, hoverEffectEnable: false)
+                .onTapGesture {
+                    if preferences.editModeEnabled {
+                        guard let configurationItem else {
+                            return
+                        }
+                        localPreferences.currentConfiguredItem = configurationItem
+                        preferences.showItemConfiguration.toggle()
+                    }
+                }
         }
     }
 }

@@ -65,6 +65,31 @@ struct ContentView: View {
     var body: some View {
         
         VStack(spacing: preferences.editModeEnabled ? 0 : 10) {
+            
+            if !rows.isEmpty {
+                // Add row divider and plus button
+                if preferences.editModeEnabled {
+                    HStack {
+                        VStack {
+                            Divider()
+                                .padding(.leading)
+                        }
+                        Button {
+//                            localPreferences.rows.append(Row(items: [supportItem]))
+                            localPreferences.rows.insert(Row(items: [supportItem]), at: 0)
+                        } label: {
+                            Label("Add row", systemImage: "plus")
+                                .labelStyle(.iconOnly)
+                        }
+                        .buttonStyle(AddIconButtonStyle(color: .green))
+                        VStack {
+                            Divider()
+                                .padding(.trailing)
+                        }
+                    }
+                }
+            }
+            
             ForEach(rows.indices, id: \.self) { index in
                 ZStack {
                     HStack(spacing: 10) {
@@ -74,31 +99,31 @@ struct ContentView: View {
                                 ZStack {
                                     switch rowItems[itemIndex].type {
                                     case "ComputerName":
-                                        ComputerNameSubview()
+                                        ComputerNameSubview(configurationItem: ConfiguredItem(rowIndex: index, itemIndex: itemIndex))
                                     case "MacOSVersion":
-                                        MacOSVersionSubview()
+                                        MacOSVersionSubview(configurationItem: ConfiguredItem(rowIndex: index, itemIndex: itemIndex))
                                     case "Network":
-                                        NetworkSubview()
+                                        NetworkSubview(configurationItem: ConfiguredItem(rowIndex: index, itemIndex: itemIndex))
                                     case "Password":
-                                        PasswordSubview()
+                                        PasswordSubview(configurationItem: ConfiguredItem(rowIndex: index, itemIndex: itemIndex))
                                     case "Storage":
-                                        StorageSubview()
+                                        StorageSubview(configurationItem: ConfiguredItem(rowIndex: index, itemIndex: itemIndex))
                                     case "Uptime":
-                                        UptimeSubview()
+                                        UptimeSubview(configurationItem: ConfiguredItem(rowIndex: index, itemIndex: itemIndex))
                                     case "AppCatalog":
-                                        AppCatalogSubview()
+                                        AppCatalogSubview(configurationItem: ConfiguredItem(rowIndex: index, itemIndex: itemIndex))
                                     case "Extension":
-                                        ItemExtension(title: rowItems[itemIndex].title ?? "", subtitle: nil, linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: color, extensionIdentifier: rowItems[itemIndex].extensionIdentifier ?? "", onAppearAction: rowItems[itemIndex].onAppearAction, hoverEffectEnable: true, animate: false)
+                                        ItemExtension(title: rowItems[itemIndex].title ?? "", subtitle: nil, linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: color, extensionIdentifier: rowItems[itemIndex].extensionIdentifier ?? "", onAppearAction: rowItems[itemIndex].onAppearAction, hoverEffectEnable: true, animate: false, configurationItem: ConfiguredItem(rowIndex: index, itemIndex: itemIndex))
                                     case "Button":
-                                        Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: color, hoverEffectEnable: true, animate: true)
+                                        Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: color, configurationItem: ConfiguredItem(rowIndex: index, itemIndex: itemIndex), hoverEffectEnable: true, animate: true)
                                     case "ButtonMedium":
-                                        ItemSmall(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: color)
+                                        ItemSmall(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: color, configurationItem: ConfiguredItem(rowIndex: index, itemIndex: itemIndex))
                                     case "ButtonSmall":
                                         if #available(macOS 26, *) {
-                                            ItemCircle(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: color)
+                                            ItemCircle(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: color, configurationItem: ConfiguredItem(rowIndex: index, itemIndex: itemIndex))
                                         }
                                     default:
-                                        Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: color, hoverEffectEnable: true, animate: true)
+                                        Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: color, configurationItem: ConfiguredItem(rowIndex: index, itemIndex: itemIndex), hoverEffectEnable: true, animate: true)
                                     }
                                 }
                                 .frame(maxWidth: .infinity)
@@ -148,7 +173,7 @@ struct ContentView: View {
                                     Label("Add item", systemImage: "plus")
                                         .labelStyle(.iconOnly)
                                 }
-                                .buttonStyle(AddIconButtonStyle())
+                                .buttonStyle(AddIconButtonStyle(color: .green))
                             }
                         }
                         .padding(.trailing, 4)
@@ -168,7 +193,7 @@ struct ContentView: View {
                             Label("Add row", systemImage: "plus")
                                 .labelStyle(.iconOnly)
                         }
-                        .buttonStyle(AddIconButtonStyle())
+                        .buttonStyle(AddIconButtonStyle(color: .green))
                         VStack {
                             Divider()
                                 .padding(.trailing)
@@ -190,7 +215,7 @@ struct ContentView: View {
                             Label("Add row", systemImage: "plus")
                                 .labelStyle(.iconOnly)
                         }
-                        .buttonStyle(AddIconButtonStyle())
+                        .buttonStyle(AddIconButtonStyle(color: .green))
                         VStack {
                             Divider()
                                 .padding(.trailing)

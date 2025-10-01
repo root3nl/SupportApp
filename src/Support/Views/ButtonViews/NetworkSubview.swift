@@ -9,6 +9,8 @@ import SwiftUI
 
 struct NetworkSubview: View {
     
+    var configurationItem: ConfiguredItem?
+    
     // Get  computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo
     
@@ -40,7 +42,7 @@ struct NetworkSubview: View {
     
     var body: some View {
         
-        Item(title: computerinfo.networkName, subtitle: computerinfo.ipAddress, linkType: "URL", link: "x-apple.systempreferences:com.apple.Network-Settings.extension", image: computerinfo.networkInterfaceSymbol, symbolColor: color, notificationBadgeBool: computerinfo.selfSignedIP, hoverEffectEnable: true, hoverView: false, animate: false)
+        Item(title: computerinfo.networkName, subtitle: computerinfo.ipAddress, linkType: "URL", link: "x-apple.systempreferences:com.apple.Network-Settings.extension", image: computerinfo.networkInterfaceSymbol, symbolColor: color, notificationBadgeBool: computerinfo.selfSignedIP, configurationItem: configurationItem, hoverEffectEnable: true, hoverView: false, animate: false)
             .accessibilityValue(NSLocalizedString("NETWORK_IP_ADDRESS", comment: ""))
             .accessibilityLabel(computerinfo.ipAddress)
     }

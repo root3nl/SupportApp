@@ -21,6 +21,7 @@ struct ItemExtension: View {
     var linkPrefKey: String?
     var extensionIdentifier: String?
     var onAppearAction: String?
+    var configurationItem: ConfiguredItem?
     
     // Access AppDelegate
     @EnvironmentObject private var appDelegate: AppDelegate
@@ -39,10 +40,12 @@ struct ItemExtension: View {
     @State var hoverView = false
     @State var showSubtitle = false
     @State var showingAlert = false
-//    @State var extensionValue: String? = nil
     
     // Get preferences or default values
     @EnvironmentObject var preferences: Preferences
+    
+    // Get local preferences for Configurator Mode
+    @EnvironmentObject var localPreferences: LocalPreferences
     
     // Get unique presentation token on every appearance
     @EnvironmentObject var popoverLifecycle: PopoverLifecycle
@@ -69,7 +72,8 @@ struct ItemExtension: View {
          extensionIdentifier: String,
          onAppearAction: String? = nil,
          hoverEffectEnable: Bool = true,
-         animate: Bool = true) {
+         animate: Bool = true,
+         configurationItem: ConfiguredItem? = nil) {
         
         self.title = title
         self.subtitle = subtitle
@@ -83,6 +87,7 @@ struct ItemExtension: View {
         self.linkPrefKey = linkPrefKey
         self.extensionIdentifier = extensionIdentifier
         self.onAppearAction = onAppearAction
+        self.configurationItem = configurationItem
         self.hoverEffectEnable = hoverEffectEnable
         self.animate = animate
         
@@ -168,7 +173,16 @@ struct ItemExtension: View {
                 }
             }
             .onTapGesture() {
-                tapGesture()
+                if preferences.editModeEnabled {
+                    guard let configurationItem else {
+                        return
+                    }
+                    localPreferences.currentConfiguredItem = configurationItem
+                    preferences.showItemConfiguration.toggle()
+                    
+                } else {
+                    tapGesture()
+                }
             }
             .task(id: popoverLifecycle.presentationToken) {
                 guard let onAppearAction else {
@@ -252,7 +266,16 @@ struct ItemExtension: View {
                 }
             }
             .onTapGesture() {
-                tapGesture()
+                if preferences.editModeEnabled {
+                    guard let configurationItem else {
+                        return
+                    }
+                    localPreferences.currentConfiguredItem = configurationItem
+                    preferences.showItemConfiguration.toggle()
+                    
+                } else {
+                    tapGesture()
+                }
             }
             .task(id: popoverLifecycle.presentationToken) {
                 guard let onAppearAction else {

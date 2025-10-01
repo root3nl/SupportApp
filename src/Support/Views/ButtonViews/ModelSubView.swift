@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ModelSubView: View {
+    
+    var configurationItem: ConfiguredItem?
 
     // Get  computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo
@@ -40,7 +42,7 @@ struct ModelSubView: View {
     
     var body: some View {
         
-        Item(title: "Model", subtitle: "\(computerinfo.modelShortName) \(computerinfo.modelYear)", linkType: "App", link: "com.apple.AboutThisMacLauncher", image: computerinfo.computerNameIcon, symbolColor: color, hoverEffectEnable: true, animate: false)
+        Item(title: "Model", subtitle: "\(computerinfo.modelShortName) \(computerinfo.modelYear)", linkType: "App", link: "com.apple.AboutThisMacLauncher", image: computerinfo.computerNameIcon, symbolColor: color, configurationItem: configurationItem, hoverEffectEnable: true, animate: false)
     }
     
 }

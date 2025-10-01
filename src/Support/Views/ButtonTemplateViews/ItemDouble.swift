@@ -20,6 +20,7 @@ struct ItemDouble: View {
     var symbolColor: Color
     var notificationBadge: Int?
     var notificationBadgeBool: Bool?
+    var configurationItem: ConfiguredItem?
     
     // Declare unified logging
     let logger = Logger(subsystem: "nl.root3.support", category: "Action")
@@ -38,6 +39,9 @@ struct ItemDouble: View {
     
     // Get preferences or default values
     @EnvironmentObject var preferences: Preferences
+    
+    // Get local preferences for Configurator Mode
+    @EnvironmentObject var localPreferences: LocalPreferences
     
     // Alert title options
     var alertTitle: String {
@@ -123,7 +127,16 @@ struct ItemDouble: View {
                 self.hoverView = hover
             }
             .onTapGesture() {
-                tapGesture()
+                if preferences.editModeEnabled {
+                    guard let configurationItem else {
+                        return
+                    }
+                    localPreferences.currentConfiguredItem = configurationItem
+                    preferences.showItemConfiguration.toggle()
+                    
+                } else {
+                    tapGesture()
+                }
             }
             
         } else {
@@ -181,7 +194,16 @@ struct ItemDouble: View {
                 hover in self.hoverView = hover
             }
             .onTapGesture() {
-                tapGesture()
+                if preferences.editModeEnabled {
+                    guard let configurationItem else {
+                        return
+                    }
+                    localPreferences.currentConfiguredItem = configurationItem
+                    preferences.showItemConfiguration.toggle()
+                    
+                } else {
+                    tapGesture()
+                }
             }
         }
     }

@@ -9,6 +9,8 @@ import SwiftUI
 
 struct StorageSubview: View {
     
+    var configurationItem: ConfiguredItem?
+    
     // Get  computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo
     
@@ -40,7 +42,7 @@ struct StorageSubview: View {
     
     var body: some View {
         
-        ProgressBarItem(percentageUsed: "\(computerinfo.capacityPercentageRounded)% " + NSLocalizedString("Used", comment: ""), storageAvailable: "\(computerinfo.capacityRounded) " + NSLocalizedString("Available", comment: ""), image: "internaldrive.fill", symbolColor: color, notificationBadgeBool: computerinfo.storageLimitReached, percentage: computerinfo.capacityPercentage, hoverEffectEnable: true)
+        ProgressBarItem(percentageUsed: "\(computerinfo.capacityPercentageRounded)% " + NSLocalizedString("Used", comment: ""), storageAvailable: "\(computerinfo.capacityRounded) " + NSLocalizedString("Available", comment: ""), image: "internaldrive.fill", symbolColor: color, notificationBadgeBool: computerinfo.storageLimitReached, percentage: computerinfo.capacityPercentage, configurationItem: configurationItem, hoverEffectEnable: true)
             .accessibilityValue(NSLocalizedString("STORAGE", comment: ""))
     }
 }

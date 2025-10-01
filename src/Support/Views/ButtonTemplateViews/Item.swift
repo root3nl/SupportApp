@@ -19,6 +19,7 @@ struct Item: View {
     var notificationBadgeBool: Bool?
     var loading: Bool?
     var linkPrefKey: String?
+    var configurationItem: ConfiguredItem?
     
     // Access AppDelegate
     @EnvironmentObject private var appDelegate: AppDelegate
@@ -40,6 +41,9 @@ struct Item: View {
     
     // Get preferences or default values
     @EnvironmentObject var preferences: Preferences
+    
+    // Get local preferences for Configurator Mode
+    @EnvironmentObject var localPreferences: LocalPreferences
     
     // Get unique presentation token on every appearance
     @EnvironmentObject var popoverLifecycle: PopoverLifecycle
@@ -142,7 +146,16 @@ struct Item: View {
                 }
             }
             .onTapGesture() {
-                tapGesture()
+                if preferences.editModeEnabled {
+                    guard let configurationItem else {
+                        return
+                    }
+                    localPreferences.currentConfiguredItem = configurationItem
+                    preferences.showItemConfiguration.toggle()
+                    
+                } else {
+                    tapGesture()
+                }
             }
             .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
             .animation(.bouncy, value: hoverView)
@@ -238,7 +251,16 @@ struct Item: View {
                 }
             }
             .onTapGesture() {
-                tapGesture()
+                if preferences.editModeEnabled {
+                    guard let configurationItem else {
+                        return
+                    }
+                    localPreferences.currentConfiguredItem = configurationItem
+                    preferences.showItemConfiguration.toggle()
+                    
+                } else {
+                    tapGesture()
+                }
             }
         }
     }

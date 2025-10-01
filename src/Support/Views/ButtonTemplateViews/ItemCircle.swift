@@ -19,6 +19,7 @@ struct ItemCircle: View {
     var symbolColor: Color
     var loading: Bool?
     var linkPrefKey: String?
+    var configurationItem: ConfiguredItem?
     
     // Access AppDelegate
     @EnvironmentObject private var appDelegate: AppDelegate
@@ -40,6 +41,9 @@ struct ItemCircle: View {
     
     // Get preferences or default values
     @EnvironmentObject var preferences: Preferences
+    
+    // Get local preferences for Configurator Mode
+    @EnvironmentObject var localPreferences: LocalPreferences
     
     var body: some View {
         VStack {
@@ -68,7 +72,16 @@ struct ItemCircle: View {
             hover in self.hoverView = hover
         }
         .onTapGesture() {
-            tapGesture()
+            if preferences.editModeEnabled {
+                guard let configurationItem else {
+                    return
+                }
+                localPreferences.currentConfiguredItem = configurationItem
+                preferences.showItemConfiguration.toggle()
+                
+            } else {
+                tapGesture()
+            }
         }
         .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: true))
         .animation(.bouncy, value: hoverView)

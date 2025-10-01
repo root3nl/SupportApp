@@ -15,10 +15,17 @@ struct InfoItem: View {
     var notificationBadge: Int?
     var notificationBadgeBool: Bool?
     var loading: Bool?
+    var configurationItem: ConfiguredItem?
     
     // Vars to activate hover effect
     @State var hoverEffectEnable: Bool
     @State var hoverView = false
+    
+    // Get preferences or default values
+    @EnvironmentObject var preferences: Preferences
+    
+    // Get local preferences for Configurator Mode
+    @EnvironmentObject var localPreferences: LocalPreferences
     
     var body: some View {
         
@@ -78,6 +85,32 @@ struct InfoItem: View {
                     NotificationBadgeTextView(badgeCounter: "!")
                         .accessibilityHidden(true)
                 }
+                
+                if preferences.editModeEnabled {
+                    HStack {
+                        VStack {
+                            Button {
+                                guard let configurationItem else {
+                                    return
+                                }
+                                localPreferences.rows[configurationItem.rowIndex].items?.remove(at: configurationItem.itemIndex)
+                                
+                                // Remove if row is empty to avoid empty/invisible rows taking up space
+                                if localPreferences.rows[configurationItem.rowIndex].items?.count == 0 {
+                                    localPreferences.rows.remove(at: configurationItem.itemIndex)
+                                }
+                            } label: {
+                                Label("Remove item", systemImage: "minus")
+                                    .labelStyle(.iconOnly)
+                            }
+                            .buttonStyle(AddIconButtonStyle(color: .red))
+                            
+                            Spacer()
+                        }
+                        Spacer()
+                    }
+                    .padding(.trailing, 4)
+                }
 
             }
             .frame(width: 176, height: 64)
@@ -135,6 +168,34 @@ struct InfoItem: View {
                 if notificationBadgeBool ?? false {
                     NotificationBadgeTextView(badgeCounter: "!")
                         .accessibilityHidden(true)
+                }
+                
+                if preferences.editModeEnabled {
+                    HStack {
+                        Spacer()
+                        
+                        VStack {
+                            
+                            Button {
+                                guard let configurationItem else {
+                                    return
+                                }
+                                localPreferences.rows[configurationItem.rowIndex].items?.remove(at: configurationItem.itemIndex)
+                                
+                                // Remove if row is empty to avoid empty/invisible rows taking up space
+                                if localPreferences.rows[configurationItem.rowIndex].items?.count == 0 {
+                                    localPreferences.rows.remove(at: configurationItem.itemIndex)
+                                }
+                            } label: {
+                                Label("Add item", systemImage: "minus")
+                                    .labelStyle(.iconOnly)
+                            }
+                            .buttonStyle(AddIconButtonStyle(color: .clear))
+                            
+                            Spacer()
+                        }
+                    }
+                    .padding(.trailing, 4)
                 }
                 
             }

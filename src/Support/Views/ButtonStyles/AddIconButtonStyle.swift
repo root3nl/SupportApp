@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct AddIconButtonStyle: ButtonStyle {
+    
+    var color: Color
         
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -16,13 +18,13 @@ struct AddIconButtonStyle: ButtonStyle {
             .modify {
                 if #available(macOS 26, *) {
                     $0
-                        .glassEffect(.regular.interactive().tint(.green))
+                        .glassEffect(.regular.interactive().tint(color))
                         .controlSize(.small)
                         .buttonBorderShape(.circle)
                 } else {
                     $0
                         .foregroundStyle(.primary)
-                        .background(.green)
+                        .background(color)
                         .clipShape(.circle)
                         .controlSize(.small)
                         .buttonBorderShape(.circle)

@@ -9,6 +9,8 @@ import SwiftUI
 
 struct MacOSVersionSubview: View {
     
+    var configurationItem: ConfiguredItem?
+    
     // Get  computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo
     
@@ -43,9 +45,17 @@ struct MacOSVersionSubview: View {
     
     var body: some View {
         
-        InfoItem(title: "macOS \(computerinfo.macOSVersionName)", subtitle: computerinfo.macOSVersion, image: "applelogo", symbolColor: color, notificationBadge: computerinfo.recommendedUpdates.count, hoverEffectEnable: true)
+        InfoItem(title: "macOS \(computerinfo.macOSVersionName)", subtitle: computerinfo.macOSVersion, image: "applelogo", symbolColor: color, notificationBadge: computerinfo.recommendedUpdates.count, configurationItem: configurationItem, hoverEffectEnable: true)
             .onTapGesture {
-                computerinfo.showMacosUpdates.toggle()
+                if preferences.editModeEnabled {
+                    guard let configurationItem else {
+                        return
+                    }
+                    localPreferences.currentConfiguredItem = configurationItem
+                    preferences.showItemConfiguration.toggle()
+                } else {
+                    computerinfo.showMacosUpdates.toggle()
+                }
             }
     }
 }

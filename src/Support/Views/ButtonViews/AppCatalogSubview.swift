@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct AppCatalogSubview: View {
+    
+    var configurationItem: ConfiguredItem?
 
     // Get  computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo
@@ -60,7 +62,15 @@ struct AppCatalogSubview: View {
         
         InfoItem(title: NSLocalizedString("APPS", comment: ""), subtitle: updatesString, image: "arrow.down.app.fill", symbolColor: color, notificationBadge: appCatalogController.appUpdates, notificationBadgeBool: appCatalogController.catalogInstalled() ? false : true, loading: appCatalogController.appsUpdating.isEmpty ? false : true, hoverEffectEnable: true)
             .onTapGesture {
-                self.appCatalogController.showAppUpdates.toggle()
+                if preferences.editModeEnabled {
+                    guard let configurationItem else {
+                        return
+                    }
+                    localPreferences.currentConfiguredItem = configurationItem
+                    preferences.showItemConfiguration.toggle()
+                } else {
+                    self.appCatalogController.showAppUpdates.toggle()
+                }
             }
     }
     
