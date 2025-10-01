@@ -13,8 +13,8 @@ struct ChangePassword: View {
     @EnvironmentObject var userinfo: UserInfo
     
     // Get preferences or default values
-    @StateObject var preferences = Preferences()
-    
+    @EnvironmentObject var preferences: Preferences
+
     // Make UserDefaults easy to use
     let defaults = UserDefaults.standard
         

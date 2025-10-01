@@ -9,6 +9,8 @@ import SwiftUI
 
 struct PasswordSubview: View {
     
+    var configurationItem: ConfiguredItem?
+    
     // Get computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo
     
@@ -16,8 +18,9 @@ struct PasswordSubview: View {
     @EnvironmentObject var userinfo: UserInfo
     
     // Get preferences or default values
-    @StateObject var preferences = Preferences()
-    
+    @EnvironmentObject var preferences: Preferences
+    @EnvironmentObject var localPreferences: LocalPreferences
+
     // Make UserDefaults easy to use
     let defaults = UserDefaults.standard
     
@@ -29,34 +32,35 @@ struct PasswordSubview: View {
     // Dark Mode detection
     @Environment(\.colorScheme) var colorScheme
     
+    // Local preferences for Configurator Mode or (managed) UserDefaults
+    var activePreferences: PreferencesProtocol {
+        preferences.configuratorModeEnabled ? localPreferences : preferences
+    }
+    
     // Set the custom color for all symbols depending on Light or Dark Mode.
-    var customColor: String {
-        if colorScheme == .light && defaults.string(forKey: "CustomColor") != nil {
-            return preferences.customColor
-        } else if colorScheme == .dark && defaults.string(forKey: "CustomColorDarkMode") != nil {
-            return preferences.customColorDarkMode
+    var color: Color {
+        if colorScheme == .dark && !activePreferences.customColorDarkMode.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColorDarkMode)") ?? NSColor.controlAccentColor)
+        } else if !activePreferences.customColor.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColor)") ?? NSColor.controlAccentColor)
         } else {
-            return preferences.customColor
+            return .accentColor
         }
     }
     
     // Link type for Password item
     var linkType: String {
-        if preferences.passwordType == "Apple" {
-            if #available(macOS 13, *) {
-                return "URL"
-            } else {
-                return "Command"
-            }
-        } else if preferences.passwordType == "KerberosSSO"  {
+        if activePreferences.passwordType == "Apple" {
+            return "URL"
+        } else if activePreferences.passwordType == "KerberosSSO"  {
             if userinfo.networkUnavailable {
                 return "KerberosSSOExtensionUnavailable"
             } else {
                 return "Command"
             }
-        } else if preferences.passwordType == "Nomad" {
+        } else if activePreferences.passwordType == "Nomad" {
             return "Command"
-        } else if preferences.passwordType == "JamfConnect" {
+        } else if activePreferences.passwordType == "JamfConnect" {
             // FIXME: - Remove when Jamf Connect Password Change can be triggered
             // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
             if defaultsJamfConnect?.bool(forKey: "PasswordCurrent") ?? false {
@@ -65,25 +69,29 @@ struct PasswordSubview: View {
                 return "Command"
             }
         } else {
-            if #available(macOS 13, *) {
-                return "URL"
-            } else {
-                return "Command"
-            }
+            return "URL"
+        }
+    }
+    
+    var passwordLabel: String {
+        if !activePreferences.passwordLabel.isEmpty {
+            return activePreferences.passwordLabel
+        } else {
+            return "Mac " + NSLocalizedString("Password", comment: "")
         }
     }
         
     var body: some View {
 
-//        Item(title: "Mac " + NSLocalizedString("Password", comment: ""), subtitle: userinfo.userPasswordExpiryString, linkType: "Command", link: "open /System/Library/PreferencePanes/Accounts.prefPane", image: "key.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: userinfo.passwordExpiryLimitReached, hoverEffectEnable: true, animate: false)
+//        Item(title: "Mac " + NSLocalizedString("Password", comment: ""), subtitle: userinfo.userPasswordExpiryString, linkType: "Command", link: "open /System/Library/PreferencePanes/Accounts.prefPane", image: "key.fill", symbolColor: color, notificationBadgeBool: userinfo.passwordExpiryLimitReached, hoverEffectEnable: true, animate: false)
         
         // Option to show another subtitle offering to change the local Mac password
         
-        ItemDouble(title: preferences.passwordLabel, secondTitle: preferences.passwordLabel, subtitle: userinfo.userPasswordExpiryString, secondSubtitle: userinfo.passwordChangeString, linkType: linkType, link: userinfo.passwordChangeLink, image: "key.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: userinfo.passwordExpiryLimitReached, hoverEffectEnable: true)
+        ItemDouble(title: passwordLabel, secondTitle: passwordLabel, subtitle: userinfo.userPasswordExpiryString, secondSubtitle: userinfo.passwordChangeString, linkType: linkType, link: userinfo.passwordChangeLink, image: "key.fill", symbolColor: color, notificationBadgeBool: userinfo.passwordExpiryLimitReached, configurationItem: configurationItem, hoverEffectEnable: true)
         
         // Expirimental view with link to password change view
         
-//        InfoItem(title: "Mac " + NSLocalizedString("Password", comment: ""), subtitle: userinfo.passwordString, image: "key.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: userinfo.passwordExpiryLimitReached, hoverEffectEnable: true)
+//        InfoItem(title: "Mac " + NSLocalizedString("Password", comment: ""), subtitle: userinfo.passwordString, image: "key.fill", symbolColor: color, notificationBadge: userinfo.passwordExpiryLimitReached, hoverEffectEnable: true)
 //            .onTapGesture {
 //                computerinfo.showPasswordChange.toggle()
 //            }

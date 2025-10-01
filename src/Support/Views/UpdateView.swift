@@ -20,7 +20,8 @@ struct UpdateView: View {
     @EnvironmentObject var userinfo: UserInfo
     
     // Get preferences or default values
-    @StateObject var preferences = Preferences()
+    @EnvironmentObject var preferences: Preferences
+    @EnvironmentObject var localPreferences: LocalPreferences
     
     // Make UserDefaults easy to use
     let defaults = UserDefaults.standard
@@ -30,14 +31,19 @@ struct UpdateView: View {
     
     @Environment(\.openURL) var openURL
 
+    // Local preferences for Configurator Mode or (managed) UserDefaults
+    var activePreferences: PreferencesProtocol {
+        preferences.configuratorModeEnabled ? localPreferences : preferences
+    }
+    
     // Set the custom color for all symbols depending on Light or Dark Mode.
-    var customColor: String {
-        if colorScheme == .light && defaults.string(forKey: "CustomColor") != nil {
-            return preferences.customColor
-        } else if colorScheme == .dark && defaults.string(forKey: "CustomColorDarkMode") != nil {
-            return preferences.customColorDarkMode
+    var color: Color {
+        if colorScheme == .dark && !activePreferences.customColorDarkMode.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColorDarkMode)") ?? NSColor.controlAccentColor)
+        } else if !activePreferences.customColor.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColor)") ?? NSColor.controlAccentColor)
         } else {
-            return preferences.customColor
+            return .accentColor
         }
     }
     
@@ -50,14 +56,29 @@ struct UpdateView: View {
                 Button(action: {
                     computerinfo.showMacosUpdates.toggle()
                 }) {
-                    Ellipse()
-                        .foregroundColor(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
-                        .overlay(
-                            Image(systemName: "chevron.backward")
-                        )
-                        .frame(width: 26, height: 26)
+                    if #available(macOS 26, *) {
+                        Image(systemName: "chevron.backward")
+                            .font(.system(size: 16))
+                            .padding(4)
+                    } else {
+                        Ellipse()
+                            .foregroundColor(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
+                            .overlay(
+                                Image(systemName: "chevron.backward")
+                            )
+                            .frame(width: 26, height: 26)
+                    }
                 }
-                .buttonStyle(.plain)
+                .modify {
+                    if #available(macOS 26, *) {
+                        $0
+                            .buttonStyle(.glass)
+                            .buttonBorderShape(.circle)
+                    } else {
+                        $0
+                            .buttonStyle(.plain)
+                    }
+                }
                 
                 Text(NSLocalizedString("MACOS_UPDATES", comment: ""))
                     .font(.system(.headline, design: .rounded))
@@ -72,12 +93,29 @@ struct UpdateView: View {
                         Text(NSLocalizedString("UPDATE_NOW", comment: ""))
                             .font(.system(.body, design: .rounded))
                             .fontWeight(.regular)
-                            .padding(.vertical, 4)
-                            .padding(.horizontal)
-                            .background(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
-                            .clipShape(Capsule())
+                            .modify {
+                                if #available(macOS 26, *) {
+                                    $0
+                                } else {
+                                    $0
+                                        .padding(.vertical, 4)
+                                        .padding(.horizontal)
+                                        .background(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
+                                        .clipShape(Capsule())
+                                }
+                            }
                     }
-                    .buttonStyle(.plain)
+                    .modify {
+                        if #available(macOS 26, *) {
+                            $0
+                                .buttonStyle(.glass)
+                                .buttonBorderShape(.capsule)
+                                .controlSize(.large)
+                        } else {
+                            $0
+                                .buttonStyle(.plain)
+                        }
+                    }
                     
                 }
                 
@@ -142,7 +180,7 @@ struct UpdateView: View {
                     
                 }
                 
-                if preferences.updateText != "" {
+                if activePreferences.updateText != "" {
                     
                     Divider()
                         .padding(2)
@@ -151,7 +189,7 @@ struct UpdateView: View {
                         
                         // Supports for markdown through a variable:
                         // https://blog.eidinger.info/3-surprises-when-using-markdown-in-swiftui
-                        Text(.init(preferences.updateText.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))
+                        Text(.init(activePreferences.updateText.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))
                             .font(.system(.body, design: .rounded))
                         
                         Spacer()
@@ -166,7 +204,8 @@ struct UpdateView: View {
                         .resizable()
                         .frame(width: 50, height: 50)
                         .symbolRenderingMode(.palette)
-                        .foregroundStyle(.white, Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+                        .foregroundStyle(.white, color)
+                        .accessibilityHidden(true)
                     
                     Text(NSLocalizedString("YOUR_MAC_IS_UP_TO_DATE", comment: ""))
                         .font(.system(.title, design: .rounded))
@@ -180,10 +219,8 @@ struct UpdateView: View {
         .padding(.horizontal)
         .unredacted()
         .task {
-            if #available(macOS 14, *) {
-                if !computerinfo.recommendedUpdates.isEmpty {
-                    self.computerinfo.getUpdateDeclaration()
-                }
+            if !computerinfo.recommendedUpdates.isEmpty {
+                self.computerinfo.getUpdateDeclaration()
             }
         }
     }
@@ -214,7 +251,8 @@ struct UpdateViewLegacy: View {
     @EnvironmentObject var userinfo: UserInfo
     
     // Get preferences or default values
-    @StateObject var preferences = Preferences()
+    @EnvironmentObject var preferences: Preferences
+    @EnvironmentObject var localPreferences: LocalPreferences
     
     // Dark Mode detection
     @Environment(\.colorScheme) var colorScheme
@@ -222,6 +260,11 @@ struct UpdateViewLegacy: View {
     // Update counter
     var updateCounter: Int
     var color: Color
+    
+    // Local preferences for Configurator Mode or (managed) UserDefaults
+    var activePreferences: PreferencesProtocol {
+        preferences.configuratorModeEnabled ? localPreferences : preferences
+    }
             
     var body: some View {
         
@@ -260,7 +303,7 @@ struct UpdateViewLegacy: View {
                     
                 }
                 
-                if preferences.updateText != "" {
+                if activePreferences.updateText != "" {
                     
                     Divider()
                         .padding(2)
@@ -274,7 +317,7 @@ struct UpdateViewLegacy: View {
                         
                         // Supports for markdown through a variable:
                         // https://blog.eidinger.info/3-surprises-when-using-markdown-in-swiftui
-                        Text(.init(preferences.updateText.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))
+                        Text(.init(activePreferences.updateText.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))
                             .font(.system(.body, design: .rounded))
                         
                         Spacer()

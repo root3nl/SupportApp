@@ -78,11 +78,7 @@ class UserInfo: ObservableObject {
     // MARK: -  Set the password change link based on password type
     var passwordChangeLink: String {
         if preferences.passwordType == "Apple" {
-            if #available(macOS 13.0, *) {
-                return "x-apple.systempreferences:com.apple.preferences.password"
-            } else {
-                return "open /System/Library/PreferencePanes/Accounts.prefPane"
-            }
+            return "x-apple.systempreferences:com.apple.preferences.password"
         } else if preferences.passwordType == "JamfConnect" {
             if defaultsJamfConnect?.bool(forKey: "PasswordCurrent") ?? false {
                 // FIXME: - Need an option to change password using Jamf Connect
@@ -104,11 +100,7 @@ class UserInfo: ObservableObject {
                 return "open nomad://signin"
             }
         } else {
-            if #available(macOS 13.0, *) {
-                return "x-apple.systempreferences:com.apple.preferences.password"
-            } else {
-                return "open /System/Library/PreferencePanes/Accounts.prefPane"
-            }
+            return "x-apple.systempreferences:com.apple.preferences.password"
         }
     }
     
@@ -285,7 +277,7 @@ class UserInfo: ObservableObject {
         do {
             self.realmsArray = try decoder.decode([String].self, from: data)
         } catch {
-            self.logger.error("Error obtaining Kerberos Realm from Kerberos SSO Extension. Please explicitely set the key 'KerberosRealm' to the Kerberos Realm used in capitals")
+            self.logger.error("Error obtaining Kerberos Realm from Kerberos SSO Extension")
         }
     }
     

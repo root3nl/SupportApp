@@ -3,7 +3,7 @@
 # Support App Extension - Jamf Pro Last Check-In Time
 #
 #
-# Copyright 2024 Root3 B.V. All rights reserved.
+# Copyright 2025 Root3 B.V. All rights reserved.
 #
 # Support App Extension to get the Jamf Pro Last Check-In Time
 #
@@ -22,19 +22,22 @@
 # Enable 24 hour clock format. 12 hour clock enabled by default
 twenty_four_hour_format="true"
 
+# Extension ID
+extension_id="last_check_in"
+
 # ---------------------    do not edit below this line    ----------------------
 
 # Support App preference plist
 preference_file_location="/Library/Preferences/nl.root3.support.plist"
 
 # Start spinning indicator
-defaults write "${preference_file_location}" ExtensionLoadingA -bool true
+defaults write "${preference_file_location}" "${extension_id}_loading" -bool true
 
 # Replace value with placeholder while loading
-defaults write "${preference_file_location}" ExtensionValueA -string "Checking in..."
+defaults write "${preference_file_location}" "${extension_id}" -string "Checking in..."
 
 # Perform a Jamf Pro check-in
 /usr/local/bin/jamf policy
 
 # Run script to populate new values in Extension
-/usr/local/bin/jamf_last_check-in_time.zsh
+/private/var/db/ManagedConfigurationFiles/BackgroundTaskServices/Services/nl.root3.support/jamf_last_check-in_time.zsh

@@ -17,6 +17,7 @@ struct ItemSmall: View {
     var symbolColor: Color
     var loading: Bool?
     var linkPrefKey: String?
+    var configurationItem: ConfiguredItem?
     
     // Access AppDelegate
     @EnvironmentObject private var appDelegate: AppDelegate
@@ -37,69 +38,167 @@ struct ItemSmall: View {
     @State var showingAlert = false
     
     // Get preferences or default values
-    @ObservedObject var preferences = Preferences()
+    @EnvironmentObject var preferences: Preferences
+    
+    // Get local preferences for Configurator Mode
+    @EnvironmentObject var localPreferences: LocalPreferences
     
     var body: some View {
         
-        VStack {
+        if #available(macOS 26, *) {
+            ZStack {
+                
+                VStack {
+                    
+                    if loading ?? false {
+                        ProgressView()
+                            .scaleEffect(0.8)
+                            .frame(width: 22, height: 22)
+                            .accessibilityHidden(true)
+                    } else {
+                        Image(systemName: image)
+                            .font(.system(size: 22, weight: .semibold))
+                            .foregroundStyle(.white)
+                        //                        .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
+                        //                        .symbolRenderingMode(.hierarchical)
+                            .frame(width: 22, height: 22)
+                            .accessibilityHidden(true)
+                    }
+                    
+                    Spacer()
+                    
+                    // Optionally show a subtitle when user hovers over button
+                    if subtitle != "" && hoverView {
+                        Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
+                            .font(.system(.subheadline, design: .default))
+                            .foregroundStyle(.white)
+                            .frame(width: 80)
+                            .lineLimit(1)
+                    } else {
+                        Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
+                            .font(.system(.subheadline, design: .default))
+                            .foregroundStyle(.white)
+                            .frame(width: 80)
+                            .lineLimit(1)
+                    }
+                }
+                .padding(10)
+                
+                // Optionally show remove item button
+                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    RemoveItemButtonView(configurationItem: configurationItem)
+                }
+            }
+            .frame(width: 114, height: 64)
+            .contentShape(Capsule())
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(title + ", " + (subtitle ?? ""))
+            .alert(isPresented: $showingAlert) {
+                Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
+            }
+            .onHover() {
+                hover in self.hoverView = hover
+            }
+            .onTapGesture() {
+                if preferences.editModeEnabled {
+                    guard let configurationItem else {
+                        return
+                    }
+                    localPreferences.currentConfiguredItem = configurationItem
+                    preferences.showItemConfiguration.toggle()
+                    
+                } else {
+                    tapGesture()
+                }
+            }
+            .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: true))
+            .animation(.bouncy, value: hoverView)
+        } else {
+            ZStack {
+                VStack {
+                    
+                    if loading ?? false {
+                        ProgressView()
+                            .scaleEffect(0.8)
+                            .frame(width: 24, height: 24)
+                            .accessibilityHidden(true)
+                    } else {
+                        Image(systemName: image)
+                            .font(.system(size: 24, weight: .semibold))
+                            .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
+                            .frame(width: 24, height: 24)
+                            .accessibilityHidden(true)
+                    }
+                    
+                    Spacer()
+                    
+                    // Optionally show a subtitle when user hovers over button
+                    if subtitle != "" && hoverView {
+                        Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
+                            .font(.system(.subheadline, design: .rounded))
+                    } else {
+                        Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
+                            .font(.system(.subheadline, design: .rounded))
+                        
+                    }
+                }
+                .padding(10)
+                
+                // Optionally show remove item button
+                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    RemoveItemButtonView(configurationItem: configurationItem)
+                }
+            }
+            .frame(width: 114, height: 60)
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(title + ", " + (subtitle ?? ""))
+            .background(hoverView && link != "" ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
+            .cornerRadius(10)
+            // Apply gray and black border in Dark Mode to better view the buttons like Control Center
+            .modifier(DarkModeBorder())
+            .shadow(color: Color.black.opacity(0.2), radius: 4, y: 2)
+            .alert(isPresented: $showingAlert) {
+                Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
+            }
+            .onHover() {
+                hover in self.hoverView = hover
+            }
+            .onTapGesture() {
+                if preferences.editModeEnabled {
+                    guard let configurationItem else {
+                        return
+                    }
+                    localPreferences.currentConfiguredItem = configurationItem
+                    preferences.showItemConfiguration.toggle()
+                    
+                } else {
+                    tapGesture()
+                }
+            }
+        }
+    }
+    
+    func tapGesture() {
+        // Don't do anything when no link is specified
+        guard link != "" else {
+            logger.debug("No link specified for \(title, privacy: .public), button disabled...")
+            return
+        }
         
-            if loading ?? false {
-                ProgressView()
-                    .scaleEffect(0.8)
-                    .frame(width: 24, height: 24)
-            } else {
-                Image(systemName: image)
-                    .font(.system(size: 24, weight: .semibold))
-                    .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
-                    .frame(width: 24, height: 24)
-            }
-
-        Spacer()
-
-            // Optionally show a subtitle when user hovers over button
-            if subtitle != "" && hoverView {
-                Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
-                    .font(.system(.subheadline, design: .rounded))
-            } else {
-                Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
-                    .font(.system(.subheadline, design: .rounded))
-
-            }
-        }
-        .padding(.vertical, 10)
-        .frame(width: 114, height: 60)
-        .background(hoverView && link != "" ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
-        .cornerRadius(10)
-        // Apply gray and black border in Dark Mode to better view the buttons like Control Center
-        .modifier(DarkModeBorder())
-        .shadow(color: Color.black.opacity(0.2), radius: 4, y: 2)
-        .alert(isPresented: $showingAlert) {
-            Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
-        }
-        .onHover() {
-            hover in self.hoverView = hover
-        }
-        .onTapGesture() {
-            // Don't do anything when no link is specified
-            guard link != "" else {
-                logger.debug("No link specified for \(title, privacy: .public), button disabled...")
-                return
-            }
-            
-            if linkType == "App" {
-                openApp()
-            } else if linkType == "URL" {
-                openLink()
-            } else if linkType == "Command" {
-                runCommand()
+        if linkType == "App" {
+            openApp()
+        } else if linkType == "URL" {
+            openLink()
+        } else if linkType == "Command" {
+            runCommand()
             // MARK: - DistributedNotification is deprecated, use PrivilegedScript instead
-            } else if linkType == "DistributedNotification" || linkType == "PrivilegedScript" {
-                Task {
-                    await runPrivilegedCommand()
-                }            } else {
+        } else if linkType == "DistributedNotification" || linkType == "PrivilegedScript" {
+            Task {
+                await runPrivilegedCommand()
+            }
+        } else {
                 self.showingAlert.toggle()
                 logger.error("Invalid Link Type: \(linkType!)")
-            }
         }
     }
     
@@ -114,6 +213,9 @@ struct ItemSmall: View {
         let configuration = NSWorkspace.OpenConfiguration()
         
         NSWorkspace.shared.openApplication(at: url, configuration: configuration, completionHandler: nil)
+        
+        // Close popover
+        appDelegate.togglePopover(nil)
     }
     
     // Open URL
@@ -180,7 +282,7 @@ struct ItemSmall: View {
         
         // Check value comes from a Configuration Profile. If not, the script may be maliciously set and needs to be ignored
         guard defaults.objectIsForced(forKey: linkPrefKey!) == true else {
-            logger.error("Script \(privilegedCommand, privacy: .public) is not set by an administrator and is not trusted. Action will not be executed")
+            logger.error("Action \(privilegedCommand, privacy: .public) is not set by an administrator and is not trusted. Action will not be executed")
             return
         }
         
@@ -204,3 +306,4 @@ struct ItemSmall: View {
         }
     }
 }
+

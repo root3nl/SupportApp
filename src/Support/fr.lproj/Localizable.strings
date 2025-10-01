@@ -66,8 +66,6 @@
 "UPDATE_ALL" = "Tout mettre à jour";
 "APP_UPDATES" = "Mises à jour de l'application";
 "MACOS_UPDATES" = "Mises à jour de macOS";
-"AUTOMATIC_INSTALLATION" = "Installation automatique";
-"MORE_INFO" = "Plus d'informations";
 "RESTART_NOW" = "Veuillez redémarrer maintenant";
 "RESTART" = "Redémarrage";
 "APPS_WILL_BE_UPDATED_AUTOMATICALLY_DESCRIPTION" = "Les applications seront automatiquement mises à jour";
@@ -76,3 +74,9 @@
 "APPS" = "Apps";
 "PRIVILEGED_HELPER_TOOL_NOT_INSTALLED" = "Le Privileged Helper Tool n'est pas installé";
 "UP_TO_DATE" = "A jour";
+"ITEM_CONFIGURATION" = "Item configuration";
+"SAVE" = "Save";
+"ITEM_PREVIEW" = "Item preview";
+"ITEM_TYPE" = "Item type";
+"STORAGE" = "Storage";
+"NETWORK_IP_ADDRESS" = "Network IP Address";

@@ -9,51 +9,41 @@ import SwiftUI
 
 struct ComputerNameSubview: View {
     
+    var configurationItem: ConfiguredItem?
+    
     // Get  computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo
     
     // Get preferences or default values
-    @StateObject var preferences = Preferences()
-    
+    @EnvironmentObject var preferences: Preferences
+    @EnvironmentObject var localPreferences: LocalPreferences
+
     // Make UserDefaults easy to use
     let defaults = UserDefaults.standard
     
     // Dark Mode detection
     @Environment(\.colorScheme) var colorScheme
     
+    // Local preferences for Configurator Mode or (managed) UserDefaults
+    var activePreferences: PreferencesProtocol {
+        preferences.configuratorModeEnabled ? localPreferences : preferences
+    }
+    
     // Set the custom color for all symbols depending on Light or Dark Mode.
-    var customColor: String {
-        if colorScheme == .light && defaults.string(forKey: "CustomColor") != nil {
-            return preferences.customColor
-        } else if colorScheme == .dark && defaults.string(forKey: "CustomColorDarkMode") != nil {
-            return preferences.customColorDarkMode
+    var color: Color {
+        if colorScheme == .dark && !activePreferences.customColorDarkMode.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColorDarkMode)") ?? NSColor.controlAccentColor)
+        } else if !activePreferences.customColor.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColor)") ?? NSColor.controlAccentColor)
         } else {
-            return preferences.customColor
-        }
-    }
-    
-    // Link to About This Mac
-    var aboutLink: String {
-        if #available(macOS 13, *) {
-            return "x-apple.systempreferences:com.apple.SystemProfiler.AboutExtension"
-        } else {
-            return "com.apple.AboutThisMacLauncher"
-        }
-    }
-    
-    // Link type for About This Mac
-    var aboutLinkType: String {
-        if #available(macOS 13, *) {
-            return "URL"
-        } else {
-            return "App"
+            return .accentColor
         }
     }
     
     var body: some View {
         
-//        InfoItem(title: NSLocalizedString("Computer Name", comment: ""), subtitle: computerinfo.hostname, image: computerinfo.computerNameIcon, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: false)
-        ItemDouble(title: NSLocalizedString("Computer Name", comment: ""), secondTitle: NSLocalizedString("Model", comment: ""), subtitle: computerinfo.hostname, secondSubtitle: computerinfo.modelNameString, linkType: aboutLinkType, link: aboutLink, image: computerinfo.computerNameIcon, symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), hoverEffectEnable: true)
+//        InfoItem(title: NSLocalizedString("Computer Name", comment: ""), subtitle: computerinfo.hostname, image: computerinfo.computerNameIcon, symbolColor: color, hoverEffectEnable: false)
+        ItemDouble(title: NSLocalizedString("Computer Name", comment: ""), secondTitle: NSLocalizedString("Model", comment: ""), subtitle: computerinfo.hostname, secondSubtitle: computerinfo.modelNameString, linkType: "URL", link: "x-apple.systempreferences:com.apple.SystemProfiler.AboutExtension", image: computerinfo.computerNameIcon, symbolColor: color, configurationItem: configurationItem, hoverEffectEnable: true)
         
     }
 }

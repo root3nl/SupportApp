@@ -12,7 +12,6 @@ import SwiftUI
 
 // Popover is based on: https://medium.com/@acwrightdesign/creating-a-macos-menu-bar-application-using-swiftui-54572a5d5f87
 
-//@NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 
     var popover: NSPopover!
@@ -22,6 +21,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     var timerEightHours: Timer?
     let menu = NSMenu()
     var statusBarItem: NSStatusItem?
+    
+    var configuratorMenuItem: NSMenuItem?
     
     // Unified logging for StatusBarItem
     let logger = Logger(subsystem: "nl.root3.support", category: "StatusBarItem")
@@ -45,10 +46,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     let catalogDefaults = UserDefaults(suiteName: "nl.root3.catalog")
     
     // Make properties and preferences available
-    var computerinfo = ComputerInfo()
-    var userinfo = UserInfo()
-    var preferences = Preferences()
-    var appCatalogController = AppCatalogController()
+    let computerinfo = ComputerInfo()
+    let userinfo = UserInfo()
+    let preferences = Preferences()
+    let appCatalogController = AppCatalogController()
+    let localPreferences = LocalPreferences()
+    let popoverLifecycle = PopoverLifecycle()
     
     // Create red notification badge view
     // https://github.com/DeveloperMaris/ToolReleases/blob/master/ToolReleases/PopoverController.swift
@@ -80,6 +83,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             .environmentObject(userinfo)
             .environmentObject(preferences)
             .environmentObject(appCatalogController)
+            .environmentObject((localPreferences))
+            .environmentObject(popoverLifecycle)
             .environmentObject(self))
 
         let popover = NSPopover()
@@ -88,13 +93,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         // https://stackoverflow.com/questions/68744895/swift-ui-macos-menubar-nspopover-no-arrow
         popover.setValue(true, forKeyPath: "shouldHideAnchor")
         
-        // Make the popover auto resizing for macOS 13 and later. macOS 12 may leave empty space some views are too large
-        if #available(macOS 13.0, *) {
-            content.sizingOptions = .preferredContentSize
-        } else {
-            // Fallback on earlier versions
-            popover.contentSize = content.view.intrinsicContentSize
-        }
+        // Make the popover auto resizing
+        content.sizingOptions = .preferredContentSize
         
         // Set popover size
         popover.behavior = .transient
@@ -128,6 +128,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         
         // Observe changes for UserDefaults
         defaults.addObserver(self, forKeyPath: "StatusBarIcon", options: .new, context: nil)
+        defaults.addObserver(self, forKeyPath: "StatusBarIconAllowsColor", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "StatusBarIconSFSymbol", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "StatusBarIconNotifierEnabled", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "UptimeDaysLimit", options: .new, context: nil)
@@ -141,6 +142,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         defaults.addObserver(self, forKeyPath: "ExtensionAlertA", options: .new, context: nil)
         defaults.addObserver(self, forKeyPath: "ExtensionAlertB", options: .new, context: nil)
         
+        // Observer changes to 'Rows'
+        defaults.addObserver(self, forKeyPath: "Rows", options: .new, context: nil)
+
         // Receive notifications after uptime check
         NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.uptimeDaysLimit, object: nil)
         
@@ -197,15 +201,40 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             
         }
         
-        // Create menu items for right click
-        menu.addItem(NSMenuItem(title: NSLocalizedString("About Support", comment: ""), action: #selector(AppDelegate.showAbout), keyEquivalent: "i"))
+        // MARK: - Create menu items for right click
+        // About button
+        let aboutItem = NSMenuItem(title: NSLocalizedString("About Support", comment: ""), action: #selector(AppDelegate.showAbout), keyEquivalent: "i")
+        aboutItem.image = NSImage(systemSymbolName: "info.circle", accessibilityDescription: nil)
+        menu.addItem(aboutItem)
+
+        // Separator
         menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: NSLocalizedString("Quit Support", comment: ""), action: #selector(NSApplication.shared.terminate(_:)), keyEquivalent: "q"))
+        
+        // Configurator Mode button
+        let configuratorItem = NSMenuItem(title: NSLocalizedString("Configurator Mode", comment: ""),
+                                          action: #selector(AppDelegate.configuratorMode),
+                                          keyEquivalent: "c")
+        configuratorItem.image = NSImage(systemSymbolName: "switch.2", accessibilityDescription: nil)
+        configuratorItem.target = self
+        configuratorItem.state = preferences.configuratorModeEnabled ? .on : .off
+        // Disable Configutor Mode when configured
+        configuratorItem.isHidden = preferences.disableConfiguratorMode && defaults.objectIsForced(forKey: "DisableConfiguratorMode")
+        menu.addItem(configuratorItem)
+        
+        self.configuratorMenuItem = configuratorItem
+        menu.addItem(NSMenuItem.separator())
+        
+        // Quit button
+        let quitItem = NSMenuItem(title: NSLocalizedString("Quit Support", comment: ""), action: #selector(NSApplication.shared.terminate(_:)), keyEquivalent: "q")
+        quitItem.image = NSImage(systemSymbolName: "xmark.circle", accessibilityDescription: nil)
+        menu.addItem(quitItem)
                 
         // Event monitor to hide popover when clicked outside the popover.
         eventMonitor = EventMonitor(mask: [.leftMouseDown, .rightMouseDown]) { [weak self] event in
             if let strongSelf = self, strongSelf.popover.isShown {
-                strongSelf.closePopover(sender: event)
+                if !strongSelf.preferences.configuratorModeEnabled {
+                    strongSelf.closePopover(sender: event)
+                }
             }
         }
     }
@@ -228,13 +257,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             orangeBadge.isHidden = true
             
             // Use custom Notification Icon if set in UserDefaults with fallback to default icon
-            if let defaultsStatusBarIcon = defaults.string(forKey: "StatusBarIcon") {
+            if !preferences.statusBarIcon.isEmpty {
                 
                 // Empty initializer with URL to local Notification Icon, either directly from the Configuration Profile or the local download location for remote image
                 var localIconURL: String = ""
                 
                 // If image is a remote URL, download the image and store in container Documents folder
-                if defaultsStatusBarIcon.hasPrefix("https") {
+                if preferences.statusBarIcon.hasPrefix("https") {
                                         
                     do {
                         
@@ -242,13 +271,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                         var newURL: Bool
                         
                         // Detect if the URL changed to check whether to download the image again
-                        if defaultsStatusBarIcon != lastKnownStatusBarItemUrl {
+                        if preferences.statusBarIcon != lastKnownStatusBarItemUrl {
                             newURL = true
                         } else {
                             newURL = false
                         }
                         
-                        if let downloadedIconURL = try getRemoteImage(url: defaultsStatusBarIcon, newURL: newURL, filename: "menu_bar_icon", logName: "StatusBarIcon") {
+                        if let downloadedIconURL = try getRemoteImage(url: preferences.statusBarIcon, newURL: newURL, filename: "menu_bar_icon", logName: "StatusBarIcon") {
                             localIconURL = downloadedIconURL.path
                         }
                         
@@ -258,13 +287,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                     }
                     
                     // Set current URL
-                    lastKnownStatusBarItemUrl = defaultsStatusBarIcon
+                    DispatchQueue.main.async {
+                        self.lastKnownStatusBarItemUrl = self.preferences.statusBarIcon
+                    }
                     
                 } else {
                     // Set image to file URL from Configuration Profile
                     logger.debug("StatusBarIcon is local file")
                     
-                    localIconURL = defaultsStatusBarIcon
+                    DispatchQueue.main.async {
+                        localIconURL = self.preferences.statusBarIcon
+                    }
                 }
                 
                 if let customIcon = NSImage(contentsOfFile: localIconURL) {
@@ -292,7 +325,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                     button.image = customIcon
                     
                     // Render as template to make icon white and match system default
-                    button.image?.isTemplate = true
+                    if preferences.statusBarIconAllowsColor {
+                        button.image?.isTemplate = false
+                    } else {
+                        button.image?.isTemplate = true
+                    }
                     logger.debug("StatusBarIcon preference key is set")
                     
                 } else {
@@ -300,10 +337,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                     logger.error("StatusBarIcon preference key is set, but no valid image was found. Please check file path/name or permissions. Falling back to default image...")
                 }
                 // Use custom status bar icon using SF Symbols if set in UserDefaults with fallback to default icon
-            } else if defaults.string(forKey: "StatusBarIconSFSymbol") != nil && defaults.string(forKey: "StatusBarIcon") == nil {
+            } else if !preferences.statusBarIconSFSymbol.isEmpty && preferences.statusBarIcon.isEmpty {
                 
                 // https://developer.apple.com/videos/play/wwdc2020/10207/
-                if let customSFSymbol = NSImage(systemSymbolName: defaults.string(forKey: "StatusBarIconSFSymbol")!, accessibilityDescription: nil) {
+                if let customSFSymbol = NSImage(systemSymbolName: preferences.statusBarIconSFSymbol, accessibilityDescription: nil) {
                     
                     // Configure SF Symbol bigger and more bold to match other Menu Bar Extras
                     let config = NSImage.SymbolConfiguration(textStyle: .body, scale: .large)
@@ -325,7 +362,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             // Set notification counter next to the menu bar icon if enabled. https://www.hackingwithswift.com/example-code/system/how-to-insert-images-into-an-attributed-string-with-nstextattachment
             
             // Create array with configured info items. Disabled info items should not show a notification badge in the menu bar icon
-            let infoItemsEnabled: [String] = [
+            var infoItemsEnabled: [String] = [
                 preferences.infoItemOne,
                 preferences.infoItemTwo,
                 preferences.infoItemThree,
@@ -334,6 +371,34 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                 preferences.infoItemSix
             ]
             
+            // Append all types from new structure
+            if !preferences.rows.isEmpty {
+                for row in preferences.rows {
+                    if let items = row.items {
+                        let allTypes = items.compactMap { $0.type }
+                        infoItemsEnabled.append(contentsOf: allTypes)
+                    }
+                }
+            }
+            
+            // Create array with extension alert booleans
+            var extensionAlerts: [Bool] = []
+            
+            if !preferences.rows.isEmpty {
+                for row in preferences.rows {
+                    if let items = row.items {
+                        let extensions = items.filter { $0.type == "Extension" }
+                        for extensionItem in extensions {
+                            if let extID = extensionItem.extensionIdentifier {
+                                let alertKey = "\(extID)_alert"
+                                let value = defaults.bool(forKey: alertKey)
+                                extensionAlerts.append(value)
+                            }
+                        }
+                    }
+                }
+            }
+                        
             // If configured, ignore major macOS version updates
             if computerinfo.forceDelayedMajorSoftwareUpdates {
                 logger.debug("forceDelayedMajorSoftwareUpdates is enabled, hiding \(self.computerinfo.majorVersionUpdates) major macOS updates")
@@ -342,7 +407,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             // Check if StatusBarItem notifier is enabled
             if defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
                 // Show notification badge in menu bar icon when info item when needed
-                if ((computerinfo.recommendedUpdates.count == 0 || !infoItemsEnabled.contains("MacOSVersion")) && (appCatalogController.appUpdates == 0 || !infoItemsEnabled.contains("AppCatalog"))) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage")) || (preferences.extensionAlertA && infoItemsEnabled.contains("ExtensionA")) || (preferences.extensionAlertB && infoItemsEnabled.contains("ExtensionB"))) {
+                if ((computerinfo.recommendedUpdates.count == 0 || !infoItemsEnabled.contains("MacOSVersion")) && (appCatalogController.appUpdates == 0 || !infoItemsEnabled.contains("AppCatalog"))) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage")) || (preferences.extensionAlertA && infoItemsEnabled.contains("ExtensionA")) || (preferences.extensionAlertB && infoItemsEnabled.contains("ExtensionB")) || extensionAlerts.contains(true)) {
                     
                     // Create orange notification badge
                     orangeBadge.isHidden = false
@@ -426,6 +491,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         switch keyPath {
         case "StatusBarIcon":
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.defaults.string(forKey: "StatusBarIcon") ?? "", privacy: .public)")
+        case "StatusBarIconAllowsColor":
+            logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.defaults.string(forKey: "StatusBarIconAllowsColor") ?? "", privacy: .public)")
         case "StatusBarIconSFSymbol":
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.defaults.string(forKey: "StatusBarIconSFSymbol") ?? "", privacy: .public)")
         case "StatusBarIconNotifierEnabled":
@@ -457,6 +524,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.preferences.extensionAlertA, privacy: .public)")
         case "ExtensionAlertB":
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed to \(self.preferences.extensionAlertB, privacy: .public)")
+        case "Rows":
+            logger.debug("\(keyPath! as NSObject, privacy: .public) changed, decoding rows...")
+            self.decodeRows()
+        case let key where key?.hasSuffix("_alert") == true:
+            logger.debug("\(key! as NSObject, privacy: .public) changed")
         default:
             logger.debug("Some other change detected...")
         }
@@ -469,7 +541,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 
     // MARK: - Process left and right clicks. https://samoylov.eu/2016/09/14/handling-left-and-right-click-at-nsstatusbar-with-swift-3/
     @objc func statusBarButtonClicked(sender: NSStatusBarButton) {
-        let event = NSApp.currentEvent!
+        guard let event = NSApp.currentEvent else {
+            logger.debug("No event available, assuming accessibility or Voice Control click...")
+            togglePopover(nil)
+            return
+        }
         
         // Show menu for right click
         if event.type == NSEvent.EventType.rightMouseUp {
@@ -527,6 +603,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             // Enable animation again to avoid issues
             self.popover.animates = true
             
+//            if let popoverWindow = popover.contentViewController?.view.window {
+//                popoverWindow.isOpaque = false
+//                popoverWindow.backgroundColor = .clear
+//                popoverWindow.hasShadow = false // Optional: Remove shadow if you want
+//            }
+            
             // Start monitoring mouse clicks outside the popover
             eventMonitor?.start()
             
@@ -547,6 +629,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                 }
             }
             
+            // Create new presentation token ID
+            popoverLifecycle.bump()
+            
         }
         // Necessary to make the view active without having to do an extra click
         self.popover.contentViewController?.view.window?.becomeKey()
@@ -555,6 +640,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     // MARK: - Run functions at startup
     func runAtStartup() {
         // Run uptime and storage once at startup
+        self.loadLocalPreferences()
+        self.decodeRows()
+        
         self.computerinfo.kernelBootTime()
         Task {
             await self.userinfo.getCurrentUserRecord()
@@ -563,9 +651,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         self.computerinfo.getStorage()
         self.computerinfo.getRecommendedUpdates()
         self.computerinfo.getModelName()
-        if #available(macOS 13, *) {
-            self.computerinfo.getRSRVersion()
-        }
+        self.computerinfo.getRSRVersion()
         
         // Only run when App Catalog is installed
         if appCatalogController.catalogInstalled() {
@@ -599,6 +685,26 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     @objc func showAbout() {
         NSApplication.shared.activate(ignoringOtherApps: true)
         NSApp.orderFrontStandardAboutPanel(self)
+    }
+    
+    //
+    @objc func configuratorMode() {
+        preferences.configuratorModeEnabled.toggle()
+        configuratorMenuItem?.state = preferences.configuratorModeEnabled ? .on : .off
+        
+        if preferences.configuratorModeEnabled {
+            preferences.editModeEnabled = true
+            
+            // Make sure the popover stays open when configurator mode and settings are presented
+            popover.behavior = .applicationDefined
+        } else {
+            preferences.editModeEnabled = false
+            
+            // Make sure the popover is set back to transient and hides when needed
+            popover.behavior = .transient
+        }
+        
+        togglePopover(nil)
     }
     
     // MARK: - Function to uninstall Privileged Helper Tool
@@ -681,79 +787,76 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     
     // Use SMAppService to handle LaunchAgent on macOS 13 and higher
     func configureLaunchAgent() {
-        if #available(macOS 13.0, *) {
+        // Set LaunchAgent PLIST name
+        let agent = SMAppService.agent(plistName: "nl.root3.support.plist")
+        launchAgentLogger.debug("LaunchAgent status: \(agent.status.rawValue)")
+        
+        // Set Legacy LaunchAgent file path URL
+        let legacyLAStatus = SMAppService.statusForLegacyPlist(at: URL(filePath: "/Library/LaunchAgents/nl.root3.support.plist"))
+        launchAgentLogger.debug("Legacy LaunchAgent status: \(legacyLAStatus.rawValue)")
+        
+        // Don't register SMAppService when Legacy LaunchAgent is active
+        guard legacyLAStatus != .enabled else {
+            launchAgentLogger.debug("Legacy LaunchAgent is active")
+            return
+        }
+        
+        // Try to register LaunchAgent unless disabled in Configuration Profile
+        if preferences.openAtLogin {
             
-            // Set LaunchAgent PLIST name
-            let agent = SMAppService.agent(plistName: "nl.root3.support.plist")
-            launchAgentLogger.debug("LaunchAgent status: \(agent.status.rawValue)")
-            
-            // Set Legacy LaunchAgent file path URL
-            let legacyLAStatus = SMAppService.statusForLegacyPlist(at: URL(filePath: "/Library/LaunchAgents/nl.root3.support.plist"))
-            launchAgentLogger.debug("Legacy LaunchAgent status: \(legacyLAStatus.rawValue)")
-            
-            // Don't register SMAppService when Legacy LaunchAgent is active
-            guard legacyLAStatus != .enabled else {
-                launchAgentLogger.debug("Legacy LaunchAgent is active")
-                return
-            }
-            
-            // Try to register LaunchAgent unless disabled in Configuration Profile
-            if preferences.openAtLogin {
-                
-                switch agent.status {
-                case .enabled:
-                    launchAgentLogger.debug("LaunchAgent is already registered and enabled")
-                case .notFound:
-                    launchAgentLogger.error("LaunchAgent not found")
-                    // Try to register LaunchAgent
-                    do {
-                        try agent.register()
-                        launchAgentLogger.debug("LaunchAgent was successfully registered")
-                        
-                        // Terminate the application to avoid running multiple instances of the app
-                        NSApplication.shared.terminate(self)
-                    } catch {
-                        launchAgentLogger.error("Error registering LaunchAgent")
-                        launchAgentLogger.error("\(error, privacy: .public)")
-                    }
-                case .notRegistered:
-                    launchAgentLogger.debug("LaunchAgent is not registered, trying to register...")
-                    // Try to register LaunchAgent
-                    do {
-                        try agent.register()
-                        launchAgentLogger.debug("LaunchAgent was successfully registered")
-                        
-                        // Terminate the application to avoid running multiple instances of the app
-                        NSApplication.shared.terminate(self)
-                    } catch {
-                        launchAgentLogger.error("Error registering LaunchAgent")
-                        launchAgentLogger.error("\(error, privacy: .public)")
-                    }
-                case .requiresApproval:
-                    launchAgentLogger.debug("LaunchAgent requires user approval")
-                    SMAppService.openSystemSettingsLoginItems()
+            switch agent.status {
+            case .enabled:
+                launchAgentLogger.debug("LaunchAgent is already registered and enabled")
+            case .notFound:
+                launchAgentLogger.error("LaunchAgent not found")
+                // Try to register LaunchAgent
+                do {
+                    try agent.register()
+                    launchAgentLogger.debug("LaunchAgent was successfully registered")
                     
                     // Terminate the application to avoid running multiple instances of the app
                     NSApplication.shared.terminate(self)
-                default:
-                    launchAgentLogger.error("Unknown error with LaunchAgent")
+                } catch {
+                    launchAgentLogger.error("Error registering LaunchAgent")
+                    launchAgentLogger.error("\(error, privacy: .public)")
                 }
-            } else {
-                
-                guard agent.status != .notRegistered else {
-                    launchAgentLogger.debug("LaunchAgent is already unregistered")
-                    return
+            case .notRegistered:
+                launchAgentLogger.debug("LaunchAgent is not registered, trying to register...")
+                // Try to register LaunchAgent
+                do {
+                    try agent.register()
+                    launchAgentLogger.debug("LaunchAgent was successfully registered")
+                    
+                    // Terminate the application to avoid running multiple instances of the app
+                    NSApplication.shared.terminate(self)
+                } catch {
+                    launchAgentLogger.error("Error registering LaunchAgent")
+                    launchAgentLogger.error("\(error, privacy: .public)")
                 }
+            case .requiresApproval:
+                launchAgentLogger.debug("LaunchAgent requires user approval")
+                SMAppService.openSystemSettingsLoginItems()
                 
-                // Try to unregister LaunchAgent when disabled in Configuration Profile
-                agent.unregister(completionHandler: { error in
-                    if let error = error {
-                        self.launchAgentLogger.error("Error unregistering LaunchAgent: \(error, privacy: .public)")
-                    } else {
-                        self.launchAgentLogger.debug("LaunchAgent successfully unregistered")
-                    }
-                })
+                // Terminate the application to avoid running multiple instances of the app
+                NSApplication.shared.terminate(self)
+            default:
+                launchAgentLogger.error("Unknown error with LaunchAgent")
             }
+        } else {
+            
+            guard agent.status != .notRegistered else {
+                launchAgentLogger.debug("LaunchAgent is already unregistered")
+                return
+            }
+            
+            // Try to unregister LaunchAgent when disabled in Configuration Profile
+            agent.unregister(completionHandler: { error in
+                if let error = error {
+                    self.launchAgentLogger.error("Error unregistering LaunchAgent: \(error, privacy: .public)")
+                } else {
+                    self.launchAgentLogger.debug("LaunchAgent successfully unregistered")
+                }
+            })
         }
     }
     
@@ -816,4 +919,86 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         
         return fileURL
     }
+    
+    // MARK: - Load all current preferences to Configurator Mode
+    func loadLocalPreferences() {
+        logger.debug("Loading current prefences to Configurator Mode")
+        
+        DispatchQueue.main.async {
+            self.localPreferences.title = self.preferences.title
+            self.localPreferences.logo = self.preferences.logo
+            self.localPreferences.logoDarkMode = self.preferences.logoDarkMode
+            self.localPreferences.notificationIcon = self.preferences.notificationIcon
+            self.localPreferences.statusBarIcon = self.preferences.statusBarIcon
+            self.localPreferences.statusBarIconAllowsColor = self.preferences.statusBarIconAllowsColor
+            self.localPreferences.statusBarIconSFSymbol = self.preferences.statusBarIconSFSymbol
+            self.localPreferences.statusBarIconNotifierEnabled = self.preferences.statusBarIconNotifierEnabled
+            self.localPreferences.updateText = self.preferences.updateText
+            self.localPreferences.customColor = self.preferences.customColor
+            self.localPreferences.customColorDarkMode = self.preferences.customColorDarkMode
+            self.localPreferences.errorMessage = self.preferences.errorMessage
+            self.localPreferences.showWelcomeScreen = self.preferences.showWelcomeScreen
+            self.localPreferences.footerText = self.preferences.footerText
+            self.localPreferences.openAtLogin = self.preferences.openAtLogin
+            self.localPreferences.disablePrivilegedHelperTool = self.preferences.disablePrivilegedHelperTool
+            self.localPreferences.disableConfiguratorMode = self.preferences.disableConfiguratorMode
+            self.localPreferences.uptimeDaysLimit = self.preferences.uptimeDaysLimit
+            self.localPreferences.passwordType = self.preferences.passwordType
+            self.localPreferences.passwordExpiryLimit = self.preferences.passwordExpiryLimit
+            self.localPreferences.passwordLabel = self.preferences.passwordLabel
+            self.localPreferences.storageLimit = self.preferences.storageLimit
+        }
+    }
+    
+    // MARK: - Function to load configuration profile
+    func decodeRows() {
+        
+        logger.debug("Loading rows from Configuration Profile...")
+        
+        // Check if "Rows" has data
+        guard let rowsDefaults = UserDefaults.standard.array(forKey: "Rows") else {
+            logger.error("No data found for key: \"Rows\".")
+            return
+        }
+        
+        // Try to decode "Rows"
+        do {
+            let data = try JSONSerialization.data(withJSONObject: rowsDefaults)
+            let decoder = JSONDecoder()
+            
+            let dedodedItems = try? decoder.decode([Row].self, from: data)
+            
+            if let rows = dedodedItems {
+                DispatchQueue.main.async {
+                    self.preferences.rows = rows
+                    self.localPreferences.rows = rows
+                }
+                
+                // Register any Extension alert observers
+                self.registerExtensionObservers(rows: rows)
+            }
+                        
+        } catch {
+            logger.error("\(error.localizedDescription)")
+        }
+    }
+
+    // MARK: - Start observing alerts for extensions
+    func registerExtensionObservers(rows: [Row]) {
+        logger.debug("Registering extension observers")
+        
+        for row in rows {
+            if let items = row.items {
+                let extensions = items.filter { $0.type == "Extension" }
+                for extensionItem in extensions {
+                    if let extID = extensionItem.extensionIdentifier {
+                        let alertKey = "\(extID)_alert"
+                        logger.debug("Observing extension alert key: \(alertKey, privacy: .public)")
+                        defaults.addObserver(self, forKeyPath: alertKey, options: .new, context: nil)
+                    }
+                }
+            }
+        }
+    }
 }
+

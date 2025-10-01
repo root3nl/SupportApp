@@ -179,3 +179,11 @@ extension String {
     }
 
 }
+
+extension String {
+    var nilIfEmpty: String? { self.isEmpty ? nil : self }
+}
+
+extension Int {
+    var nilIfZero: Int? { self == 0 ? nil : self }
+}

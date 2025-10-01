@@ -9,11 +9,14 @@ import SwiftUI
 
 struct UptimeSubview: View {
     
+    var configurationItem: ConfiguredItem?
+    
     // Get  computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo
     
     // Get preferences or default values
-    @StateObject var preferences = Preferences()
+    @EnvironmentObject var preferences: Preferences
+    @EnvironmentObject var localPreferences: LocalPreferences
     
     // Make UserDefaults easy to use
     let defaults = UserDefaults.standard
@@ -24,14 +27,19 @@ struct UptimeSubview: View {
     // Boolean to show legacy uptime alert when clicked
     @State var uptimeAlert: Bool = false
     
+    // Local preferences for Configurator Mode or (managed) UserDefaults
+    var activePreferences: PreferencesProtocol {
+        preferences.configuratorModeEnabled ? localPreferences : preferences
+    }
+    
     // Set the custom color for all symbols depending on Light or Dark Mode.
-    var customColor: String {
-        if colorScheme == .light && defaults.string(forKey: "CustomColor") != nil {
-            return preferences.customColor
-        } else if colorScheme == .dark && defaults.string(forKey: "CustomColorDarkMode") != nil {
-            return preferences.customColorDarkMode
+    var color: Color {
+        if colorScheme == .dark && !activePreferences.customColorDarkMode.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColorDarkMode)") ?? NSColor.controlAccentColor)
+        } else if !activePreferences.customColor.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColor)") ?? NSColor.controlAccentColor)
         } else {
-            return preferences.customColor
+            return .accentColor
         }
     }
     
@@ -56,28 +64,29 @@ struct UptimeSubview: View {
     var body: some View {
         
         if hoverEffectEnabled {
-            InfoItem(title: NSLocalizedString("Last Reboot", comment: ""), subtitle: "\(computerinfo.uptimeRounded) \(computerinfo.uptimeText) " + NSLocalizedString("ago", comment: ""), image: "clock.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: computerinfo.uptimeLimitReached, hoverEffectEnable: true)
-                .modify {
-                    if #available(macOS 13, *) {
-                        $0.onTapGesture {
-                            if hoverEffectEnabled {
-                                computerinfo.showUptimeAlert.toggle()
-                            }
+            InfoItem(title: NSLocalizedString("Last Reboot", comment: ""), subtitle: "\(computerinfo.uptimeRounded) \(computerinfo.uptimeText) " + NSLocalizedString("ago", comment: ""), image: "clock.fill", symbolColor: color, notificationBadgeBool: computerinfo.uptimeLimitReached, configurationItem: configurationItem, hoverEffectEnable: true)
+                .onTapGesture {
+                    if preferences.editModeEnabled {
+                        guard let configurationItem else {
+                            return
                         }
+                        localPreferences.currentConfiguredItem = configurationItem
+                        preferences.showItemConfiguration.toggle()
                     } else {
-                        $0.onTapGesture {
-                            if hoverEffectEnabled {
-                                uptimeAlert.toggle()
-                            }
-                        }
+                        computerinfo.showUptimeAlert.toggle()
                     }
                 }
-                // Legacy popover for macOS 12
-                .popover(isPresented: $uptimeAlert, arrowEdge: .leading) {
-                    PopoverAlertView(uptimeAlert: $uptimeAlert, title: NSLocalizedString("RESTART_REGULARLY", comment: ""), message: alertText)
-                }
         } else {
-            InfoItem(title: NSLocalizedString("Last Reboot", comment: ""), subtitle: "\(computerinfo.uptimeRounded) \(computerinfo.uptimeText) " + NSLocalizedString("ago", comment: ""), image: "clock.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadgeBool: false, hoverEffectEnable: false)
+            InfoItem(title: NSLocalizedString("Last Reboot", comment: ""), subtitle: "\(computerinfo.uptimeRounded) \(computerinfo.uptimeText) " + NSLocalizedString("ago", comment: ""), image: "clock.fill", symbolColor: color, notificationBadgeBool: false, hoverEffectEnable: false)
+                .onTapGesture {
+                    if preferences.editModeEnabled {
+                        guard let configurationItem else {
+                            return
+                        }
+                        localPreferences.currentConfiguredItem = configurationItem
+                        preferences.showItemConfiguration.toggle()
+                    }
+                }
         }
     }
 }
