@@ -19,7 +19,7 @@ struct ItemExtension: View {
     var notificationBadgeBool: Bool?
     var loading: Bool?
     var linkPrefKey: String?
-    var extensionIdentifier: String?
+    var extensionIdentifier: String
     var onAppearAction: String?
     var configurationItem: ConfiguredItem?
     
@@ -56,8 +56,8 @@ struct ItemExtension: View {
     var animate: Bool
     
     @AppStorage private var extensionValue: String?
-    @AppStorage private var extensionLoading: Bool
-    @AppStorage private var extensionAlert: Bool
+    @AppStorage private var extensionLoading: Bool?
+    @AppStorage private var extensionAlert: Bool?
 
     init(title: String,
          subtitle: String? = nil,
@@ -92,8 +92,8 @@ struct ItemExtension: View {
         self.animate = animate
         
         self._extensionValue = AppStorage(extensionIdentifier, store: .standard)
-        self._extensionLoading = AppStorage(wrappedValue: false, "\(extensionIdentifier)_loading", store: .standard)
-        self._extensionAlert = AppStorage(wrappedValue: false, "\(extensionIdentifier)_alert", store: .standard)
+        self._extensionLoading = AppStorage("\(extensionIdentifier)_loading", store: .standard)
+        self._extensionAlert = AppStorage("\(extensionIdentifier)_alert", store: .standard)
     }
 
     
@@ -103,7 +103,7 @@ struct ItemExtension: View {
             ZStack {
                 
                 HStack {
-                    if loading ?? false || extensionLoading {
+                    if loading ?? false || extensionLoading ?? false {
                         Ellipse()
                             .foregroundColor(.white.opacity(0.5))
                             .overlay(
@@ -151,7 +151,7 @@ struct ItemExtension: View {
                 }
                 
                 // Optionally show notification badge with warning
-                if extensionAlert {
+                if extensionAlert ?? false {
                     NotificationBadgeTextView(badgeCounter: "!")
                         .accessibilityHidden(true)
                 }
@@ -202,7 +202,7 @@ struct ItemExtension: View {
             ZStack {
                 
                 HStack {
-                    if loading ?? false || extensionLoading {
+                    if loading ?? false || extensionLoading ?? false {
                         Ellipse()
                             .foregroundColor(Color.gray.opacity(0.5))
                             .overlay(
@@ -245,7 +245,7 @@ struct ItemExtension: View {
                 }
                 
                 // Optionally show notification badge with warning
-                if extensionAlert {
+                if extensionAlert ?? false {
                     NotificationBadgeTextView(badgeCounter: "!")
                         .accessibilityHidden(true)
                 }

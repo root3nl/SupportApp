@@ -42,14 +42,14 @@ struct ItemConfigurationView: View {
         }
     }
     
-    @State private var item: SupportItem = SupportItem(type: "Button", title: nil, subtitle: nil, linkType: nil, link: nil, symbol: nil, extensionIdentifier: nil, onAppearAction: nil)
+    @State private var item: SupportItem = SupportItem(type: "Button", title: nil, subtitle: nil, linkType: nil, link: nil, symbol: nil, extensionIdentifier: "", onAppearAction: nil)
     @State private var selectedType: String = ""
     @State private var title: String = "Title Example"
     @State private var subtitle: String = "Subtitle Example"
     @State private var linkType: String = "App"
     @State private var link: String = ""
     @State private var symbol: String = "cart.fill.badge.plus"
-    @State private var extensionIdentifier: String = ""
+    @State private var extensionIdentifier: String = "extension_id_example"
     @State private var onAppearAction: String = ""
 
     let typeOptions: [String: String] = [
@@ -110,6 +110,9 @@ struct ItemConfigurationView: View {
                     if item.type.contains("Button") {
                         localPreferences.rows[localPreferences.currentConfiguredItem!.rowIndex].items?[localPreferences.currentConfiguredItem!.itemIndex] = SupportItem(type: selectedType, title: title, subtitle: subtitle, linkType: linkType, link: link, symbol: symbol, extensionIdentifier: nil, onAppearAction: nil)
                     } else if item.type == "Extension" {
+                        guard !extensionIdentifier.isEmpty else {
+                            return
+                        }
                         localPreferences.rows[localPreferences.currentConfiguredItem!.rowIndex].items?[localPreferences.currentConfiguredItem!.itemIndex] = SupportItem(type: selectedType, title: title, subtitle: nil, linkType: linkType, link: link, symbol: symbol, extensionIdentifier: extensionIdentifier, onAppearAction: onAppearAction)
                     } else {
                         localPreferences.rows[localPreferences.currentConfiguredItem!.rowIndex].items?[localPreferences.currentConfiguredItem!.itemIndex] = SupportItem(type: selectedType, title: nil, subtitle: nil, linkType: nil, link: nil, symbol: nil, extensionIdentifier: nil, onAppearAction: nil)
@@ -213,6 +216,13 @@ struct ItemConfigurationView: View {
                     TextField("SF Symbol", text: $symbol)
                     if item.type == "Extension" {
                         TextField("Extension Identifier", text: $extensionIdentifier)
+                        
+                        if extensionIdentifier.isEmpty {
+                            Text("Required field")
+                                .foregroundColor(.red)
+                                .font(.caption)
+                        }
+                        
                         TextField("On appear action", text: $onAppearAction)
                     }
                 }
@@ -251,7 +261,7 @@ struct ItemConfigurationView: View {
             }
         }
         .onChange(of: selectedType) { _, newValue in
-            item = SupportItem(type: newValue, title: title, subtitle: nil, linkType: nil, link: nil, symbol: nil, extensionIdentifier: nil, onAppearAction: nil)
+            item = SupportItem(type: newValue, title: title, subtitle: nil, linkType: nil, link: nil, symbol: nil, extensionIdentifier: extensionIdentifier, onAppearAction: nil)
         }
     }
 }
