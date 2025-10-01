@@ -25,7 +25,7 @@ struct RemoveItemButtonView: View {
                     
                     // Remove if row is empty to avoid empty/invisible rows taking up space
                     if localPreferences.rows[configurationItem.rowIndex].items?.count == 0 {
-                        localPreferences.rows.remove(at: configurationItem.itemIndex)
+                        localPreferences.rows.remove(at: configurationItem.rowIndex)
                     }
                 } label: {
                     Label("Remove item", systemImage: "minus")
