@@ -380,6 +380,24 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                     }
                 }
             }
+            
+            // Create array with extension alert booleans
+            var extensionAlerts: [Bool] = []
+            
+            if !preferences.rows.isEmpty {
+                for row in preferences.rows {
+                    if let items = row.items {
+                        let extensions = items.filter { $0.type == "Extension" }
+                        for extensionItem in extensions {
+                            if let extID = extensionItem.extensionIdentifier {
+                                let alertKey = "\(extID)_alert"
+                                let value = defaults.bool(forKey: alertKey)
+                                extensionAlerts.append(value)
+                            }
+                        }
+                    }
+                }
+            }
                         
             // If configured, ignore major macOS version updates
             if computerinfo.forceDelayedMajorSoftwareUpdates {
@@ -389,7 +407,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             // Check if StatusBarItem notifier is enabled
             if defaults.bool(forKey: "StatusBarIconNotifierEnabled") {
                 // Show notification badge in menu bar icon when info item when needed
-                if ((computerinfo.recommendedUpdates.count == 0 || !infoItemsEnabled.contains("MacOSVersion")) && (appCatalogController.appUpdates == 0 || !infoItemsEnabled.contains("AppCatalog"))) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage")) || (preferences.extensionAlertA && infoItemsEnabled.contains("ExtensionA")) || (preferences.extensionAlertB && infoItemsEnabled.contains("ExtensionB"))) {
+                if ((computerinfo.recommendedUpdates.count == 0 || !infoItemsEnabled.contains("MacOSVersion")) && (appCatalogController.appUpdates == 0 || !infoItemsEnabled.contains("AppCatalog"))) && ((computerinfo.uptimeLimitReached && infoItemsEnabled.contains("Uptime")) || (computerinfo.selfSignedIP && infoItemsEnabled.contains("Network")) || (userinfo.passwordExpiryLimitReached && infoItemsEnabled.contains("Password")) || (computerinfo.storageLimitReached && infoItemsEnabled.contains("Storage")) || (preferences.extensionAlertA && infoItemsEnabled.contains("ExtensionA")) || (preferences.extensionAlertB && infoItemsEnabled.contains("ExtensionB")) || extensionAlerts.contains(true)) {
                     
                     // Create orange notification badge
                     orangeBadge.isHidden = false
@@ -509,6 +527,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         case "Rows":
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed, decoding rows...")
             self.decodeRows()
+        case let key where key?.hasSuffix("_alert") == true:
+            logger.debug("\(key! as NSObject, privacy: .public) changed")
         default:
             logger.debug("Some other change detected...")
         }
@@ -622,17 +642,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         // Run uptime and storage once at startup
         self.loadLocalPreferences()
         self.decodeRows()
-        
-//        if preferences.rows.isEmpty {
-//            for row in preferences.rows {
-//                if let items = row.items {
-//                    let extensions = items.filter { $0.type == "Extension" }
-//                    for extensionItem in extensions {
-//                        defaults.addObserver(self, forKeyPath: "\(extensionItem.extensionIdentifier ?? "")_alert", options: .new, context: nil)
-//                    }
-//                }
-//            }
-//        }
         
         self.computerinfo.kernelBootTime()
         Task {
@@ -964,10 +973,31 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                     self.preferences.rows = rows
                     self.localPreferences.rows = rows
                 }
+                
+                // Register any Extension alert observers
+                self.registerExtensionObservers(rows: rows)
             }
                         
         } catch {
             logger.error("\(error.localizedDescription)")
+        }
+    }
+
+    // MARK: - Start observing alerts for extensions
+    func registerExtensionObservers(rows: [Row]) {
+        logger.debug("Registering extension observers")
+        
+        for row in rows {
+            if let items = row.items {
+                let extensions = items.filter { $0.type == "Extension" }
+                for extensionItem in extensions {
+                    if let extID = extensionItem.extensionIdentifier {
+                        let alertKey = "\(extID)_alert"
+                        logger.debug("Observing extension alert key: \(alertKey, privacy: .public)")
+                        defaults.addObserver(self, forKeyPath: alertKey, options: .new, context: nil)
+                    }
+                }
+            }
         }
     }
 }
