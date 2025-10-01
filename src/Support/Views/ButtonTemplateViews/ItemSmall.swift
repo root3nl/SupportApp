@@ -82,13 +82,13 @@ struct ItemSmall: View {
                             .lineLimit(1)
                     }
                 }
+                .padding(10)
                 
                 // Optionally show remove item button
                 if preferences.editModeEnabled && !preferences.showItemConfiguration {
                     RemoveItemButtonView(configurationItem: configurationItem)
                 }
             }
-            .padding(10)
             .frame(width: 114, height: 64)
             .contentShape(Capsule())
             .accessibilityElement(children: .combine)
@@ -142,13 +142,13 @@ struct ItemSmall: View {
                         
                     }
                 }
+                .padding(10)
                 
                 // Optionally show remove item button
                 if preferences.editModeEnabled && !preferences.showItemConfiguration {
                     RemoveItemButtonView(configurationItem: configurationItem)
                 }
             }
-            .padding(.vertical, 10)
             .frame(width: 114, height: 60)
             .accessibilityElement(children: .combine)
             .accessibilityLabel(title + ", " + (subtitle ?? ""))
