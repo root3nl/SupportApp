@@ -190,7 +190,7 @@ struct UpdateView: View {
                         // Supports for markdown through a variable:
                         // https://blog.eidinger.info/3-surprises-when-using-markdown-in-swiftui
                         Text(.init(activePreferences.updateText.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo)))
-                            .font(.system(.body, design: .rounded))
+//                            .font(.system(.body, design: .rounded))
                         
                         Spacer()
                     }
