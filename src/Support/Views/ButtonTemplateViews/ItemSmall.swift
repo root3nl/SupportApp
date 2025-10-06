@@ -72,14 +72,14 @@ struct ItemSmall: View {
                         Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
                             .font(.system(.subheadline, design: .default))
                             .foregroundStyle(.white)
-                            .frame(width: 80)
-                            .lineLimit(1)
+//                            .frame(width: 80)
+//                            .lineLimit(1)
                     } else {
                         Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
                             .font(.system(.subheadline, design: .default))
                             .foregroundStyle(.white)
-                            .frame(width: 80)
-                            .lineLimit(1)
+//                            .frame(width: 80)
+//                            .lineLimit(1)
                     }
                 }
                 .padding(10)
