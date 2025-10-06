@@ -304,7 +304,7 @@ struct AppUpdatesView: View {
                             HStack(alignment: .top) {
                                 
                                 Text("\(NSLocalizedString("APPS_WILL_BE_UPDATED_AUTOMATICALLY_DESCRIPTION", comment: "")) \(appCatalogController.nextUpdateDate)")
-                                    .font(.system(.body, design: .rounded))
+//                                    .font(.system(.body, design: .rounded))
                                 //                                .foregroundStyle(.secondary)
                                 
                                 Spacer()

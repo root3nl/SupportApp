@@ -83,7 +83,7 @@ struct AppView: View {
     var body: some View {
         
         // MARK: - ZStack with blur effect
-        ZStack {
+        ZStack(alignment: .topLeading) {
             
             // We need to provide Quit option for Apple App Review approval
             if !preferences.hideQuit {
@@ -92,20 +92,11 @@ struct AppView: View {
             
             // Show "Beta" in the top left corner for beta releases
             if preferences.betaRelease {
-                HStack {
-                    
-                    VStack {
-                        Text("Beta release \(version) (\(build))")
-                            .font(.system(.subheadline, design: .rounded))
-                            .opacity(0.5)
-                        
-                        Spacer()
-                    }
-                    
-                    Spacer()
-                }
-                .padding(.leading, 16.0)
-                .padding(.top, 10)
+                Text("Beta release \(version) (\(build))")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .padding(.leading, 16)
+                    .padding(.top, 10)
             }
             
             VStack(spacing: 10) {

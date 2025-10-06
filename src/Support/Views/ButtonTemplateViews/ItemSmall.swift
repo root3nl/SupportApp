@@ -43,6 +43,8 @@ struct ItemSmall: View {
     // Get local preferences for Configurator Mode
     @EnvironmentObject var localPreferences: LocalPreferences
     
+    let defaults = UserDefaults.standard
+    
     var body: some View {
         
         if #available(macOS 26, *) {
@@ -200,8 +202,11 @@ struct ItemSmall: View {
             runCommand()
             // MARK: - DistributedNotification is deprecated, use PrivilegedScript instead
         } else if linkType == "DistributedNotification" || linkType == "PrivilegedScript" {
+            guard let link else {
+                return
+            }
             Task {
-                await runPrivilegedCommand()
+                await runPrivilegedCommand(command: link)
             }
         } else {
                 self.showingAlert.toggle()
@@ -275,31 +280,23 @@ struct ItemSmall: View {
     }
     
     // MARK: - Function to run privileged script
-    func runPrivilegedCommand() async {
+    func runPrivilegedCommand(command: String) async {
         
         logger.log("Trying to run privileged script...")
         
-        let defaults = UserDefaults.standard
-        
-        // Exit when no script was found
-        guard let privilegedCommand = link else {
-            logger.error("Privileged script was not found")
-            return
-        }
-        
         // Check value comes from a Configuration Profile. If not, the script may be maliciously set and needs to be ignored
-        guard defaults.objectIsForced(forKey: linkPrefKey!) == true else {
-            logger.error("Action \(privilegedCommand, privacy: .public) is not set by an administrator and is not trusted. Action will not be executed")
+        guard defaults.objectIsForced(forKey: command) == true else {
+            logger.error("Action \(command, privacy: .public) is not set by an administrator and is not trusted. Action will not be executed")
             return
         }
         
         // Verify permissions
-        guard FileUtilities().verifyPermissions(pathname: privilegedCommand) else {
+        guard FileUtilities().verifyPermissions(pathname: command) else {
             return
         }
         
         do {
-            try ExecutionService.executeScript(command: privilegedCommand) { exitCode in
+            try ExecutionService.executeScript(command: command) { exitCode in
                 
                 if exitCode == 0 {
                     self.logger.debug("Privileged script ran successfully with exit code 0")
