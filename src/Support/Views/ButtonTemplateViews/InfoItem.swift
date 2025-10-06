@@ -35,10 +35,10 @@ struct InfoItem: View {
                 HStack {
                     if loading ?? false {
                         Ellipse()
-                            .foregroundColor(.white)
+                            .foregroundColor(.white.opacity(0.5))
                             .overlay(
                                 ProgressView()
-                                    .scaleEffect(0.8)
+                                    .controlSize(.small)
                             )
                             .frame(width: 36, height: 36)
                             .padding(.leading, 14)
