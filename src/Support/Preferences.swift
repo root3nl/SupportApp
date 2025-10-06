@@ -56,6 +56,8 @@ class Preferences: ObservableObject {
     
     @AppStorage("DisablePrivilegedHelperTool") var disablePrivilegedHelperTool: Bool = false
     
+    @AppStorage("OnAppearAction") var onAppearAction: String = ""
+    
     // MARK: - Info items
     
     // Version 2.2 new preferences for modular info items

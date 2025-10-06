@@ -31,6 +31,7 @@ struct AppModel: Codable, Hashable {
     var passwordExpiryLimit: Int?
     var passwordLabel: String?
     var storageLimit: Int?
+    var onAppearAction: String?
     var rows: [Row]?
     
     enum CodingKeys: String, CodingKey {
@@ -56,6 +57,7 @@ struct AppModel: Codable, Hashable {
         case passwordExpiryLimit = "PasswordExpiryLimit"
         case passwordLabel = "PasswordLabel"
         case storageLimit = "StorageLimit"
+        case onAppearAction = "OnAppearAction"
         case rows = "Rows"
     }
 }

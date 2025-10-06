@@ -623,7 +623,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             }
                         
             // Post Distributed Notification to trigger script for custom info items
-            if defaults.string(forKey: "OnAppearAction") != nil {
+            if !preferences.onAppearAction.isEmpty {
                 Task {
                     await runOnAppearAction()
                 }
@@ -947,6 +947,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             self.localPreferences.passwordExpiryLimit = self.preferences.passwordExpiryLimit
             self.localPreferences.passwordLabel = self.preferences.passwordLabel
             self.localPreferences.storageLimit = self.preferences.storageLimit
+            self.localPreferences.onAppearAction = self.preferences.onAppearAction
         }
     }
     

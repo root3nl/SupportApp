@@ -32,6 +32,7 @@ class LocalPreferences: ObservableObject {
     @Published var passwordExpiryLimit: Int = 0
     @Published var passwordLabel: String = ""
     @Published var storageLimit: Double = 0
+    @Published var onAppearAction: String = ""
     
     // Rows from local configuration
     @Published var rows: [Row] = []
@@ -64,6 +65,7 @@ protocol PreferencesProtocol {
     var passwordExpiryLimit: Int { get }
     var passwordLabel: String { get }
     var storageLimit: Double { get }
+    var onAppearAction: String { get }
 }
 
 extension Preferences: PreferencesProtocol {}

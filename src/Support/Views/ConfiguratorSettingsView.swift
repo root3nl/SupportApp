@@ -122,12 +122,9 @@ struct AdvancedSettingsView: View {
     var body: some View {
         Form {
             Toggle("Open at login (non-PKG version)", isOn: $localPreferences.openAtLogin)
-                .disabled(!preferences.editModeEnabled)
             Toggle("Disable Privileged Helper Tool", isOn: $localPreferences.disablePrivilegedHelperTool)
-                .disabled(!preferences.editModeEnabled)
             Toggle("Disable Configurator Mode", isOn: $localPreferences.disableConfiguratorMode)
-                .disabled(!preferences.editModeEnabled)
-                .padding(.bottom)
+            TextField("On appear action", text: $localPreferences.onAppearAction, prompt: Text("Path to script"))
             
 //            Button {
 //                if let bundleID = Bundle.main.bundleIdentifier {
@@ -138,6 +135,7 @@ struct AdvancedSettingsView: View {
 //                    .foregroundStyle(.red)
 //            }
         }
+        .disabled(!preferences.editModeEnabled)
     }
 }
 

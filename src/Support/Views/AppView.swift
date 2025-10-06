@@ -75,6 +75,7 @@ struct AppView: View {
             passwordExpiryLimit: localPreferences.passwordExpiryLimit.nilIfZero,
             passwordLabel: localPreferences.passwordLabel.nilIfEmpty,
             storageLimit: Int(localPreferences.storageLimit).nilIfZero,
+            onAppearAction: localPreferences.onAppearAction,
             rows: localPreferences.rows
         )
     }
