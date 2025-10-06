@@ -66,6 +66,21 @@ struct ItemConfigurationView: View {
         "ButtonSmall" : "Button - Small"
     ]
     
+    var actionHint: String {
+        switch linkType {
+        case "App":
+            return "Bundle identifier"
+        case "URL":
+            return "URL to open"
+        case "Command":
+            return "Path to command or script to run"
+        case "PrivilegedScript":
+            return "Path to privileged script"
+        default:
+            return ""
+        }
+    }
+    
     var body: some View {
         
         Group {
@@ -212,7 +227,13 @@ struct ItemConfigurationView: View {
                         Text("Command").tag("Command")
                         Text("Privileged Script").tag("PrivilegedScript")
                     }
-                    TextField("Action", text: $link)
+                    TextField("Action", text: $link, prompt: Text(actionHint))
+                    if linkType == "PrivilegedScript" {
+                        Text("\(Image(systemName: "info.circle.fill")) This functionality is restricted to managed profiles for security reasons.")
+                            .frame(maxWidth: 200, alignment: .leading)
+                            .foregroundColor(.secondary)
+                            .font(.caption)
+                    }
                     TextField("SF Symbol", text: $symbol)
                     if item.type == "Extension" {
                         TextField("Extension Identifier", text: $extensionIdentifier)
@@ -223,7 +244,11 @@ struct ItemConfigurationView: View {
                                 .font(.caption)
                         }
                         
-                        TextField("On appear action", text: $onAppearAction)
+                        TextField("On appear action", text: $onAppearAction, prompt: Text("Path to privileged script"))
+                        Text("\(Image(systemName: "info.circle.fill")) This functionality is restricted to managed profiles for security reasons.")
+                            .frame(maxWidth: 200, alignment: .leading)
+                            .foregroundColor(.secondary)
+                            .font(.caption)
                     }
                 }
                 

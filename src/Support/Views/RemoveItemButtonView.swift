@@ -15,27 +15,20 @@ struct RemoveItemButtonView: View {
     @EnvironmentObject var localPreferences: LocalPreferences
     
     var body: some View {
-        HStack {
-            VStack {
-                Button {
-                    guard let configurationItem else {
-                        return
-                    }
-                    localPreferences.rows[configurationItem.rowIndex].items?.remove(at: configurationItem.itemIndex)
-                    
-                    // Remove if row is empty to avoid empty/invisible rows taking up space
-                    if localPreferences.rows[configurationItem.rowIndex].items?.count == 0 {
-                        localPreferences.rows.remove(at: configurationItem.rowIndex)
-                    }
-                } label: {
-                    Label("Remove item", systemImage: "minus")
-                        .labelStyle(.iconOnly)
-                }
-                .buttonStyle(AddIconButtonStyle(color: .red))
-                
-                Spacer()
+        Button {
+            guard let configurationItem else {
+                return
             }
-            Spacer()
+            localPreferences.rows[configurationItem.rowIndex].items?.remove(at: configurationItem.itemIndex)
+            
+            // Remove if row is empty to avoid empty/invisible rows taking up space
+            if localPreferences.rows[configurationItem.rowIndex].items?.count == 0 {
+                localPreferences.rows.remove(at: configurationItem.rowIndex)
+            }
+        } label: {
+            Label("Remove item", systemImage: "minus")
+                .labelStyle(.iconOnly)
         }
-        .padding(.trailing, 4)    }
+        .buttonStyle(AddIconButtonStyle(color: .red))
+    }
 }

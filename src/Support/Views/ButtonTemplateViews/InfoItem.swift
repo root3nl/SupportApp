@@ -85,12 +85,6 @@ struct InfoItem: View {
                     NotificationBadgeTextView(badgeCounter: "!")
                         .accessibilityHidden(true)
                 }
-                
-                // Optionally show remove item button
-                if preferences.editModeEnabled && !preferences.showItemConfiguration {
-                    RemoveItemButtonView(configurationItem: configurationItem)
-                }
-
             }
             .frame(width: 176, height: 64)
             .contentShape(Capsule())
@@ -99,6 +93,12 @@ struct InfoItem: View {
                 self.hoverView = hover
             }
             .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
+            .overlay(alignment: .topLeading) {
+                // Optionally show remove item button
+                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    RemoveItemButtonView(configurationItem: configurationItem)
+                }
+            }
             .animation(.bouncy, value: hoverView)
         } else {
             
@@ -148,12 +148,6 @@ struct InfoItem: View {
                     NotificationBadgeTextView(badgeCounter: "!")
                         .accessibilityHidden(true)
                 }
-                
-                // Optionally show remove item button
-                if preferences.editModeEnabled && !preferences.showItemConfiguration {
-                    RemoveItemButtonView(configurationItem: configurationItem)
-                }
-                
             }
             .frame(width: 176, height: 60)
             .accessibilityLabel(title + ", " + subtitle)
@@ -164,6 +158,12 @@ struct InfoItem: View {
             .shadow(color: Color.black.opacity(0.2), radius: 4, y: 2)
             .onHover() {
                 hover in self.hoverView = hover
+            }
+            .overlay(alignment: .topLeading) {
+                // Optionally show remove item button
+                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    RemoveItemButtonView(configurationItem: configurationItem)
+                }
             }
         }
     }

@@ -76,11 +76,6 @@ struct ProgressBarItem: View {
                     NotificationBadgeTextView(badgeCounter: "!")
                         .accessibilityHidden(true)
                 }
-                
-                // Optionally show remove item button
-                if preferences.editModeEnabled && !preferences.showItemConfiguration {
-                    RemoveItemButtonView(configurationItem: configurationItem)
-                }
             }
             .frame(width: 176, height: 64)
             .contentShape(Capsule())
@@ -100,6 +95,12 @@ struct ProgressBarItem: View {
                 }
             }
             .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
+            .overlay(alignment: .topLeading) {
+                // Optionally show remove item button
+                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    RemoveItemButtonView(configurationItem: configurationItem)
+                }
+            }
             .animation(.bouncy, value: hoverView)
         } else {
             
@@ -166,11 +167,6 @@ struct ProgressBarItem: View {
                     NotificationBadgeTextView(badgeCounter: "!")
                         .accessibilityHidden(true)
                 }
-                
-                // Optionally show remove item button
-                if preferences.editModeEnabled && !preferences.showItemConfiguration {
-                    RemoveItemButtonView(configurationItem: configurationItem)
-                }
             }
             .frame(width: 176, height: 60)
             .background(hoverView && hoverEffectEnable ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
@@ -194,6 +190,12 @@ struct ProgressBarItem: View {
                     
                 } else {
                     openStorageManagement()
+                }
+            }
+            .overlay(alignment: .topLeading) {
+                // Optionally show remove item button
+                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    RemoveItemButtonView(configurationItem: configurationItem)
                 }
             }
         }

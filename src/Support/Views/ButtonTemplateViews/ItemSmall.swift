@@ -83,11 +83,6 @@ struct ItemSmall: View {
                     }
                 }
                 .padding(10)
-                
-                // Optionally show remove item button
-                if preferences.editModeEnabled && !preferences.showItemConfiguration {
-                    RemoveItemButtonView(configurationItem: configurationItem)
-                }
             }
             .frame(width: 114, height: 64)
             .contentShape(Capsule())
@@ -112,6 +107,12 @@ struct ItemSmall: View {
                 }
             }
             .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: true))
+            .overlay(alignment: .topLeading) {
+                // Optionally show remove item button
+                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    RemoveItemButtonView(configurationItem: configurationItem)
+                }
+            }
             .animation(.bouncy, value: hoverView)
         } else {
             ZStack {
@@ -173,6 +174,12 @@ struct ItemSmall: View {
                     
                 } else {
                     tapGesture()
+                }
+            }
+            .overlay(alignment: .topLeading) {
+                // Optionally show remove item button
+                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    RemoveItemButtonView(configurationItem: configurationItem)
                 }
             }
         }

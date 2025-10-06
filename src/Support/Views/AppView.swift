@@ -53,7 +53,7 @@ struct AppView: View {
     
     var appConfiguration: AppModel {
         return AppModel(
-            title: localPreferences.title.nilIfEmpty,
+            title: localPreferences.title,
             logo: localPreferences.logo.nilIfEmpty,
             logoDarkMode: localPreferences.logoDarkMode.nilIfEmpty,
             notificationIcon: localPreferences.notificationIcon.nilIfEmpty,

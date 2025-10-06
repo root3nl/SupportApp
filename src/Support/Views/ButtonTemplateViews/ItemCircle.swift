@@ -62,11 +62,6 @@ struct ItemCircle: View {
                         .accessibilityHidden(true)
                 }
             }
-            
-            // Optionally show remove item button
-            if preferences.editModeEnabled && !preferences.showItemConfiguration {
-                RemoveItemButtonView(configurationItem: configurationItem)
-            }
         }
         .frame(width: 83, height: 83)
         .contentShape(.circle)
@@ -91,6 +86,12 @@ struct ItemCircle: View {
             }
         }
         .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: true))
+        .overlay(alignment: .topLeading) {
+            // Optionally show remove item button
+            if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                RemoveItemButtonView(configurationItem: configurationItem)
+            }
+        }
         .animation(.bouncy, value: hoverView)
 //        .padding(.horizontal, 9)
     }

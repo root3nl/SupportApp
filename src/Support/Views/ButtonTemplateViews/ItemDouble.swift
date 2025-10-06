@@ -113,15 +113,16 @@ struct ItemDouble: View {
                     NotificationBadgeTextView(badgeCounter: "!")
                         .accessibilityHidden(true)
                 }
-                
+            }
+            .frame(width: 176, height: 64)
+            .contentShape(Capsule())
+            .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
+            .overlay(alignment: .topLeading) {
                 // Optionally show remove item button
                 if preferences.editModeEnabled && !preferences.showItemConfiguration {
                     RemoveItemButtonView(configurationItem: configurationItem)
                 }
             }
-            .frame(width: 176, height: 64)
-            .contentShape(Capsule())
-            .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
             .animation(.bouncy, value: hoverView)
             // FIXME: - Adjust when Jamf Connect Password Change can be triggered
             // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
@@ -183,11 +184,6 @@ struct ItemDouble: View {
                     NotificationBadgeTextView(badgeCounter: "!")
                         .accessibilityHidden(true)
                 }
-                
-                // Optionally show remove item button
-                if preferences.editModeEnabled && !preferences.showItemConfiguration {
-                    RemoveItemButtonView(configurationItem: configurationItem)
-                }
             }
             .frame(width: 176, height: 60)
             .background(hoverView && hoverEffectEnable ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
@@ -213,6 +209,12 @@ struct ItemDouble: View {
                     
                 } else {
                     tapGesture()
+                }
+            }
+            .overlay(alignment: .topLeading) {
+                // Optionally show remove item button
+                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    RemoveItemButtonView(configurationItem: configurationItem)
                 }
             }
         }
