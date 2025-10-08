@@ -287,17 +287,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                     }
                     
                     // Set current URL
-                    DispatchQueue.main.async {
-                        self.lastKnownStatusBarItemUrl = self.preferences.statusBarIcon
-                    }
+                    self.lastKnownStatusBarItemUrl = self.preferences.statusBarIcon
+
                     
                 } else {
                     // Set image to file URL from Configuration Profile
                     logger.debug("StatusBarIcon is local file")
                     
-                    DispatchQueue.main.async {
-                        localIconURL = self.preferences.statusBarIcon
-                    }
+                    localIconURL = self.preferences.statusBarIcon
                 }
                 
                 if let customIcon = NSImage(contentsOfFile: localIconURL) {
@@ -761,7 +758,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         
         // Check value comes from a Configuration Profile. If not, the command or script may be maliciously set and needs to be ignored
         guard defaults.objectIsForced(forKey: "OnAppearAction") == true else {
-            logger.error("OnAppearAction is not set by an administrator and is not trusted. Action will not be executed")
+            logger.error("OnAppearAction is not managed via Configuration Profile. Ignored.")
             return
         }
         
