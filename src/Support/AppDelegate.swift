@@ -702,6 +702,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         }
         
         togglePopover(nil)
+        
+        // Reload status bar icon
+        setStatusBarIcon()
     }
     
     // MARK: - Function to uninstall Privileged Helper Tool
