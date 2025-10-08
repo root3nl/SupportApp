@@ -188,7 +188,7 @@ struct ItemExtension: View {
                 guard let onAppearAction else {
                     return
                 }
-                await runPrivilegedCommand(command: onAppearAction)
+                await runPrivilegedCommand(command: onAppearAction, key: "OnAppearAction")
             }
             .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
             .overlay(alignment: .topLeading) {
@@ -287,7 +287,7 @@ struct ItemExtension: View {
                 guard let onAppearAction else {
                     return
                 }
-                await runPrivilegedCommand(command: onAppearAction)
+                await runPrivilegedCommand(command: onAppearAction, key: "OnAppearAction")
             }
             .overlay(alignment: .topLeading) {
                 // Optionally show remove item button
@@ -317,7 +317,7 @@ struct ItemExtension: View {
                 return
             }
             Task {
-                await runPrivilegedCommand(command: link)
+                await runPrivilegedCommand(command: link, key: "Action")
             }
         } else {
             self.showingAlert.toggle()
@@ -392,13 +392,28 @@ struct ItemExtension: View {
     }
     
     // MARK: - Function to run privileged script
-    func runPrivilegedCommand(command: String) async {
+    func runPrivilegedCommand(command: String, key: String) async {
         
         logger.log("Trying to run privileged script...")
         
-        // Check value comes from a Configuration Profile. If not, the script may be maliciously set and needs to be ignored
-        guard defaults.objectIsForced(forKey: command) == true else {
-            logger.error("Action \(command, privacy: .public) is not set by an administrator and is not trusted. Action will not be executed")
+        // Check that the entire "Rows" payload is enforced by a configuration profile
+        let isManaged = defaults.objectIsForced(forKey: "Rows")
+
+        // Get bundle ID
+        let bundleID = Bundle.main.bundleIdentifier
+        guard let bundleID else {
+            return
+        }
+        
+        // Read only the managed domain version of "Rows" (bypasses user defaults)
+        let managedRows = CFPreferencesCopyAppValue("Rows" as CFString,
+                                                    bundleID as CFString) as? [[String: Any]]
+
+        // Try to find an Action entry matching the command
+        let containsAction = managedRows?.flatMap { $0["Items"] as? [[String: Any]] ?? [] }.contains { ($0[key] as? String) == command } ?? false
+
+        guard isManaged, containsAction else {
+            logger.error("Action \(command, privacy: .public) is not managed via Configuration Profile. Ignored.")
             return
         }
         

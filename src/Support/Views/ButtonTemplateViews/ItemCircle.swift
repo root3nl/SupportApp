@@ -48,54 +48,104 @@ struct ItemCircle: View {
     let defaults = UserDefaults.standard
     
     var body: some View {
-        ZStack {
-            VStack {
-                
-                if loading ?? false {
-                    ProgressView()
-                        .scaleEffect(0.8)
-                        .frame(width: 22, height: 22)
-                        .accessibilityHidden(true)
+        if #available(macOS 26, *) {
+            ZStack {
+                VStack {
+                    
+                    if loading ?? false {
+                        ProgressView()
+                            .scaleEffect(0.8)
+                            .frame(width: 22, height: 22)
+                            .accessibilityHidden(true)
+                    } else {
+                        Image(systemName: image)
+                            .font(.system(size: 22, weight: .semibold))
+                            .foregroundStyle(.white)
+                            .accessibilityHidden(true)
+                    }
+                }
+            }
+            .frame(width: 83, height: 83)
+            .contentShape(.circle)
+            .accessibilityElement()
+            .accessibilityLabel(title + ", " + (subtitle ?? ""))
+            .alert(isPresented: $showingAlert) {
+                Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
+            }
+            .onHover() {
+                hover in self.hoverView = hover
+            }
+            .onTapGesture() {
+                if preferences.editModeEnabled {
+                    guard let configurationItem else {
+                        return
+                    }
+                    localPreferences.currentConfiguredItem = configurationItem
+                    preferences.showItemConfiguration.toggle()
+                    
                 } else {
-                    Image(systemName: image)
-                        .font(.system(size: 22, weight: .semibold))
-                        .foregroundStyle(.white)
-                    //                    .symbolRenderingMode(.hierarchical)
-                        .accessibilityHidden(true)
+                    tapGesture()
                 }
             }
-        }
-        .frame(width: 83, height: 83)
-        .contentShape(.circle)
-        .accessibilityElement()
-        .accessibilityLabel(title + ", " + (subtitle ?? ""))
-        .alert(isPresented: $showingAlert) {
-            Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
-        }
-        .onHover() {
-            hover in self.hoverView = hover
-        }
-        .onTapGesture() {
-            if preferences.editModeEnabled {
-                guard let configurationItem else {
-                    return
+            .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: true))
+            .overlay(alignment: .topLeading) {
+                // Optionally show remove item button
+                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    RemoveItemButtonView(configurationItem: configurationItem)
                 }
-                localPreferences.currentConfiguredItem = configurationItem
-                preferences.showItemConfiguration.toggle()
-                
-            } else {
-                tapGesture()
             }
-        }
-        .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: true))
-        .overlay(alignment: .topLeading) {
-            // Optionally show remove item button
-            if preferences.editModeEnabled && !preferences.showItemConfiguration {
-                RemoveItemButtonView(configurationItem: configurationItem)
+            .animation(.bouncy, value: hoverView)
+        } else {
+            ZStack {
+                VStack {
+                    
+                    if loading ?? false {
+                        ProgressView()
+                            .scaleEffect(0.8)
+                            .frame(width: 22, height: 22)
+                            .accessibilityHidden(true)
+                    } else {
+                        Image(systemName: image)
+                            .font(.system(size: 22, weight: .semibold))
+                            .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
+                            .accessibilityHidden(true)
+                    }
+                }
             }
+            .frame(width: 83, height: 60)
+            .accessibilityElement()
+            .accessibilityLabel(title + ", " + (subtitle ?? ""))
+            .background(hoverView && link != "" ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
+            .cornerRadius(10)
+            // Apply gray and black border in Dark Mode to better view the buttons like Control Center
+            .modifier(DarkModeBorder())
+            .shadow(color: Color.black.opacity(0.2), radius: 4, y: 2)
+            .alert(isPresented: $showingAlert) {
+                Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
+            }
+            .onHover() {
+                hover in self.hoverView = hover
+            }
+            .onTapGesture() {
+                if preferences.editModeEnabled {
+                    guard let configurationItem else {
+                        return
+                    }
+                    localPreferences.currentConfiguredItem = configurationItem
+                    preferences.showItemConfiguration.toggle()
+                    
+                } else {
+                    tapGesture()
+                }
+            }
+            .overlay(alignment: .topLeading) {
+                // Optionally show remove item button
+                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    RemoveItemButtonView(configurationItem: configurationItem)
+                }
+            }
+            .animation(.bouncy, value: hoverView)
         }
-        .animation(.bouncy, value: hoverView)
-//        .padding(.horizontal, 9)
     }
     
     func tapGesture() {
@@ -195,9 +245,24 @@ struct ItemCircle: View {
         
         logger.log("Trying to run privileged script...")
         
-        // Check value comes from a Configuration Profile. If not, the script may be maliciously set and needs to be ignored
-        guard defaults.objectIsForced(forKey: command) == true else {
-            logger.error("Action \(command, privacy: .public) is not set by an administrator and is not trusted. Action will not be executed")
+        // Check that the entire "Rows" payload is enforced by a configuration profile
+        let isManaged = defaults.objectIsForced(forKey: "Rows")
+
+        // Get bundle ID
+        let bundleID = Bundle.main.bundleIdentifier
+        guard let bundleID else {
+            return
+        }
+        
+        // Read only the managed domain version of "Rows" (bypasses user defaults)
+        let managedRows = CFPreferencesCopyAppValue("Rows" as CFString,
+                                                    bundleID as CFString) as? [[String: Any]]
+
+        // Try to find an Action entry matching the command
+        let containsAction = managedRows?.flatMap { $0["Items"] as? [[String: Any]] ?? [] }.contains { ($0["Action"] as? String) == command } ?? false
+
+        guard isManaged, containsAction else {
+            logger.error("Action \(command, privacy: .public) is not managed via Configuration Profile. Ignored.")
             return
         }
         
