@@ -147,9 +147,6 @@ struct AppView: View {
                 }
                 
                 if preferences.configuratorModeEnabled {
-                
-//                    VStack(alignment: .leading) {
-                        
                         HStack {
                             
                             Spacer()
@@ -160,7 +157,6 @@ struct AppView: View {
                                     openSettings()
                                     NSApplication.shared.activate(ignoringOtherApps: true)
                                 } label: {
-//                                SettingsLink(label: {
                                     Label("Settings", systemImage: "gear")
                                         .labelStyle(.titleOnly)
                                 }
@@ -175,10 +171,6 @@ struct AppView: View {
                                     }
                                 }
                             } else {
-                            
-//                            Spacer()
-                            
-//                            if !preferences.editModeEnabled {
                                 Button {
                                     showExportOptions.toggle()
                                 } label: {
@@ -209,9 +201,7 @@ struct AppView: View {
                             
                                 if preferences.editModeEnabled && !preferences.showItemConfiguration {
                                     Button {
-//                                        withAnimation {
-                                            preferences.editModeEnabled.toggle()
-//                                        }
+                                        preferences.editModeEnabled.toggle()
                                         
                                         // Persist preferences
                                         preferences.saveUserDefaults(appConfiguration: appConfiguration)
@@ -232,9 +222,7 @@ struct AppView: View {
                                     }
                                 } else if !preferences.showItemConfiguration {
                                     Button {
-//                                        withAnimation {
-                                            preferences.editModeEnabled.toggle()
-//                                        }
+                                        preferences.editModeEnabled.toggle()
                                     } label: {
                                         Label("Edit", systemImage: "")
                                             .labelStyle(.titleOnly)
@@ -254,11 +242,6 @@ struct AppView: View {
                         .glassContainerIfAvailable(spacing: 0)
                         .animation(.easeInOut, value: preferences.editModeEnabled)
                         .padding(.horizontal, 10)
-                        
-//                        Text("Configurator Mode")
-//                            .foregroundStyle(.secondary)
-//                    }
-//                    .padding(.horizontal, 10)
                 }
             }
             .padding(.bottom, 10)
