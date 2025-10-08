@@ -117,17 +117,17 @@ struct Item: View {
                     Spacer()
                 }
                 
-                // Optionally show notification badge with counter
-                if notificationBadge != nil && notificationBadge! > 0 {
-                    NotificationBadgeView(badgeCounter: notificationBadge!)
-                        .accessibilityHidden(true)
-                }
-                
-                // Optionally show notification badge with warning
-                if notificationBadgeBool ?? false {
-                    NotificationBadgeTextView(badgeCounter: "!")
-                        .accessibilityHidden(true)
-                }
+//                // Optionally show notification badge with counter
+//                if notificationBadge != nil && notificationBadge! > 0 {
+//                    NotificationBadgeView(badgeCounter: notificationBadge!)
+//                        .accessibilityHidden(true)
+//                }
+//                
+//                // Optionally show notification badge with warning
+//                if notificationBadgeBool ?? false {
+//                    NotificationBadgeTextView(badgeCounter: "!")
+//                        .accessibilityHidden(true)
+//                }
             }
             .frame(width: 176, height: 64)
             .contentShape(Capsule())
@@ -158,6 +158,19 @@ struct Item: View {
                 }
             }
             .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
+            .overlay(alignment: .topTrailing) {
+                // Optionally show notification badge with counter
+                if notificationBadge != nil && notificationBadge! > 0 {
+                    NotificationBadgeView(badgeCounter: notificationBadge!)
+                        .accessibilityHidden(true)
+                }
+                
+                // Optionally show notification badge with warning
+                if notificationBadgeBool ?? false {
+                    NotificationBadgeTextView(badgeCounter: "!")
+                        .accessibilityHidden(true)
+                }
+            }
             .overlay(alignment: .topLeading) {
                 // Optionally show remove item button
                 if preferences.editModeEnabled && !preferences.showItemConfiguration {
@@ -220,17 +233,17 @@ struct Item: View {
                     Spacer()
                 }
                 
-                // Optionally show notification badge with counter
-                if notificationBadge != nil && notificationBadge! > 0 {
-                    NotificationBadgeView(badgeCounter: notificationBadge!)
-                        .accessibilityHidden(true)
-                }
-                
-                // Optionally show notification badge with warning
-                if notificationBadgeBool ?? false {
-                    NotificationBadgeTextView(badgeCounter: "!")
-                        .accessibilityHidden(true)
-                }
+//                // Optionally show notification badge with counter
+//                if notificationBadge != nil && notificationBadge! > 0 {
+//                    NotificationBadgeView(badgeCounter: notificationBadge!)
+//                        .accessibilityHidden(true)
+//                }
+//                
+//                // Optionally show notification badge with warning
+//                if notificationBadgeBool ?? false {
+//                    NotificationBadgeTextView(badgeCounter: "!")
+//                        .accessibilityHidden(true)
+//                }
             }
             .frame(width: 176, height: 60)
             .accessibilityLabel(title + ", " + (subtitle ?? ""))
@@ -262,6 +275,19 @@ struct Item: View {
                     
                 } else {
                     tapGesture()
+                }
+            }
+            .overlay(alignment: .topTrailing) {
+                // Optionally show notification badge with counter
+                if notificationBadge != nil && notificationBadge! > 0 {
+                    NotificationBadgeView(badgeCounter: notificationBadge!)
+                        .accessibilityHidden(true)
+                }
+                
+                // Optionally show notification badge with warning
+                if notificationBadgeBool ?? false {
+                    NotificationBadgeTextView(badgeCounter: "!")
+                        .accessibilityHidden(true)
                 }
             }
             .overlay(alignment: .topLeading) {

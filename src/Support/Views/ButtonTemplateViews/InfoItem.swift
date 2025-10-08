@@ -74,6 +74,26 @@ struct InfoItem: View {
                     Spacer()
                 }
                 
+//                // Optionally show notification badge with counter
+//                if notificationBadge != nil && notificationBadge! > 0 {
+//                    NotificationBadgeView(badgeCounter: notificationBadge!)
+//                        .accessibilityHidden(true)
+//                }
+                
+//                // Optionally show notification badge with warning
+//                if notificationBadgeBool ?? false {
+//                    NotificationBadgeTextView(badgeCounter: "!")
+//                        .accessibilityHidden(true)
+//                }
+            }
+            .frame(width: 176, height: 64)
+            .contentShape(Capsule())
+            .accessibilityLabel(title + ", " + subtitle)
+            .onHover() { hover in
+                self.hoverView = hover
+            }
+            .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
+            .overlay(alignment: .topTrailing) {
                 // Optionally show notification badge with counter
                 if notificationBadge != nil && notificationBadge! > 0 {
                     NotificationBadgeView(badgeCounter: notificationBadge!)
@@ -86,13 +106,6 @@ struct InfoItem: View {
                         .accessibilityHidden(true)
                 }
             }
-            .frame(width: 176, height: 64)
-            .contentShape(Capsule())
-            .accessibilityLabel(title + ", " + subtitle)
-            .onHover() { hover in
-                self.hoverView = hover
-            }
-            .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
             .overlay(alignment: .topLeading) {
                 // Optionally show remove item button
                 if preferences.editModeEnabled && !preferences.showItemConfiguration {
@@ -137,6 +150,29 @@ struct InfoItem: View {
                     Spacer()
                 }
                 
+//                // Optionally show notification badge with counter
+//                if notificationBadge != nil && notificationBadge! > 0 {
+//                    NotificationBadgeView(badgeCounter: notificationBadge!)
+//                        .accessibilityHidden(true)
+//                }
+//                
+//                // Optionally show notification badge with warning
+//                if notificationBadgeBool ?? false {
+//                    NotificationBadgeTextView(badgeCounter: "!")
+//                        .accessibilityHidden(true)
+//                }
+            }
+            .frame(width: 176, height: 60)
+            .accessibilityLabel(title + ", " + subtitle)
+            .background(hoverView && hoverEffectEnable ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
+            .cornerRadius(10)
+            // Apply gray and black border in Dark Mode to better view the buttons like Control Center
+            .modifier(DarkModeBorder())
+            .shadow(color: Color.black.opacity(0.2), radius: 4, y: 2)
+            .onHover() {
+                hover in self.hoverView = hover
+            }
+            .overlay(alignment: .topTrailing) {
                 // Optionally show notification badge with counter
                 if notificationBadge != nil && notificationBadge! > 0 {
                     NotificationBadgeView(badgeCounter: notificationBadge!)
@@ -148,16 +184,6 @@ struct InfoItem: View {
                     NotificationBadgeTextView(badgeCounter: "!")
                         .accessibilityHidden(true)
                 }
-            }
-            .frame(width: 176, height: 60)
-            .accessibilityLabel(title + ", " + subtitle)
-            .background(hoverView && hoverEffectEnable ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
-            .cornerRadius(10)
-            // Apply gray and black border in Dark Mode to better view the buttons like Control Center
-            .modifier(DarkModeBorder())
-            .shadow(color: Color.black.opacity(0.2), radius: 4, y: 2)
-            .onHover() {
-                hover in self.hoverView = hover
             }
             .overlay(alignment: .topLeading) {
                 // Optionally show remove item button

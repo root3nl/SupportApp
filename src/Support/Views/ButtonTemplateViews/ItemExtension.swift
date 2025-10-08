@@ -150,11 +150,11 @@ struct ItemExtension: View {
                     Spacer()
                 }
                 
-                // Optionally show notification badge with warning
-                if extensionAlert ?? false {
-                    NotificationBadgeTextView(badgeCounter: "!")
-                        .accessibilityHidden(true)
-                }
+//                // Optionally show notification badge with warning
+//                if extensionAlert ?? false {
+//                    NotificationBadgeTextView(badgeCounter: "!")
+//                        .accessibilityHidden(true)
+//                }
             }
             .frame(width: 176, height: 64)
             .contentShape(Capsule())
@@ -191,6 +191,13 @@ struct ItemExtension: View {
                 await runPrivilegedCommand(command: onAppearAction, key: "OnAppearAction")
             }
             .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
+            .overlay(alignment: .topTrailing) {
+                // Optionally show notification badge with warning
+                if extensionAlert ?? false {
+                    NotificationBadgeTextView(badgeCounter: "!")
+                        .accessibilityHidden(true)
+                }
+            }
             .overlay(alignment: .topLeading) {
                 // Optionally show remove item button
                 if preferences.editModeEnabled && !preferences.showItemConfiguration {
@@ -245,11 +252,11 @@ struct ItemExtension: View {
                     Spacer()
                 }
                 
-                // Optionally show notification badge with warning
-                if extensionAlert ?? false {
-                    NotificationBadgeTextView(badgeCounter: "!")
-                        .accessibilityHidden(true)
-                }
+//                // Optionally show notification badge with warning
+//                if extensionAlert ?? false {
+//                    NotificationBadgeTextView(badgeCounter: "!")
+//                        .accessibilityHidden(true)
+//                }
             }
             .frame(width: 176, height: 60)
             .accessibilityLabel(title + ", " + (subtitle ?? ""))
@@ -288,6 +295,13 @@ struct ItemExtension: View {
                     return
                 }
                 await runPrivilegedCommand(command: onAppearAction, key: "OnAppearAction")
+            }
+            .overlay(alignment: .topTrailing) {
+                // Optionally show notification badge with warning
+                if extensionAlert ?? false {
+                    NotificationBadgeTextView(badgeCounter: "!")
+                        .accessibilityHidden(true)
+                }
             }
             .overlay(alignment: .topLeading) {
                 // Optionally show remove item button

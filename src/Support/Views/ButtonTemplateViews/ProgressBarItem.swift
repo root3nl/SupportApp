@@ -72,10 +72,10 @@ struct ProgressBarItem: View {
                     Spacer()
                 }
                 
-                if notificationBadgeBool ?? false {
-                    NotificationBadgeTextView(badgeCounter: "!")
-                        .accessibilityHidden(true)
-                }
+//                if notificationBadgeBool ?? false {
+//                    NotificationBadgeTextView(badgeCounter: "!")
+//                        .accessibilityHidden(true)
+//                }
             }
             .frame(width: 176, height: 64)
             .contentShape(Capsule())
@@ -95,6 +95,13 @@ struct ProgressBarItem: View {
                 }
             }
             .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
+            .overlay(alignment: .topTrailing) {
+                // Optionally show notification badge with warning
+                if notificationBadgeBool ?? false {
+                    NotificationBadgeTextView(badgeCounter: "!")
+                        .accessibilityHidden(true)
+                }
+            }
             .overlay(alignment: .topLeading) {
                 // Optionally show remove item button
                 if preferences.editModeEnabled && !preferences.showItemConfiguration {
@@ -163,10 +170,10 @@ struct ProgressBarItem: View {
                     Spacer()
                 }
                 
-                if notificationBadgeBool ?? false {
-                    NotificationBadgeTextView(badgeCounter: "!")
-                        .accessibilityHidden(true)
-                }
+//                if notificationBadgeBool ?? false {
+//                    NotificationBadgeTextView(badgeCounter: "!")
+//                        .accessibilityHidden(true)
+//                }
             }
             .frame(width: 176, height: 60)
             .background(hoverView && hoverEffectEnable ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
@@ -190,6 +197,13 @@ struct ProgressBarItem: View {
                     
                 } else {
                     openStorageManagement()
+                }
+            }
+            .overlay(alignment: .topTrailing) {
+                // Optionally show notification badge with warning
+                if notificationBadgeBool ?? false {
+                    NotificationBadgeTextView(badgeCounter: "!")
+                        .accessibilityHidden(true)
                 }
             }
             .overlay(alignment: .topLeading) {

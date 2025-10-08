@@ -13,23 +13,33 @@ struct NotificationBadgeTextView: View {
     
     var body: some View {
         
-        VStack {
-            
-            HStack {
+        if #available(macOS 26, *) {
+            Text("\(badgeCounter)")
+                .font(Font.system(size: 12))
+                .frame(width: 20, height: 20)
+                .foregroundStyle(.white)
+                .glassEffect(.regular.interactive().tint(.orange))
+                .contentShape(.circle)
+                .clipShape(.circle)
+        } else {
+//            VStack {
                 
-                Spacer()
-                
-                Circle()
-                    .foregroundColor(.orange)
-                    .overlay(
-                        Text("\(badgeCounter)")
-                            .foregroundColor(.white)
-                            .font(Font.system(size: 12))
-                    )
-                    .frame(width: 18, height: 18)
-                    .padding(12)
-            }
-            Spacer()
+//                HStack {
+                    
+//                    Spacer()
+                    
+                    Circle()
+                        .foregroundColor(.orange)
+                        .overlay(
+                            Text("\(badgeCounter)")
+                                .foregroundColor(.white)
+                                .font(Font.system(size: 12))
+                        )
+                        .frame(width: 18, height: 18)
+                        .padding(4)
+//                }
+//                Spacer()
+//            }
         }
     }
 }

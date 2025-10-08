@@ -104,19 +104,32 @@ struct ItemDouble: View {
                     Spacer()
                 }
                 
+//                if notificationBadge != nil && notificationBadge! > 0 {
+//                    NotificationBadgeView(badgeCounter: notificationBadge!)
+//                        .accessibilityHidden(true)
+//                }
+//                
+//                if notificationBadgeBool ?? false {
+//                    NotificationBadgeTextView(badgeCounter: "!")
+//                        .accessibilityHidden(true)
+//                }
+            }
+            .frame(width: 176, height: 64)
+            .contentShape(Capsule())
+            .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
+            .overlay(alignment: .topTrailing) {
+                // Optionally show notification badge with counter
                 if notificationBadge != nil && notificationBadge! > 0 {
                     NotificationBadgeView(badgeCounter: notificationBadge!)
                         .accessibilityHidden(true)
                 }
                 
+                // Optionally show notification badge with warning
                 if notificationBadgeBool ?? false {
                     NotificationBadgeTextView(badgeCounter: "!")
                         .accessibilityHidden(true)
                 }
             }
-            .frame(width: 176, height: 64)
-            .contentShape(Capsule())
-            .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
             .overlay(alignment: .topLeading) {
                 // Optionally show remove item button
                 if preferences.editModeEnabled && !preferences.showItemConfiguration {
@@ -175,15 +188,15 @@ struct ItemDouble: View {
                     Spacer()
                 }
                 
-                if notificationBadge != nil && notificationBadge! > 0 {
-                    NotificationBadgeView(badgeCounter: notificationBadge!)
-                        .accessibilityHidden(true)
-                }
-                
-                if notificationBadgeBool ?? false {
-                    NotificationBadgeTextView(badgeCounter: "!")
-                        .accessibilityHidden(true)
-                }
+//                if notificationBadge != nil && notificationBadge! > 0 {
+//                    NotificationBadgeView(badgeCounter: notificationBadge!)
+//                        .accessibilityHidden(true)
+//                }
+//                
+//                if notificationBadgeBool ?? false {
+//                    NotificationBadgeTextView(badgeCounter: "!")
+//                        .accessibilityHidden(true)
+//                }
             }
             .frame(width: 176, height: 60)
             .background(hoverView && hoverEffectEnable ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
@@ -209,6 +222,19 @@ struct ItemDouble: View {
                     
                 } else {
                     tapGesture()
+                }
+            }
+            .overlay(alignment: .topTrailing) {
+                // Optionally show notification badge with counter
+                if notificationBadge != nil && notificationBadge! > 0 {
+                    NotificationBadgeView(badgeCounter: notificationBadge!)
+                        .accessibilityHidden(true)
+                }
+                
+                // Optionally show notification badge with warning
+                if notificationBadgeBool ?? false {
+                    NotificationBadgeTextView(badgeCounter: "!")
+                        .accessibilityHidden(true)
                 }
             }
             .overlay(alignment: .topLeading) {
