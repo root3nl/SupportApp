@@ -23,7 +23,7 @@
 "Available" = "Tillgänglig";
 "About Support" = "Om Support";
 "Help and Documentation" = "Hjälp och dokumentation";
-"Quit Support" = "Snabbhjälp";
+"Quit Support" = "Avsluta Support";
 "Quit" = "Avsluta";
 "Are you sure you want to quit?" = "Är du säker på att du vill avsluta?";
 "An error occurred" = "Ett fel har uppstått";
@@ -54,7 +54,7 @@
 "CLOSE" = "Stäng";
 "UPDATES_AVAILABLE" = "Updateringar tillgängliga";
 "NO_UPDATES_AVAILABLE" = "Inga uppdateringar tillgängliga";
-"UPDATE_NOW" = "Updatera nu";
+"UPDATE_NOW" = "Uppdatera nu";
 "SYSTEM_SETTINGS" = "Systeminställningar";
 "SYSTEM_PREFERENCES" = "Systeminställningar";
 "YOUR_MAC_IS_UP_TO_DATE" = "Din Mac är uppdaterad";
