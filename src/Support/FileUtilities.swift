@@ -60,7 +60,7 @@ class FileUtilities {
             return true
         }
 
-        logger.error("Permissions for \(pathname, privacy: .public) are incorrect. Allowed ownerships are root:wheel (0:0) with 755 or _rmd:_rmd (277:277) with 444. Found owner:group \(ownerID):\(groupID) and mode \(String(format: "%o", mode.intValue)).")
+        logger.error("Permissions for \(pathname, privacy: .public) are incorrect. Allowed ownerships are root:wheel (0:0) with 755 or _rmd:_rmd (277:277). Found owner:group \(ownerID):\(groupID) and mode \(String(format: "%o", mode.intValue)).")
         return false
     }
     
