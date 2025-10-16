@@ -223,6 +223,6 @@ struct ContentView: View {
                 }
             }
         }
-        .frame(minWidth: 382, idealWidth: 382, maxWidth: 382)
+        .frame(minWidth: Constants.popoverWidth, idealWidth: Constants.popoverWidth, maxWidth: Constants.popoverWidth)
     }
 }

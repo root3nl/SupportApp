@@ -65,7 +65,7 @@ struct ItemCircle: View {
                     }
                 }
             }
-            .frame(width: 83, height: 83)
+            .frame(width: Constants.smallItemWidth, height: Constants.smallItemWidth)
             .contentShape(.circle)
             .accessibilityElement()
             .accessibilityLabel(title + ", " + (subtitle ?? ""))
@@ -112,7 +112,7 @@ struct ItemCircle: View {
                     }
                 }
             }
-            .frame(width: 83, height: 60)
+            .frame(width: Constants.smallItemWidth, height: Constants.itemLegacyHeight)
             .accessibilityElement()
             .accessibilityLabel(title + ", " + (subtitle ?? ""))
             .background(hoverView && link != "" ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))

@@ -36,6 +36,9 @@ struct ProgressBarItem: View {
     // Get local preferences for Configurator Mode
     @EnvironmentObject var localPreferences: LocalPreferences
     
+    // Dark Mode detection
+    @Environment(\.colorScheme) var colorScheme
+    
     var body: some View {
         
         if #available(macOS 26, *) {
@@ -58,7 +61,8 @@ struct ProgressBarItem: View {
                             Text(hoverView ? storageAvailable : percentageUsed)
                                 .font(.system(.body, design: .default))
                                 .fontWeight(.medium)
-                                .foregroundStyle(.white)
+                                .kerning(Constants.defaultKerning)
+                                .foregroundStyle(.white.opacity(colorScheme == .dark ? 0.8 : 1.0))
                                 .lineLimit(1)
                         }
                         
@@ -77,7 +81,7 @@ struct ProgressBarItem: View {
 //                        .accessibilityHidden(true)
 //                }
             }
-            .frame(width: 176, height: 64)
+            .frame(width: Constants.largeItemWidth, height: Constants.itemHeight)
             .contentShape(Capsule())
             .onHover() {
                 hover in self.hoverView = hover
@@ -175,7 +179,7 @@ struct ProgressBarItem: View {
 //                        .accessibilityHidden(true)
 //                }
             }
-            .frame(width: 176, height: 60)
+            .frame(width: Constants.largeItemWidth, height: Constants.itemLegacyHeight)
             .background(hoverView && hoverEffectEnable ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
             .cornerRadius(10)
             // Apply gray and black border in Dark Mode to better view the buttons like Control Center

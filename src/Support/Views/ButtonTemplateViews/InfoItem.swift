@@ -24,6 +24,9 @@ struct InfoItem: View {
     // Get preferences or default values
     @EnvironmentObject var preferences: Preferences
     
+    // Dark Mode detection
+    @Environment(\.colorScheme) var colorScheme
+    
     // Get local preferences for Configurator Mode
 //    @EnvironmentObject var localPreferences: LocalPreferences
     
@@ -60,13 +63,13 @@ struct InfoItem: View {
                         Text(title)
                             .font(.system(.body, design: .default))
                             .fontWeight(.medium)
+                            .kerning(Constants.defaultKerning)
                             .foregroundStyle(.white)
                             .lineLimit(2)
                         
                         Text(subtitle)
                             .font(.system(.subheadline, design: .default))
-//                            .foregroundStyle(.white.opacity(0.8))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(.white.opacity(colorScheme == .dark ? 0.8 : 1.0))
                             .lineLimit(2)
                     }
                     .accessibilityElement(children: .ignore)
@@ -86,7 +89,7 @@ struct InfoItem: View {
 //                        .accessibilityHidden(true)
 //                }
             }
-            .frame(width: 176, height: 64)
+            .frame(width: Constants.largeItemWidth, height: Constants.itemHeight)
             .contentShape(Capsule())
             .accessibilityLabel(title + ", " + subtitle)
             .onHover() { hover in
@@ -162,7 +165,7 @@ struct InfoItem: View {
 //                        .accessibilityHidden(true)
 //                }
             }
-            .frame(width: 176, height: 60)
+            .frame(width: Constants.largeItemWidth, height: Constants.itemLegacyHeight)
             .accessibilityLabel(title + ", " + subtitle)
             .background(hoverView && hoverEffectEnable ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
             .cornerRadius(10)

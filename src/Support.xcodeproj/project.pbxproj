@@ -93,6 +93,7 @@
 		49B054482E68C45E0068ABFA /* PopoverLifecycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B054472E68C45E0068ABFA /* PopoverLifecycle.swift */; };
 		49B4952D2642E96A00A6AE64 /* DarkModeBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B4952C2642E96A00A6AE64 /* DarkModeBorder.swift */; };
 		49BF03FC2BC0BE3A00AB7152 /* FileUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BF03FB2BC0BE3A00AB7152 /* FileUtilities.swift */; };
+		49C18C312EA19D1A00A2560F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C18C302EA19D1A00A2560F /* Constants.swift */; };
 		49CB03B12E663F8200D0016D /* LegacyContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CB03B02E663F8200D0016D /* LegacyContentView.swift */; };
 		49CB03B42E6640C800D0016D /* AddIconButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CB03B32E6640C800D0016D /* AddIconButtonStyle.swift */; };
 		49CB64452BA3BC58009E6026 /* UptimeAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CB64442BA3BC58009E6026 /* UptimeAlertView.swift */; };
@@ -257,6 +258,7 @@
 		49B163AC26FCB154006D57C7 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		49B4952C2642E96A00A6AE64 /* DarkModeBorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeBorder.swift; sourceTree = "<group>"; };
 		49BF03FB2BC0BE3A00AB7152 /* FileUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileUtilities.swift; sourceTree = "<group>"; };
+		49C18C302EA19D1A00A2560F /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		49CB03B02E663F8200D0016D /* LegacyContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyContentView.swift; sourceTree = "<group>"; };
 		49CB03B32E6640C800D0016D /* AddIconButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddIconButtonStyle.swift; sourceTree = "<group>"; };
 		49CB64442BA3BC58009E6026 /* UptimeAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UptimeAlertView.swift; sourceTree = "<group>"; };
@@ -457,6 +459,7 @@
 				49857E9724D4B543009B6FBA /* Preferences.swift */,
 				498DB8402E5E49D700DDC33B /* LocalPreferences.swift */,
 				496FE4D02651485E007746ED /* UserInfo.swift */,
+				49C18C302EA19D1A00A2560F /* Constants.swift */,
 				49822CE624B4C3F200E8DE54 /* Assets.xcassets */,
 				49822CEE24B4C3F200E8DE54 /* Info.plist */,
 				49822CEF24B4C3F200E8DE54 /* Support.entitlements */,
@@ -733,6 +736,7 @@
 				49857E9A24D4B58B009B6FBA /* ComputerInfo.swift in Sources */,
 				496C2FE1271477B800D51EE1 /* NotificationNames.swift in Sources */,
 				0A4A738E26020A6500927DAB /* MacOSVersionSubview.swift in Sources */,
+				49C18C312EA19D1A00A2560F /* Constants.swift in Sources */,
 				493DCCD22B08E5E500FA2480 /* AppCatalogController.swift in Sources */,
 				490B145E258A55B90048D8AF /* Extensions.swift in Sources */,
 				0AFB04FB263AC23000507B23 /* ModelSubView.swift in Sources */,

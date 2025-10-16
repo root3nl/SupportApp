@@ -142,7 +142,7 @@ struct AppView: View {
                     }
                     .padding(.horizontal, 10)
                     // Workaround to support multiple lines
-                    .frame(minWidth: 382, idealWidth: 382, maxWidth: 382)
+                    .frame(minWidth: Constants.popoverWidth, idealWidth: Constants.popoverWidth, maxWidth: Constants.popoverWidth)
                     .fixedSize()
                 }
                 
@@ -256,7 +256,7 @@ struct AppView: View {
             }
         }
         // Set default popover width
-        .frame(minWidth: 382, idealWidth: 382, maxWidth: 382)
+        .frame(minWidth: Constants.popoverWidth, idealWidth: Constants.popoverWidth, maxWidth: Constants.popoverWidth)
         // MARK: - Run functions when ContentView appears for the first time
         .onAppear {
             dataLoadingEffect()

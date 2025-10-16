@@ -43,6 +43,9 @@ struct ItemDouble: View {
     // Get local preferences for Configurator Mode
     @EnvironmentObject var localPreferences: LocalPreferences
     
+    // Dark Mode detection
+    @Environment(\.colorScheme) var colorScheme
+    
     // Alert title options
     var alertTitle: String {
         switch linkType {
@@ -89,13 +92,13 @@ struct ItemDouble: View {
                         Text(hoverView && hoverEffectEnable ? secondTitle : title)
                             .font(.system(.body, design: .default))
                             .fontWeight(.medium)
+                            .kerning(Constants.defaultKerning)
                             .foregroundStyle(.white)
                             .lineLimit(2)
                         
                         Text(hoverView && hoverEffectEnable ? secondSubtitle : subtitle)
                             .font(.system(.subheadline, design: .default))
-//                            .foregroundStyle(.white.opacity(0.8))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(.white.opacity(colorScheme == .dark ? 0.8 : 1.0))
                             .lineLimit(2)
 
                     }
@@ -114,7 +117,7 @@ struct ItemDouble: View {
 //                        .accessibilityHidden(true)
 //                }
             }
-            .frame(width: 176, height: 64)
+            .frame(width: Constants.largeItemWidth, height: Constants.itemHeight)
             .contentShape(Capsule())
             .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
             .overlay(alignment: .topTrailing) {
@@ -198,7 +201,7 @@ struct ItemDouble: View {
 //                        .accessibilityHidden(true)
 //                }
             }
-            .frame(width: 176, height: 60)
+            .frame(width: Constants.largeItemWidth, height: Constants.itemLegacyHeight)
             .background(hoverView && hoverEffectEnable ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
             .cornerRadius(10)
             // Apply gray and black border in Dark Mode to better view the buttons like Control Center

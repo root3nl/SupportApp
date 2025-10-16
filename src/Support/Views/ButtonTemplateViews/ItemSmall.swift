@@ -72,19 +72,17 @@ struct ItemSmall: View {
                         Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
                             .font(.system(.subheadline, design: .default))
                             .foregroundStyle(.white)
-//                            .frame(width: 80)
-//                            .lineLimit(1)
+                            .kerning(Constants.defaultKerning)
                     } else {
                         Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
                             .font(.system(.subheadline, design: .default))
                             .foregroundStyle(.white)
-//                            .frame(width: 80)
-//                            .lineLimit(1)
+                            .kerning(Constants.defaultKerning)
                     }
                 }
                 .padding(10)
             }
-            .frame(width: 114, height: 64)
+            .frame(width: Constants.mediumItemWidth, height: Constants.itemHeight)
             .contentShape(Capsule())
             .accessibilityElement(children: .combine)
             .accessibilityLabel(title + ", " + (subtitle ?? ""))
@@ -145,7 +143,7 @@ struct ItemSmall: View {
                 }
                 .padding(10)
             }
-            .frame(width: 114, height: 60)
+            .frame(width: Constants.mediumItemWidth, height: Constants.itemLegacyHeight)
             .accessibilityElement(children: .combine)
             .accessibilityLabel(title + ", " + (subtitle ?? ""))
             .background(hoverView && link != "" ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))

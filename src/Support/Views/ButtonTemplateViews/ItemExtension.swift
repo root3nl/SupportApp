@@ -50,6 +50,9 @@ struct ItemExtension: View {
     // Get unique presentation token on every appearance
     @EnvironmentObject var popoverLifecycle: PopoverLifecycle
     
+    // Dark Mode detection
+    @Environment(\.colorScheme) var colorScheme
+    
     let defaults = UserDefaults.standard
     
     // Enable animation
@@ -131,7 +134,8 @@ struct ItemExtension: View {
                         Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
                             .font(.system(.body, design: .default))
                             .fontWeight(.medium)
-                            .foregroundStyle(.white)
+                            .kerning(Constants.defaultKerning)
+                            .foregroundStyle(.white.opacity(colorScheme == .dark ? 0.8 : 1.0))
                             .lineLimit(2)
                         
                         if let extensionValue {
@@ -156,7 +160,7 @@ struct ItemExtension: View {
 //                        .accessibilityHidden(true)
 //                }
             }
-            .frame(width: 176, height: 64)
+            .frame(width: Constants.largeItemWidth, height: Constants.itemHeight)
             .contentShape(Capsule())
             .accessibilityLabel(title + ", " + (subtitle ?? ""))
             .alert(isPresented: $showingAlert) {
@@ -258,7 +262,7 @@ struct ItemExtension: View {
 //                        .accessibilityHidden(true)
 //                }
             }
-            .frame(width: 176, height: 60)
+            .frame(width: Constants.largeItemWidth, height: Constants.itemLegacyHeight)
             .accessibilityLabel(title + ", " + (subtitle ?? ""))
             .background(hoverView && hoverEffectEnable && link != "" ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
             .cornerRadius(10)
