@@ -73,11 +73,15 @@ struct ItemSmall: View {
                             .font(.system(.subheadline, design: .default))
                             .foregroundStyle(.white)
                             .kerning(Constants.defaultKerning)
+                            .allowsTightening(true)
+                            .minimumScaleFactor(0.5)
                     } else {
                         Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
                             .font(.system(.subheadline, design: .default))
                             .foregroundStyle(.white)
                             .kerning(Constants.defaultKerning)
+                            .allowsTightening(true)
+                            .minimumScaleFactor(0.5)
                     }
                 }
                 .padding(10)
@@ -141,7 +145,7 @@ struct ItemSmall: View {
                         
                     }
                 }
-                .padding(10)
+                .padding(.vertical, 10)
             }
             .frame(width: Constants.mediumItemWidth, height: Constants.itemLegacyHeight)
             .accessibilityElement(children: .combine)
