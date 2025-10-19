@@ -287,6 +287,7 @@ struct AppView: View {
             savePanel.allowedContentTypes = [.propertyList]
             savePanel.nameFieldStringValue = "nl.root3.support.plist"
             savePanel.canCreateDirectories = true
+            savePanel.directoryURL = .downloadsDirectory
 
             if savePanel.runModal() == .OK, let url = savePanel.url {
                 try data.write(to: url)
@@ -347,6 +348,7 @@ struct AppView: View {
             savePanel.allowedContentTypes = [.init(filenameExtension: "mobileconfig")!]
             savePanel.nameFieldStringValue = "nl.root3.support.mobileconfig"
             savePanel.canCreateDirectories = true
+            savePanel.directoryURL = .downloadsDirectory
 
             if savePanel.runModal() == .OK, let url = savePanel.url {
                 try profileData.write(to: url)
