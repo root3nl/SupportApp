@@ -57,7 +57,6 @@ struct GeneralSettingsView: View {
             TextField("Error message", text: $localPreferences.errorMessage, prompt: Text("Example: Please contact IT support"))
             Toggle("Welcome screen", isOn: $localPreferences.showWelcomeScreen)
             Toggle("Menu Bar notifier", isOn: $localPreferences.statusBarIconNotifierEnabled)
-            TextField("Update text", text: $localPreferences.updateText, prompt: Text("Example: Your organization requires you to update as soon as possible"))
         }
         .disabled(!preferences.editModeEnabled)
     }
@@ -109,6 +108,7 @@ struct InfoItemSettingsView: View {
                 Text("100")
             }
             Text("\(Int(localPreferences.storageLimit))%")
+            TextField("Update text", text: $localPreferences.updateText, prompt: Text("Example: Your organization requires you to update as soon as possible"))
         }
         .disabled(!preferences.editModeEnabled)
     }
