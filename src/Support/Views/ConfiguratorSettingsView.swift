@@ -119,7 +119,7 @@ struct AdvancedSettingsView: View {
     @EnvironmentObject var localPreferences: LocalPreferences
     @EnvironmentObject var preferences: Preferences
     @EnvironmentObject var appDelegate: AppDelegate
-    
+        
     @State private var showDeleteConfirmation: Bool = false
     
     var body: some View {
@@ -131,26 +131,43 @@ struct AdvancedSettingsView: View {
             
             Divider()
             
-            Button {
-                showDeleteConfirmation.toggle()
-            } label: {
-                Label("Clear preferences", systemImage: "trash")
-            }
-            .tint(.red)
-            .confirmationDialog("Clear preferences", isPresented: $showDeleteConfirmation) {
-                Button(role: .destructive) {
-                    if let bundleID = Bundle.main.bundleIdentifier {
-                        let defaults = UserDefaults.standard
-                        defaults.removePersistentDomain(forName: bundleID)
-                        preferences.rows = []
-                        localPreferences.clear()
-                    }
-                    appDelegate.configuratorMode()
+            Section {
+                Button {
+                    showDeleteConfirmation.toggle()
                 } label: {
-                    Text("Clear", comment: "")
+                    Label("Remove preferences", systemImage: "trash.fill")
                 }
-            } message: {
-                Text("Are you sure you want to clear all preferences? Any managed preferences will be preserved.")
+                .buttonStyle(.borderedProminent)
+                .tint(.red)
+                .confirmationDialog("", isPresented: $showDeleteConfirmation) {
+                    Button(role: .destructive) {
+                        if let bundleID = Bundle.main.bundleIdentifier {
+                            let defaults = UserDefaults.standard
+                            
+                            // Remove all preferences
+                            defaults.removePersistentDomain(forName: bundleID)
+                            
+                            // Clear values in memory
+                            preferences.rows = []
+                            localPreferences.clear()
+                        }
+                        
+                        // Disable configurator mode
+                        appDelegate.configuratorMode()
+                    } label: {
+                        Text("Remove", comment: "")
+                    }
+                } message: {
+                    Text("Are you sure you want to remove all preferences? Any managed preferences will be preserved.")
+                }
+            } footer: {
+                HStack {
+                    Text("Removes all app preferences including preferences set in Configurator Mode.")
+                        .fixedSize(horizontal: false, vertical: true)
+                    Spacer()
+                }
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
             }
         }
         .disabled(!preferences.editModeEnabled)
