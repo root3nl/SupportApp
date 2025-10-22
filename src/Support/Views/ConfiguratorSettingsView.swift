@@ -118,6 +118,9 @@ struct AdvancedSettingsView: View {
     
     @EnvironmentObject var localPreferences: LocalPreferences
     @EnvironmentObject var preferences: Preferences
+    @EnvironmentObject var appDelegate: AppDelegate
+    
+    @State private var showDeleteConfirmation: Bool = false
     
     var body: some View {
         Form {
@@ -126,14 +129,29 @@ struct AdvancedSettingsView: View {
             Toggle("Disable Configurator Mode", isOn: $localPreferences.disableConfiguratorMode)
             TextField("On appear action", text: $localPreferences.onAppearAction, prompt: Text("Path to script"))
             
-//            Button {
-//                if let bundleID = Bundle.main.bundleIdentifier {
-//                    UserDefaults.standard.removePersistentDomain(forName: bundleID)
-//                }
-//            } label: {
-//                Label("Clear all data", systemImage: "trash")
-//                    .foregroundStyle(.red)
-//            }
+            Divider()
+            
+            Button {
+                showDeleteConfirmation.toggle()
+            } label: {
+                Label("Clear preferences", systemImage: "trash")
+            }
+            .tint(.red)
+            .confirmationDialog("Clear preferences", isPresented: $showDeleteConfirmation) {
+                Button(role: .destructive) {
+                    if let bundleID = Bundle.main.bundleIdentifier {
+                        let defaults = UserDefaults.standard
+                        defaults.removePersistentDomain(forName: bundleID)
+                        preferences.rows = []
+                        localPreferences.clear()
+                    }
+                    appDelegate.configuratorMode()
+                } label: {
+                    Text("Clear", comment: "")
+                }
+            } message: {
+                Text("Are you sure you want to clear all preferences? Any managed preferences will be preserved.")
+            }
         }
         .disabled(!preferences.editModeEnabled)
     }

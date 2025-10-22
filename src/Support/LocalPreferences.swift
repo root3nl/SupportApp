@@ -42,6 +42,36 @@ class LocalPreferences: ObservableObject {
     
 }
 
+extension LocalPreferences {
+    func clear() {
+        self.title = ""
+        self.logo = ""
+        self.logoDarkMode = ""
+        self.notificationIcon = ""
+        self.statusBarIcon = ""
+        self.statusBarIconAllowsColor = false
+        self.statusBarIconSFSymbol = ""
+        self.statusBarIconNotifierEnabled = false
+        self.updateText = ""
+        self.customColor = ""
+        self.customColorDarkMode = ""
+        self.errorMessage = ""
+        self.showWelcomeScreen = false
+        self.footerText = ""
+        self.openAtLogin = false
+        self.disablePrivilegedHelperTool = false
+        self.disableConfiguratorMode = false
+        self.uptimeDaysLimit = 0
+        self.passwordType = ""
+        self.passwordExpiryLimit = 0
+        self.passwordLabel = ""
+        self.storageLimit = 0
+        self.onAppearAction = ""
+        self.rows = []
+        self.currentConfiguredItem = nil
+    }
+}
+
 protocol PreferencesProtocol {
     var title: String { get }
     var logo: String { get }
