@@ -1,7 +1,7 @@
 # macOS Support App
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/root3nl/SupportApp?color=success)
-[![Static Badge](https://img.shields.io/badge/SwiftUI-524520?logo=swift)](https://developer.apple.com/xcode/swiftui/)
+[![Static Badge](https://img.shields.io/badge/SwiftUI-524520?logo=swift)](https://developer.apple.com/swiftui/)
 ![Github](https://img.shields.io/badge/macOS-14%2B-green)
 
 <img src="/Screenshots/hero_light.png" width="800">
