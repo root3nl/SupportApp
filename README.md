@@ -6,7 +6,9 @@
 
 <img src="/Screenshots/hero_light.png" width="800">
 
-<img src="/Screenshots/hero_dark.png" width="800">
+<img src="/Screenshots/hero_dark_zoomed.png" width="800">
+
+<img src="/Screenshots/hero_dark_custom_zoomed.png" width="800">
 
 ## Introduction
 The Support App is a macOS menu bar app designed to assist organizations in various ways:
