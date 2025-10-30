@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct AppCatalogSubview: View {
+    
+    var configurationItem: ConfiguredItem?
 
     // Get  computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo
@@ -16,8 +18,9 @@ struct AppCatalogSubview: View {
     @EnvironmentObject var appCatalogController: AppCatalogController
     
     // Get preferences or default values
-    @StateObject var preferences = Preferences()
-    
+    @EnvironmentObject var preferences: Preferences
+    @EnvironmentObject var localPreferences: LocalPreferences
+
     // Make UserDefaults easy to use
     let defaults = UserDefaults.standard
     
@@ -27,14 +30,19 @@ struct AppCatalogSubview: View {
     // Boolean to show AppUpdatesView as popover
     @State var showAppCatalogPopover: Bool = false
     
+    // Local preferences for Configurator Mode or (managed) UserDefaults
+    var activePreferences: PreferencesProtocol {
+        preferences.configuratorModeEnabled ? localPreferences : preferences
+    }
+    
     // Set the custom color for all symbols depending on Light or Dark Mode.
-    var customColor: String {
-        if colorScheme == .light && defaults.string(forKey: "CustomColor") != nil {
-            return preferences.customColor
-        } else if colorScheme == .dark && defaults.string(forKey: "CustomColorDarkMode") != nil {
-            return preferences.customColorDarkMode
+    var color: Color {
+        if colorScheme == .dark && !activePreferences.customColorDarkMode.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColorDarkMode)") ?? NSColor.controlAccentColor)
+        } else if !activePreferences.customColor.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColor)") ?? NSColor.controlAccentColor)
         } else {
-            return preferences.customColor
+            return .accentColor
         }
     }
     
@@ -52,21 +60,17 @@ struct AppCatalogSubview: View {
     
     var body: some View {
         
-        InfoItem(title: NSLocalizedString("APPS", comment: ""), subtitle: updatesString, image: "arrow.down.app.fill", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: appCatalogController.appUpdates, notificationBadgeBool: appCatalogController.catalogInstalled() ? false : true, loading: appCatalogController.appsUpdating.isEmpty ? false : true, hoverEffectEnable: true)
-            .modify {
-                if #available(macOS 13, *) {
-                    $0.onTapGesture {
-                        self.appCatalogController.showAppUpdates.toggle()
+        InfoItem(title: NSLocalizedString("APPS", comment: ""), subtitle: updatesString, image: "arrow.down.app.fill", symbolColor: color, notificationBadge: appCatalogController.appUpdates, notificationBadgeBool: appCatalogController.catalogInstalled() ? false : true, loading: appCatalogController.appsUpdating.isEmpty ? false : true, configurationItem: configurationItem, hoverEffectEnable: true)
+            .onTapGesture {
+                if preferences.editModeEnabled {
+                    guard let configurationItem else {
+                        return
                     }
+                    localPreferences.currentConfiguredItem = configurationItem
+                    preferences.showItemConfiguration.toggle()
                 } else {
-                    $0.onTapGesture {
-                        showAppCatalogPopover.toggle()
-                    }
+                    self.appCatalogController.showAppUpdates.toggle()
                 }
-            }
-            // Legacy popover for macOS 12
-            .popover(isPresented: $showAppCatalogPopover, arrowEdge: .leading) {
-                AppUpdatesView()
             }
     }
     

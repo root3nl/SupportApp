@@ -16,7 +16,7 @@
       "links": [
         {
           "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
+          "href": "https://github.com/root3nl/SupportApp/wiki"
         }
       ]
     },
@@ -30,7 +30,7 @@
       "links": [
         {
           "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
+          "href": "https://github.com/root3nl/SupportApp/wiki"
         }
       ]
     },
@@ -44,7 +44,7 @@
       "links": [
         {
           "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
+          "href": "https://github.com/root3nl/SupportApp/wiki"
         }
       ]
     },
@@ -58,7 +58,7 @@
 			"links": [
 				{
 					"rel": "Documentation",
-					"href": "https://github.com/root3nl/SupportApp"
+					"href": "https://github.com/root3nl/SupportApp/wiki"
 				}
 			]
 		},
@@ -72,7 +72,7 @@
       "links": [
         {
           "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
+          "href": "https://github.com/root3nl/SupportApp/wiki"
         }
       ]
     },
@@ -86,7 +86,7 @@
       "links": [
         {
           "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
+          "href": "https://github.com/root3nl/SupportApp/wiki"
         }
       ]
     },
@@ -101,7 +101,37 @@
       "links": [
         {
           "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
+          "href": "https://github.com/root3nl/SupportApp/wiki"
+        }
+      ]
+    },
+    "StatusBarIconAllowsColor": {
+      "title": "Allow Status Bar Icon color",
+      "description": "Allow status bar icon to show color",
+      "type": "boolean",
+      "options": {
+        "enum_titles": ["Enabled", "Disabled"],
+        "infoText": "Key name: StatusBarIconAllowsColor"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp/wiki"
+        }
+      ]
+    },
+    "DisableConfiguratorMode": {
+      "title": "Block Configurator Mode",
+      "description": "Block the user from enabling Configurator Mode",
+      "type": "boolean",
+      "options": {
+        "enum_titles": ["Blocked", "Allowed"],
+        "infoText": "Key name: DisableConfiguratorMode"
+      },
+      "links": [
+        {
+          "rel": "Documentation",
+          "href": "https://github.com/root3nl/SupportApp/wiki"
         }
       ]
     },
@@ -115,7 +145,7 @@
       "links": [
         {
           "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
+          "href": "https://github.com/root3nl/SupportApp/wiki"
         }
       ]
     },
@@ -129,7 +159,7 @@
       "links": [
         {
           "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
+          "href": "https://github.com/root3nl/SupportApp/wiki"
         }
       ]
     },
@@ -143,82 +173,7 @@
       "links": [
         {
           "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "HideFirstRowInfoItems": {
-      "title": "Hide first row Info Items",
-      "description": "Hide the first row with Info Items",
-      "type": "boolean",
-      "options": {
-        "enum_titles": ["Hide", "Show"],
-        "infoText": "Key name: HideFirstRowInfoItems"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "HideSecondRowInfoItems": {
-      "title": "Hide second row Info Items",
-      "description": "Hide the second row with Info Items",
-      "type": "boolean",
-      "options": {
-        "enum_titles": ["Hide", "Show"],
-        "infoText": "Key name: HideSecondRowInfoItems"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "HideThirdRowInfoItems": {
-      "title": "Hide third row Info Items",
-      "description": "Hide the third row with Info Items",
-      "type": "boolean",
-      "options": {
-        "enum_titles": ["Hide", "Show"],
-        "infoText": "Key name: HideThirdRowInfoItems"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "HideFirstRowButtons": {
-      "title": "Hide first row configurable buttons",
-      "description": "Hide the first row with configurable items",
-      "type": "boolean",
-      "options": {
-        "enum_titles": ["Hide", "Show"],
-        "infoText": "Key name: HideFirstRowButtons"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "HideSecondRowButtons": {
-      "title": "Hide second row configurable buttons",
-      "description": "Hide the second row with configurable items",
-      "type": "boolean",
-      "options": {
-        "enum_titles": ["Hide", "Show"],
-        "infoText": "Key name: HideSecondRowButtons"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
+          "href": "https://github.com/root3nl/SupportApp/wiki"
         }
       ]
     },
@@ -232,7 +187,7 @@
       "links": [
         {
           "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
+          "href": "https://github.com/root3nl/SupportApp/wiki"
         }
       ]
     },
@@ -247,7 +202,7 @@
       "links": [
         {
           "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
+          "href": "https://github.com/root3nl/SupportApp/wiki"
         }
       ]
     },
@@ -261,7 +216,7 @@
       "links": [
         {
           "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
+          "href": "https://github.com/root3nl/SupportApp/wiki"
         }
       ]
     },
@@ -276,103 +231,7 @@
       "links": [
         {
           "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "InfoItemOne": {
-      "title": "Info item 1st tile",
-      "description": "Info item shown in the upper left corner",
-      "type": "string",
-      "options": {
-        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Extension A", "Extension B", "App Catalog"],
-        "infoText": "Key name: InfoItemOne"
-      },
-      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA", "ExtensionB", "AppCatalog"],
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "InfoItemTwo": {
-      "title": "Info item 2nd tile",
-      "description": "Info item shown in the upper right corner",
-      "type": "string",
-      "options": {
-        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Extension A", "Extension B", "App Catalog"],
-        "infoText": "Key name: InfoItemTwo"
-      },
-      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA", "ExtensionB", "AppCatalog"],
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "InfoItemThree": {
-      "title": "Info item 3rd tile",
-      "description": "Info item shown in the second row left",
-      "type": "string",
-      "options": {
-        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Extension A", "Extension B", "App Catalog"],
-        "infoText": "Key name: InfoItemThree"
-      },
-      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA", "ExtensionB", "AppCatalog"],
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "InfoItemFour": {
-      "title": "Info item 4th tile",
-      "description": "Info item shown in the second row right",
-      "type": "string",
-      "options": {
-        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Extension A", "Extension B", "App Catalog"],
-        "infoText": "Key name: InfoItemFour"
-      },
-      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA", "ExtensionB", "AppCatalog"],
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "InfoItemFive": {
-      "title": "Info item 5th tile",
-      "description": "Info item shown in the third row left",
-      "type": "string",
-      "options": {
-        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Extension A", "Extension B", "App Catalog"],
-        "infoText": "Key name: InfoItemFive"
-      },
-      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA", "ExtensionB", "AppCatalog"],
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "InfoItemSix": {
-      "title": "Info item 6th tile",
-      "description": "Info item shown in the third row right",
-      "type": "string",
-      "options": {
-        "enum_titles": ["Computer Name", "macOS Version", "Network", "Password", "Storage", "Uptime", "Extension A", "Extension B", "App Catalog"],
-        "infoText": "Key name: InfoItemSix"
-      },
-      "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "ExtensionA", "ExtensionB", "AppCatalog"],
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
+          "href": "https://github.com/root3nl/SupportApp/wiki"
         }
       ]
     },
@@ -386,7 +245,7 @@
       "links": [
         {
           "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
+          "href": "https://github.com/root3nl/SupportApp/wiki"
         }
       ]
     },
@@ -400,7 +259,7 @@
       "links": [
         {
           "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
+          "href": "https://github.com/root3nl/SupportApp/wiki"
         }
       ]
     },
@@ -414,7 +273,7 @@
       "links": [
         {
           "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
+          "href": "https://github.com/root3nl/SupportApp/wiki"
         }
       ]
     },
@@ -430,7 +289,7 @@
       "links": [
         {
           "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
+          "href": "https://github.com/root3nl/SupportApp/wiki"
         }
       ]
     },
@@ -444,613 +303,7 @@
       "links": [
         {
           "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "FirstRowTitleLeft": {
-      "title": "First Row Left: Title",
-      "description": "The text shown in the button label",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: FirstRowTitleLeft"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "FirstRowSubtitleLeft": {
-      "title": "First Row Left: Subtitle",
-      "description": "Subtitle text will appear under title when the user hovers over the button. Ignored if left empty.",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: FirstRowSubtitleLeft"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "FirstRowTypeLeft": {
-      "title": "First Row Left: Type",
-      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. App by default.",
-      "type": "string",
-      "options": {
-        "enum_titles": ["App", "URL", "User Command", "Privileged Script"],
-        "infoText": "Key name: FirstRowTypeLeft"
-      },
-      "enum": ["App", "URL", "Command", "PrivilegedScript"],
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "FirstRowLinkLeft": {
-      "title": "First Row Left: Link",
-      "description": "The Bundle Identifier of the app, link, command or path to script",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: FirstRowLinkLeft"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "FirstRowSymbolLeft": {
-      "title": "First Row Left: SF Symbol name",
-      "description": "The SF Symbol shown in the button",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: FirstRowSymbolLeft"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "FirstRowTitleMiddle": {
-      "title": "First Row Middle: Title",
-      "description": "The text shown in the button label",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: FirstRowTitleMiddle"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "FirstRowSubtitleMiddle": {
-      "title": "First Row Middle: Subtitle",
-      "description": "Subtitle text will appear under title when the user hovers over the button. Ignored if left empty.",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: FirstRowSubtitleMiddle"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "FirstRowTypeMiddle": {
-      "title": "First Row Middle: Type",
-      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. App by default.",
-      "type": "string",
-      "options": {
-        "enum_titles": ["App", "URL", "User Command", "Privileged Script"],
-        "infoText": "Key name: FirstRowTypeMiddle"
-      },
-      "enum": ["App", "URL", "Command", "PrivilegedScript"],
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "FirstRowLinkMiddle": {
-      "title": "First Row Middle: Link",
-      "description": "The Bundle Identifier of the app, link, command or path to script",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: FirstRowLinkMiddle"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "FirstRowSymbolMiddle": {
-      "title": "First Row Middle: SF Symbol name",
-      "description": "The SF Symbol shown in the button",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: FirstRowSymbolMiddle"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "FirstRowTitleRight": {
-      "title": "First Row Right: Title",
-      "description": "The text shown in the button label.",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: FirstRowTitleRight"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "FirstRowSubtitleRight": {
-      "title": "First Row Right: Subtitle",
-      "description": "Subtitle text will appear under title when the user hovers over the button. Ignored if left empty.",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: FirstRowSubtitleRight"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "FirstRowTypeRight": {
-      "title": "First Row Right: Type",
-      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. App by default.",
-      "type": "string",
-      "options": {
-        "enum_titles": ["App", "URL", "User Command", "Privileged Script"],
-        "infoText": "Key name: FirstRowTypeRight"
-      },
-      "enum": ["App", "URL", "Command", "PrivilegedScript"],
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "FirstRowLinkRight": {
-      "title": "First Row Right: Link",
-      "description": "The Bundle Identifier of the app, link, command or path to script",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: FirstRowLinkRight"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "FirstRowSymbolRight": {
-      "title": "First Row Right: SF Symbol name",
-      "description": "The SF Symbol shown in the button.",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: FirstRowSymbolRight"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "SecondRowTitleLeft": {
-      "title": "Second Row Left: Title",
-      "description": "The text shown in the button label.",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: SecondRowTitleLeft"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "SecondRowSubtitleLeft": {
-      "title": "Second Row Left: Subtitle",
-      "description": "Subtitle text will replace the title when the user hovers over the button. Ignored if left empty.",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: SecondRowSubtitleLeft"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "SecondRowTypeLeft": {
-      "title": "Second Row Left: Type",
-      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. URL by default.",
-      "type": "string",
-      "options": {
-        "enum_titles": ["App", "URL", "User Command", "Privileged Script"],
-        "infoText": "Key name: SecondRowTypeLeft"
-      },
-      "enum": ["App", "URL", "Command", "PrivilegedScript"],
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "SecondRowLinkLeft": {
-      "title": "Second Row Left: Link",
-      "description": "The Bundle Identifier of the app, link, command or path to script.",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: SecondRowLinkLeft"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "SecondRowSymbolLeft": {
-      "title": "Second Row Left: SF Symbol name",
-      "description": "The SF Symbol shown in the button.",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: SecondRowSymbolLeft"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "SecondRowTitleMiddle": {
-      "title": "Second Row Middle: Title",
-      "description": "The text shown in the button label.",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: SecondRowTitleMiddle"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "SecondRowSubtitleMiddle": {
-      "title": "Second Row Middle: Subtitle",
-      "description": "Subtitle text will replace the title when the user hovers over the button. Ignored if left empty.",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: SecondRowSubtitleMiddle"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "SecondRowTypeMiddle": {
-      "title": "Second Row Middle: Type",
-      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. URL by default.",
-      "type": "string",
-      "options": {
-        "enum_titles": ["App", "URL", "User Command", "Privileged Script"],
-        "infoText": "Key name: SecondRowTypeMiddle"
-      },
-      "enum": ["App", "URL", "Command", "PrivilegedScript"],
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "SecondRowLinkMiddle": {
-      "title": "Second Row Middle: Link",
-      "description": "The Bundle Identifier of the app, link, command or path to script.",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: SecondRowLinkMiddle"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "SecondRowSymbolMiddle": {
-      "title": "Second Row Middle: SF Symbol name",
-      "description": "The SF Symbol shown in the button.",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: SecondRowSymbolMiddle"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "SecondRowTitleRight": {
-      "title": "Second Row Right: Title",
-      "description": "The text shown in the button label.",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: SecondRowTitleRight"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "SecondRowSubtitleRight": {
-      "title": "Second Row Right: Subtitle",
-      "description": "Subtitle text will replace the title when the user hovers over the button. Ignored if left empty.",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: SecondRowSubtitleRight"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "SecondRowTypeRight": {
-      "title": "Second Row Right: Type",
-      "description": "Type of link the item should open. Can be anything like screen sharing tools, company stores, file servers or core applications in your organization. URL by default.",
-      "type": "string",
-      "options": {
-        "enum_titles": ["App", "URL", "User Command", "Privileged Script"],
-        "infoText": "Key name: SecondRowTypeRight"
-      },
-      "enum": ["App", "URL", "Command", "PrivilegedScript"],
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "SecondRowLinkRight": {
-      "title": "Second Row Right: Link",
-      "description": "The Bundle Identifier of the app, link, command or path to script.",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: SecondRowLinkRight"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "SecondRowSymbolRight": {
-      "title": "Second Row Right: SF Symbol name",
-      "description": "The SF Symbol shown in the button.",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: SecondRowSymbolRight"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "ExtensionTitleA": {
-      "title": "Extension Title A",
-      "description": "The text shown in the Extension.",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: ExtensionTitleA"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "ExtensionValueA": {
-      "title": "Extension Value A",
-      "description": "The value shown in the Extension as subtitle.",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: ExtensionValueA"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "ExtensionSymbolA": {
-      "title": "Extension SF Symbol A",
-      "description": "The SF Symbol shown in the Extension.",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: ExtensionSymbolA"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "ExtensionTypeA": {
-      "title": "Extension Link Type A",
-      "description": "Type of link the Extension should open.",
-      "type": "string",
-      "options": {
-        "enum_titles": ["App", "URL", "User Command", "Privileged Script"],
-        "infoText": "Key name: ExtensionTypeA"
-      },
-      "enum": ["App", "URL", "Command", "PrivilegedScript"],
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "ExtensionLinkA": {
-      "title": "Extension Link A",
-      "description": "The Bundle Identifier of the app, link, command or path to script.",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: ExtensionLinkA"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-		},
-    "ExtensionAlertA": {
-      "title": "Extension Alert A",
-      "description": "Enable an alert notification badge in Extension A",
-      "type": "boolean",
-      "options": {
-        "enum_titles": ["Enable Alert", "Disable Alert"],
-        "infoText": "Key name: ExtensionAlertA"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "ExtensionTitleB": {
-      "title": "Extension Title B",
-      "description": "The text shown in the Extension.",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: ExtensionTitleB"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "ExtensionValueB": {
-      "title": "Extension Value B",
-      "description": "The value shown in the Extension as subtitle.",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: ExtensionValueB"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "ExtensionSymbolB": {
-      "title": "Extension SF Symbol B",
-      "description": "The SF Symbol shown in the Extension.",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: ExtensionSymbolB"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "ExtensionTypeB": {
-      "title": "Extension Link Type B",
-      "description": "Type of link the Extension should open",
-      "type": "string",
-      "options": {
-        "enum_titles": ["App", "URL", "User Command", "Privileged Script"],
-        "infoText": "Key name: ExtensionTypeB"
-      },
-      "enum": ["App", "URL", "Command", "PrivilegedScript"],
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-    },
-    "ExtensionLinkB": {
-      "title": "Extension Link B",
-      "description": "The Bundle Identifier of the app, link, command or path to script.",
-      "type": "string",
-      "options": {
-        "infoText": "Key name: ExtensionLinkB"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
-        }
-      ]
-		},
-    "ExtensionAlertB": {
-      "title": "Extension Alert B",
-      "description": "Enable an alert notification badge in Extension B",
-      "type": "boolean",
-      "options": {
-        "enum_titles": ["Enable Alert", "Disable Alert"],
-        "infoText": "Key name: ExtensionAlertB"
-      },
-      "links": [
-        {
-          "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
+          "href": "https://github.com/root3nl/SupportApp/wiki"
         }
       ]
     },
@@ -1064,7 +317,7 @@
       "links": [
         {
           "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
+          "href": "https://github.com/root3nl/SupportApp/wiki"
         }
       ]
 		},
@@ -1079,9 +332,162 @@
       "links": [
         {
           "rel": "Documentation",
-          "href": "https://github.com/root3nl/SupportApp"
+          "href": "https://github.com/root3nl/SupportApp/wiki"
         }
       ]
+    },
+    "Rows": {
+      "title": "Rows",
+      "description": "An array of rows which contain items",
+      "type": "array",
+      "options": {
+        "infoText": "Key name: Rows"
+      },
+      "items": {
+        "title": "Row",
+        "type": "object",
+        "options": {
+          "infoText": "Rows"
+        },
+        "links": [
+          {
+            "rel": "Documentation",
+            "href": "https://github.com/root3nl/SupportApp/wiki"
+          }
+        ],
+        "properties":{
+          "Items": {
+            "title": "Items",
+            "description": "An array of items inside a row",
+            "type": "array",
+            "options": {
+              "infoText": "Items"
+            },
+            "links": [
+              {
+                "rel": "Documentation",
+                "href": "https://github.com/root3nl/SupportApp/wiki"
+              }
+            ],
+            "items": {
+              "title": "Item",
+              "type": "object",
+              "description": "An item shown in the row",
+              "properties": {
+                "Type": {
+                  "title": "Type",
+                  "description": "Item type",
+                  "type": "string",
+                  "options": {
+                    "enum_titles": ["Info Item - Computer name", "Info Item - macOS version", "Info Item - Network", "Info Item - Password", "Info Item - Storage", "Info Item - Uptime", "Info Item - App Catalog", "Extension", "Button - Regular", "Button - Medium", "Button - Small"],
+                    "infoText": "Type"
+                  },
+                  "enum": ["ComputerName", "MacOSVersion", "Network", "Password", "Storage", "Uptime", "AppCatalog", "Extension", "Button", "ButtonMedium", "ButtonSmall"],
+                  "links": [
+                    {
+                      "rel": "Documentation",
+                      "href": "https://github.com/root3nl/SupportApp/wiki"
+                    }
+                  ]
+                },
+                "Title": {
+                  "title": "Title",
+                  "type": "string",
+                  "options": {
+                    "infoText": "Title"
+                  },
+                  "links": [
+                    {
+                      "rel": "Documentation",
+                      "href": "https://github.com/root3nl/SupportApp/wiki"
+                    }
+                  ]
+                },
+                "Subtitle": {
+                  "title": "Subtitle",
+                  "type": "string",
+                  "options": {
+                    "infoText": "Subtitle"
+                  },
+                  "links": [
+                    {
+                      "rel": "Documentation",
+                      "href": "https://github.com/root3nl/SupportApp/wiki"
+                    }
+                  ]
+                },
+                "ActionType": {
+                  "title": "Action Type",
+                  "type": "string",
+                  "options": {
+                    "enum_titles": ["App", "URL", "User Command", "Privileged Script"],
+                    "infoText": "LinkType"
+                  },
+                  "enum": ["App", "URL", "Command", "PrivilegedScript"],
+                  "links": [
+                    {
+                      "rel": "Documentation",
+                      "href": "https://github.com/root3nl/SupportApp/wiki"
+                    }
+                  ]
+                },
+                "Action": {
+                  "title": "Action",
+                  "type": "string",
+                  "options": {
+                    "infoText": "Action"
+                  },
+                  "links": [
+                    {
+                      "rel": "Documentation",
+                      "href": "https://github.com/root3nl/SupportApp/wiki"
+                    }
+                  ]
+                },
+                "Symbol": {
+                  "title": "Symbol",
+                  "type": "string",
+                  "options": {
+                    "infoText": "Symbol"
+                  },
+                  "links": [
+                    {
+                      "rel": "Documentation",
+                      "href": "https://github.com/root3nl/SupportApp/wiki"
+                    }
+                  ]
+                },
+                "ExtensionID": {
+                  "title": "Extension ID",
+                  "type": "string",
+                  "options": {
+                    "infoText": "ExtensionID"
+                  },
+                  "links": [
+                    {
+                      "rel": "Documentation",
+                      "href": "https://github.com/root3nl/SupportApp/wiki"
+                    }
+                  ]
+                },
+                "OnAppearAction": {
+                  "title": "On appear action for Extension",
+                  "type": "string",
+                  "options": {
+                    "infoText": "OnAppearAction"
+                  },
+                  "links": [
+                    {
+                      "rel": "Documentation",
+                      "href": "https://github.com/root3nl/SupportApp/wiki"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
     }
 	}
 }

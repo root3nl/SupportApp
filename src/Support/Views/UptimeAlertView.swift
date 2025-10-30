@@ -19,7 +19,8 @@ struct UptimeAlertView: View {
     @EnvironmentObject var userinfo: UserInfo
     
     // Get preferences or default values
-    @StateObject var preferences = Preferences()
+    @EnvironmentObject var preferences: Preferences
+    @EnvironmentObject var localPreferences: LocalPreferences
     
     // Make UserDefaults easy to use
     let defaults = UserDefaults.standard
@@ -29,14 +30,19 @@ struct UptimeAlertView: View {
     
     @State private var restarting: Bool = false
     
+    // Local preferences for Configurator Mode or (managed) UserDefaults
+    var activePreferences: PreferencesProtocol {
+        preferences.configuratorModeEnabled ? localPreferences : preferences
+    }
+    
     // Set the custom color for all symbols depending on Light or Dark Mode.
-    var customColor: String {
-        if colorScheme == .light && defaults.string(forKey: "CustomColor") != nil {
-            return preferences.customColor
-        } else if colorScheme == .dark && defaults.string(forKey: "CustomColorDarkMode") != nil {
-            return preferences.customColorDarkMode
+    var color: Color {
+        if colorScheme == .dark && !activePreferences.customColorDarkMode.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColorDarkMode)") ?? NSColor.controlAccentColor)
+        } else if !activePreferences.customColor.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColor)") ?? NSColor.controlAccentColor)
         } else {
-            return preferences.customColor
+            return .accentColor
         }
     }
     
@@ -58,14 +64,29 @@ struct UptimeAlertView: View {
                 Button(action: {
                     computerinfo.showUptimeAlert.toggle()
                 }) {
-                    Ellipse()
-                        .foregroundColor(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
-                        .overlay(
-                            Image(systemName: "chevron.backward")
-                        )
-                        .frame(width: 26, height: 26)
+                    if #available(macOS 26, *) {
+                        Image(systemName: "chevron.backward")
+                            .font(.system(size: 16))
+                            .padding(4)
+                    } else {
+                        Ellipse()
+                            .foregroundColor(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
+                            .overlay(
+                                Image(systemName: "chevron.backward")
+                            )
+                            .frame(width: 26, height: 26)
+                    }
                 }
-                .buttonStyle(.plain)
+                .modify {
+                    if #available(macOS 26, *) {
+                        $0
+                            .buttonStyle(.glass)
+                            .buttonBorderShape(.circle)
+                    } else {
+                        $0
+                            .buttonStyle(.plain)
+                    }
+                }
                 
                 Text(NSLocalizedString("Last Reboot", comment: ""))
                     .font(.system(.headline, design: .rounded))
@@ -84,7 +105,7 @@ struct UptimeAlertView: View {
                     .scaledToFit()
                     .frame(width: 50, height: 50)
                     .symbolRenderingMode(.palette)
-                    .foregroundStyle(.primary, computerinfo.uptimeLimitReached ? .orange : Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
+                    .foregroundStyle(.primary, computerinfo.uptimeLimitReached ? .orange : color)
                 
                 Text(computerinfo.uptimeLimitReached ? NSLocalizedString("RESTART_NOW", comment: "") : NSLocalizedString("RESTART_REGULARLY", comment: ""))
                     .font(.system(.title, design: .rounded))
@@ -110,17 +131,21 @@ struct UptimeAlertView: View {
                         restartMac()
                     }) {
                         Text(NSLocalizedString("RESTART", comment: ""))
-                            .font(.system(.title3, design: .rounded))
-                            .fontWeight(.medium)
-                            .foregroundStyle(.white)
-                            .padding(.vertical, 4)
-                            .padding(.horizontal)
-                            .background(Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
-                            .clipShape(Capsule())
+//                            .font(.system(.title3, design: .rounded))
+                            .fontWeight(.bold)
                     }
-                    .buttonStyle(.plain)
-                    .frame(height: 20)
-                    
+                    .modify {
+                        if #available(macOS 26, *) {
+                            $0
+                                .buttonStyle(.glassProminent)
+                        } else {
+                            $0
+                                .buttonStyle(.borderedProminent)
+                        }
+                    }
+                    .tint(color)
+                    .buttonBorderShape(.capsule)
+                    .controlSize(.extraLarge)
                 }
                                     
             }

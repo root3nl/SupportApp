@@ -15,7 +15,7 @@ on:
 
 jobs:
   build_with_signing:
-    runs-on: macos-15
+    runs-on: macos-26
     environment: production
 
     steps:

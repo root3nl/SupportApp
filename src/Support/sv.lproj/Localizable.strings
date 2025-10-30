@@ -23,7 +23,7 @@
 "Available" = "Tillgänglig";
 "About Support" = "Om Support";
 "Help and Documentation" = "Hjälp och dokumentation";
-"Quit Support" = "Snabbhjälp";
+"Quit Support" = "Avsluta Support";
 "Quit" = "Avsluta";
 "Are you sure you want to quit?" = "Är du säker på att du vill avsluta?";
 "An error occurred" = "Ett fel har uppstått";
@@ -54,7 +54,7 @@
 "CLOSE" = "Stäng";
 "UPDATES_AVAILABLE" = "Updateringar tillgängliga";
 "NO_UPDATES_AVAILABLE" = "Inga uppdateringar tillgängliga";
-"UPDATE_NOW" = "Updatera nu";
+"UPDATE_NOW" = "Uppdatera nu";
 "SYSTEM_SETTINGS" = "Systeminställningar";
 "SYSTEM_PREFERENCES" = "Systeminställningar";
 "YOUR_MAC_IS_UP_TO_DATE" = "Din Mac är uppdaterad";
@@ -74,3 +74,9 @@
 "APPS" = "Appar";
 "PRIVILEGED_HELPER_TOOL_NOT_INSTALLED" = "Privileged Helper Tool är inte installerat";
 "UP_TO_DATE" = "Uppdaterad";
+"ITEM_CONFIGURATION" = "Objektkonfiguration";
+"SAVE" = "Spara";
+"ITEM_PREVIEW" = "Objektförhandsvisning";
+"ITEM_TYPE" = "Objekttyp";
+"STORAGE" = "Storage";
+"NETWORK_IP_ADDRESS" = "Network IP Address";

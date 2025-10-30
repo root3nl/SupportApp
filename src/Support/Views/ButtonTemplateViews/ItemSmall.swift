@@ -17,6 +17,7 @@ struct ItemSmall: View {
     var symbolColor: Color
     var loading: Bool?
     var linkPrefKey: String?
+    var configurationItem: ConfiguredItem?
     
     // Access AppDelegate
     @EnvironmentObject private var appDelegate: AppDelegate
@@ -37,69 +38,174 @@ struct ItemSmall: View {
     @State var showingAlert = false
     
     // Get preferences or default values
-    @ObservedObject var preferences = Preferences()
+    @EnvironmentObject var preferences: Preferences
+    
+    // Get local preferences for Configurator Mode
+    @EnvironmentObject var localPreferences: LocalPreferences
+    
+    let defaults = UserDefaults.standard
     
     var body: some View {
         
-        VStack {
+        if #available(macOS 26, *) {
+            ZStack {
+                
+                VStack {
+                    
+                    if loading ?? false {
+                        ProgressView()
+                            .scaleEffect(0.8)
+                            .frame(width: 22, height: 22)
+                            .accessibilityHidden(true)
+                    } else {
+                        Image(systemName: image)
+                            .font(.system(size: 22, weight: .semibold))
+                            .foregroundStyle(.white)
+                            .frame(width: 22, height: 22)
+                            .accessibilityHidden(true)
+                    }
+                    
+                    Spacer()
+                    
+                    // Optionally show a subtitle when user hovers over button
+                    if subtitle != "" && hoverView {
+                        Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
+                            .font(.system(.subheadline, design: .default))
+                            .foregroundStyle(.white)
+                            .kerning(Constants.defaultKerning)
+                            .allowsTightening(true)
+                            .minimumScaleFactor(0.5)
+                    } else {
+                        Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
+                            .font(.system(.subheadline, design: .default))
+                            .foregroundStyle(.white)
+                            .kerning(Constants.defaultKerning)
+                            .allowsTightening(true)
+                            .minimumScaleFactor(0.5)
+                    }
+                }
+                .padding(10)
+            }
+            .frame(width: Constants.mediumItemWidth, height: Constants.itemHeight)
+            .contentShape(Capsule())
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(title + ", " + (subtitle ?? ""))
+            .alert(isPresented: $showingAlert) {
+                Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
+            }
+            .onHover() {
+                hover in self.hoverView = hover
+            }
+            .onTapGesture() {
+                if preferences.editModeEnabled {
+                    guard let configurationItem else {
+                        return
+                    }
+                    localPreferences.currentConfiguredItem = configurationItem
+                    preferences.showItemConfiguration.toggle()
+                    
+                } else {
+                    tapGesture()
+                }
+            }
+            .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: true))
+            .overlay(alignment: .topLeading) {
+                // Optionally show remove item button
+                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    RemoveItemButtonView(configurationItem: configurationItem)
+                }
+            }
+            .animation(.bouncy, value: hoverView)
+        } else {
+            ZStack {
+                VStack {
+                    
+                    if loading ?? false {
+                        ProgressView()
+                            .scaleEffect(0.8)
+                            .frame(width: 24, height: 24)
+                            .accessibilityHidden(true)
+                    } else {
+                        Image(systemName: image)
+                            .font(.system(size: 24, weight: .semibold))
+                            .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
+                            .frame(width: 24, height: 24)
+                            .accessibilityHidden(true)
+                    }
+                    
+                    Spacer()
+                    
+                    // Optionally show a subtitle when user hovers over button
+                    if subtitle != "" && hoverView {
+                        Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
+                            .font(.system(.subheadline, design: .rounded))
+                    } else {
+                        Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
+                            .font(.system(.subheadline, design: .rounded))
+                        
+                    }
+                }
+                .padding(.vertical, 10)
+            }
+            .frame(width: Constants.mediumItemWidth, height: Constants.itemLegacyHeight)
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(title + ", " + (subtitle ?? ""))
+            .background(hoverView && link != "" ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
+            .cornerRadius(10)
+            // Apply gray and black border in Dark Mode to better view the buttons like Control Center
+            .modifier(DarkModeBorder())
+            .shadow(color: Color.black.opacity(0.2), radius: 4, y: 2)
+            .alert(isPresented: $showingAlert) {
+                Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
+            }
+            .onHover() {
+                hover in self.hoverView = hover
+            }
+            .onTapGesture() {
+                if preferences.editModeEnabled {
+                    guard let configurationItem else {
+                        return
+                    }
+                    localPreferences.currentConfiguredItem = configurationItem
+                    preferences.showItemConfiguration.toggle()
+                    
+                } else {
+                    tapGesture()
+                }
+            }
+            .overlay(alignment: .topLeading) {
+                // Optionally show remove item button
+                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    RemoveItemButtonView(configurationItem: configurationItem)
+                }
+            }
+        }
+    }
+    
+    func tapGesture() {
+        // Don't do anything when no link is specified
+        guard link != "" else {
+            logger.debug("No link specified for \(title, privacy: .public), button disabled...")
+            return
+        }
         
-            if loading ?? false {
-                ProgressView()
-                    .scaleEffect(0.8)
-                    .frame(width: 24, height: 24)
-            } else {
-                Image(systemName: image)
-                    .font(.system(size: 24, weight: .semibold))
-                    .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
-                    .frame(width: 24, height: 24)
-            }
-
-        Spacer()
-
-            // Optionally show a subtitle when user hovers over button
-            if subtitle != "" && hoverView {
-                Text(subtitle?.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo) ?? "")
-                    .font(.system(.subheadline, design: .rounded))
-            } else {
-                Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
-                    .font(.system(.subheadline, design: .rounded))
-
-            }
-        }
-        .padding(.vertical, 10)
-        .frame(width: 114, height: 60)
-        .background(hoverView && link != "" ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
-        .cornerRadius(10)
-        // Apply gray and black border in Dark Mode to better view the buttons like Control Center
-        .modifier(DarkModeBorder())
-        .shadow(color: Color.black.opacity(0.2), radius: 4, y: 2)
-        .alert(isPresented: $showingAlert) {
-            Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
-        }
-        .onHover() {
-            hover in self.hoverView = hover
-        }
-        .onTapGesture() {
-            // Don't do anything when no link is specified
-            guard link != "" else {
-                logger.debug("No link specified for \(title, privacy: .public), button disabled...")
+        if linkType == "App" {
+            openApp()
+        } else if linkType == "URL" {
+            openLink()
+        } else if linkType == "Command" {
+            runCommand()
+            // MARK: - DistributedNotification is deprecated, use PrivilegedScript instead
+        } else if linkType == "DistributedNotification" || linkType == "PrivilegedScript" {
+            guard let link else {
                 return
             }
-            
-            if linkType == "App" {
-                openApp()
-            } else if linkType == "URL" {
-                openLink()
-            } else if linkType == "Command" {
-                runCommand()
-            // MARK: - DistributedNotification is deprecated, use PrivilegedScript instead
-            } else if linkType == "DistributedNotification" || linkType == "PrivilegedScript" {
-                Task {
-                    await runPrivilegedCommand()
-                }            } else {
+            Task {
+                await runPrivilegedCommand(command: link, key: "Action")
+            }
+        } else {
                 self.showingAlert.toggle()
                 logger.error("Invalid Link Type: \(linkType!)")
-            }
         }
     }
     
@@ -114,6 +220,9 @@ struct ItemSmall: View {
         let configuration = NSWorkspace.OpenConfiguration()
         
         NSWorkspace.shared.openApplication(at: url, configuration: configuration, completionHandler: nil)
+        
+        // Close popover
+        appDelegate.togglePopover(nil)
     }
     
     // Open URL
@@ -166,31 +275,47 @@ struct ItemSmall: View {
     }
     
     // MARK: - Function to run privileged script
-    func runPrivilegedCommand() async {
-        
+    func runPrivilegedCommand(command: String, key: String) async {
+
         logger.log("Trying to run privileged script...")
         
-        let defaults = UserDefaults.standard
-        
-        // Exit when no script was found
-        guard let privilegedCommand = link else {
-            logger.error("Privileged script was not found")
-            return
-        }
-        
-        // Check value comes from a Configuration Profile. If not, the script may be maliciously set and needs to be ignored
-        guard defaults.objectIsForced(forKey: linkPrefKey!) == true else {
-            logger.error("Script \(privilegedCommand, privacy: .public) is not set by an administrator and is not trusted. Action will not be executed")
-            return
+        if let linkPrefKey {
+            // Check value comes from a Configuration Profile. If not, the script may be maliciously set and needs to be ignored
+            guard defaults.objectIsForced(forKey: linkPrefKey) == true else {
+                logger.error("Action \(command, privacy: .public) is not set by an administrator and is not trusted. Action will not be executed")
+                return
+            }
+        } else {
+            
+            // Check that the entire "Rows" payload is enforced by a configuration profile
+            let isManaged = defaults.objectIsForced(forKey: "Rows")
+            
+            // Get bundle ID
+            let bundleID = Bundle.main.bundleIdentifier
+            guard let bundleID else {
+                return
+            }
+            
+            // Read only the managed domain version of "Rows" (bypasses user defaults)
+            let managedRows = CFPreferencesCopyAppValue("Rows" as CFString,
+                                                        bundleID as CFString) as? [[String: Any]]
+            
+            // Try to find an Action entry matching the command
+            let containsAction = managedRows?.flatMap { $0["Items"] as? [[String: Any]] ?? [] }.contains { ($0[key] as? String) == command } ?? false
+            
+            guard isManaged, containsAction else {
+                logger.error("Action \(command, privacy: .public) is not managed via Configuration Profile. Ignored.")
+                return
+            }
         }
         
         // Verify permissions
-        guard FileUtilities().verifyPermissions(pathname: privilegedCommand) else {
+        guard FileUtilities().verifyPermissions(pathname: command) else {
             return
         }
         
         do {
-            try ExecutionService.executeScript(command: privilegedCommand) { exitCode in
+            try ExecutionService.executeScript(command: command) { exitCode in
                 
                 if exitCode == 0 {
                     self.logger.debug("Privileged script ran successfully with exit code 0")
@@ -204,3 +329,4 @@ struct ItemSmall: View {
         }
     }
 }
+

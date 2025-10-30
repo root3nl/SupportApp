@@ -6,10 +6,13 @@
 //
 
 import Foundation
+import os
 import SwiftUI
 
 // Class to publish preference updates from variables to ContentView
 class Preferences: ObservableObject {
+    
+    let logger = Logger(subsystem: "nl.root3.support", category: "Preferences")
     
     // Where possible we use the @AppStorage property wrapper which uses UserDefaults to get and store preferences.
     // The benefit of @AppStorage is that value changes are automatically observed by SwiftUI and updates the view
@@ -19,6 +22,16 @@ class Preferences: ObservableObject {
     
     // Title shown in the top of the app
     @AppStorage("Title") var title: String = "Support"
+    
+    @AppStorage("Logo") var logo: String = ""
+    @AppStorage("LogoDarkMode") var logoDarkMode: String = ""
+    @AppStorage("NotificationIcon") var notificationIcon: String = ""
+    @AppStorage("StatusBarIcon") var statusBarIcon: String = ""
+    @AppStorage("StatusBarIconSFSymbol") var statusBarIconSFSymbol: String = ""
+    @AppStorage("StatusBarIconNotifierEnabled") var statusBarIconNotifierEnabled: Bool = false
+    
+    // Optional text to show in the Managed Updates view
+    @AppStorage("UpdateText") var updateText: String = ""
     
     // Custom color for all symbols
     @AppStorage("CustomColor") var customColor: String = ""
@@ -41,8 +54,9 @@ class Preferences: ObservableObject {
     // Automatically register modern LaunchAgent on macOS 13 and higher
     @AppStorage("OpenAtLogin") var openAtLogin: Bool = false
     
-    // Optional text to show in the Managed Updates view
-    @AppStorage("UpdateText") var updateText: String = ""
+    @AppStorage("DisablePrivilegedHelperTool") var disablePrivilegedHelperTool: Bool = false
+    
+    @AppStorage("OnAppearAction") var onAppearAction: String = ""
     
     // MARK: - Info items
     
@@ -61,16 +75,17 @@ class Preferences: ObservableObject {
     @AppStorage("PasswordExpiryLimit") var passwordExpiryLimit: Int = 0
     
     // Text to show in Password info item
-    @AppStorage("PasswordLabel") var passwordLabel: String = "Mac " + NSLocalizedString("Password", comment: "")
+    @AppStorage("PasswordLabel") var passwordLabel: String = ""
     
     // Password type
     @AppStorage("PasswordType") var passwordType: String = "Apple"
     
-    // Kerberos realm when used with Kerberos SSO Extension
-    @AppStorage("KerberosRealm") var kerberosRealm: String = ""
-    
     // Percentage of storage used after which a notification badge is shown, disabled by default
-    @AppStorage("StorageLimit") var storageLimit: Int = 0
+    @AppStorage("StorageLimit") var storageLimit: Double = 0
+    
+    @AppStorage("StatusBarIconAllowsColor") var statusBarIconAllowsColor: Bool = false
+    
+    @AppStorage("DisableConfiguratorMode") var disableConfiguratorMode: Bool = false
     
     // Hide first and/or second row of Info Items, disabled by default
     @AppStorage("HideFirstRowInfoItems") var hideFirstRowInfoItems: Bool = false
@@ -174,4 +189,41 @@ class Preferences: ObservableObject {
     
     // Enable beta release watermark
     let betaRelease: Bool = false
+    
+    // Variable to load rows from Configuration Profile
+    @Published var rows: [Row] = []
+    
+    // Configurator mode
+    @Published var configuratorModeEnabled = false
+    
+    // Edit mode
+    @Published var editModeEnabled = false
+    
+    // Item configuration view
+    @Published var showItemConfiguration = false
+    
+    // MARK: - Save settings from Configurator Mode
+    func saveUserDefaults(appConfiguration: AppModel) {
+        do {
+            // Encode to a property list-compatible Data
+            let encoder = PropertyListEncoder()
+            encoder.outputFormat = .xml
+            let data = try encoder.encode(appConfiguration)
+
+            // Convert encoded Data into a Foundation property list (Dictionary)
+            let plistObject = try PropertyListSerialization.propertyList(from: data, options: [], format: nil)
+
+            guard let dict = plistObject as? [String: Any] else {
+                logger.error("Failed to convert encoded AppModel to [String: Any] for UserDefaults persistent domain")
+                return
+            }
+
+            // Write to the nl.root3.support UserDefaults domain
+            let defaults = UserDefaults.standard
+            defaults.setPersistentDomain(dict, forName: "nl.root3.support")
+            
+        } catch {
+            logger.error("\(error.localizedDescription)")
+        }
+    }
 }

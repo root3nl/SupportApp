@@ -9,12 +9,15 @@ import SwiftUI
 
 struct MacOSVersionSubview: View {
     
+    var configurationItem: ConfiguredItem?
+    
     // Get  computer info from functions in class
     @EnvironmentObject var computerinfo: ComputerInfo
     
     // Get preferences or default values
-    @StateObject var preferences = Preferences()
-    
+    @EnvironmentObject var preferences: Preferences
+    @EnvironmentObject var localPreferences: LocalPreferences
+
     // Make UserDefaults easy to use
     let defaults = UserDefaults.standard
     
@@ -24,34 +27,35 @@ struct MacOSVersionSubview: View {
     // Boolean to show UpdateViewLegacy as popover
     @State var showUpdatePopover: Bool = false
     
+    // Local preferences for Configurator Mode or (managed) UserDefaults
+    var activePreferences: PreferencesProtocol {
+        preferences.configuratorModeEnabled ? localPreferences : preferences
+    }
+    
     // Set the custom color for all symbols depending on Light or Dark Mode.
-    var customColor: String {
-        if colorScheme == .light && defaults.string(forKey: "CustomColor") != nil {
-            return preferences.customColor
-        } else if colorScheme == .dark && defaults.string(forKey: "CustomColorDarkMode") != nil {
-            return preferences.customColorDarkMode
+    var color: Color {
+        if colorScheme == .dark && !activePreferences.customColorDarkMode.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColorDarkMode)") ?? NSColor.controlAccentColor)
+        } else if !activePreferences.customColor.isEmpty {
+            return Color(NSColor(hex: "\(activePreferences.customColor)") ?? NSColor.controlAccentColor)
         } else {
-            return preferences.customColor
+            return .accentColor
         }
     }
     
     var body: some View {
         
-        InfoItem(title: "macOS \(computerinfo.macOSVersionName)", subtitle: computerinfo.macOSVersion, image: "applelogo", symbolColor: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor), notificationBadge: computerinfo.recommendedUpdates.count, hoverEffectEnable: true)
-            .modify {
-                if #available(macOS 13, *) {
-                    $0.onTapGesture {
-                        computerinfo.showMacosUpdates.toggle()
+        InfoItem(title: "macOS \(computerinfo.macOSVersionName)", subtitle: computerinfo.macOSVersion, image: "applelogo", symbolColor: color, notificationBadge: computerinfo.recommendedUpdates.count, configurationItem: configurationItem, hoverEffectEnable: true)
+            .onTapGesture {
+                if preferences.editModeEnabled {
+                    guard let configurationItem else {
+                        return
                     }
+                    localPreferences.currentConfiguredItem = configurationItem
+                    preferences.showItemConfiguration.toggle()
                 } else {
-                    $0.onTapGesture {
-                        showUpdatePopover.toggle()
-                    }
+                    computerinfo.showMacosUpdates.toggle()
                 }
-            }
-            // Legacy popover for macOS 12
-            .popover(isPresented: $showUpdatePopover, arrowEdge: .leading) {
-                UpdateViewLegacy(updateCounter: computerinfo.recommendedUpdates.count, color: Color(NSColor(hex: "\(customColor)") ?? NSColor.controlAccentColor))
             }
     }
 }

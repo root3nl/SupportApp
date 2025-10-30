@@ -15,6 +15,7 @@ struct ProgressBarItem: View {
     var symbolColor: Color
     var notificationBadgeBool: Bool?
     var percentage: CGFloat
+    var configurationItem: ConfiguredItem?
     
     // Declare unified logging
     let logger = Logger(subsystem: "nl.root3.support", category: "Action")
@@ -30,115 +31,202 @@ struct ProgressBarItem: View {
     @State private var showingAlert = false
     
     // Get preferences or default values
-    @ObservedObject var preferences = Preferences()
+    @EnvironmentObject var preferences: Preferences
+    
+    // Get local preferences for Configurator Mode
+    @EnvironmentObject var localPreferences: LocalPreferences
+    
+    // Dark Mode detection
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         
-        ZStack {
-            
-            HStack {
-                Ellipse()
-                    .foregroundColor(hoverView ? .primary : symbolColor)
-                    .overlay(
-                        Image(systemName: image)
-                            .foregroundColor(hoverView ? Color("hoverColor") : Color.white)
-                    )
-                    .frame(width: 26, height: 26)
-                    .padding(.leading, 10)
+        if #available(macOS 26, *) {
+            ZStack {
                 
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text(hoverView ? storageAvailable : percentageUsed)
-                            .font(.system(.body, design: .rounded))
-                            .fontWeight(.medium)
-                            .lineLimit(1)
+                HStack {
+                    Ellipse()
+                        .foregroundColor(.white)
+                        .overlay(
+                            Image(systemName: image)
+                                .foregroundColor(symbolColor)
+                                .font(.system(size: 18))
+                        )
+                        .frame(width: 36, height: 36)
+                        .padding(.leading, 14)
+                        .accessibilityHidden(true)
+
+                    VStack(alignment: .leading, spacing: 0) {
+                        HStack {
+                            Text(hoverView ? storageAvailable : percentageUsed)
+                                .font(.system(.body, design: .default))
+                                .fontWeight(.medium)
+                                .kerning(Constants.defaultKerning)
+                                .foregroundStyle(.white.opacity(colorScheme == .dark ? 0.8 : 1.0))
+                                .lineLimit(1)
+                        }
+                        
+                        ProgressView(value: percentage , total: 120)
+                            .padding(.trailing, 14)
+                            .accessibilityHidden(true)
+                        
                     }
+                    .accessibilityElement(children: .combine)
                     
-                    ZStack(alignment: .leading) {
+                    Spacer()
+                }
+                
+//                if notificationBadgeBool ?? false {
+//                    NotificationBadgeTextView(badgeCounter: "!")
+//                        .accessibilityHidden(true)
+//                }
+            }
+            .frame(width: Constants.largeItemWidth, height: Constants.itemHeight)
+            .contentShape(Capsule())
+            .onHover() {
+                hover in self.hoverView = hover
+            }
+            .onTapGesture() {
+                if preferences.editModeEnabled {
+                    guard let configurationItem else {
+                        return
+                    }
+                    localPreferences.currentConfiguredItem = configurationItem
+                    preferences.showItemConfiguration.toggle()
+                    
+                } else {
+                    openStorageManagement()
+                }
+            }
+            .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
+            .overlay(alignment: .topTrailing) {
+                // Optionally show notification badge with warning
+                if notificationBadgeBool ?? false {
+                    NotificationBadgeTextView(badgeCounter: "!")
+                        .accessibilityHidden(true)
+                }
+            }
+            .overlay(alignment: .topLeading) {
+                // Optionally show remove item button
+                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    RemoveItemButtonView(configurationItem: configurationItem)
+                }
+            }
+            .animation(.bouncy, value: hoverView)
+        } else {
+            
+            ZStack {
+                
+                HStack {
+                    Ellipse()
+                        .foregroundColor(hoverView ? .primary : symbolColor)
+                        .overlay(
+                            Image(systemName: image)
+                                .foregroundColor(hoverView ? Color("hoverColor") : Color.white)
+                        )
+                        .frame(width: 26, height: 26)
+                        .padding(.leading, 10)
+                        .accessibilityHidden(true)
+                    
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text(hoverView ? storageAvailable : percentageUsed)
+                                .font(.system(.body, design: .rounded))
+                                .fontWeight(.medium)
+                                .lineLimit(1)
+                        }
                         
-                        RoundedRectangle(cornerRadius: 4)
-                            .frame(width: 120, height: 4).foregroundColor(.white)
-                        
-                        // Show red bar if more than 90% of 120 points (108)
-                        if percentage >= 108 {
+                        ZStack(alignment: .leading) {
+                            
                             RoundedRectangle(cornerRadius: 4)
-                                .frame(width: percentage, height: 4).foregroundColor(.red)
+                                .frame(width: 120, height: 4).foregroundColor(.white)
                             
-                            // Animation when loading app
-                                .animation(.easeInOut, value: percentage)
-                                .transition(.scale)
-                        // Show orange bar if optional storageLimit is reached and still below 90%
-                        } else if notificationBadgeBool ?? false && percentage < 108 {
-                            RoundedRectangle(cornerRadius: 4)
-                                .frame(width: percentage, height: 4).foregroundColor(.orange)
-                            
-                            // Animation when loading app
-                                .animation(.easeInOut, value: percentage)
-                                .transition(.scale)
-                            
-                            // Show accentColor in all other cases
-                        } else {
-                            RoundedRectangle(cornerRadius: 4)
-                                .frame(width: percentage, height: 4).foregroundColor(symbolColor)
-                            
-                            // Animation when loading app
-                                .animation(.easeInOut, value: percentage)
-                                .transition(.scale)
+                            // Show red bar if more than 90% of 120 points (108)
+                            if percentage >= 108 {
+                                RoundedRectangle(cornerRadius: 4)
+                                    .frame(width: percentage, height: 4).foregroundColor(.red)
+                                
+                                // Animation when loading app
+                                    .animation(.easeInOut, value: percentage)
+                                    .transition(.scale)
+                                // Show orange bar if optional storageLimit is reached and still below 90%
+                            } else if notificationBadgeBool ?? false && percentage < 108 {
+                                RoundedRectangle(cornerRadius: 4)
+                                    .frame(width: percentage, height: 4).foregroundColor(.orange)
+                                
+                                // Animation when loading app
+                                    .animation(.easeInOut, value: percentage)
+                                    .transition(.scale)
+                                
+                                // Show accentColor in all other cases
+                            } else {
+                                RoundedRectangle(cornerRadius: 4)
+                                    .frame(width: percentage, height: 4).foregroundColor(symbolColor)
+                                
+                                // Animation when loading app
+                                    .animation(.easeInOut, value: percentage)
+                                    .transition(.scale)
+                            }
                         }
                     }
+                    .accessibilityElement(children: .combine)
+                    
+                    Spacer()
                 }
-                Spacer()
+                
+//                if notificationBadgeBool ?? false {
+//                    NotificationBadgeTextView(badgeCounter: "!")
+//                        .accessibilityHidden(true)
+//                }
             }
-            
-            if notificationBadgeBool ?? false {
-                NotificationBadgeTextView(badgeCounter: "!")
+            .frame(width: Constants.largeItemWidth, height: Constants.itemLegacyHeight)
+            .background(hoverView && hoverEffectEnable ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
+            .cornerRadius(10)
+            // Apply gray and black border in Dark Mode to better view the buttons like Control Center
+            .modifier(DarkModeBorder())
+            .shadow(color: Color.black.opacity(0.2), radius: 4, y: 2)
+            .alert(isPresented: $showingAlert) {
+                Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
             }
-        }
-        .frame(width: 176, height: 60)
-        .background(hoverView && hoverEffectEnable ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
-        .cornerRadius(10)
-        // Apply gray and black border in Dark Mode to better view the buttons like Control Center
-        .modifier(DarkModeBorder())
-        .shadow(color: Color.black.opacity(0.2), radius: 4, y: 2)
-        .alert(isPresented: $showingAlert) {
-            Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
-        }
-        .onHover() {
-            hover in self.hoverView = hover
-        }
-        .onTapGesture() {
-            openStorageManagement()
+            .onHover() {
+                hover in self.hoverView = hover
+            }
+            .onTapGesture() {
+                if preferences.editModeEnabled {
+                    guard let configurationItem else {
+                        return
+                    }
+                    localPreferences.currentConfiguredItem = configurationItem
+                    preferences.showItemConfiguration.toggle()
+                    
+                } else {
+                    openStorageManagement()
+                }
+            }
+            .overlay(alignment: .topTrailing) {
+                // Optionally show notification badge with warning
+                if notificationBadgeBool ?? false {
+                    NotificationBadgeTextView(badgeCounter: "!")
+                        .accessibilityHidden(true)
+                }
+            }
+            .overlay(alignment: .topLeading) {
+                // Optionally show remove item button
+                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    RemoveItemButtonView(configurationItem: configurationItem)
+                }
+            }
         }
     }
     
     // Open Storage Management
     func openStorageManagement() {
+        guard let url = URL(string: "x-apple.systempreferences:com.apple.settings.Storage") else {
+            self.showingAlert.toggle()
+            return }
+        NSWorkspace.shared.open(url)
         
-        if #available(macOS 13, *) {
-            
-            guard let url = URL(string: "x-apple.systempreferences:com.apple.settings.Storage")
-                    // Show alert when there is an error
-            else {
-                self.showingAlert.toggle()
-                return }
-            NSWorkspace.shared.open(url)
-            
-            // Close the popover
-//            NSApp.deactivate()
-            
-            // Close popover
-            appDelegate.togglePopover(nil)
-            
-        } else {
-            
-            guard let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: "com.apple.StorageManagementLauncher")
-                    // Show alert when there is an error
-            else {
-                self.showingAlert.toggle()
-                return }
-            let configuration = NSWorkspace.OpenConfiguration()
-            
-            NSWorkspace.shared.openApplication(at: url, configuration: configuration, completionHandler: nil)
-        }
+        // Close popover
+        appDelegate.togglePopover(nil)
     }
 }

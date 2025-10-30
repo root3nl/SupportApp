@@ -47,22 +47,6 @@ fi
 
 # ------------------    LaunchAgent    ------------------
 
-# Open the app so the legacy LaunchAgent properly displays the app name and icon
-# in System Settings > General > Login Items
-# Tested and does only work when a user is logged in during the installation
-# Thanks to @PicoMitchell:
-# https://github.com/freegeek-pdx/macOS-Testing-and-Deployment-Scripts/blob/main/fgMIB%20Resources/Prepare%20OS%20Package/fg-prepare-os.sh#L971-L983
-if is-at-least 13.0 ${os_version}; then
-	OSASCRIPT_ENV_APP_PATH="/Applications/Support.app" osascript -l 'JavaScript' -e 'ObjC.import("LaunchServices"); $.LSRegisterURL($.NSURL.fileURLWithPath($.NSProcessInfo.processInfo.environment.objectForKey("OSASCRIPT_ENV_APP_PATH")), true)' &> /dev/null
-	
-	if [[ -n "${username}" ]]; then
-		# Get the username ID
-		uid=$(id -u "${username}")
-
-		launchctl asuser "${uid}" sudo -u "${username}" open -na "${install_location}"
-	fi
-fi
-
 # Add AssociatedBundleIdentifiers to show app name in Login Items on 
 # macOS 13 and higher instead of developer name
 defaults write "/Library/LaunchAgents/${launch_agent}.plist" AssociatedBundleIdentifiers -array -string "nl.root3.support"

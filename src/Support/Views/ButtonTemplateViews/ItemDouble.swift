@@ -20,6 +20,7 @@ struct ItemDouble: View {
     var symbolColor: Color
     var notificationBadge: Int?
     var notificationBadgeBool: Bool?
+    var configurationItem: ConfiguredItem?
     
     // Declare unified logging
     let logger = Logger(subsystem: "nl.root3.support", category: "Action")
@@ -37,7 +38,13 @@ struct ItemDouble: View {
     @State var showingAlert = false
     
     // Get preferences or default values
-    @ObservedObject var preferences = Preferences()
+    @EnvironmentObject var preferences: Preferences
+    
+    // Get local preferences for Configurator Mode
+    @EnvironmentObject var localPreferences: LocalPreferences
+    
+    // Dark Mode detection
+    @Environment(\.colorScheme) var colorScheme
     
     // Alert title options
     var alertTitle: String {
@@ -64,74 +71,201 @@ struct ItemDouble: View {
     }
     
     var body: some View {
-        
-        ZStack {
-            
-            HStack {
-                Ellipse()
-                    .foregroundColor(hoverView ? .primary : symbolColor)
-                    .overlay(
-                        Image(systemName: image)
-                            .foregroundColor(hoverView ? Color("hoverColor") : Color.white)
-                    )
-                    .frame(width: 26, height: 26)
-                    .padding(.leading, 10)
-                
-                VStack(alignment: .leading) {
-                    
-                    Text(hoverView && hoverEffectEnable ? secondTitle : title)
-                        .font(.system(.body, design: .rounded)).fontWeight(.medium)
-                        .lineLimit(2)
-                    
-                    Text(hoverView && hoverEffectEnable ? secondSubtitle : subtitle)
-                        .font(.system(.subheadline, design: .rounded))
-                        .lineLimit(2)
 
+        if #available(macOS 26, *) {
+            ZStack {
+                
+                HStack {
+                    Ellipse()
+                        .foregroundColor(.white)
+                        .overlay(
+                            Image(systemName: image)
+                                .foregroundColor(symbolColor)
+                                .font(.system(size: 18))
+                        )
+                        .frame(width: 36, height: 36)
+                        .padding(.leading, 14)
+                        .accessibilityHidden(true)
+
+                    VStack(alignment: .leading) {
+                        
+                        Text(hoverView && hoverEffectEnable ? secondTitle : title)
+                            .font(.system(.body, design: .default))
+                            .fontWeight(.medium)
+                            .kerning(Constants.defaultKerning)
+                            .foregroundStyle(.white)
+                            .lineLimit(2)
+                        
+                        Text(hoverView && hoverEffectEnable ? secondSubtitle : subtitle)
+                            .font(.system(.subheadline, design: .default))
+                            .foregroundStyle(.white.opacity(colorScheme == .dark ? 0.8 : 1.0))
+                            .lineLimit(2)
+
+                    }
+                    .accessibilityElement(children: .combine)
+                    
+                    Spacer()
                 }
                 
-                Spacer()
+//                if notificationBadge != nil && notificationBadge! > 0 {
+//                    NotificationBadgeView(badgeCounter: notificationBadge!)
+//                        .accessibilityHidden(true)
+//                }
+//                
+//                if notificationBadgeBool ?? false {
+//                    NotificationBadgeTextView(badgeCounter: "!")
+//                        .accessibilityHidden(true)
+//                }
             }
-            
-            if notificationBadge != nil && notificationBadge! > 0 {
-                NotificationBadgeView(badgeCounter: notificationBadge!)
-            }
-            
-            if notificationBadgeBool ?? false {
-                NotificationBadgeTextView(badgeCounter: "!")
-            }
-        }
-        .frame(width: 176, height: 60)
-        .background(hoverView && hoverEffectEnable ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
-        .cornerRadius(10)
-        // Apply gray and black border in Dark Mode to better view the buttons like Control Center
-        .modifier(DarkModeBorder())
-        .shadow(color: Color.black.opacity(0.2), radius: 4, y: 2)
-        // FIXME: - Adjust when Jamf Connect Password Change can be triggered
-        // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
-        .popover(isPresented: $showingAlert, arrowEdge: .leading) {
-            PopoverAlertView(uptimeAlert: $showingAlert, title: alertTitle, message: alertMessage)
-        }
-        .onHover() {
-            hover in self.hoverView = hover
-        }
-        .onTapGesture() {
-            if linkType == "App" {
-                openApp()
-            } else if linkType == "URL" {
-                openLink()
-            } else if linkType == "Command" {
-                runCommand()
+            .frame(width: Constants.largeItemWidth, height: Constants.itemHeight)
+            .contentShape(Capsule())
+            .modifier(GlassEffectModifier(hoverView: hoverView, hoverEffectEnable: hoverEffectEnable))
+            .overlay(alignment: .topTrailing) {
+                // Optionally show notification badge with counter
+                if notificationBadge != nil && notificationBadge! > 0 {
+                    NotificationBadgeView(badgeCounter: notificationBadge!)
+                        .accessibilityHidden(true)
+                }
                 
+                // Optionally show notification badge with warning
+                if notificationBadgeBool ?? false {
+                    NotificationBadgeTextView(badgeCounter: "!")
+                        .accessibilityHidden(true)
+                }
+            }
+            .overlay(alignment: .topLeading) {
+                // Optionally show remove item button
+                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    RemoveItemButtonView(configurationItem: configurationItem)
+                }
+            }
+            .animation(.bouncy, value: hoverView)
+            // FIXME: - Adjust when Jamf Connect Password Change can be triggered
+            // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
+            .popover(isPresented: $showingAlert, arrowEdge: .leading) {
+                PopoverAlertView(uptimeAlert: $showingAlert, title: alertTitle, message: alertMessage)
+            }
+            .onHover() { hover in
+                self.hoverView = hover
+            }
+            .onTapGesture() {
+                if preferences.editModeEnabled {
+                    guard let configurationItem else {
+                        return
+                    }
+                    localPreferences.currentConfiguredItem = configurationItem
+                    preferences.showItemConfiguration.toggle()
+                    
+                } else {
+                    tapGesture()
+                }
+            }
+            
+        } else {
+            ZStack {
+                
+                HStack {
+                    Ellipse()
+                        .foregroundColor(hoverView ? .primary : symbolColor)
+                        .overlay(
+                            Image(systemName: image)
+                                .foregroundColor(hoverView ? Color("hoverColor") : Color.white)
+                        )
+                        .frame(width: 26, height: 26)
+                        .padding(.leading, 10)
+                        .accessibilityHidden(true)
+                    
+                    VStack(alignment: .leading) {
+                        
+                        Text(hoverView && hoverEffectEnable ? secondTitle : title)
+                            .font(.system(.body, design: .rounded)).fontWeight(.medium)
+                            .lineLimit(2)
+                        
+                        Text(hoverView && hoverEffectEnable ? secondSubtitle : subtitle)
+                            .font(.system(.subheadline, design: .rounded))
+                            .lineLimit(2)
+                        
+                    }
+                    .accessibilityElement(children: .combine)
+                    
+                    Spacer()
+                }
+                
+//                if notificationBadge != nil && notificationBadge! > 0 {
+//                    NotificationBadgeView(badgeCounter: notificationBadge!)
+//                        .accessibilityHidden(true)
+//                }
+//                
+//                if notificationBadgeBool ?? false {
+//                    NotificationBadgeTextView(badgeCounter: "!")
+//                        .accessibilityHidden(true)
+//                }
+            }
+            .frame(width: Constants.largeItemWidth, height: Constants.itemLegacyHeight)
+            .background(hoverView && hoverEffectEnable ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
+            .cornerRadius(10)
+            // Apply gray and black border in Dark Mode to better view the buttons like Control Center
+            .modifier(DarkModeBorder())
+            .shadow(color: Color.black.opacity(0.2), radius: 4, y: 2)
+            // FIXME: - Adjust when Jamf Connect Password Change can be triggered
+            // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
+            .popover(isPresented: $showingAlert, arrowEdge: .leading) {
+                PopoverAlertView(uptimeAlert: $showingAlert, title: alertTitle, message: alertMessage)
+            }
+            .onHover() {
+                hover in self.hoverView = hover
+            }
+            .onTapGesture() {
+                if preferences.editModeEnabled {
+                    guard let configurationItem else {
+                        return
+                    }
+                    localPreferences.currentConfiguredItem = configurationItem
+                    preferences.showItemConfiguration.toggle()
+                    
+                } else {
+                    tapGesture()
+                }
+            }
+            .overlay(alignment: .topTrailing) {
+                // Optionally show notification badge with counter
+                if notificationBadge != nil && notificationBadge! > 0 {
+                    NotificationBadgeView(badgeCounter: notificationBadge!)
+                        .accessibilityHidden(true)
+                }
+                
+                // Optionally show notification badge with warning
+                if notificationBadgeBool ?? false {
+                    NotificationBadgeTextView(badgeCounter: "!")
+                        .accessibilityHidden(true)
+                }
+            }
+            .overlay(alignment: .topLeading) {
+                // Optionally show remove item button
+                if preferences.editModeEnabled && !preferences.showItemConfiguration {
+                    RemoveItemButtonView(configurationItem: configurationItem)
+                }
+            }
+        }
+    }
+    
+    func tapGesture() {
+        if linkType == "App" {
+            openApp()
+        } else if linkType == "URL" {
+            openLink()
+        } else if linkType == "Command" {
+            runCommand()
+            
             // FIXME: - Asjust when Jamf Connect Password Change can be triggered
             // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
-            } else if linkType == "JamfConnectPasswordChangeException" {
-                self.showingAlert.toggle()
-            } else if linkType == "KerberosSSOExtensionUnavailable" {
-                self.showingAlert.toggle()
-            } else {
-                self.showingAlert.toggle()
-                logger.error("Invalid Link Type: \(linkType!)")
-            }
+        } else if linkType == "JamfConnectPasswordChangeException" {
+            self.showingAlert.toggle()
+        } else if linkType == "KerberosSSOExtensionUnavailable" {
+            self.showingAlert.toggle()
+        } else {
+            self.showingAlert.toggle()
+            logger.error("Invalid Link Type: \(linkType!)")
         }
     }
     
@@ -146,6 +280,9 @@ struct ItemDouble: View {
         let configuration = NSWorkspace.OpenConfiguration()
         
         NSWorkspace.shared.openApplication(at: url, configuration: configuration, completionHandler: nil)
+        
+        // Close popover
+        appDelegate.togglePopover(nil)
     }
     
     // Open URL
