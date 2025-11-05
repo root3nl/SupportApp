@@ -64,18 +64,7 @@ struct UptimeAlertView: View {
                 Button(action: {
                     computerinfo.showUptimeAlert.toggle()
                 }) {
-                    if #available(macOS 26, *) {
-                        Image(systemName: "chevron.backward")
-                            .font(.system(size: 16))
-                            .padding(4)
-                    } else {
-                        Ellipse()
-                            .foregroundColor(colorScheme == .dark ? .white.opacity(0.2) : .black.opacity(0.1))
-                            .overlay(
-                                Image(systemName: "chevron.backward")
-                            )
-                            .frame(width: 26, height: 26)
-                    }
+                    BackButton()
                 }
                 .modify {
                     if #available(macOS 26, *) {
