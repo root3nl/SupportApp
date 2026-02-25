@@ -15,6 +15,7 @@
 		0A4A7388260208B500927DAB /* UptimeSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4A7387260208B500927DAB /* UptimeSubview.swift */; };
 		0A4A738B26020A3800927DAB /* ComputerNameSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4A738A26020A3800927DAB /* ComputerNameSubview.swift */; };
 		0A4A738E26020A6500927DAB /* MacOSVersionSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4A738D26020A6500927DAB /* MacOSVersionSubview.swift */; };
+		0A8C8C202F4F209900860621 /* FoundationModelsQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8C8C1F2F4F209900860621 /* FoundationModelsQuestionView.swift */; };
 		0A94A3832E3D0880001BB59E /* SupportApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A94A3822E3D0880001BB59E /* SupportApp.swift */; };
 		0AC50A7524FFE6E100AE62D0 /* EventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC50A7424FFE6E000AE62D0 /* EventMonitor.swift */; };
 		0AFB04FB263AC23000507B23 /* ModelSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFB04FA263AC23000507B23 /* ModelSubView.swift */; };
@@ -175,6 +176,7 @@
 		0A4A738A26020A3800927DAB /* ComputerNameSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComputerNameSubview.swift; sourceTree = "<group>"; };
 		0A4A738D26020A6500927DAB /* MacOSVersionSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacOSVersionSubview.swift; sourceTree = "<group>"; };
 		0A65A36A2E45E9CB005F268F /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
+		0A8C8C1F2F4F209900860621 /* FoundationModelsQuestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundationModelsQuestionView.swift; sourceTree = "<group>"; };
 		0A94A3822E3D0880001BB59E /* SupportApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportApp.swift; sourceTree = "<group>"; };
 		0AC50A7424FFE6E000AE62D0 /* EventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMonitor.swift; sourceTree = "<group>"; };
 		0AFB04FA263AC23000507B23 /* ModelSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelSubView.swift; sourceTree = "<group>"; };
@@ -348,6 +350,7 @@
 				4972476728DBB1AB007194F0 /* StatusItemBadgeView.swift */,
 				4939A0C729259B7B00731363 /* LogoView.swift */,
 				498DB8422E5EE13A00DDC33B /* ConfiguratorSettingsView.swift */,
+				0A8C8C1F2F4F209900860621 /* FoundationModelsQuestionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -715,6 +718,7 @@
 				493856702E81EC94007E9E82 /* ItemExtension.swift in Sources */,
 				498DB7F22E5D113A00DDC33B /* AppModel.swift in Sources */,
 				493DCCB42B082FE600FA2480 /* HelperRemote.swift in Sources */,
+				0A8C8C202F4F209900860621 /* FoundationModelsQuestionView.swift in Sources */,
 				499F56752AE47A3900CBDE73 /* AppUpdatesView.swift in Sources */,
 				493DCCB22B082FCE00FA2480 /* ExecutionService.swift in Sources */,
 				0AFB04FD263B422900507B23 /* ItemDouble.swift in Sources */,

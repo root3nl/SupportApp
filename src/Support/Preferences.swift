@@ -202,6 +202,9 @@ class Preferences: ObservableObject {
     // Item configuration view
     @Published var showItemConfiguration = false
     
+    // Show Foundation Models question view
+    @Published var showQuestionView = false
+    
     // MARK: - Save settings from Configurator Mode
     func saveUserDefaults(appConfiguration: AppModel) {
         do {
