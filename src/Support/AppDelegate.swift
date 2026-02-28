@@ -52,6 +52,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     let appCatalogController = AppCatalogController()
     let localPreferences = LocalPreferences()
     let popoverLifecycle = PopoverLifecycle()
+    let messageStore = MessageStore()
     
     // Create red notification badge view
     // https://github.com/DeveloperMaris/ToolReleases/blob/master/ToolReleases/PopoverController.swift
@@ -85,6 +86,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             .environmentObject(appCatalogController)
             .environmentObject((localPreferences))
             .environmentObject(popoverLifecycle)
+            .environment(messageStore)
             .environmentObject(self))
 
         let popover = NSPopover()
@@ -1002,4 +1004,3 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         }
     }
 }
-

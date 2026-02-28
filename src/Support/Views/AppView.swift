@@ -30,8 +30,6 @@ struct AppView: View {
     // Simple property wrapper boolean to visualize data loading when app opens
     @State private var placeholdersEnabled = true
     @State private var showExportOptions: Bool = false
-    
-    @State private var questionText: String = ""
         
     // Version and build number
     var version = Bundle.main.infoDictionary!["CFBundleShortVersionString"]! as! String
@@ -119,7 +117,7 @@ struct AppView: View {
                         ItemConfigurationView()
                     } else if preferences.showQuestionView {
                         if #available(macOS 26, *) {
-                            FoundationModelsQuestionView(question: questionText)
+                            FoundationModelsQuestionView()
                         } else {
                             // Fallback on earlier versions
                         }
@@ -134,20 +132,14 @@ struct AppView: View {
                 }
                 
                 if #available(macOS 26, *) {
-                    HStack {
-                        Image(systemName: "sparkles")
-                            .foregroundStyle(.secondary)
-                        
-                        TextField("Tell me about any issues...", text: $questionText)
-                            .textFieldStyle(.plain)
-                            .submitLabel(.send)
-                            .onSubmit {
-                                preferences.showQuestionView = true
-                            }
+                    if !preferences.showQuestionView {
+                        QuestionSearchFieldView(disabled: .constant(false), onSend: {
+                            preferences.showQuestionView = true
+                        })
+                        .padding(.horizontal, 10)
                     }
-                    .padding(8)
-                    .modifier(GlassEffectModifier(hoverView: false, hoverEffectEnable: false))
-                    .padding(.horizontal, 10)
+                } else {
+                    // Fallback on earlier versions
                 }
                 
                 // MARK: - Footnote
