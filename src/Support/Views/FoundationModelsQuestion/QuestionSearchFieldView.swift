@@ -23,6 +23,8 @@ struct QuestionSearchFieldView: View {
                 .foregroundStyle(.secondary)
             
             TextField("Tell me about any issues...", text: $questionText)
+                .foregroundStyle(.secondary)
+                .fontWeight(.medium)
                 .textFieldStyle(.plain)
                 .submitLabel(.send)
                 .disabled(disabled)

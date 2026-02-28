@@ -369,7 +369,6 @@
 				0A8C8C1F2F4F209900860621 /* FoundationModelsQuestionView.swift */,
 				491CA72A2F5255B900B19A52 /* MessageView.swift */,
 				491CA72C2F52EEFF00B19A52 /* QuestionSearchFieldView.swift */,
-				491CA72E2F52F0E700B19A52 /* MessageStore.swift */,
 			);
 			path = FoundationModelsQuestion;
 			sourceTree = "<group>";
@@ -409,6 +408,7 @@
 			children = (
 				493DCCD12B08E5E500FA2480 /* AppCatalogController.swift */,
 				497B01012DDDF23900F50BC7 /* InstallTaskQueue.swift */,
+				491CA72E2F52F0E700B19A52 /* MessageStore.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";

@@ -40,6 +40,7 @@ struct FoundationModelsQuestionView: View {
     @State private var question: String = ""
     @State private var isGenerating: Bool = false
     @State var scrollPosition: ScrollPosition = .init()
+    private let composerInset: CGFloat = 30
     
     var body: some View {
         
@@ -68,52 +69,65 @@ struct FoundationModelsQuestionView: View {
                 
                 Spacer()
             }
+            .padding(.horizontal)
             
             Divider()
                 .padding(2)
+                .padding(.horizontal)
             
             ScrollView {
-                if !messageStore.messages.isEmpty {
-                    ForEach(messageStore.messages) { message in
-                        MessageView(message: FoundationModelMessage(id: message.id, message: message.message, role: message.role, urls: message.urls, bundleIDs: message.bundleIDs), color: color)
-                            .id(message.id)
+                LazyVStack(spacing: 12) {
+                    if !messageStore.messages.isEmpty {
+                        ForEach(messageStore.messages) { message in
+                            MessageView(message: FoundationModelMessage(id: message.id, message: message.message, role: message.role, urls: message.urls, bundleIDs: message.bundleIDs), color: color)
+                                .id(message.id)
+                        }
+                    } else {
+                        ContentUnavailableView("Ask me aything!", systemImage: "sparkles", description: Text("I can help you find relevant resources from our organization."))
                     }
-                } else {
-                    ContentUnavailableView("Ask me aything!", systemImage: "sparkles", description: Text("I can help you find relevant resources from our organization."))
+
+                    Color.clear
+                        .frame(height: composerInset)
                 }
+                .frame(maxWidth: .infinity)
             }
             .scrollPosition($scrollPosition, anchor: .bottom)
-            .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300, alignment: .topLeading)
-            
-            HStack {
-                QuestionSearchFieldView(disabled: $isGenerating, onSend: {
-                    do {
-                        try await fetchAnswer()
-                    } catch {
-                        print(error.localizedDescription)
+            .scrollIndicators(.hidden)
+            .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 500, alignment: .topLeading)
+            .padding(.horizontal)
+            .overlay(alignment: .bottom) {
+                
+                HStack {
+                    QuestionSearchFieldView(disabled: $isGenerating, onSend: {
+                        do {
+                            try await fetchAnswer()
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                    })
+                    
+                    Spacer()
+                    
+                    Button {
+                        messageStore.messages.removeAll()
+                        session = nil
+                    } label: {
+                        Label("Clear chat", systemImage: "trash")
+                            .labelStyle(.iconOnly)
                     }
-                })
-                
-                Spacer()
-                
-                Button {
-                    messageStore.messages.removeAll()
-                    session = nil
-                } label: {
-                    Label("Clear chat", systemImage: "trash")
-                        .labelStyle(.iconOnly)
+                    .disabled(isGenerating)
+                    .buttonBorderShape(.circle)
+                    .buttonStyle(.plain)
+                    .padding(8)
+                    .modifier(GlassEffectModifier(hoverView: false, hoverEffectEnable: false))
+                    
                 }
-                .disabled(isGenerating)
-                .buttonBorderShape(.circle)
-                .buttonStyle(.plain)
-                .padding(8)
-                .modifier(GlassEffectModifier(hoverView: false, hoverEffectEnable: false))
-                
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 10)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .frame(minWidth: 300)
-        .padding(.horizontal)
+//        .padding(.horizontal)
         .unredacted()
         .task {
             do {
@@ -152,8 +166,10 @@ struct FoundationModelsQuestionView: View {
         
         if session == nil {
             session = LanguageModelSession(model: .default, instructions: """
-        You are a helpful IT assistant and your task is to take a question as input and provide the user with relevant resources from the provided IT documentation. Try to match the user's question with the key words in the documentation. 
-        You MUST respond in the locale or language of the question in the prompt"
+        You are a helpful IT assistant and your task is to take a question as input and provide the user with relevant resources from the provided IT documentation. Additional instructions:
+        - Try to match the user's question with the key words in the documentation. 
+        - If you don't know the answer respond with something like "Sorry, I cannot help you with that"
+        - You MUST respond in the locale or language of the question in the prompt"
 """
             )
         }
@@ -186,7 +202,7 @@ struct FoundationModelsQuestionView: View {
             for try await partialResponse in stream {
                 messageStore.messages[index].message = partialResponse.content.answer ?? ""
                 messageStore.messages[index].urls = partialResponse.content.resources?.flatMap { $0.urls ?? [] }
-                messageStore.messages[index].bundleIDs = partialResponse.content.resources?.flatMap { $0.appBundleIds ?? [] }
+//                messageStore.messages[index].bundleIDs = partialResponse.content.resources?.flatMap { $0.appBundleIds ?? [] }
             }
             
             withAnimation {

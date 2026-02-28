@@ -37,25 +37,44 @@ struct MessageView: View {
                 }
                 if let urls = message.urls {
                     ForEach(urls, id: \.self) { url in
-                        Text("URL: \(url)")
-                            .foregroundStyle(.white)
-                            .font(.headline)
-                            .textSelection(.enabled)
+                        HStack(alignment: .top) {
+                            Image(systemName: "link")
+                                .foregroundStyle(.white)
+                            if let destination = URL(string: url) {
+                                Link(destination: destination) {
+                                    Text(url)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .multilineTextAlignment(.leading)
+                                }
+                                .foregroundStyle(.white)
+                                .font(.headline)
+                            } else {
+                                Text(url)
+                                    .foregroundStyle(.white)
+                                    .font(.headline)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .multilineTextAlignment(.leading)
+                                    .textSelection(.enabled)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
+                    .padding(.top)
                 }
                 if let bundleIDs = message.bundleIDs {
                     ForEach(bundleIDs, id: \.self) { bundleID in
-                        Text("App: \(bundleID)")
-                            .foregroundStyle(.white)
-                            .font(.headline)
-                            .textSelection(.enabled)
+                        HStack {
+                            Image(systemName: "arrow.up.right.square.fill")
+                                .foregroundStyle(.white)
+                            Text(bundleID)
+                                .foregroundStyle(.white)
+                                .font(.headline)
+                                .textSelection(.enabled)
+                        }
                     }
                 }
             }
             .padding(10)
-//            .glassEffect(
-//                .clear.interactive().tint(message.role == .user ? .blue : .clear), in: .rect(cornerRadius: 16)
-//            )
             .modify {
                 if colorScheme == .dark {
                     $0
@@ -65,8 +84,7 @@ struct MessageView: View {
                         .glassEffect(.clear.tint(message.role == .user ? .blue : .primary.opacity(0.4)), in: .rect(cornerRadius: 16))
                 }
             }
-            .frame(maxWidth: 200, alignment: message.role == .assistant ? .leading : .trailing)
-//            .padding(.horizontal)
+            .frame(maxWidth: 300, alignment: message.role == .assistant ? .leading : .trailing)
             .animation(.bouncy, value: message.message)
             
             if message.role == .assistant {
