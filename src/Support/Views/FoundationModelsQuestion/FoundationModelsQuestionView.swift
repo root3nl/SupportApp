@@ -81,6 +81,13 @@ struct FoundationModelsQuestionView: View {
                         ForEach(messageStore.messages) { message in
                             MessageView(message: FoundationModelMessage(id: message.id, message: message.message, role: message.role, urls: message.urls, bundleIDs: message.bundleIDs), color: color)
                                 .id(message.id)
+                            if let urls = message.urls {
+                                if !urls.isEmpty {
+                                    ForEach(urls, id: \.self) { url in
+                                        MessageAttachmentView(url: url, color: color)
+                                    }
+                                }
+                            }
                         }
                     } else {
                         ContentUnavailableView("Ask me aything!", systemImage: "sparkles", description: Text("I can help you find relevant resources from our organization."))
@@ -89,8 +96,10 @@ struct FoundationModelsQuestionView: View {
                     Color.clear
                         .frame(height: composerInset)
                 }
+                .scrollTargetLayout()
                 .frame(maxWidth: .infinity)
             }
+            .scrollTargetBehavior(.viewAligned)
             .scrollPosition($scrollPosition, anchor: .bottom)
             .scrollIndicators(.hidden)
             .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 500, alignment: .topLeading)
@@ -141,7 +150,7 @@ struct FoundationModelsQuestionView: View {
     
     @Generable
     struct Response {
-        @Guide(description: "The answer to the question")
+        @Guide(description: "A brief answer to the question")
         var answer: String
         
         //        @Guide(description: "Whether it was not possible to answer the question")
@@ -216,6 +225,5 @@ struct FoundationModelsQuestionView: View {
     }
     
     let itDocs = """
-
 """
 }

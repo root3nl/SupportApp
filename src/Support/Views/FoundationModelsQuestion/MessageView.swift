@@ -35,53 +35,15 @@ struct MessageView: View {
                         .font(.system(size: 40))
                         .symbolEffect(.variableColor.iterative.dimInactiveLayers.nonReversing, options: .repeat(.continuous))
                 }
-                if let urls = message.urls {
-                    ForEach(urls, id: \.self) { url in
-                        HStack(alignment: .top) {
-                            Image(systemName: "link")
-                                .foregroundStyle(.white)
-                            if let destination = URL(string: url) {
-                                Link(destination: destination) {
-                                    Text(url)
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                        .multilineTextAlignment(.leading)
-                                }
-                                .foregroundStyle(.white)
-                                .font(.headline)
-                            } else {
-                                Text(url)
-                                    .foregroundStyle(.white)
-                                    .font(.headline)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .multilineTextAlignment(.leading)
-                                    .textSelection(.enabled)
-                            }
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    .padding(.top)
-                }
-                if let bundleIDs = message.bundleIDs {
-                    ForEach(bundleIDs, id: \.self) { bundleID in
-                        HStack {
-                            Image(systemName: "arrow.up.right.square.fill")
-                                .foregroundStyle(.white)
-                            Text(bundleID)
-                                .foregroundStyle(.white)
-                                .font(.headline)
-                                .textSelection(.enabled)
-                        }
-                    }
-                }
             }
             .padding(10)
             .modify {
                 if colorScheme == .dark {
                     $0
-                        .glassEffect(.clear.tint(message.role == .user ? .blue : .clear), in: .rect(cornerRadius: 16))
+                        .glassEffect(.clear.tint(message.role == .user ? .blue : .clear), in: .rect(cornerRadius: 20))
                 } else {
                     $0
-                        .glassEffect(.clear.tint(message.role == .user ? .blue : .primary.opacity(0.4)), in: .rect(cornerRadius: 16))
+                        .glassEffect(.clear.tint(message.role == .user ? .blue : .primary.opacity(0.4)), in: .rect(cornerRadius: 20))
                 }
             }
             .frame(maxWidth: 300, alignment: message.role == .assistant ? .leading : .trailing)

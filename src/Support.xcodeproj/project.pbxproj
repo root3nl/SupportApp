@@ -35,6 +35,7 @@
 		491CA72B2F5255B900B19A52 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 491CA72A2F5255B900B19A52 /* MessageView.swift */; };
 		491CA72D2F52EEFF00B19A52 /* QuestionSearchFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 491CA72C2F52EEFF00B19A52 /* QuestionSearchFieldView.swift */; };
 		491CA72F2F52F0E700B19A52 /* MessageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 491CA72E2F52F0E700B19A52 /* MessageStore.swift */; };
+		491CA9692F54897900B19A52 /* MessageAttachmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 491CA9682F54897900B19A52 /* MessageAttachmentView.swift */; };
 		491ECC5A2DAC5BEB00B88732 /* ItemConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 491ECC592DAC5BEB00B88732 /* ItemConfigurationView.swift */; };
 		4934C79A2B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4934C7992B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift */; };
 		4934C79B2B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4934C7992B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift */; };
@@ -201,6 +202,7 @@
 		491CA72A2F5255B900B19A52 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		491CA72C2F52EEFF00B19A52 /* QuestionSearchFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionSearchFieldView.swift; sourceTree = "<group>"; };
 		491CA72E2F52F0E700B19A52 /* MessageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageStore.swift; sourceTree = "<group>"; };
+		491CA9682F54897900B19A52 /* MessageAttachmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAttachmentView.swift; sourceTree = "<group>"; };
 		491ECC592DAC5BEB00B88732 /* ItemConfigurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemConfigurationView.swift; sourceTree = "<group>"; };
 		4934C7992B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoftwareUpdateDeclarationModel.swift; sourceTree = "<group>"; };
 		4938566F2E81EC94007E9E82 /* ItemExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemExtension.swift; sourceTree = "<group>"; };
@@ -368,6 +370,7 @@
 			children = (
 				0A8C8C1F2F4F209900860621 /* FoundationModelsQuestionView.swift */,
 				491CA72A2F5255B900B19A52 /* MessageView.swift */,
+				491CA9682F54897900B19A52 /* MessageAttachmentView.swift */,
 				491CA72C2F52EEFF00B19A52 /* QuestionSearchFieldView.swift */,
 			);
 			path = FoundationModelsQuestion;
@@ -736,6 +739,7 @@
 				49152916259CD2C300056B5F /* Item.swift in Sources */,
 				493DCCB72B08303B00FA2480 /* SupportHelperProtocol.swift in Sources */,
 				493856702E81EC94007E9E82 /* ItemExtension.swift in Sources */,
+				491CA9692F54897900B19A52 /* MessageAttachmentView.swift in Sources */,
 				498DB7F22E5D113A00DDC33B /* AppModel.swift in Sources */,
 				493DCCB42B082FE600FA2480 /* HelperRemote.swift in Sources */,
 				0A8C8C202F4F209900860621 /* FoundationModelsQuestionView.swift in Sources */,
