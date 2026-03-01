@@ -36,6 +36,7 @@
 		491CA72D2F52EEFF00B19A52 /* QuestionSearchFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 491CA72C2F52EEFF00B19A52 /* QuestionSearchFieldView.swift */; };
 		491CA72F2F52F0E700B19A52 /* MessageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 491CA72E2F52F0E700B19A52 /* MessageStore.swift */; };
 		491CA9692F54897900B19A52 /* MessageAttachmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 491CA9682F54897900B19A52 /* MessageAttachmentView.swift */; };
+		491CA9DE2F54FD0900B19A52 /* RAGService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 491CA9DD2F54FD0900B19A52 /* RAGService.swift */; };
 		491ECC5A2DAC5BEB00B88732 /* ItemConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 491ECC592DAC5BEB00B88732 /* ItemConfigurationView.swift */; };
 		4934C79A2B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4934C7992B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift */; };
 		4934C79B2B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4934C7992B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift */; };
@@ -203,6 +204,7 @@
 		491CA72C2F52EEFF00B19A52 /* QuestionSearchFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionSearchFieldView.swift; sourceTree = "<group>"; };
 		491CA72E2F52F0E700B19A52 /* MessageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageStore.swift; sourceTree = "<group>"; };
 		491CA9682F54897900B19A52 /* MessageAttachmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAttachmentView.swift; sourceTree = "<group>"; };
+		491CA9DD2F54FD0900B19A52 /* RAGService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RAGService.swift; sourceTree = "<group>"; };
 		491ECC592DAC5BEB00B88732 /* ItemConfigurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemConfigurationView.swift; sourceTree = "<group>"; };
 		4934C7992B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoftwareUpdateDeclarationModel.swift; sourceTree = "<group>"; };
 		4938566F2E81EC94007E9E82 /* ItemExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemExtension.swift; sourceTree = "<group>"; };
@@ -412,6 +414,7 @@
 				493DCCD12B08E5E500FA2480 /* AppCatalogController.swift */,
 				497B01012DDDF23900F50BC7 /* InstallTaskQueue.swift */,
 				491CA72E2F52F0E700B19A52 /* MessageStore.swift */,
+				491CA9DD2F54FD0900B19A52 /* RAGService.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -800,6 +803,7 @@
 				49BF03FC2BC0BE3A00AB7152 /* FileUtilities.swift in Sources */,
 				49822CE324B4C3F100E8DE54 /* AppDelegate.swift in Sources */,
 				4934C79A2B99317000268CE2 /* SoftwareUpdateDeclarationModel.swift in Sources */,
+				491CA9DE2F54FD0900B19A52 /* RAGService.swift in Sources */,
 				0A4A73852602075F00927DAB /* StorageSubview.swift in Sources */,
 				49857E9824D4B543009B6FBA /* Preferences.swift in Sources */,
 				495D51CF2CF1431200D13729 /* SupportItemModel.swift in Sources */,
