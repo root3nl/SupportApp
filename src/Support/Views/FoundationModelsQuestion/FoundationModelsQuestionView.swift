@@ -38,6 +38,7 @@ struct FoundationModelsQuestionView: View {
     }
 
     @State private var session: LanguageModelSession?
+    @State private var question: String = ""
     @State private var isGenerating: Bool = false
     @State var scrollPosition: ScrollPosition = .init()
     private let composerInset: CGFloat = 30
@@ -145,7 +146,7 @@ struct FoundationModelsQuestionView: View {
         .unredacted()
         .task {
             do {
-                try await ragService.prepareIndexIfNeeded()
+//                try await ragService.prepareIndexIfNeeded()
                 try await fetchAnswer()
             } catch {
                 print(error.localizedDescription)
@@ -172,30 +173,23 @@ struct FoundationModelsQuestionView: View {
     }
 
     func fetchAnswer() async throws {
-        let currentQuestion = messageStore.messages
-            .last(where: { $0.role == .user })?
-            .message?
-            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-
-        guard !currentQuestion.isEmpty else {
-            logger.debug("Skipping generation because the latest user question is empty")
-            return
-        }
-
-        logger.debug("Starting answer generation for question: \(currentQuestion, privacy: .public)")
-
         isGenerating = true
         defer { isGenerating = false }
+        
+        
+        let answer = FoundationModelMessage(id: UUID(), message: nil, role: .assistant, urls: nil, bundleIDs: nil)
+        messageStore.messages.append(answer)
 
-        let relevantDocumentation = try await ragService.context(for: currentQuestion)
-        logger.debug("Retrieved documentation context with \(relevantDocumentation.count) characters")
+        withAnimation {
+            scrollPosition.scrollTo(edge: .bottom)
+        }
 
         if session == nil {
             logger.debug("Creating new LanguageModelSession")
-            session = LanguageModelSession(model: .default, instructions: """
+            session = LanguageModelSession(model: .default, instructions:
+        """
         You are a helpful IT assistant and your task is to answer the user's question using only the provided IT documentation excerpts.
         Additional instructions:
-        - You MUST respond in the locale or language of the question in the prompt
         - If the supplied documentation does not answer the question, clearly say that the local IT documentation does not cover it
         - Prefer concise, actionable instructions
         """
@@ -207,22 +201,12 @@ struct FoundationModelsQuestionView: View {
             return
         }
 
-        let promptDocumentation = relevantDocumentation.isEmpty ? "No local IT documentation was found." : relevantDocumentation
-        let promptPreview = String(promptDocumentation.prefix(500))
-        logger.debug("Prompt question: \(currentQuestion, privacy: .public)")
-        logger.debug("Prompt context preview (first 500 chars): \(promptPreview, privacy: .public)")
-
         let stream = session.streamResponse(generating: Response.self) {
-            "Question: \(currentQuestion)"
-            "Relevant IT documentation:"
-            promptDocumentation
-        }
-
-        let answer = FoundationModelMessage(id: UUID(), message: nil, role: .assistant, urls: nil, bundleIDs: nil)
-        messageStore.messages.append(answer)
-
-        withAnimation {
-            scrollPosition.scrollTo(edge: .bottom)
+            question
+//            if !messageStore.messages.contains(where: {$0.role == .assistant }) {
+//                "Here is the IT documentation:"
+//                itDocs
+//            }
         }
 
         guard let index = messageStore.messages.firstIndex(of: answer) else {
@@ -232,12 +216,8 @@ struct FoundationModelsQuestionView: View {
         do {
             for try await partialResponse in stream {
                 messageStore.messages[index].message = partialResponse.content.answer ?? ""
-                messageStore.messages[index].urls = partialResponse.content.resources?.flatMap { $0.urls ?? [] }
-                logger.debug("Received partial response chunk with \(messageStore.messages[index].message?.count ?? 0) characters")
+//                messageStore.messages[index].urls = partialResponse.content.resources?.flatMap { $0.urls ?? [] }
             }
-
-            logger.debug("Completed answer generation. Final answer length: \(messageStore.messages[index].message?.count ?? 0)")
-            logger.debug("Suggested resource URL count: \(messageStore.messages[index].urls?.count ?? 0)")
 
             withAnimation {
                 scrollPosition.scrollTo(edge: .bottom)
