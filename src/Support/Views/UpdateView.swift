@@ -80,8 +80,8 @@ struct UpdateView: View {
                         // If there is only one update, check if it's a Background Security Update
                         if computerinfo.recommendedUpdates.count == 1 {
                             if let update = computerinfo.recommendedUpdates.first {
-                                // Open Background Security Update prefpane when displayname contains it
-                                if update.displayName.contains("Background Security Improvement") {
+                                // Open the Background Security Improvements pane for supplemental security updates.
+                                if update.isBackgroundSecurityImprovement {
                                     openBSI()
                                 } else {
                                     openSoftwareUpdate()
