@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.0.1</string>
+	<string>3.0.2</string>
 	<key>CFBundleVersion</key>
 	<string>100</string>
 	<key>LSApplicationCategoryType</key>
@@ -27,7 +27,7 @@
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
-	<string>© 2025 Root3 B.V. All rights reserved.</string>
+	<string>© 2026 Root3 B.V. All rights reserved.</string>
 	<key>SMPrivilegedExecutables</key>
 	<dict>
 		<key>nl.root3.support.helper</key>
