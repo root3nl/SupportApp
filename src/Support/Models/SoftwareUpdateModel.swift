@@ -22,5 +22,20 @@ struct SoftwareUpdateModel: Identifiable, Codable, Hashable {
         case mobileSoftwareUpdate = "MobileSoftwareUpdate"
         case productKey = "Product Key"
     }
+
+    var isBackgroundSecurityImprovement: Bool {
+        if id.localizedCaseInsensitiveContains("_rsr") ||
+            (productKey?.localizedCaseInsensitiveContains("_rsr") ?? false) {
+            return true
+        }
+
+        guard let displayVersion else {
+            return false
+        }
+
+        // Fall back to the display version pattern Apple uses for these updates.
+        let pattern = #"\([a-zA-Z]\)$"#
+        return displayVersion.range(of: pattern, options: .regularExpression) != nil
+    }
     
 }
