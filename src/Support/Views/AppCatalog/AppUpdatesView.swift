@@ -379,7 +379,7 @@ struct AppUpdatesView: View {
         appCatalogController.logger.debug("App \(bundleID, privacy: .public) added to update queue")
         
         // Command to update app
-        let command = "'/usr/local/bin/catalog --install \(bundleID) --update-action --support-app'"
+        let command = "'/usr/local/bin/catalog --install \(bundleID) --update-action --force --support-app'"
         
         // Remove Bundle ID from queued array
         await MainActor.run {

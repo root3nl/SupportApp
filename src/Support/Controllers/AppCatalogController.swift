@@ -44,7 +44,8 @@ class AppCatalogController: ObservableObject {
     // Calculate when next update schedule will run
     var nextUpdateDate: String {
         let fromDate = Date(timeIntervalSince1970: Double(lastUpdated))
-        var toDate = fromDate.addingTimeInterval(Double(updateInterval) * 86400)
+        let interval: Double = catalogUsesHourlyUpdateInterval ? 3600 : 86400
+        var toDate = fromDate.addingTimeInterval(Double(updateInterval) * interval)
         
         // If next update is not in the future, show within the next hour
         // If next update if within on hour, show within the next hour as we don't know exactly when the LaunchDaemon will run
@@ -58,6 +59,21 @@ class AppCatalogController: ObservableObject {
         let relativeDate = toDate.formatted(formatter)
         
         return relativeDate
+    }
+
+    /// Returns `true` when the installed Catalog app is version 1.9.0 or newer,
+    /// which uses hourly update intervals instead of daily intervals.
+    private var catalogUsesHourlyUpdateInterval: Bool {
+        let appURL = URL(fileURLWithPath: "/Applications/Catalog.app")
+
+        guard
+            let bundle = Bundle(url: appURL),
+            let version = bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+        else {
+            return false
+        }
+
+        return version.compare("1.9.0", options: .numeric) != .orderedAscending
     }
     
     // MARK: - Call Catalog Agent to check for updates
