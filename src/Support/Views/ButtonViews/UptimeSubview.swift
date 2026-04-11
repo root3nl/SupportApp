@@ -77,7 +77,7 @@ struct UptimeSubview: View {
                     }
                 }
         } else {
-            InfoItem(title: NSLocalizedString("Last Reboot", comment: ""), subtitle: "\(computerinfo.uptimeRounded) \(computerinfo.uptimeText) " + NSLocalizedString("ago", comment: ""), image: "clock.fill", symbolColor: color, notificationBadgeBool: false, hoverEffectEnable: false)
+            InfoItem(title: NSLocalizedString("Last Reboot", comment: ""), subtitle: "\(computerinfo.uptimeRounded) \(computerinfo.uptimeText) " + NSLocalizedString("ago", comment: ""), image: "clock.fill", symbolColor: color, notificationBadgeBool: false, configurationItem: configurationItem, hoverEffectEnable: false)
                 .onTapGesture {
                     if preferences.editModeEnabled {
                         guard let configurationItem else {
