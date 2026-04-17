@@ -69,6 +69,8 @@
 "RESTART_NOW" = "Bitte jetzt neu starten";
 "RESTART" = "Neustart";
 "APPS_WILL_BE_UPDATED_AUTOMATICALLY_DESCRIPTION" = "Die Anwendungen werden automatisch aktualisiert";
+"APP_CATALOG_CHECKS_FOR_UPDATES_EVERY_HOUR" = "App Catalog sucht automatisch jede Stunde nach neuen Updates";
+"CHECK_FOR_UPDATES" = "Nach Updates suchen";
 "ENFORCED_ON" = "Durchgesetzt am";
 "DETAILS" = "Einzelheiten";
 "APPS" = "Apps";

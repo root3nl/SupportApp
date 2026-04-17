@@ -71,6 +71,8 @@
 "RESTART_NOW" = "Var god starta om nu";
 "RESTART" = "Starta om";
 "APPS_WILL_BE_UPDATED_AUTOMATICALLY_DESCRIPTION" = "Appar kommer uppdateras automatiskt";
+"APP_CATALOG_CHECKS_FOR_UPDATES_EVERY_HOUR" = "App Catalog kontrollerar automatiskt varje timme om det finns nya uppdateringar";
+"CHECK_FOR_UPDATES" = "Sök efter uppdateringar";
 "APPS" = "Appar";
 "PRIVILEGED_HELPER_TOOL_NOT_INSTALLED" = "Privileged Helper Tool är inte installerat";
 "UP_TO_DATE" = "Uppdaterad";
