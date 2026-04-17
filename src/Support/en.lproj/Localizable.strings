@@ -71,6 +71,8 @@
 "RESTART_NOW" = "Please restart now";
 "RESTART" = "Restart";
 "APPS_WILL_BE_UPDATED_AUTOMATICALLY_DESCRIPTION" = "Apps will be automatically updated";
+"APP_CATALOG_CHECKS_FOR_UPDATES_EVERY_HOUR" = "App Catalog automatically checks for new updates every hour";
+"CHECK_FOR_UPDATES" = "Check for updates";
 "APPS" = "Apps";
 "PRIVILEGED_HELPER_TOOL_NOT_INSTALLED" = "Privileged Helper Tool is not installed";
 "UP_TO_DATE" = "Up to date";

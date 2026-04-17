@@ -292,7 +292,7 @@ struct AppUpdatesView: View {
                             
                             HStack(alignment: .top) {
                                 
-                                Text("\(NSLocalizedString("APPS_WILL_BE_UPDATED_AUTOMATICALLY_DESCRIPTION", comment: "")) \(appCatalogController.nextUpdateDate)")
+                                Text(appCatalogController.automaticUpdateDescription)
 //                                    .font(.system(.body, design: .rounded))
                                 //                                .foregroundStyle(.secondary)
                                 
@@ -317,13 +317,38 @@ struct AppUpdatesView: View {
                             
                             if appCatalogController.updateInterval > 0 {
                                 
-                                Text("\(NSLocalizedString("APPS_WILL_BE_UPDATED_AUTOMATICALLY_DESCRIPTION", comment: "")) \(appCatalogController.nextUpdateDate)")
+                                Text(appCatalogController.automaticUpdateDescription)
                                 // Set frame to 250 to allow multiline text
                                     .frame(width: 250)
                                     .font(.system(.title3, design: .rounded))
                                     .multilineTextAlignment(.center)
                                     .foregroundStyle(.secondary)
                                 
+                            }
+
+                            if appCatalogController.checkingForUpdates {
+                                ProgressView()
+                                    .frame(height: 35)
+                            } else {
+                                Button(action: {
+                                    appCatalogController.getAppUpdates()
+                                }) {
+                                    Text(NSLocalizedString("CHECK_FOR_UPDATES", comment: ""))
+                                        .fontWeight(.bold)
+                                }
+                                .modify {
+                                    if #available(macOS 26, *) {
+                                        $0
+                                            .buttonStyle(.glass)
+                                    } else {
+                                        $0
+                                            .buttonStyle(.bordered)
+                                    }
+                                }
+//                                .tint(color)
+                                .buttonBorderShape(.capsule)
+                                .controlSize(.extraLarge)
+                                .frame(height: 35)
                             }
                             
                         }
@@ -379,7 +404,7 @@ struct AppUpdatesView: View {
         appCatalogController.logger.debug("App \(bundleID, privacy: .public) added to update queue")
         
         // Command to update app
-        let command = "'/usr/local/bin/catalog --install \(bundleID) --update-action --support-app'"
+        let command = "'/usr/local/bin/catalog --install \(bundleID) --update-action --force --support-app'"
         
         // Remove Bundle ID from queued array
         await MainActor.run {

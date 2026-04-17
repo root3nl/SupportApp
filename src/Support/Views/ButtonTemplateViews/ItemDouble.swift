@@ -139,7 +139,7 @@ struct ItemDouble: View {
                     RemoveItemButtonView(configurationItem: configurationItem)
                 }
             }
-            .animation(.bouncy, value: hoverView)
+//            .animation(.bouncy, value: hoverView)
             // FIXME: - Adjust when Jamf Connect Password Change can be triggered
             // https://docs.jamf.com/jamf-connect/2.9.1/documentation/Jamf_Connect_URL_Scheme.html#ID-00005c31
             .popover(isPresented: $showingAlert, arrowEdge: .leading) {

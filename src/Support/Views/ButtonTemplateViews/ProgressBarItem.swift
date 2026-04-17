@@ -126,7 +126,7 @@ struct ProgressBarItem: View {
                     RemoveItemButtonView(configurationItem: configurationItem)
                 }
             }
-            .animation(.bouncy, value: hoverView)
+//            .animation(.bouncy, value: hoverView)
         } else {
             
             ZStack {

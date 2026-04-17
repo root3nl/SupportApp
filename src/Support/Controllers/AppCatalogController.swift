@@ -31,6 +31,9 @@ class AppCatalogController: ObservableObject {
     
     // Current apps updating
     @Published var appsUpdating: [String] = []
+
+    // Indicates that App Catalog is checking for available updates
+    @Published var checkingForUpdates: Bool = false
     
     // Current apps in the queue
     @Published var appsQueued: [String] = []
@@ -41,10 +44,17 @@ class AppCatalogController: ObservableObject {
     // Array containing app details
     @Published var updateDetails: [InstalledAppItem] = []
     
-    // Calculate when next update schedule will run
+    /// Calculates the relative date for the next automatic app update check.
+    ///
+    /// This is only used for Catalog versions older than 1.9.0, where the
+    /// configured update interval is still interpreted as a daily schedule.
+    /// If the computed date is already in the past or within the next hour,
+    /// the value is clamped to one hour from now because the exact
+    /// LaunchDaemon execution time is not known.
     var nextUpdateDate: String {
         let fromDate = Date(timeIntervalSince1970: Double(lastUpdated))
-        var toDate = fromDate.addingTimeInterval(Double(updateInterval) * 86400)
+        let interval: Double = 86400
+        var toDate = fromDate.addingTimeInterval(Double(updateInterval) * interval)
         
         // If next update is not in the future, show within the next hour
         // If next update if within on hour, show within the next hour as we don't know exactly when the LaunchDaemon will run
@@ -59,12 +69,43 @@ class AppCatalogController: ObservableObject {
         
         return relativeDate
     }
+
+    /// Returns the localized automatic update message shown in the UI.
+    ///
+    /// Catalog 1.9.0 and newer checks for app updates every hour, so the text
+    /// is a fixed localized sentence. Older versions still use the existing
+    /// daily schedule messaging combined with `nextUpdateDate`.
+    var automaticUpdateDescription: String {
+        if catalogUsesHourlyUpdateInterval {
+            return NSLocalizedString("APP_CATALOG_CHECKS_FOR_UPDATES_EVERY_HOUR", comment: "")
+        } else {
+            return "\(NSLocalizedString("APPS_WILL_BE_UPDATED_AUTOMATICALLY_DESCRIPTION", comment: "")) \(nextUpdateDate)"
+        }
+    }
+
+    /// Returns `true` when the installed Catalog app is version 1.9.0 or newer,
+    /// which uses fixed hourly update checks instead of the previous daily schedule.
+    private var catalogUsesHourlyUpdateInterval: Bool {
+        let appURL = URL(fileURLWithPath: "/Applications/Catalog.app")
+
+        guard
+            let bundle = Bundle(url: appURL),
+            let version = bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+        else {
+            return false
+        }
+
+        return version.compare("1.9.0", options: .numeric) != .orderedAscending
+    }
     
     // MARK: - Call Catalog Agent to check for updates
     func getAppUpdates() {
         
         // Check available app updates
         logger.log("Checking app updates...")
+        DispatchQueue.main.async {
+            self.checkingForUpdates = true
+        }
         
         let command = "'/usr/local/bin/catalog --check-updates'"
         
@@ -98,6 +139,10 @@ class AppCatalogController: ObservableObject {
             
             // Decode app updates
             self.decodeAppUpdates()
+
+            DispatchQueue.main.async {
+                self.checkingForUpdates = false
+            }
         }
 
     }

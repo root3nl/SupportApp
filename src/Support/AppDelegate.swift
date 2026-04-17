@@ -239,6 +239,40 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         }
     }
     
+    // Resolve which info item types are actually visible in the active layout.
+    // The app has two rendering modes:
+    // - Row-based layout uses `preferences.rows` and should only allow badges for item types present in those rows.
+    // - Legacy layout uses `InfoItemOne...Six` and should only allow badges for slots in rows that are not hidden.
+    // This keeps menu bar signaling aligned with what the user can actually see in the popover.
+    func visibleInfoItemTypes() -> Set<String> {
+        if !preferences.rows.isEmpty {
+            return Set(
+                preferences.rows
+                    .compactMap(\.items)
+                    .flatMap { $0.compactMap(\.type) }
+            )
+        }
+
+        var visibleItems = [String]()
+
+        if !preferences.hideFirstRowInfoItems {
+            visibleItems.append(preferences.infoItemOne)
+            visibleItems.append(preferences.infoItemTwo)
+        }
+
+        if !preferences.hideSecondRowInfoItems {
+            visibleItems.append(preferences.infoItemThree)
+            visibleItems.append(preferences.infoItemFour)
+        }
+
+        if !preferences.hideThirdRowInfoItems {
+            visibleItems.append(preferences.infoItemFive)
+            visibleItems.append(preferences.infoItemSix)
+        }
+
+        return Set(visibleItems.filter { !$0.isEmpty })
+    }
+
     // MARK: - Set and update the menu bar icon
     @objc func setStatusBarIcon() {
         
@@ -358,25 +392,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             
             // Set notification counter next to the menu bar icon if enabled. https://www.hackingwithswift.com/example-code/system/how-to-insert-images-into-an-attributed-string-with-nstextattachment
             
-            // Create array with configured info items. Disabled info items should not show a notification badge in the menu bar icon
-            var infoItemsEnabled: [String] = [
-                preferences.infoItemOne,
-                preferences.infoItemTwo,
-                preferences.infoItemThree,
-                preferences.infoItemFour,
-                preferences.infoItemFive,
-                preferences.infoItemSix
-            ]
-            
-            // Append all types from new structure
-            if !preferences.rows.isEmpty {
-                for row in preferences.rows {
-                    if let items = row.items {
-                        let allTypes = items.compactMap { $0.type }
-                        infoItemsEnabled.append(contentsOf: allTypes)
-                    }
-                }
-            }
+            // Only item types visible in the currently rendered layout may drive a status bar badge.
+            let infoItemsEnabled = visibleInfoItemTypes()
             
             // Create array with extension alert booleans
             var extensionAlerts: [Bool] = []
@@ -1002,4 +1019,3 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         }
     }
 }
-
