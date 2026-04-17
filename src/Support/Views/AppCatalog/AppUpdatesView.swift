@@ -339,13 +339,13 @@ struct AppUpdatesView: View {
                                 .modify {
                                     if #available(macOS 26, *) {
                                         $0
-                                            .buttonStyle(.glassProminent)
+                                            .buttonStyle(.glass)
                                     } else {
                                         $0
-                                            .buttonStyle(.borderedProminent)
+                                            .buttonStyle(.bordered)
                                     }
                                 }
-                                .tint(color)
+//                                .tint(color)
                                 .buttonBorderShape(.capsule)
                                 .controlSize(.extraLarge)
                                 .frame(height: 35)
