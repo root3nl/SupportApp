@@ -195,7 +195,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             timerEightHours = Timer.scheduledTimer(withTimeInterval: 28800, repeats: true) { time in
                 // Only run when App Catalog is installed
                 if self.appCatalogController.catalogInstalled() {
-                    self.appCatalogController.getAppUpdates()
+                    self.appCatalogController.decodeAppUpdates()
                 }
             }
             
@@ -669,7 +669,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         
         // Only run when App Catalog is installed
         if appCatalogController.catalogInstalled() {
-            self.appCatalogController.getAppUpdates()
+            self.appCatalogController.decodeAppUpdates()
         }
         
         // Uninstall Privileged Helper Tool if configured
