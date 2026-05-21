@@ -53,6 +53,7 @@
 		493DCCB72B08303B00FA2480 /* SupportHelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493DCCA02B082E4100FA2480 /* SupportHelperProtocol.swift */; };
 		493DCCB82B08304A00FA2480 /* RemoteApplicationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493DCCA62B082EAD00FA2480 /* RemoteApplicationProtocol.swift */; };
 		493DCCD22B08E5E500FA2480 /* AppCatalogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493DCCD12B08E5E500FA2480 /* AppCatalogController.swift */; };
+		49C0FF0F2E5F1A0100ABCDEF /* LegacyConfigMigrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C0FF0E2E5F1A0100ABCDEF /* LegacyConfigMigrator.swift */; };
 		493FBB8D27406B5D002A79F9 /* ExtensionBSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493FBB8C27406B5D002A79F9 /* ExtensionBSubview.swift */; };
 		494746D02E43A30000C81C37 /* GlassEffectModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494746CF2E43A30000C81C37 /* GlassEffectModifier.swift */; };
 		4947C1512B154A2F00276EFD /* SupportXPC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4947C1502B154A2F00276EFD /* SupportXPC.swift */; };
@@ -213,6 +214,7 @@
 		493DCCB12B082FCE00FA2480 /* ExecutionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecutionService.swift; sourceTree = "<group>"; };
 		493DCCB32B082FE600FA2480 /* HelperRemote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperRemote.swift; sourceTree = "<group>"; };
 		493DCCD12B08E5E500FA2480 /* AppCatalogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCatalogController.swift; sourceTree = "<group>"; };
+		49C0FF0E2E5F1A0100ABCDEF /* LegacyConfigMigrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyConfigMigrator.swift; sourceTree = "<group>"; };
 		493FBB8C27406B5D002A79F9 /* ExtensionBSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBSubview.swift; sourceTree = "<group>"; };
 		494746CF2E43A30000C81C37 /* GlassEffectModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassEffectModifier.swift; sourceTree = "<group>"; };
 		4947C14E2B154A2F00276EFD /* SupportXPC.xpc */ = {isa = PBXFileReference; explicitFileType = "wrapper.xpc-service"; includeInIndex = 0; path = SupportXPC.xpc; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -387,6 +389,7 @@
 			children = (
 				493DCCD12B08E5E500FA2480 /* AppCatalogController.swift */,
 				497B01012DDDF23900F50BC7 /* InstallTaskQueue.swift */,
+				49C0FF0E2E5F1A0100ABCDEF /* LegacyConfigMigrator.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -741,6 +744,7 @@
 				0A4A738E26020A6500927DAB /* MacOSVersionSubview.swift in Sources */,
 				49C18C312EA19D1A00A2560F /* Constants.swift in Sources */,
 				493DCCD22B08E5E500FA2480 /* AppCatalogController.swift in Sources */,
+				49C0FF0F2E5F1A0100ABCDEF /* LegacyConfigMigrator.swift in Sources */,
 				490B145E258A55B90048D8AF /* Extensions.swift in Sources */,
 				0AFB04FB263AC23000507B23 /* ModelSubView.swift in Sources */,
 				4939A0C829259B7B00731363 /* LogoView.swift in Sources */,
