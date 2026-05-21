@@ -159,7 +159,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         
         // Receive notification after macOS update check
         NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.recommendedUpdates, object: nil)
-        
+
+        // Reload status bar icon on any UserDefaults change in our domain.
+        // Extension alert keys can contain '.' (reverse-DNS identifiers), which KVO/KVC
+        // interprets as keypath separators — so per-key UserDefaults KVO is unusable for them.
+        // This process-level notification fires for in-process and cross-process changes alike.
+        NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: defaults, queue: .main) { [weak self] _ in
+            self?.setStatusBarIcon()
+        }
+
         // Decode app updates and reload status bar item when Catalog Agent or App completed an update check
         DistributedNotificationCenter.default().addObserver(forName: Notification.Name.updateCheckCompleted, object: nil, queue: .main) { _ in
             // Decode app updates
@@ -541,8 +549,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         case "Rows":
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed, decoding rows...")
             self.decodeRows()
-        case let key where key?.hasSuffix("_alert") == true:
-            logger.debug("\(key! as NSObject, privacy: .public) changed")
         default:
             logger.debug("Some other change detected...")
         }
@@ -991,31 +997,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                     self.preferences.rows = rows
                     self.localPreferences.rows = rows
                 }
-                
-                // Register any Extension alert observers
-                self.registerExtensionObservers(rows: rows)
             }
-                        
+
         } catch {
             logger.error("\(error.localizedDescription)")
-        }
-    }
-
-    // MARK: - Start observing alerts for extensions
-    func registerExtensionObservers(rows: [Row]) {
-        logger.debug("Registering extension observers")
-        
-        for row in rows {
-            if let items = row.items {
-                let extensions = items.filter { $0.type == "Extension" }
-                for extensionItem in extensions {
-                    if let extID = extensionItem.extensionIdentifier {
-                        let alertKey = "\(extID)_alert"
-                        logger.debug("Observing extension alert key: \(alertKey, privacy: .public)")
-                        defaults.addObserver(self, forKeyPath: alertKey, options: .new, context: nil)
-                    }
-                }
-            }
         }
     }
 }
