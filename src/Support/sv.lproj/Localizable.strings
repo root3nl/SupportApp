@@ -83,3 +83,24 @@
 "STORAGE" = "Storage";
 "NETWORK_IP_ADDRESS" = "Network IP Address";
 "BACK" = "Tillbaka";
+
+
+
+/* Legacy 2.x configuration migration */
+"MIGRATE_LEGACY_CONFIG" = "Migrera Support App 2.x-konfiguration…";
+"MIGRATE_LEGACY_CONFIG_DESCRIPTION" = "Konverterar en Support App 2.x-plist eller konfigurationsprofil till 3.x-schemat. Välj en källfil och välj sedan var den migrerade kopian ska sparas.";
+"MIGRATE_LEGACY_CONFIG_SELECT_FILE" = "Välj en Support App 2.x .plist- eller .mobileconfig-fil";
+"MIGRATION_COMPLETE" = "Migrering slutförd";
+"MIGRATION_WROTE_TO" = "Migrerad konfiguration skrevs till %@.";
+"SHOW_IN_FINDER" = "Visa i Finder";
+"OK" = "OK";
+"MIGRATION_ERROR_READ_FILE" = "Kunde inte läsa filen";
+"MIGRATION_ERROR_SAVE_FILE" = "Kunde inte spara filen";
+"MIGRATION_ERROR_INVALID_PLIST" = "Ogiltig plist";
+"MIGRATION_ERROR_INVALID_PROFILE" = "Ogiltig konfigurationsprofil";
+"MIGRATION_ERROR_NO_PAYLOAD" = "Ingen Support App-payload";
+"MIGRATION_ERROR_PARSE_FAILED" = "Den valda filen kunde inte tolkas som plist: %@";
+"MIGRATION_ERROR_NO_PAYLOAD_CONTENT" = "Den valda .mobileconfig-filen saknar en PayloadContent-array.";
+"MIGRATION_ERROR_MISSING_SUPPORT_PAYLOAD" = "Den valda .mobileconfig-filen innehåller ingen nl.root3.support-payload.";
+"MIGRATION_ERROR_PLIST_NOT_DICT" = "Roten i den valda .plist-filen är inte en ordbok.";
+"MIGRATION_ERROR_FILE_FORMAT" = "%@: %@";

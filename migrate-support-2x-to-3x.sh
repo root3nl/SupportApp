@@ -9,8 +9,8 @@
 # Support App 3.x schema. The migrated configuration renders the same
 # rows, info items and buttons as the 2.x app produced: defaults for
 # unset info items are preserved, hide-toggles are honored and button
-# row sizing matches the legacy LegacyContentView layout (3-up buttons
-# become ButtonSmall, 2-up buttons become Button).
+# row sizing matches the legacy layout (3-up buttons
+# become ButtonMedium, 2-up buttons become Button).
 #
 # Usage:
 #   migrate-support-2x-to-3x.sh -i <input> [-o <output>] [--to-plist]
@@ -29,7 +29,8 @@
 #   https://github.com/root3nl/SupportApp/wiki/Migrating-Support-2.x-to-3.x
 #   https://github.com/root3nl/SupportApp/wiki/Configuration
 #
-# REQUIREMENTS: macOS with /usr/libexec/PlistBuddy and /usr/bin/plutil.
+# REQUIREMENTS:
+# - Source .plist or .mobileconfig in the Support 2.x schema
 #
 # THE SOFTWARE IS PROVIDED BY ROOT3 B.V. "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
@@ -151,21 +152,43 @@ plutil -convert xml1 "${work_file}"
 # -----------------------------------------------------------------------------
 
 # For .plist the target is the root dict (empty prefix). For .mobileconfig
-# we locate the PayloadContent entry whose PayloadType matches the Support
-# App and use that as the prefix for every PlistBuddy path.
+# we locate the PayloadContent entry that holds the Support App settings
+# and use that as the prefix for every PlistBuddy path.
+#
+# Two layouts are supported:
+#   * Flat: PayloadType == "nl.root3.support" with settings keys directly
+#     on the payload dict (the form Support App exports).
+#   * MCX:  PayloadType == "com.apple.ManagedClient.preferences" with
+#     settings nested at
+#     PayloadContent:nl.root3.support:Forced:0:mcx_preference_settings
+#     (Jamf-style profiles).
 prefix=""
 
 if [[ "${input_kind}" == "mobileconfig" ]]; then
   found_index=""
+  found_layout=""
   i=0
   while :; do
     ptype=$("${plist_buddy}" \
       -c "Print :PayloadContent:${i}:PayloadType" \
       "${work_file}" 2>/dev/null) || break
+
     if [[ "${ptype}" == "${support_payload_type}" ]]; then
       found_index="${i}"
+      found_layout="flat"
       break
     fi
+
+    if [[ "${ptype}" == "com.apple.ManagedClient.preferences" ]]; then
+      mcx_probe="PayloadContent:${i}:PayloadContent:${support_payload_type}:Forced:0:mcx_preference_settings"
+      if "${plist_buddy}" -c "Print :${mcx_probe}" \
+            "${work_file}" >/dev/null 2>&1; then
+        found_index="${i}"
+        found_layout="mcx"
+        break
+      fi
+    fi
+
     (( ++i ))
   done
 
@@ -173,7 +196,11 @@ if [[ "${input_kind}" == "mobileconfig" ]]; then
     die "no PayloadContent entry with PayloadType=${support_payload_type}"
   fi
 
-  prefix="PayloadContent:${found_index}:"
+  if [[ "${found_layout}" == "mcx" ]]; then
+    prefix="PayloadContent:${found_index}:PayloadContent:${support_payload_type}:Forced:0:mcx_preference_settings:"
+  else
+    prefix="PayloadContent:${found_index}:"
+  fi
 fi
 
 # -----------------------------------------------------------------------------
@@ -405,11 +432,11 @@ add_button_row() {
 
   (( populated_count > 0 )) || return 0
 
-  # Match LegacyContentView: 3 buttons render as ButtonSmall, otherwise
+  # Match LegacyContentView: 3 buttons render as ButtonMedium, otherwise
   # the regular Button type.
   local button_type
   if (( populated_count >= 3 )); then
-    button_type="ButtonSmall"
+    button_type="ButtonMedium"
   else
     button_type="Button"
   fi
