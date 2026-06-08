@@ -47,18 +47,14 @@ class ComputerInfo: ObservableObject {
     // macOS Version Name
     var macOSVersionName: String {
         switch systemVersionMajor {
-        case 11:
-            return "Big Sur"
-        case 12:
-            return "Monterey"
-        case 13:
-            return "Ventura"
         case 14:
             return "Sonoma"
         case 15:
             return "Sequoia"
         case 26:
             return "Tahoe"
+        case 27:
+            return "Golden Gate"
         default:
             return ""
         }
