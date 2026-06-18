@@ -328,8 +328,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                         logger.error("\(error.localizedDescription)")
                     }
                     
-                    // Set current URL
-                    self.lastKnownStatusBarItemUrl = self.preferences.statusBarIcon
+                    // Set current URL only when it actually changed. Writing this @AppStorage
+                    // value unconditionally would post UserDefaults.didChangeNotification on every
+                    // call, which our process-level observer reacts to by calling setStatusBarIcon()
+                    // again — an infinite loop whenever a remote (https) StatusBarIcon is configured.
+                    if self.lastKnownStatusBarItemUrl != self.preferences.statusBarIcon {
+                        self.lastKnownStatusBarItemUrl = self.preferences.statusBarIcon
+                    }
 
                     
                 } else {
