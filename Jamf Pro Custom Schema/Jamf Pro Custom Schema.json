@@ -461,7 +461,7 @@
                   "title": "Extension ID",
                   "type": "string",
                   "options": {
-                    "infoText": "ExtensionID"
+                    "infoText": "Unique identifier for the Extension. Must not contain a dot (.): the menu bar notifier badge would not update for identifiers containing a dot, such as reverse-DNS style names."
                   },
                   "links": [
                     {

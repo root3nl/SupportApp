@@ -114,7 +114,10 @@ struct ItemConfigurationView: View {
                     if item.type.contains("Button") {
                         localPreferences.rows[localPreferences.currentConfiguredItem!.rowIndex].items?[localPreferences.currentConfiguredItem!.itemIndex] = SupportItem(type: selectedType, title: title, subtitle: subtitle, linkType: linkType, link: link, symbol: symbol, extensionIdentifier: nil, onAppearAction: nil)
                     } else if item.type == "Extension" {
-                        guard !extensionIdentifier.isEmpty else {
+                        // Identifier is required and must not contain a dot: '_alert' keys built from
+                        // it are KVO-observed, and KVC treats '.' as a key-path separator, which would
+                        // stop the menu bar notifier badge from updating.
+                        guard !extensionIdentifier.isEmpty, !extensionIdentifier.contains(".") else {
                             return
                         }
                         localPreferences.rows[localPreferences.currentConfiguredItem!.rowIndex].items?[localPreferences.currentConfiguredItem!.itemIndex] = SupportItem(type: selectedType, title: title, subtitle: nil, linkType: linkType, link: link, symbol: symbol, extensionIdentifier: extensionIdentifier, onAppearAction: onAppearAction)
@@ -230,6 +233,11 @@ struct ItemConfigurationView: View {
                         if extensionIdentifier.isEmpty {
                             Text("Required field")
                                 .foregroundColor(.red)
+                                .font(.caption)
+                        } else if extensionIdentifier.contains(".") {
+                            Text("\(Image(systemName: "exclamationmark.triangle.fill")) Identifier must not contain a dot (.), otherwise the menu bar notifier badge will not update.")
+                                .frame(maxWidth: 200, alignment: .leading)
+                                .foregroundColor(.orange)
                                 .font(.caption)
                         }
                         

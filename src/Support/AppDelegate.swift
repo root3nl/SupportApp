@@ -19,6 +19,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     var timer: Timer?
     var timerFiveMinutes: Timer?
     var timerEightHours: Timer?
+
+    // Extension '_alert' keys we already KVO-observe, to avoid registering duplicate observers
+    // when the rows are decoded more than once.
+    var observedExtensionAlertKeys: Set<String> = []
     let menu = NSMenu()
     var statusBarItem: NSStatusItem?
     
@@ -160,13 +164,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         // Receive notification after macOS update check
         NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.recommendedUpdates, object: nil)
 
-        // Reload status bar icon on any UserDefaults change in our domain.
-        // Extension alert keys can contain '.' (reverse-DNS identifiers), which KVO/KVC
-        // interprets as keypath separators — so per-key UserDefaults KVO is unusable for them.
-        // This process-level notification fires for in-process and cross-process changes alike.
-        NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: defaults, queue: .main) { [weak self] _ in
-            self?.setStatusBarIcon()
-        }
+        // Per-key observers for each extension's '_alert' key are registered in
+        // registerExtensionObservers() once the rows are decoded.
 
         // Decode app updates and reload status bar item when Catalog Agent or App completed an update check
         DistributedNotificationCenter.default().addObserver(forName: Notification.Name.updateCheckCompleted, object: nil, queue: .main) { _ in
@@ -1002,10 +1001,45 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                     self.preferences.rows = rows
                     self.localPreferences.rows = rows
                 }
+
+                // Observe each extension's '_alert' key so the menu bar badge updates
+                self.registerExtensionObservers(rows: rows)
             }
 
         } catch {
             logger.error("\(error.localizedDescription)")
+        }
+    }
+
+    // MARK: - Start observing alerts for extensions
+    // Each extension stores its alert state in a '<ExtensionID>_alert' key. We KVO-observe each
+    // one so the menu bar notifier badge refreshes (via observeValue) when the alert changes,
+    // including changes made by the privileged OnAppearAction/Action scripts in another process.
+    //
+    // NOTE: KVO uses KVC key paths, which treat '.' as a path separator. An ExtensionID that
+    // contains a dot (e.g. a reverse-DNS identifier) therefore cannot be observed — the observer
+    // registers but never fires, so the badge would not update. We skip those and log a warning.
+    // ExtensionIDs must not contain dots.
+    func registerExtensionObservers(rows: [Row]) {
+        for row in rows {
+            guard let items = row.items else { continue }
+            for extensionItem in items where extensionItem.type == "Extension" {
+                guard let extID = extensionItem.extensionIdentifier else { continue }
+
+                if extID.contains(".") {
+                    logger.warning("Extension identifier '\(extID, privacy: .public)' contains a '.', which prevents its menu bar notifier badge from updating automatically. Use an identifier without dots.")
+                    continue
+                }
+
+                let alertKey = "\(extID)_alert"
+
+                // Avoid registering duplicate observers when rows are decoded more than once
+                guard !observedExtensionAlertKeys.contains(alertKey) else { continue }
+                observedExtensionAlertKeys.insert(alertKey)
+
+                logger.debug("Observing extension alert key: \(alertKey, privacy: .public)")
+                defaults.addObserver(self, forKeyPath: alertKey, options: .new, context: nil)
+            }
         }
     }
 }
