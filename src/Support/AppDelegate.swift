@@ -21,6 +21,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     var timerEightHours: Timer?
     let menu = NSMenu()
     var statusBarItem: NSStatusItem?
+    private var rightClickMonitor: Any?
     
     var configuratorMenuItem: NSMenuItem?
     
@@ -237,6 +238,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                 }
             }
         }
+        
+        // Intercept right-clicks on the status bar button to show the context menu
+        rightClickMonitor = NSEvent.addLocalMonitorForEvents(matching: .rightMouseDown) { [weak self] event in
+            guard let self = self,
+                  let button = self.statusBarItem?.button,
+                  event.window == button.window else {
+                return event
+            }
+            self.showStatusItemMenu()
+            return nil
+        }
     }
     
     // Resolve which info item types are actually visible in the active layout.
@@ -438,10 +450,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             button.display()
 
             // Action when clicked on the menu bar icon
+            button.target = self
             button.action = #selector(self.statusBarButtonClicked)
-            
-            // Monitor left or right clicks
-            button.sendAction(on: [.leftMouseUp, .rightMouseUp])
+
+            // Left mouse down only; right-clicks are handled by the local event monitor
+            button.sendAction(on: [.leftMouseDown])
         }
     }
     
@@ -553,38 +566,31 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     
     }
 
-    // MARK: - Process left and right clicks. https://samoylov.eu/2016/09/14/handling-left-and-right-click-at-nsstatusbar-with-swift-3/
+    // MARK: - Process left and right clicks
     @objc func statusBarButtonClicked(sender: NSStatusBarButton) {
-        guard let event = NSApp.currentEvent else {
-            logger.debug("No event available, assuming accessibility or Voice Control click...")
-            togglePopover(nil)
-            return
-        }
-        
-        // Show menu for right click
-        if event.type == NSEvent.EventType.rightMouseUp {
-            logger.debug("Right mouse button clicked...")
-            closePopover(sender: nil)
 
-            // FIXME: Old deprecated API
-            statusBarItem?.popUpMenu(menu)
-            
-            // FIXME: Could not get new API to work correctly
-//            statusBarItem.menu = menu // add menu to button...
-//            statusBarItem.button?.performClick(nil) // ...and click
-                           
-        // Show Popover for left click
+        // Handle control-click as secondary click
+        if NSEvent.modifierFlags.contains(.control) {
+            logger.debug("Control-click detected, showing menu...")
+            showStatusItemMenu()
         } else {
-            logger.debug("Left mouse button clicked...")
+            logger.debug("Primary click detected, toggling popover...")
             togglePopover(nil)
         }
     }
-    
-    // FIXME: Could not get new API to work correctly
-//    @objc func menuDidClose(_ menu: NSMenu) {
-//        statusBarItem.menu = nil // remove menu so button works as before
-//        logger.debug("menuDidClose")
-//    }
+
+    // MARK: - Show the right-click menu beneath the status item
+    func showStatusItemMenu() {
+
+        // Hide the popover so it does not overlap the menu.
+        closePopover(sender: nil)
+
+        // Temporarily assign the menu for native positioning, then
+        // clear it so the button action works for left clicks again
+        statusBarItem?.menu = menu
+        statusBarItem?.button?.performClick(nil)
+        statusBarItem?.menu = nil
+    }
     
     // MARK: - Close or open popover depending on current state
     @objc func togglePopover(_ sender: Any?) {
