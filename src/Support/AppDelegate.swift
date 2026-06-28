@@ -21,6 +21,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     var timerEightHours: Timer?
     let menu = NSMenu()
     var statusBarItem: NSStatusItem?
+    private var rightClickMonitor: Any?
     
     var configuratorMenuItem: NSMenuItem?
     
@@ -237,6 +238,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                 }
             }
         }
+        
+        // Intercept right-clicks on the status bar button to show the context menu
+        rightClickMonitor = NSEvent.addLocalMonitorForEvents(matching: .rightMouseDown) { [weak self] event in
+            guard let self = self,
+                  let button = self.statusBarItem?.button,
+                  event.window == button.window else {
+                return event
+            }
+            self.showStatusItemMenu()
+            return nil
+        }
     }
     
     // Resolve which info item types are actually visible in the active layout.
@@ -441,12 +453,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             button.target = self
             button.action = #selector(self.statusBarButtonClicked)
 
-            // Fire the action on left mouse up (primary click) and right mouse
-            // down (secondary click). Right mouse *down* is used so the right
-            // button is still held when the action fires, which lets us detect
-            // it reliably via NSEvent.pressedMouseButtons. On macOS 27+ the
-            // normalized NSApp.currentEvent can no longer be trusted for this.
-            button.sendAction(on: [.leftMouseUp, .rightMouseDown])
+            // Left mouse down only; right-clicks are handled by the local event monitor
+            button.sendAction(on: [.leftMouseDown])
         }
     }
     
@@ -561,16 +569,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     // MARK: - Process left and right clicks
     @objc func statusBarButtonClicked(sender: NSStatusBarButton) {
 
-        // Detect the secondary click from live input state rather than from
-        // NSApp.currentEvent, which macOS 27+ normalizes to a left click:
-        // - a right click leaves the secondary mouse button pressed (bit 1)
-        //   because the action fires on rightMouseDown
-        // - a control-click is a primary click with the Control modifier held
-        let secondaryMouseButtonDown = (NSEvent.pressedMouseButtons & (1 << 1)) != 0
-        let controlKeyDown = NSEvent.modifierFlags.contains(.control)
-
-        if secondaryMouseButtonDown || controlKeyDown {
-            logger.debug("Secondary click detected, showing menu...")
+        // Handle control-click as secondary click
+        if NSEvent.modifierFlags.contains(.control) {
+            logger.debug("Control-click detected, showing menu...")
             showStatusItemMenu()
         } else {
             logger.debug("Primary click detected, toggling popover...")
@@ -584,13 +585,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         // Hide the popover so it does not overlap the menu.
         closePopover(sender: nil)
 
-        guard let button = statusBarItem?.button else { return }
-
-        // Display the menu directly under the status bar button using the
-        // non-deprecated NSMenu.popUp API. This replaces the deprecated
-        // NSStatusItem.popUpMenu(_:) which no longer works on macOS 27+.
-        let location = NSPoint(x: 0, y: button.bounds.height + 5)
-        menu.popUp(positioning: nil, at: location, in: button)
+        // Temporarily assign the menu for native positioning, then
+        // clear it so the button action works for left clicks again
+        statusBarItem?.menu = menu
+        statusBarItem?.button?.performClick(nil)
+        statusBarItem?.menu = nil
     }
     
     // MARK: - Close or open popover depending on current state
