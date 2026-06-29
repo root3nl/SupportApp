@@ -5,6 +5,7 @@
 //  Created by Jordy Witteman on 27/08/2025.
 //
 
+import AppKit
 import SwiftUI
 
 struct ConfiguratorSettingsView: View {
@@ -121,7 +122,10 @@ struct AdvancedSettingsView: View {
     @EnvironmentObject var appDelegate: AppDelegate
         
     @State private var showDeleteConfirmation: Bool = false
-    
+
+    /// Drives the success / failure alert shown after a legacy migration run.
+    @State private var migrationAlert: MigrationAlert?
+
     var body: some View {
         Form {
             Toggle("Open at login (non-PKG version)", isOn: $localPreferences.openAtLogin)
@@ -130,7 +134,26 @@ struct AdvancedSettingsView: View {
             TextField("On appear action", text: $localPreferences.onAppearAction, prompt: Text("Path to script"))
             
             Divider()
-            
+
+            Section {
+                Button {
+                    Task { await runLegacyConfigMigration() }
+                } label: {
+                    Label("MIGRATE_LEGACY_CONFIG", systemImage: "arrow.triangle.2.circlepath")
+                }
+                .buttonStyle(.bordered)
+            } footer: {
+                HStack {
+                    Text("MIGRATE_LEGACY_CONFIG_DESCRIPTION")
+                        .fixedSize(horizontal: false, vertical: true)
+                    Spacer()
+                }
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+            }
+
+            Divider()
+
             Section {
                 Button {
                     showDeleteConfirmation.toggle()
@@ -171,7 +194,83 @@ struct AdvancedSettingsView: View {
             }
         }
         .disabled(!preferences.editModeEnabled)
+        .alert(
+            Text(verbatim: migrationAlert?.title ?? ""),
+            isPresented: Binding(
+                get: { migrationAlert != nil },
+                set: { if !$0 { migrationAlert = nil } }
+            ),
+            presenting: migrationAlert
+        ) { alert in
+            if let url = alert.revealURL {
+                Button {
+                    NSWorkspace.shared.activateFileViewerSelecting([url])
+                    migrationAlert = nil
+                } label: {
+                    Text("SHOW_IN_FINDER")
+                }
+            }
+            Button(role: .cancel) {
+                migrationAlert = nil
+            } label: {
+                Text("OK")
+            }
+        } message: { alert in
+            Text(verbatim: alert.message)
+        }
     }
+
+    // MARK: - Legacy 2.x configuration migration
+
+    /// Run the migration flow via `LegacyConfigMigrator` and translate the
+    /// returned `Outcome` into the user-facing alert. The view owns the
+    /// alert state; the controller owns the flow and the localized keys.
+    /// The runner is `async` so its CPU/IO work runs off the main thread.
+    @MainActor
+    private func runLegacyConfigMigration() async {
+        switch await LegacyConfigMigrator.runUserSelectedMigration() {
+        case .cancelled:
+            return
+        case .success(let outputURL):
+            let title = NSLocalizedString(
+                "MIGRATION_COMPLETE",
+                comment: "Alert title shown after a successful legacy config migration"
+            )
+            let format = NSLocalizedString(
+                "MIGRATION_WROTE_TO",
+                comment: "Alert body after a successful legacy config migration; %@ is the output file path"
+            )
+            migrationAlert = MigrationAlert(
+                title: title,
+                message: String(format: format, outputURL.path),
+                revealURL: outputURL
+            )
+        case .failure(let titleKey, let messageFormatKey, let arguments):
+            let title = NSLocalizedString(
+                titleKey, comment: "Migration error alert title"
+            )
+            let format = NSLocalizedString(
+                messageFormatKey, comment: "Migration error alert body"
+            )
+            let message = arguments.isEmpty
+                ? format
+                : String(format: format, arguments: arguments as [CVarArg])
+            migrationAlert = MigrationAlert(
+                title: title, message: message, revealURL: nil
+            )
+        }
+    }
+}
+
+/// Payload for the migration result alert. `title` and `message` are
+/// already localized at construction time. `revealURL` is non-nil only on
+/// the success path, which is how the alert decides whether to show the
+/// "Show in Finder" button.
+private struct MigrationAlert: Identifiable {
+    let id = UUID()
+    let title: String
+    let message: String
+    let revealURL: URL?
 }
 
 #Preview {

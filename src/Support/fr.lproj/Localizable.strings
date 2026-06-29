@@ -83,3 +83,24 @@
 "STORAGE" = "Storage";
 "NETWORK_IP_ADDRESS" = "Network IP Address";
 "BACK" = "Retour";
+
+
+
+/* Legacy 2.x configuration migration */
+"MIGRATE_LEGACY_CONFIG" = "Migrer la configuration Support App 2.x…";
+"MIGRATE_LEGACY_CONFIG_DESCRIPTION" = "Convertit une plist ou un profil de configuration Support App 2.x vers le schéma 3.x. Choisissez un fichier source, puis l'emplacement où enregistrer la copie migrée.";
+"MIGRATE_LEGACY_CONFIG_SELECT_FILE" = "Sélectionnez un fichier .plist ou .mobileconfig Support App 2.x";
+"MIGRATION_COMPLETE" = "Migration terminée";
+"MIGRATION_WROTE_TO" = "Configuration migrée écrite dans %@.";
+"SHOW_IN_FINDER" = "Afficher dans le Finder";
+"OK" = "OK";
+"MIGRATION_ERROR_READ_FILE" = "Impossible de lire le fichier";
+"MIGRATION_ERROR_SAVE_FILE" = "Impossible d'enregistrer le fichier";
+"MIGRATION_ERROR_INVALID_PLIST" = "plist non valide";
+"MIGRATION_ERROR_INVALID_PROFILE" = "Profil de configuration non valide";
+"MIGRATION_ERROR_NO_PAYLOAD" = "Aucune charge utile Support App";
+"MIGRATION_ERROR_PARSE_FAILED" = "Le fichier sélectionné n'a pas pu être analysé en tant que plist : %@";
+"MIGRATION_ERROR_NO_PAYLOAD_CONTENT" = "Le fichier .mobileconfig sélectionné ne contient pas de tableau PayloadContent.";
+"MIGRATION_ERROR_MISSING_SUPPORT_PAYLOAD" = "Le fichier .mobileconfig sélectionné ne contient pas de charge utile nl.root3.support.";
+"MIGRATION_ERROR_PLIST_NOT_DICT" = "La racine du fichier .plist sélectionné n'est pas un dictionnaire.";
+"MIGRATION_ERROR_FILE_FORMAT" = "%@ : %@";
