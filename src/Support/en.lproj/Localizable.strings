@@ -83,8 +83,7 @@
 "STORAGE" = "Storage";
 "NETWORK_IP_ADDRESS" = "Network IP Address";
 "BACK" = "Back";
-
-
+"EXTENSION_IDENTIFIER_NO_DOT_WARNING" = "Identifier must not contain a dot (.), otherwise the menu bar notifier badge will not update.";
 
 /* Legacy 2.x configuration migration */
 "MIGRATE_LEGACY_CONFIG" = "Migrate Support App 2.x configuration…";

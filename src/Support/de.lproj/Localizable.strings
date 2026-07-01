@@ -83,8 +83,7 @@
 "STORAGE" = "Speicher";
 "NETWORK_IP_ADDRESS" = "IP-Addresse";
 "BACK" = "Zurück";
-
-
+"EXTENSION_IDENTIFIER_NO_DOT_WARNING" = "Der Bezeichner darf keinen Punkt (.) enthalten, sonst wird das Hinweis-Badge in der Menüleiste nicht aktualisiert.";
 
 /* Legacy 2.x configuration migration */
 "MIGRATE_LEGACY_CONFIG" = "Support App 2.x-Konfiguration migrieren…";
