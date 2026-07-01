@@ -235,7 +235,7 @@ struct ItemConfigurationView: View {
                                 .foregroundColor(.red)
                                 .font(.caption)
                         } else if extensionIdentifier.contains(".") {
-                            Text("\(Image(systemName: "exclamationmark.triangle.fill")) Identifier must not contain a dot (.), otherwise the menu bar notifier badge will not update.")
+                            Text("\(Image(systemName: "exclamationmark.triangle.fill")) \(Text("EXTENSION_IDENTIFIER_NO_DOT_WARNING"))")
                                 .frame(maxWidth: 200, alignment: .leading)
                                 .foregroundColor(.orange)
                                 .font(.caption)

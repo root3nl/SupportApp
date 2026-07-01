@@ -83,3 +83,4 @@
 "STORAGE" = "Storage";
 "NETWORK_IP_ADDRESS" = "Network IP Address";
 "BACK" = "Retour";
+"EXTENSION_IDENTIFIER_NO_DOT_WARNING" = "L'identifiant ne doit pas contenir de point (.), sinon le badge de notification de la barre des menus ne sera pas mis à jour.";

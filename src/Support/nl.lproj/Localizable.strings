@@ -83,3 +83,4 @@
 "STORAGE" = "Storage";
 "NETWORK_IP_ADDRESS" = "Network IP Address";
 "BACK" = "Terug";
+"EXTENSION_IDENTIFIER_NO_DOT_WARNING" = "Identifier mag geen punt (.) bevatten, anders wordt de melding in de menubalk niet bijgewerkt.";
