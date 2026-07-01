@@ -202,7 +202,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             timerEightHours = Timer.scheduledTimer(withTimeInterval: 28800, repeats: true) { time in
                 // Only run when App Catalog is installed
                 if self.appCatalogController.catalogInstalled() {
-                    self.appCatalogController.getAppUpdates()
+                    self.appCatalogController.decodeAppUpdates()
                 }
             }
             
@@ -244,6 +244,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                 }
             }
         }
+        
     }
     
     // Resolve which info item types are actually visible in the active layout.
@@ -451,7 +452,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 
             // Action when clicked on the menu bar icon
             button.action = #selector(self.statusBarButtonClicked)
-            
+
             // Monitor left or right clicks
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
         }
@@ -570,32 +571,32 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             togglePopover(nil)
             return
         }
-        
-        // Show menu for right click
-        if event.type == NSEvent.EventType.rightMouseUp {
-            logger.debug("Right mouse button clicked...")
+
+        // Show menu for right click or control-click
+        if event.type == NSEvent.EventType.rightMouseUp || NSEvent.modifierFlags.contains(.control) {
+            logger.debug("Right mouse button or control-click detected...")
             closePopover(sender: nil)
 
             // FIXME: Old deprecated API
             statusBarItem?.popUpMenu(menu)
-            
+
             // FIXME: Could not get new API to work correctly
 //            statusBarItem.menu = menu // add menu to button...
 //            statusBarItem.button?.performClick(nil) // ...and click
-                           
+
         // Show Popover for left click
         } else {
             logger.debug("Left mouse button clicked...")
             togglePopover(nil)
         }
     }
-    
+
     // FIXME: Could not get new API to work correctly
 //    @objc func menuDidClose(_ menu: NSMenu) {
 //        statusBarItem.menu = nil // remove menu so button works as before
 //        logger.debug("menuDidClose")
 //    }
-    
+
     // MARK: - Close or open popover depending on current state
     @objc func togglePopover(_ sender: Any?) {
       if popover.isShown {
@@ -617,7 +618,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     func showPopover(sender: Any?) {
         
         if let button = statusBarItem?.button {
-            
+
             // Disable animation when popover opens
             self.popover.animates = false
             
@@ -679,7 +680,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         
         // Only run when App Catalog is installed
         if appCatalogController.catalogInstalled() {
-            self.appCatalogController.getAppUpdates()
+            self.appCatalogController.decodeAppUpdates()
         }
         
         // Uninstall Privileged Helper Tool if configured
@@ -692,7 +693,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     func closePopover(sender: Any?) {
 //        popover.performClose(sender)
         popover.close()
-        
+
         // Stop monitoring mouse clicks outside the popover
         eventMonitor?.stop()
         
