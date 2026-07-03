@@ -58,6 +58,7 @@ struct ItemExtension: View {
     // Enable animation
     var animate: Bool
     
+    @AppStorage private var extensionTitle: String?
     @AppStorage private var extensionValue: String?
     @AppStorage private var extensionLoading: Bool?
     @AppStorage private var extensionAlert: Bool?
@@ -97,6 +98,7 @@ struct ItemExtension: View {
         self.hoverEffectEnable = hoverEffectEnable
         self.animate = animate
         
+        self._extensionTitle = AppStorage("\(extensionIdentifier)_title", store: .standard)
         self._extensionValue = AppStorage(extensionIdentifier, store: .standard)
         self._extensionLoading = AppStorage("\(extensionIdentifier)_loading", store: .standard)
         self._extensionAlert = AppStorage("\(extensionIdentifier)_alert", store: .standard)
@@ -105,6 +107,15 @@ struct ItemExtension: View {
         self._extensionAction = AppStorage("\(extensionIdentifier)_action", store: .standard)
     }
     
+    // Show dynamic title or MDM managed title
+    var activeExtensionTitle: String {
+        if let extensionTitle {
+            return extensionTitle
+        } else {
+            return title
+        }
+    }
+
     // Show dynamic SF Symbol or MDM managed SF Symbol
     var activeExtensionSymbol: String {
         if let extensionSymbol {
@@ -163,7 +174,7 @@ struct ItemExtension: View {
                     
                     VStack(alignment: .leading) {
                         
-                        Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
+                        Text(activeExtensionTitle.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
                             .font(.system(.body, design: .default))
                             .fontWeight(.medium)
                             .kerning(Constants.defaultKerning)
@@ -194,7 +205,7 @@ struct ItemExtension: View {
             }
             .frame(width: Constants.largeItemWidth, height: Constants.itemHeight)
             .contentShape(Capsule())
-            .accessibilityLabel(title + ", " + (subtitle ?? ""))
+            .accessibilityLabel(activeExtensionTitle + ", " + (subtitle ?? ""))
             .alert(isPresented: $showingAlert) {
                 Alert(title: Text(NSLocalizedString("An error occurred", comment: "")), message: Text(preferences.errorMessage), dismissButton: .default(Text("OK")))
             }
@@ -270,7 +281,7 @@ struct ItemExtension: View {
                     
                     VStack(alignment: .leading) {
                         
-                        Text(title.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
+                        Text(activeExtensionTitle.replaceLocalVariables(computerInfo: computerinfo, userInfo: userinfo))
                             .font(.system(.body, design: .rounded)).fontWeight(.medium)
                             .lineLimit(2)
                         
@@ -295,7 +306,7 @@ struct ItemExtension: View {
 //                }
             }
             .frame(width: Constants.largeItemWidth, height: Constants.itemLegacyHeight)
-            .accessibilityLabel(title + ", " + (subtitle ?? ""))
+            .accessibilityLabel(activeExtensionTitle + ", " + (subtitle ?? ""))
             .background(hoverView && hoverEffectEnable && activeExtensionAction != "" ? EffectsView(material: NSVisualEffectView.Material.windowBackground, blendingMode: NSVisualEffectView.BlendingMode.withinWindow) : EffectsView(material: NSVisualEffectView.Material.popover, blendingMode: NSVisualEffectView.BlendingMode.withinWindow))
             .cornerRadius(10)
             // Apply gray and black border in Dark Mode to better view the buttons like Control Center
@@ -351,7 +362,7 @@ struct ItemExtension: View {
     func tapGesture() {
         // Don't do anything when no link is specified
         guard activeExtensionAction != "" else {
-            logger.debug("No link specified for \(title, privacy: .public), button disabled...")
+            logger.debug("No link specified for \(activeExtensionTitle, privacy: .public), button disabled...")
             return
         }
         
