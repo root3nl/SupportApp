@@ -21,16 +21,56 @@ launch_daemon="nl.root3.support.helper"
 # CLI location
 cli_location="/usr/local/bin/SupportHelper"
 
-# Create the LaunchAgent
-defaults write "/Library/LaunchDaemons/${launch_daemon}.plist" Label -string "${launch_daemon}"
-defaults write "/Library/LaunchDaemons/${launch_daemon}.plist" ProgramArguments -array -string "${cli_location}"
-# Keep the process alive
-defaults write "/Library/LaunchDaemons/${launch_daemon}.plist" KeepAlive -boolean yes
-# Run at every reboot
-defaults write "/Library/LaunchDaemons/${launch_daemon}.plist" RunAtLoad -boolean yes
+# Developer Team Identifier used for the SpawnConstraint
+team_identifier="98LJ4XBGYK"
+
+# Path to PlistBuddy
+plistbuddy="/usr/libexec/PlistBuddy"
+
+# Path to the LaunchDaemon property list
+launch_daemon_plist="/Library/LaunchDaemons/${launch_daemon}.plist"
+
+# Load Requirements
+autoload is-at-least
+
+# macOS Version
+os_version=$(sw_vers -productVersion)
+
+# Remove any existing LaunchDaemon plist to avoid stale keys and extended
+# attributes. Note: the plist is created with PlistBuddy instead of
+# "defaults write", as defaults hands the write to cfprefsd which adds the
+# com.apple.quarantine extended attribute to every file it creates. launchd
+# refuses to load quarantined property list files on macOS 27 and higher.
+rm -f "${launch_daemon_plist}"
+
+# Create the LaunchDaemon
+# - KeepAlive keeps the process alive
+# - RunAtLoad runs at every reboot
+"${plistbuddy}" \
+	-c "Add :Label string ${launch_daemon}" \
+	-c "Add :ProgramArguments array" \
+	-c "Add :ProgramArguments:0 string ${cli_location}" \
+	-c "Add :KeepAlive bool true" \
+	-c "Add :RunAtLoad bool true" \
+	"${launch_daemon_plist}" > /dev/null
+
+# Add a SpawnConstraint on macOS 14 and higher so launchd only spawns this
+# service when the binary is signed by Root3 with the expected signing
+# identifier
+if is-at-least 14.0 ${os_version}; then
+	"${plistbuddy}" \
+		-c "Add :SpawnConstraint dict" \
+		-c "Add :SpawnConstraint:team-identifier string ${team_identifier}" \
+		-c "Add :SpawnConstraint:signing-identifier string nl.root3.support.helper" \
+		"${launch_daemon_plist}" > /dev/null
+fi
+
+# Just to be sure, remove the quarantine extended attribute if present
+xattr -d com.apple.quarantine "${launch_daemon_plist}" &> /dev/null
+
 # Set permissions
-chown root:wheel "/Library/LaunchDaemons/${launch_daemon}.plist"
-chmod 644 "/Library/LaunchDaemons/${launch_daemon}.plist"
+chown root:wheel "${launch_daemon_plist}"
+chmod 644 "${launch_daemon_plist}"
 
 # Unload the LaunchDaemon
 launchctl bootout system "/Library/LaunchDaemons/${launch_daemon}.plist" &> /dev/null

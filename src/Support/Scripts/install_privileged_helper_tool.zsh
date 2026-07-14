@@ -25,6 +25,18 @@ launch_daemon="nl.root3.support.helper"
 # Install location
 install_location="/Applications/Support.app"
 
+# Developer Team Identifier used for the SpawnConstraint
+team_identifier="98LJ4XBGYK"
+
+# Path to PlistBuddy
+plistbuddy="/usr/libexec/PlistBuddy"
+
+# Load Requirements
+autoload is-at-least
+
+# macOS Version
+os_version=$(sw_vers -productVersion)
+
 # ------------------    PrivilegedHelperTool    ------------------
 
 # Create "/Library/PrivilegedHelperTools/" if not present
@@ -40,17 +52,47 @@ chmod 544 "${privileged_helper_tool}"
 
 # ------------------    LaunchDaemon PrivilegedHelperTool    ------------------
 
-# Add AssociatedBundleIdentifiers to show app name in Login Items on 
-# macOS 13 and higher instead of developer name
-defaults write "/Library/LaunchDaemons/${launch_daemon}.plist" AssociatedBundleIdentifiers -array -string "nl.root3.support"
-# Set the Label and ProgramArguments
-defaults write "/Library/LaunchDaemons/${launch_daemon}.plist" Label -string "${launch_daemon}"
-defaults write "/Library/LaunchDaemons/${launch_daemon}.plist" ProgramArguments -array -string "${privileged_helper_tool}"
-# Set MachServices
-defaults write "/Library/LaunchDaemons/${launch_daemon}.plist" MachServices -dict -string "nl.root3.support.helper" -bool true
+# Path to the LaunchDaemon property list
+launch_daemon_plist="/Library/LaunchDaemons/${launch_daemon}.plist"
+
+# Remove any existing LaunchDaemon plist to avoid stale keys and extended
+# attributes. Note: the plist is created with PlistBuddy instead of
+# "defaults write", as defaults hands the write to cfprefsd which adds the
+# com.apple.quarantine extended attribute to every file it creates. launchd
+# refuses to load quarantined property list files on macOS 27 and higher.
+rm -f "${launch_daemon_plist}"
+
+# Create the LaunchDaemon
+# - AssociatedBundleIdentifiers shows the app name in Login Items on
+#   macOS 13 and higher instead of the developer name
+"${plistbuddy}" \
+  -c "Add :Label string ${launch_daemon}" \
+  -c "Add :ProgramArguments array" \
+  -c "Add :ProgramArguments:0 string ${privileged_helper_tool}" \
+  -c "Add :MachServices dict" \
+  -c "Add :MachServices:nl.root3.support.helper bool true" \
+  -c "Add :AssociatedBundleIdentifiers array" \
+  -c "Add :AssociatedBundleIdentifiers:0 string nl.root3.support" \
+  "${launch_daemon_plist}" > /dev/null
+
+# Add a SpawnConstraint on macOS 14 and higher so launchd only spawns this
+# service when the binary is signed by Root3 with the expected signing
+# identifier. This prevents an orphaned plist from launching a malicious
+# binary placed at the same path.
+if is-at-least 14.0 ${os_version}; then
+  "${plistbuddy}" \
+    -c "Add :SpawnConstraint dict" \
+    -c "Add :SpawnConstraint:team-identifier string ${team_identifier}" \
+    -c "Add :SpawnConstraint:signing-identifier string nl.root3.support.helper" \
+    "${launch_daemon_plist}" > /dev/null
+fi
+
+# Just to be sure, remove the quarantine extended attribute if present
+xattr -d com.apple.quarantine "${launch_daemon_plist}" &> /dev/null
+
 # Set permissions
-chown root:wheel "/Library/LaunchDaemons/${launch_daemon}.plist"
-chmod 644 "/Library/LaunchDaemons/${launch_daemon}.plist"
+chown root:wheel "${launch_daemon_plist}"
+chmod 644 "${launch_daemon_plist}"
 
 # Unload the LaunchDaemon
 if launchctl print "system/${launch_daemon}" &> /dev/null ; then
