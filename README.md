@@ -17,7 +17,7 @@ The Support App is a macOS menu bar app designed to assist organizations in vari
 * **Access to support channels and resources:** Users can conveniently access support channels, company resources such as websites, applications, and file servers through the app.
 * **Modern and native macOS app:** The app offers a visually appealing and native macOS experience, incorporating your corporate identity.
 
-Support App is developed by Root3, an organization specialized in managing Apple devices based in Halfweg, The Netherlands. Root3 provides managed workplaces, consultancy, and support services to organizations, helping them maximize the benefits of their Apple devices.
+Support App is developed by Root3, an organization specialized in managing Apple devices based in Halfweg, The Netherlands. Root3 provides managed workplaces, consultancy, support services, and [App Catalog](https://appcatalog.cloud) for third-party macOS app patch management, helping organizations maximize the benefits and security of their Apple devices.
 
 Support App was publicly released in 2020 and had since then become a popular tool and used within organizations all over the world.
 
