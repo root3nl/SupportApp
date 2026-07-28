@@ -22,6 +22,12 @@ launch_agent="nl.root3.support"
 # LaunchDaemon label
 launch_daemon="nl.root3.support.helper"
 
+# Developer Team Identifier used for the SpawnConstraint
+team_identifier="98LJ4XBGYK"
+
+# Path to PlistBuddy
+plistbuddy="/usr/libexec/PlistBuddy"
+
 # Install location
 install_location="/Applications/Support.app"
 
@@ -47,19 +53,49 @@ fi
 
 # ------------------    LaunchAgent    ------------------
 
-# Add AssociatedBundleIdentifiers to show app name in Login Items on 
-# macOS 13 and higher instead of developer name
-defaults write "/Library/LaunchAgents/${launch_agent}.plist" AssociatedBundleIdentifiers -array -string "nl.root3.support"
-# Set the Label and ProgramArguments
-defaults write "/Library/LaunchAgents/${launch_agent}.plist" Label -string "${launch_agent}"
-defaults write "/Library/LaunchAgents/${launch_agent}.plist" ProgramArguments -array -string "/Applications/Support.app/Contents/MacOS/Support"
-# Run every reboot
-defaults write "/Library/LaunchAgents/${launch_agent}.plist" KeepAlive -boolean yes
-# Set ProcessType to Interactive
-defaults write "/Library/LaunchAgents/${launch_agent}.plist" ProcessType -string "Interactive"
+# Path to the LaunchAgent property list
+launch_agent_plist="/Library/LaunchAgents/${launch_agent}.plist"
+
+# Remove any existing LaunchAgent plist to avoid stale keys and extended
+# attributes. Note: the plist is created with PlistBuddy instead of
+# "defaults write", as defaults hands the write to cfprefsd which adds the
+# com.apple.quarantine extended attribute to every file it creates. launchd
+# refuses to load quarantined property list files on macOS 27 and higher.
+rm -f "${launch_agent_plist}"
+
+# Create the LaunchAgent
+# - AssociatedBundleIdentifiers shows the app name in Login Items on
+#   macOS 13 and higher instead of the developer name
+# - KeepAlive runs the app at every reboot and relaunches it when quit
+# - ProcessType Interactive gives the app UI process priority
+"${plistbuddy}" \
+	-c "Add :Label string ${launch_agent}" \
+	-c "Add :ProgramArguments array" \
+	-c "Add :ProgramArguments:0 string ${install_location}/Contents/MacOS/Support" \
+	-c "Add :KeepAlive bool true" \
+	-c "Add :ProcessType string Interactive" \
+	-c "Add :AssociatedBundleIdentifiers array" \
+	-c "Add :AssociatedBundleIdentifiers:0 string nl.root3.support" \
+	"${launch_agent_plist}" > /dev/null
+
+# Add a SpawnConstraint on macOS 14 and higher so launchd only spawns this
+# service when the binary is signed by Root3 with the expected signing
+# identifier. This prevents an orphaned plist from launching a malicious
+# binary placed at the same path.
+if is-at-least 14.0 ${os_version}; then
+	"${plistbuddy}" \
+		-c "Add :SpawnConstraint dict" \
+		-c "Add :SpawnConstraint:team-identifier string ${team_identifier}" \
+		-c "Add :SpawnConstraint:signing-identifier string nl.root3.support" \
+		"${launch_agent_plist}" > /dev/null
+fi
+
+# Just to be sure, remove the quarantine extended attribute if present
+xattr -d com.apple.quarantine "${launch_agent_plist}" &> /dev/null
+
 # Set permissions
-chown root:wheel "/Library/LaunchAgents/${launch_agent}.plist"
-chmod 644 "/Library/LaunchAgents/${launch_agent}.plist"
+chown root:wheel "${launch_agent_plist}"
+chmod 644 "${launch_agent_plist}"
 
 # Reload the LaunchAgent
 if [[ -n "${username}" ]]; then

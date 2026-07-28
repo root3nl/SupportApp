@@ -19,6 +19,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     var timer: Timer?
     var timerFiveMinutes: Timer?
     var timerEightHours: Timer?
+
+    // Extension '_alert' keys we already KVO-observe, to avoid registering duplicate observers
+    // when the rows are decoded more than once.
+    var observedExtensionAlertKeys: Set<String> = []
     let menu = NSMenu()
     var statusBarItem: NSStatusItem?
     
@@ -159,7 +163,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         
         // Receive notification after macOS update check
         NotificationCenter.default.addObserver(self, selector: #selector(setStatusBarIcon), name: Notification.Name.recommendedUpdates, object: nil)
-        
+
+        // Per-key observers for each extension's '_alert' key are registered in
+        // registerExtensionObservers() once the rows are decoded.
+
         // Decode app updates and reload status bar item when Catalog Agent or App completed an update check
         DistributedNotificationCenter.default().addObserver(forName: Notification.Name.updateCheckCompleted, object: nil, queue: .main) { _ in
             // Decode app updates
@@ -195,7 +202,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             timerEightHours = Timer.scheduledTimer(withTimeInterval: 28800, repeats: true) { time in
                 // Only run when App Catalog is installed
                 if self.appCatalogController.catalogInstalled() {
-                    self.appCatalogController.getAppUpdates()
+                    self.appCatalogController.decodeAppUpdates()
                 }
             }
             
@@ -237,6 +244,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                 }
             }
         }
+        
     }
     
     // Resolve which info item types are actually visible in the active layout.
@@ -320,8 +328,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                         logger.error("\(error.localizedDescription)")
                     }
                     
-                    // Set current URL
-                    self.lastKnownStatusBarItemUrl = self.preferences.statusBarIcon
+                    // Set current URL only when it actually changed. Writing this @AppStorage
+                    // value unconditionally would post UserDefaults.didChangeNotification on every
+                    // call, which our process-level observer reacts to by calling setStatusBarIcon()
+                    // again — an infinite loop whenever a remote (https) StatusBarIcon is configured.
+                    if self.lastKnownStatusBarItemUrl != self.preferences.statusBarIcon {
+                        self.lastKnownStatusBarItemUrl = self.preferences.statusBarIcon
+                    }
 
                     
                 } else {
@@ -439,7 +452,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 
             // Action when clicked on the menu bar icon
             button.action = #selector(self.statusBarButtonClicked)
-            
+
             // Monitor left or right clicks
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
         }
@@ -541,8 +554,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         case "Rows":
             logger.debug("\(keyPath! as NSObject, privacy: .public) changed, decoding rows...")
             self.decodeRows()
-        case let key where key?.hasSuffix("_alert") == true:
-            logger.debug("\(key! as NSObject, privacy: .public) changed")
         default:
             logger.debug("Some other change detected...")
         }
@@ -560,32 +571,32 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             togglePopover(nil)
             return
         }
-        
-        // Show menu for right click
-        if event.type == NSEvent.EventType.rightMouseUp {
-            logger.debug("Right mouse button clicked...")
+
+        // Show menu for right click or control-click
+        if event.type == NSEvent.EventType.rightMouseUp || NSEvent.modifierFlags.contains(.control) {
+            logger.debug("Right mouse button or control-click detected...")
             closePopover(sender: nil)
 
             // FIXME: Old deprecated API
             statusBarItem?.popUpMenu(menu)
-            
+
             // FIXME: Could not get new API to work correctly
 //            statusBarItem.menu = menu // add menu to button...
 //            statusBarItem.button?.performClick(nil) // ...and click
-                           
+
         // Show Popover for left click
         } else {
             logger.debug("Left mouse button clicked...")
             togglePopover(nil)
         }
     }
-    
+
     // FIXME: Could not get new API to work correctly
 //    @objc func menuDidClose(_ menu: NSMenu) {
 //        statusBarItem.menu = nil // remove menu so button works as before
 //        logger.debug("menuDidClose")
 //    }
-    
+
     // MARK: - Close or open popover depending on current state
     @objc func togglePopover(_ sender: Any?) {
       if popover.isShown {
@@ -607,7 +618,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     func showPopover(sender: Any?) {
         
         if let button = statusBarItem?.button {
-            
+
             // Disable animation when popover opens
             self.popover.animates = false
             
@@ -669,7 +680,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         
         // Only run when App Catalog is installed
         if appCatalogController.catalogInstalled() {
-            self.appCatalogController.getAppUpdates()
+            self.appCatalogController.decodeAppUpdates()
         }
         
         // Uninstall Privileged Helper Tool if configured
@@ -682,7 +693,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     func closePopover(sender: Any?) {
 //        popover.performClose(sender)
         popover.close()
-        
+
         // Stop monitoring mouse clicks outside the popover
         eventMonitor?.stop()
         
@@ -991,30 +1002,44 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                     self.preferences.rows = rows
                     self.localPreferences.rows = rows
                 }
-                
-                // Register any Extension alert observers
+
+                // Observe each extension's '_alert' key so the menu bar badge updates
                 self.registerExtensionObservers(rows: rows)
             }
-                        
+
         } catch {
             logger.error("\(error.localizedDescription)")
         }
     }
 
     // MARK: - Start observing alerts for extensions
+    // Each extension stores its alert state in a '<ExtensionID>_alert' key. We KVO-observe each
+    // one so the menu bar notifier badge refreshes (via observeValue) when the alert changes,
+    // including changes made by the privileged OnAppearAction/Action scripts in another process.
+    //
+    // NOTE: KVO uses KVC key paths, which treat '.' as a path separator. An ExtensionID that
+    // contains a dot (e.g. a reverse-DNS identifier) therefore cannot be observed — the observer
+    // registers but never fires, so the badge would not update. We skip those and log a warning.
+    // ExtensionIDs must not contain dots.
     func registerExtensionObservers(rows: [Row]) {
-        logger.debug("Registering extension observers")
-        
         for row in rows {
-            if let items = row.items {
-                let extensions = items.filter { $0.type == "Extension" }
-                for extensionItem in extensions {
-                    if let extID = extensionItem.extensionIdentifier {
-                        let alertKey = "\(extID)_alert"
-                        logger.debug("Observing extension alert key: \(alertKey, privacy: .public)")
-                        defaults.addObserver(self, forKeyPath: alertKey, options: .new, context: nil)
-                    }
+            guard let items = row.items else { continue }
+            for extensionItem in items where extensionItem.type == "Extension" {
+                guard let extID = extensionItem.extensionIdentifier else { continue }
+
+                if extID.contains(".") {
+                    logger.warning("Extension identifier '\(extID, privacy: .public)' contains a '.', which prevents its menu bar notifier badge from updating automatically. Use an identifier without dots.")
+                    continue
                 }
+
+                let alertKey = "\(extID)_alert"
+
+                // Avoid registering duplicate observers when rows are decoded more than once
+                guard !observedExtensionAlertKeys.contains(alertKey) else { continue }
+                observedExtensionAlertKeys.insert(alertKey)
+
+                logger.debug("Observing extension alert key: \(alertKey, privacy: .public)")
+                defaults.addObserver(self, forKeyPath: alertKey, options: .new, context: nil)
             }
         }
     }
