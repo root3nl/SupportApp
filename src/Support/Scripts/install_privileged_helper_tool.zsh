@@ -25,17 +25,9 @@ launch_daemon="nl.root3.support.helper"
 # Install location
 install_location="/Applications/Support.app"
 
-# Developer Team Identifier used for the SpawnConstraint
-team_identifier="98LJ4XBGYK"
-
-# Path to PlistBuddy
-plistbuddy="/usr/libexec/PlistBuddy"
-
-# Load Requirements
-autoload is-at-least
-
-# macOS Version
-os_version=$(sw_vers -productVersion)
+# Directory containing this script and the LaunchDaemon property list shipped
+# alongside it in the app bundle
+script_directory="$(cd -- "$(dirname -- "$0")" && pwd -P)"
 
 # ------------------    PrivilegedHelperTool    ------------------
 
@@ -52,43 +44,32 @@ chmod 544 "${privileged_helper_tool}"
 
 # ------------------    LaunchDaemon PrivilegedHelperTool    ------------------
 
+# Path to the LaunchDaemon property list shipped alongside this script
+launch_daemon_plist_source="${script_directory}/${launch_daemon}.plist"
+
 # Path to the LaunchDaemon property list
 launch_daemon_plist="/Library/LaunchDaemons/${launch_daemon}.plist"
 
-# Remove any existing LaunchDaemon plist to avoid stale keys and extended
-# attributes. Note: the plist is created with PlistBuddy instead of
-# "defaults write", as defaults hands the write to cfprefsd which adds the
-# com.apple.quarantine extended attribute to every file it creates. launchd
-# refuses to load quarantined property list files on macOS 27 and higher.
-rm -f "${launch_daemon_plist}"
-
-# Create the LaunchDaemon
-# - AssociatedBundleIdentifiers shows the app name in Login Items on
-#   macOS 13 and higher instead of the developer name
-"${plistbuddy}" \
-  -c "Add :Label string ${launch_daemon}" \
-  -c "Add :ProgramArguments array" \
-  -c "Add :ProgramArguments:0 string ${privileged_helper_tool}" \
-  -c "Add :MachServices dict" \
-  -c "Add :MachServices:nl.root3.support.helper bool true" \
-  -c "Add :AssociatedBundleIdentifiers array" \
-  -c "Add :AssociatedBundleIdentifiers:0 string nl.root3.support" \
-  "${launch_daemon_plist}" > /dev/null
-
-# Add a SpawnConstraint on macOS 14 and higher so launchd only spawns this
-# service when the binary is signed by Root3 with the expected signing
-# identifier. This prevents an orphaned plist from launching a malicious
-# binary placed at the same path.
-if is-at-least 14.0 ${os_version}; then
-  "${plistbuddy}" \
-    -c "Add :SpawnConstraint dict" \
-    -c "Add :SpawnConstraint:team-identifier string ${team_identifier}" \
-    -c "Add :SpawnConstraint:signing-identifier string nl.root3.support.helper" \
-    "${launch_daemon_plist}" > /dev/null
+# Install the LaunchDaemon. The property list is a static file shipped inside
+# the app bundle and is only copied into place, never generated here. Earlier
+# versions created it with "defaults write", which hands the write to cfprefsd
+# and adds the com.apple.quarantine extended attribute to every file it
+# creates. launchd refuses to load quarantined property list files on macOS 27
+# and higher.
+if [[ ! -f "${launch_daemon_plist_source}" ]]; then
+  echo "Missing ${launch_daemon_plist_source}, keeping the existing LaunchDaemon"
+  exit 1
 fi
 
-# Just to be sure, remove the quarantine extended attribute if present
-xattr -d com.apple.quarantine "${launch_daemon_plist}" &> /dev/null
+# Remove any existing property list first. Overwriting in place reuses the
+# existing inode and keeps its extended attributes, including a quarantine
+# attribute left behind by an earlier version of this script.
+rm -f "${launch_daemon_plist}"
+
+# Copy without extended attributes or resource forks. The source comes from the
+# signed and notarized app bundle and is not quarantined, -X guarantees nothing
+# is carried over.
+cp -X "${launch_daemon_plist_source}" "${launch_daemon_plist}"
 
 # Set permissions
 chown root:wheel "${launch_daemon_plist}"

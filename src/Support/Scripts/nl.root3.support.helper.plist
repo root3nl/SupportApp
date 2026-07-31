@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>nl.root3.support.helper</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/Library/PrivilegedHelperTools/nl.root3.support.helper</string>
+	</array>
+	<key>MachServices</key>
+	<dict>
+		<key>nl.root3.support.helper</key>
+		<true/>
+	</dict>
+	<key>AssociatedBundleIdentifiers</key>
+	<array>
+		<string>nl.root3.support</string>
+	</array>
+	<key>SpawnConstraint</key>
+	<dict>
+		<key>team-identifier</key>
+		<string>98LJ4XBGYK</string>
+		<key>signing-identifier</key>
+		<string>nl.root3.support.helper</string>
+	</dict>
+</dict>
+</plist>

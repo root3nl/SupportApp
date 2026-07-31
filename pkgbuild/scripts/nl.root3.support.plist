@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>nl.root3.support</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/Applications/Support.app/Contents/MacOS/Support</string>
+	</array>
+	<key>KeepAlive</key>
+	<true/>
+	<key>ProcessType</key>
+	<string>Interactive</string>
+	<key>AssociatedBundleIdentifiers</key>
+	<array>
+		<string>nl.root3.support</string>
+	</array>
+	<key>SpawnConstraint</key>
+	<dict>
+		<key>team-identifier</key>
+		<string>98LJ4XBGYK</string>
+		<key>signing-identifier</key>
+		<string>nl.root3.support</string>
+	</dict>
+</dict>
+</plist>

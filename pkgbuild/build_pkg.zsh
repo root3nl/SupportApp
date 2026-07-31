@@ -75,6 +75,11 @@ nfs_home_directory=$(dscl . read /Users/${username} NFSHomeDirectory | awk '{pri
 # Create directory
 mkdir -p "${nfs_home_directory}/Downloads/${app_name}_${version}"
 
+# Validate the LaunchAgent property list shipped alongside the postinstall
+# script. The postinstall script copies it into /Library/LaunchAgents, so a
+# missing or malformed file breaks the install.
+plutil -lint "${scripts}"/*.plist
+
 # Build and export pkg to Downloads folder
 pkgbuild --component-plist "${component_plist}" \
     --root "${payload}" \

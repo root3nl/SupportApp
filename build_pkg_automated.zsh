@@ -81,6 +81,11 @@ fi
 # Move app bundle to payload folder
 cp -r "${current_directory}/build/${app_name}.app" "${payload}"
 
+# Validate the LaunchAgent property list shipped alongside the postinstall
+# script. The postinstall script copies it into /Library/LaunchAgents, so a
+# missing or malformed file breaks the install.
+plutil -lint "${scripts}"/*.plist
+
 # Set credentials for notarization
 echo "Xcode version: ${xcode_version}"
 "${xcode_version}/Contents/Developer/usr/bin/notarytool" store-credentials --apple-id "${apple_id}" --team-id "98LJ4XBGYK" --password "${apple_id_app_specific_password}" "${keychain_profile}"

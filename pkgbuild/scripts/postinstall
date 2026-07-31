@@ -22,14 +22,12 @@ launch_agent="nl.root3.support"
 # LaunchDaemon label
 launch_daemon="nl.root3.support.helper"
 
-# Developer Team Identifier used for the SpawnConstraint
-team_identifier="98LJ4XBGYK"
-
-# Path to PlistBuddy
-plistbuddy="/usr/libexec/PlistBuddy"
-
 # Install location
 install_location="/Applications/Support.app"
+
+# Directory containing this script and the LaunchAgent property list shipped
+# alongside it in the package
+script_directory="$(cd -- "$(dirname -- "$0")" && pwd -P)"
 
 # Get the username of the currently logged in user
 username=$(scutil <<< "show State:/Users/ConsoleUser" | awk '/Name :/ && ! /loginwindow/ { print $3 }')
@@ -53,49 +51,35 @@ fi
 
 # ------------------    LaunchAgent    ------------------
 
+# Path to the LaunchAgent property list shipped alongside this script
+launch_agent_plist_source="${script_directory}/${launch_agent}.plist"
+
 # Path to the LaunchAgent property list
 launch_agent_plist="/Library/LaunchAgents/${launch_agent}.plist"
 
-# Remove any existing LaunchAgent plist to avoid stale keys and extended
-# attributes. Note: the plist is created with PlistBuddy instead of
-# "defaults write", as defaults hands the write to cfprefsd which adds the
-# com.apple.quarantine extended attribute to every file it creates. launchd
+# Install the LaunchAgent. The property list is a static file shipped with this
+# package and is only copied into place, never generated here. Earlier versions
+# created it with "defaults write", which hands the write to cfprefsd and adds
+# the com.apple.quarantine extended attribute to every file it creates. launchd
 # refuses to load quarantined property list files on macOS 27 and higher.
-rm -f "${launch_agent_plist}"
+if [[ -f "${launch_agent_plist_source}" ]]; then
 
-# Create the LaunchAgent
-# - AssociatedBundleIdentifiers shows the app name in Login Items on
-#   macOS 13 and higher instead of the developer name
-# - KeepAlive runs the app at every reboot and relaunches it when quit
-# - ProcessType Interactive gives the app UI process priority
-"${plistbuddy}" \
-	-c "Add :Label string ${launch_agent}" \
-	-c "Add :ProgramArguments array" \
-	-c "Add :ProgramArguments:0 string ${install_location}/Contents/MacOS/Support" \
-	-c "Add :KeepAlive bool true" \
-	-c "Add :ProcessType string Interactive" \
-	-c "Add :AssociatedBundleIdentifiers array" \
-	-c "Add :AssociatedBundleIdentifiers:0 string nl.root3.support" \
-	"${launch_agent_plist}" > /dev/null
+	# Remove any existing property list first. Overwriting in place reuses the
+	# existing inode and keeps its extended attributes, including a quarantine
+	# attribute left behind by an earlier version of this script.
+	rm -f "${launch_agent_plist}"
 
-# Add a SpawnConstraint on macOS 14 and higher so launchd only spawns this
-# service when the binary is signed by Root3 with the expected signing
-# identifier. This prevents an orphaned plist from launching a malicious
-# binary placed at the same path.
-if is-at-least 14.0 ${os_version}; then
-	"${plistbuddy}" \
-		-c "Add :SpawnConstraint dict" \
-		-c "Add :SpawnConstraint:team-identifier string ${team_identifier}" \
-		-c "Add :SpawnConstraint:signing-identifier string nl.root3.support" \
-		"${launch_agent_plist}" > /dev/null
+	# Copy without extended attributes or resource forks. The source comes from
+	# the signed and notarized package and is not quarantined, -X guarantees
+	# nothing is carried over.
+	cp -X "${launch_agent_plist_source}" "${launch_agent_plist}"
+
+	# Set permissions
+	chown root:wheel "${launch_agent_plist}"
+	chmod 644 "${launch_agent_plist}"
+else
+	echo "Missing ${launch_agent_plist_source}, keeping the existing LaunchAgent"
 fi
-
-# Just to be sure, remove the quarantine extended attribute if present
-xattr -d com.apple.quarantine "${launch_agent_plist}" &> /dev/null
-
-# Set permissions
-chown root:wheel "${launch_agent_plist}"
-chmod 644 "${launch_agent_plist}"
 
 # Reload the LaunchAgent
 if [[ -n "${username}" ]]; then
