@@ -65,6 +65,7 @@
 		495F74EC28B39A9A00C20304 /* PopoverAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495F74EB28B39A9A00C20304 /* PopoverAlertView.swift */; };
 		4962F3B22C0C8C5F004571DC /* uninstall_privileged_helper_tool.zsh in Resources */ = {isa = PBXBuildFile; fileRef = 4962F3B12C0C8C5F004571DC /* uninstall_privileged_helper_tool.zsh */; };
 		4962F3B62C0CEF24004571DC /* install_privileged_helper_tool.zsh in Resources */ = {isa = PBXBuildFile; fileRef = 4962F3B52C0CEF24004571DC /* install_privileged_helper_tool.zsh */; };
+		4962F3C02C0CEF24004571DC /* nl.root3.support.helper.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4962F3C12C0CEF24004571DC /* nl.root3.support.helper.plist */; };
 		496C2FE1271477B800D51EE1 /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496C2FE0271477B800D51EE1 /* NotificationNames.swift */; };
 		496ECB662E53DE1F001C93FC /* ItemCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496ECB652E53DE1F001C93FC /* ItemCircle.swift */; };
 		496FE4D12651485E007746ED /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496FE4D02651485E007746ED /* UserInfo.swift */; };
@@ -229,6 +230,7 @@
 		495F74EB28B39A9A00C20304 /* PopoverAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PopoverAlertView.swift; path = Support/Views/PopoverAlertView.swift; sourceTree = SOURCE_ROOT; };
 		4962F3B12C0C8C5F004571DC /* uninstall_privileged_helper_tool.zsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = uninstall_privileged_helper_tool.zsh; sourceTree = "<group>"; };
 		4962F3B52C0CEF24004571DC /* install_privileged_helper_tool.zsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = install_privileged_helper_tool.zsh; sourceTree = "<group>"; };
+		4962F3C12C0CEF24004571DC /* nl.root3.support.helper.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = nl.root3.support.helper.plist; sourceTree = "<group>"; };
 		496C2FE0271477B800D51EE1 /* NotificationNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNames.swift; sourceTree = "<group>"; };
 		496ECB652E53DE1F001C93FC /* ItemCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCircle.swift; sourceTree = "<group>"; };
 		496FE4D02651485E007746ED /* UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
@@ -411,6 +413,7 @@
 			isa = PBXGroup;
 			children = (
 				4962F3B52C0CEF24004571DC /* install_privileged_helper_tool.zsh */,
+				4962F3C12C0CEF24004571DC /* nl.root3.support.helper.plist */,
 				4962F3B12C0C8C5F004571DC /* uninstall_privileged_helper_tool.zsh */,
 			);
 			path = Scripts;
@@ -670,6 +673,7 @@
 				0AFE0A8325014C6100957B52 /* Localizable.strings in Resources */,
 				49822CEA24B4C3F200E8DE54 /* Preview Assets.xcassets in Resources */,
 				4962F3B62C0CEF24004571DC /* install_privileged_helper_tool.zsh in Resources */,
+				4962F3C02C0CEF24004571DC /* nl.root3.support.helper.plist in Resources */,
 				49822CE724B4C3F200E8DE54 /* Assets.xcassets in Resources */,
 				490B26EF2E84111200DE50E0 /* AppIcon.icon in Resources */,
 			);
@@ -829,7 +833,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
-				CURRENT_PROJECT_VERSION = 114;
+				CURRENT_PROJECT_VERSION = 115;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = 98LJ4XBGYK;
@@ -868,7 +872,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
-				CURRENT_PROJECT_VERSION = 114;
+				CURRENT_PROJECT_VERSION = 115;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = 98LJ4XBGYK;
@@ -905,7 +909,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 114;
+				CURRENT_PROJECT_VERSION = 115;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = 98LJ4XBGYK;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -938,7 +942,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 114;
+				CURRENT_PROJECT_VERSION = 115;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = 98LJ4XBGYK;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1089,7 +1093,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 114;
+				CURRENT_PROJECT_VERSION = 115;
 				DEVELOPMENT_ASSET_PATHS = "\"Support/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = 98LJ4XBGYK;
@@ -1136,7 +1140,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 114;
+				CURRENT_PROJECT_VERSION = 115;
 				DEVELOPMENT_ASSET_PATHS = "\"Support/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = 98LJ4XBGYK;
