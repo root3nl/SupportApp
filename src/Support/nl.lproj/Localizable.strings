@@ -84,6 +84,9 @@
 "NETWORK_IP_ADDRESS" = "Network IP Address";
 "BACK" = "Terug";
 "EXTENSION_IDENTIFIER_NO_DOT_WARNING" = "Identifier mag geen punt (.) bevatten, anders wordt de melding in de menubalk niet bijgewerkt.";
+"CUSTOM_IMAGE" = "Aangepaste afbeelding";
+"CUSTOM_IMAGE_HINT" = "Pad, URL of data-URI";
+"CUSTOM_IMAGE_INFO" = "Vervangt het SF Symbol. Accepteert een lokaal bestandspad, een https-URL of een Base64-data-URI.";
 
 /* Legacy 2.x configuration migration */
 "MIGRATE_LEGACY_CONFIG" = "Support App 2.x-configuratie migreren…";

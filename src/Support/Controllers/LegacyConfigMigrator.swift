@@ -393,7 +393,7 @@ struct LegacyConfigMigrator {
                                        ("Second", "HideSecondRowButtons")] {
                 if boolValue(result[hideKey]) { continue }
 
-                var populated: [(title: String, subtitle: String, symbol: String,
+                var populated: [(title: String, subtitle: String, symbol: String, image: String,
                                  link: String, type: String)] = []
                 for slot in ["Left", "Middle", "Right"] {
                     let title = stringValue(result["\(rowName)RowTitle\(slot)"])
@@ -403,6 +403,7 @@ struct LegacyConfigMigrator {
                         title: title,
                         subtitle: stringValue(result["\(rowName)RowSubtitle\(slot)"]),
                         symbol: stringValue(result["\(rowName)RowSymbol\(slot)"]),
+                        image: stringValue(result["\(rowName)RowImage\(slot)"]),
                         link: link,
                         type: stringValue(result["\(rowName)RowType\(slot)"])
                     ))
@@ -416,6 +417,7 @@ struct LegacyConfigMigrator {
                     if !slot.title.isEmpty    { item["Title"]      = slot.title }
                     if !slot.subtitle.isEmpty { item["Subtitle"]   = slot.subtitle }
                     if !slot.symbol.isEmpty   { item["Symbol"]     = slot.symbol }
+                    if !slot.image.isEmpty    { item["Image"]      = slot.image }
                     if !slot.link.isEmpty     { item["Action"]     = slot.link }
                     if !slot.type.isEmpty     { item["ActionType"] = slot.type }
                     items.append(item)
@@ -471,7 +473,7 @@ struct LegacyConfigMigrator {
             "HideFirstRowButtons", "HideSecondRowButtons"
         ]
         for row in ["First", "Second"] {
-            for prop in ["Title", "Subtitle", "Type", "Link", "Symbol"] {
+            for prop in ["Title", "Subtitle", "Type", "Link", "Symbol", "Image"] {
                 for slot in ["Left", "Middle", "Right"] {
                     keys.append("\(row)Row\(prop)\(slot)")
                 }

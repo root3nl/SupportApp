@@ -51,7 +51,7 @@ struct ContentView: View {
     @State private var addRowButtonHoveredIndex: Int?
     @State private var showItemConfigurationPopover = false
     
-    let supportItem = SupportItem(type: "Button", title: "Title", subtitle: "Subtitle", linkType: nil, link: nil, symbol: "cart.fill.badge.plus", extensionIdentifier: nil, onAppearAction: nil)
+    let supportItem = SupportItem(type: "Button", title: "Title", subtitle: "Subtitle", linkType: nil, link: nil, symbol: "cart.fill.badge.plus", image: nil, extensionIdentifier: nil, onAppearAction: nil)
     
     // Local preferences or (managed) UserDefaults
     var rows: [Row] {
@@ -114,15 +114,15 @@ struct ContentView: View {
                                     case "Extension":
                                         ItemExtension(title: rowItems[itemIndex].title ?? "", subtitle: nil, linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: color, extensionIdentifier: rowItems[itemIndex].extensionIdentifier ?? "", onAppearAction: rowItems[itemIndex].onAppearAction, hoverEffectEnable: true, animate: false, configurationItem: ConfiguredItem(rowIndex: index, itemIndex: itemIndex))
                                     case "Button":
-                                        Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: color, configurationItem: ConfiguredItem(rowIndex: index, itemIndex: itemIndex), hoverEffectEnable: true, animate: true)
+                                        Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", customImage: rowItems[itemIndex].image, symbolColor: color, configurationItem: ConfiguredItem(rowIndex: index, itemIndex: itemIndex), hoverEffectEnable: true, animate: true)
                                     case "ButtonMedium":
-                                        ItemSmall(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: color, configurationItem: ConfiguredItem(rowIndex: index, itemIndex: itemIndex))
+                                        ItemSmall(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", customImage: rowItems[itemIndex].image, symbolColor: color, configurationItem: ConfiguredItem(rowIndex: index, itemIndex: itemIndex))
                                     case "ButtonSmall":
                                         if #available(macOS 26, *) {
-                                            ItemCircle(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: color, configurationItem: ConfiguredItem(rowIndex: index, itemIndex: itemIndex))
+                                            ItemCircle(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", customImage: rowItems[itemIndex].image, symbolColor: color, configurationItem: ConfiguredItem(rowIndex: index, itemIndex: itemIndex))
                                         }
                                     default:
-                                        Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", symbolColor: color, configurationItem: ConfiguredItem(rowIndex: index, itemIndex: itemIndex), hoverEffectEnable: true, animate: true)
+                                        Item(title: rowItems[itemIndex].title ?? "", subtitle: rowItems[itemIndex].subtitle ?? "", linkType: rowItems[itemIndex].linkType ?? "", link: rowItems[itemIndex].link ?? "", image: rowItems[itemIndex].symbol ?? "", customImage: rowItems[itemIndex].image, symbolColor: color, configurationItem: ConfiguredItem(rowIndex: index, itemIndex: itemIndex), hoverEffectEnable: true, animate: true)
                                     }
                                 }
                                 .frame(maxWidth: .infinity)

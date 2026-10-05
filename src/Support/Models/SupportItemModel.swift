@@ -22,6 +22,7 @@ struct SupportItem: Codable, Hashable {
     let linkType: String?
     let link: String?
     let symbol: String?
+    let image: String?
     let extensionIdentifier: String?
     let onAppearAction: String?
 
@@ -32,6 +33,7 @@ struct SupportItem: Codable, Hashable {
         case linkType = "ActionType"
         case link = "Action"
         case symbol = "Symbol"
+        case image = "Image"
         case extensionIdentifier = "ExtensionID"
         case onAppearAction = "OnAppearAction"
     }

@@ -84,6 +84,9 @@
 "NETWORK_IP_ADDRESS" = "Network IP Address";
 "BACK" = "Back";
 "EXTENSION_IDENTIFIER_NO_DOT_WARNING" = "Identifier must not contain a dot (.), otherwise the menu bar notifier badge will not update.";
+"CUSTOM_IMAGE" = "Custom image";
+"CUSTOM_IMAGE_HINT" = "Path, URL or data URI";
+"CUSTOM_IMAGE_INFO" = "Overrides the SF Symbol. Accepts a local file path, an https URL or a Base64 data URI.";
 
 /* Legacy 2.x configuration migration */
 "MIGRATE_LEGACY_CONFIG" = "Migrate Support App 2.x configuration…";

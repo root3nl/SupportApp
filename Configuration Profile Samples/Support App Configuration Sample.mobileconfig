@@ -25,6 +25,18 @@
 			<string>Now</string>
 			<key>FirstRowSubtitleRight</key>
 			<string>Download Apps</string>
+			<!-- Optionally show a custom image instead of the SF Symbol for a button. Accepts a
+			     path to a local image file, an https URL, or a Base64 encoded data URI to embed
+			     the image in the profile itself. Falls back to the SF Symbol from the matching
+			     Symbol key when the image cannot be loaded. For the modern Rows configuration the
+			     equivalent key is "Image" next to "Symbol" in an item.
+			<key>FirstRowImageLeft</key>
+			<string>/Library/Application Support/JAMF/remote-support.png</string>
+			<key>FirstRowImageMiddle</key>
+			<string>https://www.root3.nl/images/support.png</string>
+			<key>FirstRowImageRight</key>
+			<string>data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==</string>
+			-->
 			<key>FirstRowSymbolLeft</key>
 			<string>cursorarrow.and.square.on.square.dashed</string>
 			<key>FirstRowSymbolMiddle</key>

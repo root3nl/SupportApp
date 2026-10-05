@@ -115,13 +115,15 @@ class Preferences: ObservableObject {
     @AppStorage("FirstRowTypeLeft") var firstRowTypeLeft: String = "App"
     @AppStorage(firstRowLinkLeftKey) var firstRowLinkLeft: String = "com.apple.ScreenSharing"
     @AppStorage("FirstRowSymbolLeft") var firstRowSymbolLeft: String = "cursorarrow"
-    
+    @AppStorage("FirstRowImageLeft") var firstRowImageLeft: String = ""
+
     // UserDefaults for optional button middle (3th row)
     @AppStorage("FirstRowTitleMiddle") var firstRowTitleMiddle: String = ""
     @AppStorage("FirstRowSubtitleMiddle") var firstRowSubtitleMiddle: String = ""
     @AppStorage("FirstRowTypeMiddle") var firstRowTypeMiddle: String = "URL"
     @AppStorage(firstRowLinkMiddleKey) var firstRowLinkMiddle: String = ""
     @AppStorage("FirstRowSymbolMiddle") var firstRowSymbolMiddle: String = ""
+    @AppStorage("FirstRowImageMiddle") var firstRowImageMiddle: String = ""
 
     // UserDefaults for button right (3rd row) with default values
     @AppStorage("FirstRowTitleRight") var firstRowTitleRight: String = "Company Store"
@@ -129,7 +131,8 @@ class Preferences: ObservableObject {
     @AppStorage("FirstRowTypeRight") var firstRowTypeRight: String = "App"
     @AppStorage(firstRowLinkRightKey) var firstRowLinkRight: String = "com.apple.AppStore"
     @AppStorage("FirstRowSymbolRight") var firstRowSymbolRight: String = "cart.fill"
-    
+    @AppStorage("FirstRowImageRight") var firstRowImageRight: String = ""
+
     // MARK: - Second row of configurable buttons
     
     // UserDefaults for button left (4th row) with default values
@@ -138,21 +141,24 @@ class Preferences: ObservableObject {
     @AppStorage("SecondRowTypeLeft") var secondRowTypeLeft: String = "URL"
     @AppStorage(secondRowLinkLeftKey) var secondRowLinkLeft: String = "https://yourticketsystem.tld"
     @AppStorage("SecondRowSymbolLeft") var secondRowSymbolLeft: String = "ticket"
-    
+    @AppStorage("SecondRowImageLeft") var secondRowImageLeft: String = ""
+
     // UserDefaults for optional button middle (4th row) with default values
     @AppStorage("SecondRowTitleMiddle") var secondRowTitleMiddle: String = ""
     @AppStorage("SecondRowSubtitleMiddle") var secondRowSubtitleMiddle: String = ""
     @AppStorage("SecondRowTypeMiddle") var secondRowTypeMiddle: String = "URL"
     @AppStorage(secondRowLinkMiddleKey) var secondRowLinkMiddle: String = ""
     @AppStorage("SecondRowSymbolMiddle") var secondRowSymbolMiddle: String = ""
-    
+    @AppStorage("SecondRowImageMiddle") var secondRowImageMiddle: String = ""
+
     // UserDefaults for button right (4th row) with default values
     @AppStorage("SecondRowTitleRight") var secondRowTitleRight: String = "Phone"
     @AppStorage("SecondRowSubtitleRight") var secondRowSubtitleRight: String = ""
     @AppStorage("SecondRowTypeRight") var secondRowTypeRight: String = "URL"
     @AppStorage(secondRowLinkRightKey) var secondRowLinkRight: String = "tel:+31000000000"
     @AppStorage("SecondRowSymbolRight") var secondRowSymbolRight: String = "phone"
-    
+    @AppStorage("SecondRowImageRight") var secondRowImageRight: String = ""
+
     // MARK: - Static preference Key Names
     static let firstRowLinkLeftKey = "FirstRowLinkLeft"
     static let firstRowLinkMiddleKey = "FirstRowLinkMiddle"

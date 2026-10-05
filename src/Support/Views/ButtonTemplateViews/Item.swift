@@ -14,6 +14,7 @@ struct Item: View {
     var linkType: String?
     var link: String?
     var image: String
+    var customImage: String?
     var symbolColor: Color
     var notificationBadge: Int?
     var notificationBadgeBool: Bool?
@@ -73,13 +74,7 @@ struct Item: View {
                             .padding(.leading, 14)
                             .accessibilityHidden(true)
                     } else {
-                        Ellipse()
-                            .foregroundColor(.white)
-                            .overlay(
-                                Image(systemName: image)
-                                    .foregroundColor(symbolColor)
-                                    .font(.system(size: 18))
-                            )
+                        ButtonIconView(symbol: image, image: customImage, symbolColor: symbolColor, symbolFont: .system(size: 18), backgroundColor: .white, imageSize: 36)
                             .frame(width: 36, height: 36)
                             .padding(.leading, 14)
                             .accessibilityHidden(true)
@@ -198,12 +193,7 @@ struct Item: View {
                             .padding(.leading, 10)
                             .accessibilityHidden(true)
                     } else {
-                        Ellipse()
-                            .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
-                            .overlay(
-                                Image(systemName: image)
-                                    .foregroundColor(hoverView && link != "" ? Color("hoverColor") : Color.white)
-                            )
+                        ButtonIconView(symbol: image, image: customImage, symbolColor: hoverView && link != "" ? Color("hoverColor") : Color.white, symbolFont: .body, backgroundColor: hoverView && link != "" ? .primary : symbolColor, imageSize: 26)
                             .frame(width: 26, height: 26)
                             .padding(.leading, 10)
                             .accessibilityHidden(true)

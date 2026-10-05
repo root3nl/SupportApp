@@ -84,6 +84,9 @@
 "NETWORK_IP_ADDRESS" = "IP-Addresse";
 "BACK" = "Zurück";
 "EXTENSION_IDENTIFIER_NO_DOT_WARNING" = "Der Bezeichner darf keinen Punkt (.) enthalten, sonst wird das Hinweis-Badge in der Menüleiste nicht aktualisiert.";
+"CUSTOM_IMAGE" = "Eigenes Bild";
+"CUSTOM_IMAGE_HINT" = "Pfad, URL oder Data-URI";
+"CUSTOM_IMAGE_INFO" = "Ersetzt das SF Symbol. Akzeptiert einen lokalen Dateipfad, eine https-URL oder eine Base64-Data-URI.";
 
 /* Legacy 2.x configuration migration */
 "MIGRATE_LEGACY_CONFIG" = "Support App 2.x-Konfiguration migrieren…";

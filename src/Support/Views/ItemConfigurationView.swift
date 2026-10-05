@@ -42,13 +42,14 @@ struct ItemConfigurationView: View {
         }
     }
     
-    @State private var item: SupportItem = SupportItem(type: "Button", title: nil, subtitle: nil, linkType: nil, link: nil, symbol: nil, extensionIdentifier: "", onAppearAction: nil)
+    @State private var item: SupportItem = SupportItem(type: "Button", title: nil, subtitle: nil, linkType: nil, link: nil, symbol: nil, image: nil, extensionIdentifier: "", onAppearAction: nil)
     @State private var selectedType: String = ""
     @State private var title: String = "Title Example"
     @State private var subtitle: String = "Subtitle Example"
     @State private var linkType: String = "App"
     @State private var link: String = ""
     @State private var symbol: String = "cart.fill.badge.plus"
+    @State private var customImage: String = ""
     @State private var extensionIdentifier: String = "extension_id_example"
     @State private var onAppearAction: String = ""
 
@@ -112,7 +113,7 @@ struct ItemConfigurationView: View {
                 Button(action: {
                     // Save item
                     if item.type.contains("Button") {
-                        localPreferences.rows[localPreferences.currentConfiguredItem!.rowIndex].items?[localPreferences.currentConfiguredItem!.itemIndex] = SupportItem(type: selectedType, title: title, subtitle: subtitle, linkType: linkType, link: link, symbol: symbol, extensionIdentifier: nil, onAppearAction: nil)
+                        localPreferences.rows[localPreferences.currentConfiguredItem!.rowIndex].items?[localPreferences.currentConfiguredItem!.itemIndex] = SupportItem(type: selectedType, title: title, subtitle: subtitle, linkType: linkType, link: link, symbol: symbol, image: customImage.isEmpty ? nil : customImage, extensionIdentifier: nil, onAppearAction: nil)
                     } else if item.type == "Extension" {
                         // Identifier is required and must not contain a dot: '_alert' keys built from
                         // it are KVO-observed, and KVC treats '.' as a key-path separator, which would
@@ -120,9 +121,9 @@ struct ItemConfigurationView: View {
                         guard !extensionIdentifier.isEmpty, !extensionIdentifier.contains(".") else {
                             return
                         }
-                        localPreferences.rows[localPreferences.currentConfiguredItem!.rowIndex].items?[localPreferences.currentConfiguredItem!.itemIndex] = SupportItem(type: selectedType, title: title, subtitle: nil, linkType: linkType, link: link, symbol: symbol, extensionIdentifier: extensionIdentifier, onAppearAction: onAppearAction)
+                        localPreferences.rows[localPreferences.currentConfiguredItem!.rowIndex].items?[localPreferences.currentConfiguredItem!.itemIndex] = SupportItem(type: selectedType, title: title, subtitle: nil, linkType: linkType, link: link, symbol: symbol, image: nil, extensionIdentifier: extensionIdentifier, onAppearAction: onAppearAction)
                     } else {
-                        localPreferences.rows[localPreferences.currentConfiguredItem!.rowIndex].items?[localPreferences.currentConfiguredItem!.itemIndex] = SupportItem(type: selectedType, title: nil, subtitle: nil, linkType: nil, link: nil, symbol: nil, extensionIdentifier: nil, onAppearAction: nil)
+                        localPreferences.rows[localPreferences.currentConfiguredItem!.rowIndex].items?[localPreferences.currentConfiguredItem!.itemIndex] = SupportItem(type: selectedType, title: nil, subtitle: nil, linkType: nil, link: nil, symbol: nil, image: nil, extensionIdentifier: nil, onAppearAction: nil)
 
                     }
                     
@@ -183,15 +184,15 @@ struct ItemConfigurationView: View {
                 case "Extension":
                     Item(title: title, subtitle: subtitle, linkType: linkType, link: link, image: symbol, symbolColor: color, hoverEffectEnable: true, animate: false)
                 case "Button":
-                    Item(title: title, subtitle: subtitle, linkType: linkType, link: link, image: symbol, symbolColor: color, hoverEffectEnable: true, animate: true)
+                    Item(title: title, subtitle: subtitle, linkType: linkType, link: link, image: symbol, customImage: customImage, symbolColor: color, hoverEffectEnable: true, animate: true)
                 case "ButtonMedium":
-                    ItemSmall(title: title, subtitle: subtitle, linkType: linkType, link: link, image: symbol, symbolColor: color)
+                    ItemSmall(title: title, subtitle: subtitle, linkType: linkType, link: link, image: symbol, customImage: customImage, symbolColor: color)
                 case "ButtonSmall":
                     if #available(macOS 26, *) {
-                        ItemCircle(title: title, subtitle: subtitle, linkType: linkType, link: link, image: symbol, symbolColor: color)
+                        ItemCircle(title: title, subtitle: subtitle, linkType: linkType, link: link, image: symbol, customImage: customImage, symbolColor: color)
                     }
                 default:
-                    Item(title: title, subtitle: subtitle, linkType: linkType, link: link, image: symbol, symbolColor: color, hoverEffectEnable: true, animate: true)
+                    Item(title: title, subtitle: subtitle, linkType: linkType, link: link, image: symbol, customImage: customImage, symbolColor: color, hoverEffectEnable: true, animate: true)
                 }
                 
             }
@@ -227,6 +228,13 @@ struct ItemConfigurationView: View {
                             .font(.caption)
                     }
                     TextField("SF Symbol", text: $symbol)
+                    if item.type != "Extension" {
+                        TextField("CUSTOM_IMAGE", text: $customImage, prompt: Text("CUSTOM_IMAGE_HINT"))
+                        Text("\(Image(systemName: "info.circle.fill")) \(Text("CUSTOM_IMAGE_INFO"))")
+                            .frame(maxWidth: 200, alignment: .leading)
+                            .foregroundColor(.secondary)
+                            .font(.caption)
+                    }
                     if item.type == "Extension" {
                         TextField("Extension Identifier", text: $extensionIdentifier)
                         
@@ -274,6 +282,9 @@ struct ItemConfigurationView: View {
                 if let symbol = item.symbol {
                     self.symbol = symbol
                 }
+                if let image = item.image {
+                    self.customImage = image
+                }
                 if let extensionIdentifier = item.extensionIdentifier {
                     self.extensionIdentifier = extensionIdentifier
                 }
@@ -283,7 +294,7 @@ struct ItemConfigurationView: View {
             }
         }
         .onChange(of: selectedType) { _, newValue in
-            item = SupportItem(type: newValue, title: title, subtitle: nil, linkType: nil, link: nil, symbol: nil, extensionIdentifier: extensionIdentifier, onAppearAction: nil)
+            item = SupportItem(type: newValue, title: title, subtitle: nil, linkType: nil, link: nil, symbol: nil, image: nil, extensionIdentifier: extensionIdentifier, onAppearAction: nil)
         }
     }
 }

@@ -14,6 +14,7 @@ struct ItemSmall: View {
     var linkType: String?
     var link: String?
     var image: String
+    var customImage: String?
     var symbolColor: Color
     var loading: Bool?
     var linkPrefKey: String?
@@ -58,9 +59,7 @@ struct ItemSmall: View {
                             .frame(width: 22, height: 22)
                             .accessibilityHidden(true)
                     } else {
-                        Image(systemName: image)
-                            .font(.system(size: 22, weight: .semibold))
-                            .foregroundStyle(.white)
+                        ButtonIconView(symbol: image, image: customImage, symbolColor: .white, symbolFont: .system(size: 22, weight: .semibold), imageSize: 22)
                             .frame(width: 22, height: 22)
                             .accessibilityHidden(true)
                     }
@@ -126,9 +125,7 @@ struct ItemSmall: View {
                             .frame(width: 24, height: 24)
                             .accessibilityHidden(true)
                     } else {
-                        Image(systemName: image)
-                            .font(.system(size: 24, weight: .semibold))
-                            .foregroundColor(hoverView && link != "" ? .primary : symbolColor)
+                        ButtonIconView(symbol: image, image: customImage, symbolColor: hoverView && link != "" ? .primary : symbolColor, symbolFont: .system(size: 24, weight: .semibold), imageSize: 24)
                             .frame(width: 24, height: 24)
                             .accessibilityHidden(true)
                     }

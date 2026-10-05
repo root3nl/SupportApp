@@ -457,6 +457,19 @@
                     }
                   ]
                 },
+                "Image": {
+                  "title": "Image",
+                  "type": "string",
+                  "options": {
+                    "infoText": "Path to a local image file, an https URL to an image or a Base64 encoded data URI like data:image/png;base64,iVBORw0KGgo... Overrides Symbol for button items. Falls back to the SF Symbol when the image cannot be loaded"
+                  },
+                  "links": [
+                    {
+                      "rel": "Documentation",
+                      "href": "https://github.com/root3nl/SupportApp/wiki"
+                    }
+                  ]
+                },
                 "ExtensionID": {
                   "title": "Extension ID",
                   "type": "string",
